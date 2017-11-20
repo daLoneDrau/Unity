@@ -1,0 +1,7 @@
+So, static colliders shouldn't move, like walls and floors.
+
+Dynamic colliders can move, and have a rigid body attached.
+
+Standard rigid bodies are moved using physics forces.
+
+Kinematic rigid bodies are moved using their transform.
