@@ -92,6 +92,17 @@
     <Compile Include="Assets\Camera &amp; UI\HealthBarPanel.cs" />
     <Compile Include="Assets\NewBehaviourScript.cs" />
     <Compile Include="Assets\Player\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\Constants\Behaviour.cs" />
+    <Compile Include="Assets\Scripts\Constants\Dice.cs" />
+    <Compile Include="Assets\Scripts\Constants\Die.cs" />
+    <Compile Include="Assets\Scripts\Engine\Systems\Diceroller.cs" />
+    <Compile Include="Assets\Scripts\Flyweights\Attribute.cs" />
+    <Compile Include="Assets\Scripts\Flyweights\ErrorMessage.cs" />
+    <Compile Include="Assets\Scripts\Flyweights\RPGException.cs" />
+    <Compile Include="Assets\Scripts\Pooled\PoolableObject.cs" />
+    <Compile Include="Assets\Scripts\Pooled\PooledException.cs" />
+    <Compile Include="Assets\Scripts\Pooled\PooledStringBuilder.cs" />
+    <Compile Include="Assets\Scripts\Pooled\StringBuilderPool.cs" />
     <Compile Include="Assets\Simple UI\LoseLifeButtonScript.cs" />
     <Compile Include="Assets\Simple UI\ScoreCounterScript.cs" />
     <Compile Include="Assets\Simple UI\StatusBarScript.cs" />
@@ -107,6 +118,7 @@
     <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
 </Project>
