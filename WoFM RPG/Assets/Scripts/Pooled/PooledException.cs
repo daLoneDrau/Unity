@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text;
-using System.Runtime.Serialization;
 
 namespace RPGBaseCS.Pooled
 {

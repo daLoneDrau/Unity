@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGBaseCS.Engine.Systems
 {
@@ -16,7 +14,7 @@ namespace RPGBaseCS.Engine.Systems
         /// Gets the one and only instance of <see cref="Diceroller"/>.
         /// </summary>
         /// <returns><see cref="Diceroller"/></returns>
-        public static Diceroller getInstance()
+        public static Diceroller GetInstance()
         {
             if (Diceroller.instance == null)
             {
@@ -112,6 +110,56 @@ namespace RPGBaseCS.Engine.Systems
                 map.Remove(key);
             }
             return o;
+        }
+        /// <summary>
+        /// Rolls an x-sided die.
+        /// </summary>
+        /// <param name="x">the # of faces on the die</param>
+        /// <returns><see cref="Int32"/></returns>
+        public int RolldX(int x)
+        {
+            Check();
+            return Math.Abs(random.Next() % x) + 1;
+        }
+        /// <summary>
+        /// Rolls an x-sided die plus y offset. to roll from 3-8 (d6 + 2) x must be 6, y must be 2.
+        /// </summary>
+        /// <param name="x">the # of faces on the die</param>
+        /// <param name="y">the offset</param>
+        /// <returns><see cref="Int32"/></returns>
+        public int RolldXPlusY(int x, int y)
+        {
+            Check();
+            return RolldX(x) + y;
+        }
+        /// <summary>
+        /// Gets a positive number between 0.01 and 1.0.
+        /// </summary>
+        /// <returns></returns>
+        public float RollPercent()
+        {
+            Check();
+            float per = (float) random.NextDouble() + 0.1f;
+            if (per > 1f)
+            {
+                per = 1f;
+            }
+            return per;
+        }
+        /// <summary>
+        /// Gets a y-die roll x number of times. To get a 6d6 roll, x and y must be 6. To get a 3d6 roll, x must be 3, y must be 6.
+        /// </summary>
+        /// <param name="x">the number of time to roll the die</param>
+        /// <param name="y">the # of faces on the die</param>
+        /// <returns><see cref="Int32"/></returns>
+        public int RollXdY(int x, int y)
+        {
+            int result = 0;
+            for (int i = 0; i < x; i++)
+            {
+                result += RolldX(y);
+            }
+            return result;
         }
     }
 }

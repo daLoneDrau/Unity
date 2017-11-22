@@ -1,27 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RPGBaseCS.Engine.Systems;
 
 namespace RPGBaseCS.Constants
 {
-    public static class DieExtensions
+    public static class DiceExtensions
     {
-        public static int GetFlag(this Die die)
+        public static int Roll(this Dice dice)
         {
-            return Int32.Parse(die.ToString().Substring(1));
+            int sixteen = 16, shift = 0xffff;
+            int num = (int)dice >> sixteen, faces = (int)dice & shift;
+            return Diceroller.GetInstance().RollXdY(num, faces);
         }
     }
-    public enum Die
+    public enum Dice
     {
-        D2,
-        D3,
-        D4,
-        D6,
-        D8,
-        D10,
-        D12,
-        D20
+        ONE_D10 = 65546,
+        ONE_D2 = 65538,
+        ONE_D3 = 65539,
+        ONE_D4 = 65540,
+        ONE_D6 = 65542,
+        ONE_D8 = 65544,
+        ONE_D12 = 65548,
+        ONE_D20 = 65556
     }
 }
