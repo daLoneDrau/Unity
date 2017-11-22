@@ -1,7 +1,7 @@
 ﻿using System;
-using RPGBaseCS.Engine.Systems;
+using RPGBase.Engine.Systems;
 
-namespace RPGBaseCS.Constants
+namespace RPGBase.Constants
 {
     public static class DiceExtensions
     {

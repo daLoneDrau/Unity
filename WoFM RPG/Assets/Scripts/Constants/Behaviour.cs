@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RPGBaseCS.Constants
+namespace RPGBase.Constants
 {
     public static class BehaviourExtensions
     {
@@ -11,6 +11,9 @@ namespace RPGBaseCS.Constants
     }
     public enum Behaviour
     {
+        /// <summary>
+        /// 
+        /// </summary>
         BEHAVIOUR_NONE,
         BEHAVIOUR_FRIENDLY,
         BEHAVIOUR_MOVE_TO,

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RPGBaseCS.Constants
+namespace RPGBase.Constants
 {
     public static class DieExtensions
     {

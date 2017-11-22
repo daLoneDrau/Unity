@@ -5,7 +5,7 @@ namespace RPGBase.Flyweights
     public sealed class Attribute
     {
         /// <summary>
-        /// the <see cref="Attribute"/> 's name abbreviation.
+        /// the <see cref="Attribute"/>'s name abbreviation.
         /// </summary>
         public string Abbr { get; set; }
         /// <summary>

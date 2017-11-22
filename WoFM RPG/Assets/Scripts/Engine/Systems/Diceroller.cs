@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RPGBaseCS.Engine.Systems
+namespace RPGBase.Engine.Systems
 {
     public sealed class Diceroller
     {
@@ -57,7 +57,7 @@ namespace RPGBaseCS.Engine.Systems
             Check();
             return array[Math.Abs(random.Next() % array.Length)];
         }
-        public long getRandomLong()
+        public long GetRandomLong()
         {
             Check();
             return random.Next();

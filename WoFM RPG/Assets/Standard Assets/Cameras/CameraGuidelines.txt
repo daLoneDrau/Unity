@@ -11,7 +11,7 @@ The "Free Look" camera is designed to follow a target's position, while allowing
 
 The "Multipurpose" camera is designed to follow a target's position and rotation (or direction of movement) and is useful for many game situations.
 
-With the "Free Look" and "Multipurpose" camera, the rig is designed so the root object of the rig should always move towards the target's position. The camera offset is specified by the height (the Y value) of the "Pivot" object, and the forward offset of the final "Camera" object.
+With the "Free Look" and "Multipurpose" camera, the rig is designed so the root object of the rig should always move towards the target's position. The camera offset is specified by the height (the Y value) of the "Pivot" object, and the forward offset of the  "Camera" object.
 
 A typical set up for this would be to have the Y positional value of the Pivot set to 2 (for 2 meters above the target), and the Z positional value of the Camera set to -6 (for 6 meters behind the pivot).
 
