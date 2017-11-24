@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.Flyweights
+namespace RPGBase.Flyweights
 {
-    class IOPcData
+    public abstract class IOPcData
     {
         /** the number of bags the player has. */
         private int bags;
@@ -33,9 +33,9 @@ namespace Assets.Scripts.Flyweights
         private int xp;
         /**
          * Creates a new instance of {@link IoPcData}.
-         * @throws RPGException if there is an error defining attributes
+         * @ if there is an error defining attributes
          */
-        protected IoPcData() throws RPGException
+        protected IoPcData() 
         {
             
 		name = new char[0];
@@ -58,27 +58,27 @@ namespace Assets.Scripts.Flyweights
         {
             keyring = new char[0][];
         }
-        char[] keyCopy = new char[key.length];
-        System.arraycopy(key, 0, keyCopy, 0, key.length);
-        for (int i = keyCopy.length - 1; i >= 0; i--)
+        char[] keyCopy = new char[key.Length];
+        System.arraycopy(key, 0, keyCopy, 0, key.Length);
+        for (int i = keyCopy.Length - 1; i >= 0; i--)
         {
             keyCopy[i] = Character.toLowerCase(keyCopy[i]);
         }
         int index = -1;
-        for (int i = keyring.length - 1; i >= 0; i--)
+        for (int i = keyring.Length - 1; i >= 0; i--)
         {
             if (keyring[i] == null)
             {
                 index = i;
                 break;
             }
-            char[] keyRingCopy = new char[keyring[i].length];
-            System.arraycopy(keyring[i], 0, keyRingCopy, 0, keyring[i].length);
-            for (int j = keyRingCopy.length - 1; j >= 0; j--)
+            char[] keyRingCopy = new char[keyring[i].Length];
+            System.arraycopy(keyring[i], 0, keyRingCopy, 0, keyring[i].Length);
+            for (int j = keyRingCopy.Length - 1; j >= 0; j--)
             {
                 keyRingCopy[j] = Character.toLowerCase(keyRingCopy[j]);
             }
-            if (Arrays.equals(keyRingCopy, keyCopy))
+            if (Arrays.Equals(keyRingCopy, keyCopy))
             {
                 index = i;
                 break;
@@ -86,7 +86,7 @@ namespace Assets.Scripts.Flyweights
         }
         if (index == -1)
         {
-            keyring = ArrayUtilities.getInstance().extendArray(key, keyring);
+            keyring = ArrayUtilities.GetInstance().extendArray(key, keyring);
             numKeys++;
         }
         keyCopy = null;
@@ -120,7 +120,7 @@ namespace Assets.Scripts.Flyweights
     {
         String ls = getLifeAttribute();
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("M");
@@ -128,10 +128,10 @@ namespace Assets.Scripts.Flyweights
         }
         catch (PooledException e)
         {
-            JOGLErrorHandler.getInstance().fatalError(e);
+            JOGLErrorHandler.GetInstance().fatalError(e);
         }
         String mls = sb.toString();
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         setBaseAttributeScore(getLifeAttribute(), getBaseLife() + dmg);
         if (getBaseLife() > getFullAttributeScore(mls))
@@ -171,15 +171,15 @@ namespace Assets.Scripts.Flyweights
 	 * @param type the type of damage
 	 * @param source the source of the damage
 	 * @return {@link float}
-	 * @throws RPGException if an error occurs
+	 * @ if an error occurs
 	 */
     public  float ARX_DAMAGES_DamagePlayer( float dmg,
              long type,
-             int source) throws RPGException
+             int source) 
     {
 		float damagesdone = 0.f;
         computeFullStats();
-		if (!io.hasIOFlag(IoGlobals.PLAYERFLAGS_INVULNERABILITY)
+		if (!io.HasIOFlag(IoGlobals.PLAYERFLAGS_INVULNERABILITY)
 		        && getBaseLife() > 0) {
             if (dmg > getBaseLife())
             {
@@ -193,37 +193,37 @@ namespace Assets.Scripts.Flyweights
 
             // TODO - add timer for ouch
             // if (ARXTime > inter.iobj[0]->ouch_time + 500) {
-            IO oes = (IO)Script.getInstance().getEventSender();
+            IO oes = (IO)Script.GetInstance().getEventSender();
 
-            if (Interactive.getInstance().hasIO(source))
+            if (Interactive.GetInstance().hasIO(source))
             {
-                Script.getInstance()
+                Script.GetInstance()
                         .setEventSender(Interactive
-                                .getInstance().getIO(source));
+                                .GetInstance().getIO(source));
             }
             else
             {
-                Script.getInstance().setEventSender(null);
+                Script.GetInstance().setEventSender(null);
             }
-            Script.getInstance().sendIOScriptEvent(io,
+            Script.GetInstance().sendIOScriptEvent(io,
                     ScriptConsts.SM_045_OUCH,
                     new Object[] { "OUCH", io.getDamageSum(),
                             "SUMMONED_OUCH", 0f },
                     null);
-            Script.getInstance().setEventSender(oes);
+            Script.GetInstance().setEventSender(oes);
             io.setDamageSum(0);
             // }
 
             if (dmg > 0.f)
             {
-                if (Interactive.getInstance().hasIO(source))
+                if (Interactive.GetInstance().hasIO(source))
                 {
                     IO poisonWeaponIO = null;
                     IO sourceIO =
-                            (IO)Interactive.getInstance()
+                            (IO)Interactive.GetInstance()
                                     .getIO(source);
 
-                    if (sourceIO.hasIOFlag(IoGlobals.IO_03_NPC))
+                    if (sourceIO.HasIOFlag(IoGlobals.IO_03_NPC))
                     {
                         poisonWeaponIO = (IO)sourceIO.getNPCData().getWeapon();
                         if (poisonWeaponIO != null
@@ -280,28 +280,28 @@ namespace Assets.Scripts.Flyweights
                         // ARX_SOUND_PlayInterface(SND_PLAYER_DEATH_BY_FIRE);
                         // }
 
-                        Script.getInstance().sendIOScriptEvent(io,
+                        Script.GetInstance().sendIOScriptEvent(io,
                                 ScriptConsts.SM_017_DIE, null, null);
 
-                        int i = Interactive.getInstance().getMaxIORefId();
+                        int i = Interactive.GetInstance().getMaxIORefId();
                         for (; i >= 0; i--)
                         {
-                            if (!Interactive.getInstance().hasIO(i))
+                            if (!Interactive.GetInstance().hasIO(i))
                             {
                                 continue;
                             }
-                            IO ioo = (IO)Interactive.getInstance().getIO(i);
+                            IO ioo = (IO)Interactive.GetInstance().getIO(i);
                             // tell all IOs not to target player anymore
                             if (ioo != null
-                                    && ioo.hasIOFlag(IoGlobals.IO_03_NPC))
+                                    && ioo.HasIOFlag(IoGlobals.IO_03_NPC))
                             {
-                                if (ioo.getTargetinfo() == io.getRefId()
+                                if (ioo.getTargetinfo() == io.GetRefId()
                                         || ioo.getTargetinfo() == IoGlobals.TARGET_PLAYER)
                                 {
-                                    Script.getInstance()
+                                    Script.GetInstance()
                                             .setEventSender(io);
                                     String killer = "";
-                                    if (source == io.getRefId())
+                                    if (source == io.GetRefId())
                                     {
                                         killer = "PLAYER";
                                     }
@@ -309,14 +309,14 @@ namespace Assets.Scripts.Flyweights
                                     {
                                         killer = "NONE";
                                     }
-                                    else if (Interactive.getInstance()
+                                    else if (Interactive.GetInstance()
                                           .hasIO(source))
                                     {
                                         IO sourceIO =
                                                 (IO)Interactive
-                                                        .getInstance().getIO(
+                                                        .GetInstance().getIO(
                                                                 source);
-                                        if (sourceIO.hasIOFlag(
+                                        if (sourceIO.HasIOFlag(
                                                 IoGlobals.IO_03_NPC))
                                         {
                                             killer = new String(
@@ -324,7 +324,7 @@ namespace Assets.Scripts.Flyweights
                                                             .getName());
                                         }
                                     }
-                                    Script.getInstance().sendIOScriptEvent(ioo,
+                                    Script.GetInstance().sendIOScriptEvent(ioo,
                                             0,
                                             new Object[] { "tmp_int1", source },
                                             "TargetDeath");
@@ -345,7 +345,7 @@ namespace Assets.Scripts.Flyweights
     public  float ARX_DAMAGES_DrainMana( float dmg)
     {
         float manaDrained = 0;
-        if (!io.hasIOFlag(IoGlobals.PLAYERFLAGS_NO_MANA_DRAIN))
+        if (!io.HasIOFlag(IoGlobals.PLAYERFLAGS_NO_MANA_DRAIN))
         {
             if (getBaseMana() >= dmg)
             {
@@ -393,28 +393,28 @@ namespace Assets.Scripts.Flyweights
 	 * Gets the type of weapon the player is wielding.
 	 * @return {@link long}
 	 * @throws PooledException if an error occurs
-	 * @throws RPGException if an error occurs
+	 * @ if an error occurs
 	 */
-    public  long ARX_EQUIPMENT_GetPlayerWeaponType() throws RPGException
+    public  long ARX_EQUIPMENT_GetPlayerWeaponType() 
     {
 		int type = EquipmentGlobals.WEAPON_BARE;
 		int wpnId = getEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
 		if (wpnId >= 0
-		        && Interactive.getInstance().hasIO(wpnId)) {
-            IO weapon = (IO)Interactive.getInstance().getIO(wpnId);
-            if (weapon.hasTypeFlag(EquipmentGlobals.OBJECT_TYPE_DAGGER))
+		        && Interactive.GetInstance().hasIO(wpnId)) {
+            IO weapon = (IO)Interactive.GetInstance().getIO(wpnId);
+            if (weapon.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_DAGGER))
             {
                 type = EquipmentGlobals.WEAPON_DAGGER;
             }
-            if (weapon.hasTypeFlag(EquipmentGlobals.OBJECT_TYPE_1H))
+            if (weapon.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_1H))
             {
                 type = EquipmentGlobals.WEAPON_1H;
             }
-            if (weapon.hasTypeFlag(EquipmentGlobals.OBJECT_TYPE_2H))
+            if (weapon.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_2H))
             {
                 type = EquipmentGlobals.WEAPON_2H;
             }
-            if (weapon.hasTypeFlag(EquipmentGlobals.OBJECT_TYPE_BOW))
+            if (weapon.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_BOW))
             {
                 type = EquipmentGlobals.WEAPON_BOW;
             }
@@ -428,21 +428,21 @@ namespace Assets.Scripts.Flyweights
 	 * @return <tt>true</tt> if the player has the item equipped; <tt>false</tt>
 	 *         otherwise
 	 * @throws PooledException if an error occurs
-	 * @throws RPGException if an error occurs
+	 * @ if an error occurs
 	 */
     public  bool ARX_EQUIPMENT_IsPlayerEquip( IO itemIO)
 
-            throws RPGException
+            
     {
         bool isEquipped = false;
-		int i = ProjectConstants.getInstance().getMaxEquipped() - 1;
+		int i = ProjectConstants.GetInstance().getMaxEquipped() - 1;
 		for (; i >= 0; i--) {
             if (this.getEquippedItem(i) >= 0
-                    && Interactive.getInstance().hasIO(getEquippedItem(i)))
+                    && Interactive.GetInstance().hasIO(getEquippedItem(i)))
             {
-                IO toequip = (IO)Interactive.getInstance().getIO(
+                IO toequip = (IO)Interactive.GetInstance().getIO(
                         getEquippedItem(i));
-                if (toequip.equals(itemIO))
+                if (toequip.Equals(itemIO))
                 {
                     isEquipped = true;
                     break;
@@ -456,31 +456,31 @@ namespace Assets.Scripts.Flyweights
     /**
 	 * Unequips the player's weapon.
 	 * @throws PooledException if an error occurs
-	 * @throws RPGException if an error occurs
+	 * @ if an error occurs
 	 */
     public  void ARX_EQUIPMENT_UnEquipPlayerWeapon()
 
-            throws RPGException
+            
     {
 		int wpnId = getEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
 		if (wpnId >= 0
-		        && Interactive.getInstance().hasIO(wpnId)) {
-            IO weapon = (IO)Interactive.getInstance().getIO(wpnId);
+		        && Interactive.GetInstance().hasIO(wpnId)) {
+            IO weapon = (IO)Interactive.GetInstance().getIO(wpnId);
             weapon.getItemData().ARX_EQUIPMENT_UnEquip(io, false);
         }
         setEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON, -1);
     }
     /**
 	 * Called when a player dies.
-	 * @throws RPGException
+	 * @
 	 */
-    public  void becomesDead() throws RPGException
+    public  void becomesDead() 
     {
-		int i = ProjectConstants.getInstance().getMaxSpells() - 1;
+		int i = ProjectConstants.GetInstance().getMaxSpells() - 1;
 		for (; i >= 0; i--) {
-            Spell spell = SpellController.getInstance().getSpell(i);
+            Spell spell = SpellController.GetInstance().getSpell(i);
             if (spell.exists()
-                    && spell.getCaster() == io.getRefId())
+                    && spell.getCaster() == io.GetRefId())
             {
                 spell.setTimeToLive(0);
                 spell.setTurnsToLive(0);
@@ -542,7 +542,7 @@ namespace Assets.Scripts.Flyweights
         char[] key = null;
         if (keyring != null
                 && index >= 0
-                && index < keyring.length)
+                && index < keyring.Length)
         {
             key = keyring[index];
         }
@@ -560,21 +560,21 @@ namespace Assets.Scripts.Flyweights
         {
             keyring = new char[0][];
         }
-        char[] keyCopy = new char[key.length];
-        System.arraycopy(key, 0, keyCopy, 0, key.length);
-        for (int i = keyCopy.length - 1; i >= 0; i--)
+        char[] keyCopy = new char[key.Length];
+        System.arraycopy(key, 0, keyCopy, 0, key.Length);
+        for (int i = keyCopy.Length - 1; i >= 0; i--)
         {
             keyCopy[i] = Character.toLowerCase(keyCopy[i]);
         }
-        for (int i = keyring.length - 1; i >= 0; i--)
+        for (int i = keyring.Length - 1; i >= 0; i--)
         {
-            char[] arrCopy = new char[keyring[i].length];
-            System.arraycopy(keyring[i], 0, arrCopy, 0, keyring[i].length);
-            for (int j = arrCopy.length - 1; j >= 0; j--)
+            char[] arrCopy = new char[keyring[i].Length];
+            System.arraycopy(keyring[i], 0, arrCopy, 0, keyring[i].Length);
+            for (int j = arrCopy.Length - 1; j >= 0; j--)
             {
                 arrCopy[j] = Character.toLowerCase(arrCopy[j]);
             }
-            if (Arrays.equals(keyCopy, arrCopy))
+            if (Arrays.Equals(keyCopy, arrCopy))
             {
                 index = i;
                 break;
@@ -662,21 +662,21 @@ namespace Assets.Scripts.Flyweights
         {
             keyring = new char[0][];
         }
-        char[] keyCopy = new char[key.length];
-        System.arraycopy(key, 0, keyCopy, 0, key.length);
-        for (int i = keyCopy.length - 1; i >= 0; i--)
+        char[] keyCopy = new char[key.Length];
+        System.arraycopy(key, 0, keyCopy, 0, key.Length);
+        for (int i = keyCopy.Length - 1; i >= 0; i--)
         {
             keyCopy[i] = Character.toLowerCase(keyCopy[i]);
         }
-        for (int i = keyring.length - 1; i >= 0; i--)
+        for (int i = keyring.Length - 1; i >= 0; i--)
         {
-            char[] arrCopy = new char[keyring[i].length];
-            System.arraycopy(keyring[i], 0, arrCopy, 0, keyring[i].length);
-            for (int j = arrCopy.length - 1; j >= 0; j--)
+            char[] arrCopy = new char[keyring[i].Length];
+            System.arraycopy(keyring[i], 0, arrCopy, 0, keyring[i].Length);
+            for (int j = arrCopy.Length - 1; j >= 0; j--)
             {
                 arrCopy[j] = Character.toLowerCase(arrCopy[j]);
             }
-            if (Arrays.equals(keyCopy, arrCopy))
+            if (Arrays.Equals(keyCopy, arrCopy))
             {
                 hasKey = true;
                 break;
@@ -711,7 +711,7 @@ namespace Assets.Scripts.Flyweights
         int index = getKeyIndex(key);
         if (index >= 0)
         {
-            keyring = ArrayUtilities.getInstance().removeIndex(index, keyring);
+            keyring = ArrayUtilities.GetInstance().removeIndex(index, keyring);
             numKeys--;
         }
     }

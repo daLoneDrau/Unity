@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RPGBaseCS.Pooled
+namespace RPGBase.Pooled
 {
     /// <summary>
     /// Pooled string builder assets list.

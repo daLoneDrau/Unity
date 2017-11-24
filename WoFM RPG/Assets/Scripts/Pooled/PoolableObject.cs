@@ -1,4 +1,4 @@
-﻿namespace RPGBaseCS.Pooled
+﻿namespace RPGBase.Pooled
 {
     interface PoolableObject
     {

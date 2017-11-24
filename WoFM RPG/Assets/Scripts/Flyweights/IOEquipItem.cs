@@ -15,7 +15,7 @@ namespace RPGBase.Flyweights
         private EquipmentItemModifier[] elements;
         /**
          * Creates a new instance of {@link IOEquipItem}. 
-         * @throws RPGException
+         * @
          */
         public IOEquipItem()
         {

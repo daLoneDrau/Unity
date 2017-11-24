@@ -24,7 +24,7 @@ namespace Assets.Scripts.Flyweights
         {
             behaviorParam = bParam;
             String[] split = initParams.split(" ");
-            for (int i = split.length - 1; i >= 0; i--)
+            for (int i = split.Length - 1; i >= 0; i--)
             {
                 if (split[i].equalsIgnoreCase("STACK"))
                 {

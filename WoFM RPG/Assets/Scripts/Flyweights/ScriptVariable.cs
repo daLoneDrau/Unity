@@ -32,16 +32,16 @@ namespace Assets.Scripts.Flyweights
          * @param newName the variable name
          * @param newType the variable type
          * @param value the variable value
-         * @throws RPGException if the type is invalid
+         * @ if the type is invalid
          */
         public ScriptVariable( String newName,  int newType,
-                 Object value) throws RPGException
+                 Object value) 
         {
 		if (newName == null) {
 			throw new RPGException(
                     ErrorMessage.BAD_PARAMETERS, "Name field is null.");
     }
-		if (newName.trim().length() == 0) {
+		if (newName.trim().Length() == 0) {
 			throw new RPGException(
                     ErrorMessage.BAD_PARAMETERS, "Name field is empty.");
 }
@@ -57,9 +57,9 @@ name = newName.getBytes();
 	 * @param newName the variable name
 	 * @param newType the variable type
 	 * @param value the variable value
-	 * @throws RPGException if the type is invalid
+	 * @ if the type is invalid
 	 */
-	public ScriptVariable( ScriptVariable clone) throws RPGException
+	public ScriptVariable( ScriptVariable clone) 
 {
 		if (clone == null) {
         throw new RPGException(ErrorMessage.BAD_PARAMETERS,
@@ -68,27 +68,27 @@ name = newName.getBytes();
     name = clone.name;
     type = clone.type;
 		if (clone.faval != null) {
-        faval = new float[clone.faval.length];
-        System.arraycopy(clone.faval, 0, faval, 0, clone.faval.length);
+        faval = new float[clone.faval.Length];
+        System.arraycopy(clone.faval, 0, faval, 0, clone.faval.Length);
     }
     fval = clone.fval;
 		if (clone.iaval != null) {
-        iaval = new int[clone.iaval.length];
-        System.arraycopy(clone.iaval, 0, iaval, 0, clone.iaval.length);
+        iaval = new int[clone.iaval.Length];
+        System.arraycopy(clone.iaval, 0, iaval, 0, clone.iaval.Length);
     }
     ival = clone.ival;
 		if (clone.laval != null) {
-        laval = new long[clone.laval.length];
-        System.arraycopy(clone.laval, 0, laval, 0, clone.laval.length);
+        laval = new long[clone.laval.Length];
+        System.arraycopy(clone.laval, 0, laval, 0, clone.laval.Length);
     }
     lval = clone.lval;
 		if (clone.text != null) {
-        text = new byte[clone.text.length];
-        System.arraycopy(clone.text, 0, text, 0, clone.text.length);
+        text = new byte[clone.text.Length];
+        System.arraycopy(clone.text, 0, text, 0, clone.text.Length);
     }
 		if (clone.textaval != null) {
-        textaval = new byte[clone.textaval.length][];
-        System.arraycopy(clone.textaval, 0, textaval, 0, clone.textaval.length);
+        textaval = new byte[clone.textaval.Length][];
+        System.arraycopy(clone.textaval, 0, textaval, 0, clone.textaval.Length);
     }
 }
 /** Clears up member fields, releasing their memory. */
@@ -108,9 +108,9 @@ public void clear()
  * Gets the floating-point array value the {@link ScriptVariable}
  * references.
  * @return <code>float[]</code>
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public float[] getFloatArrayVal() throws RPGException
+public float[] getFloatArrayVal() 
 {
 		if (type != ScriptConstants.TYPE_G_03_FLOAT_ARR
 				&& type != ScriptConstants.TYPE_L_11_FLOAT_ARR) {
@@ -124,9 +124,9 @@ public float[] getFloatArrayVal() throws RPGException
  * {@link ScriptVariable} references.
  * @param index the value's index
  * @return <code>float</code>
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public float getFloatArrayVal( int index) throws RPGException
+public float getFloatArrayVal( int index) 
 {
 		if (type != ScriptConstants.TYPE_G_03_FLOAT_ARR
 				&& type != ScriptConstants.TYPE_L_11_FLOAT_ARR) {
@@ -138,9 +138,9 @@ public float getFloatArrayVal( int index) throws RPGException
 /**
  * Gets the floating-point value the {@link ScriptVariable} references.
  * @return <code>float</code>
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public float getFloatVal() throws RPGException
+public float getFloatVal() 
 {
 		if (type != ScriptConstants.TYPE_G_02_FLOAT
 				&& type != ScriptConstants.TYPE_L_10_FLOAT) {
@@ -152,9 +152,9 @@ public float getFloatVal() throws RPGException
 /**
  * Gets the integer array value the {@link ScriptVariable} references.
  * @return <code>int[]</code>
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public int[] getIntArrayVal() throws RPGException
+public int[] getIntArrayVal() 
 {
 		if (type != ScriptConstants.TYPE_G_05_INT_ARR
 				&& type != ScriptConstants.TYPE_L_13_INT_ARR) {
@@ -168,9 +168,9 @@ public int[] getIntArrayVal() throws RPGException
  * references.
  * @param index the value's index
  * @return <code>int</code>
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public int getIntArrayVal( int index) throws RPGException
+public int getIntArrayVal( int index) 
 {
 		if (type != ScriptConstants.TYPE_G_05_INT_ARR
 				&& type != ScriptConstants.TYPE_L_13_INT_ARR) {
@@ -182,9 +182,9 @@ public int getIntArrayVal( int index) throws RPGException
 /**
  * Gets the integer value the {@link ScriptVariable} references.
  * @return <code>long</code>
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public int getIntVal() throws RPGException
+public int getIntVal() 
 {
 		if (type != ScriptConstants.TYPE_G_04_INT
 				&& type != ScriptConstants.TYPE_L_12_INT) {
@@ -196,9 +196,9 @@ public int getIntVal() throws RPGException
 /**
  * Gets the long integer array value the {@link ScriptVariable} references.
  * @return <code>long[]</code>
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public long[] getLongArrayVal() throws RPGException
+public long[] getLongArrayVal() 
 {
 		if (type != ScriptConstants.TYPE_G_07_LONG_ARR
 				&& type != ScriptConstants.TYPE_L_15_LONG_ARR) {
@@ -212,9 +212,9 @@ public long[] getLongArrayVal() throws RPGException
  * {@link ScriptVariable} references.
  * @param index the value's index
  * @return <code>long</code>
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public long getLongArrayVal( int index) throws RPGException
+public long getLongArrayVal( int index) 
 {
 		if (type != ScriptConstants.TYPE_G_07_LONG_ARR
 				&& type != ScriptConstants.TYPE_L_15_LONG_ARR) {
@@ -226,9 +226,9 @@ public long getLongArrayVal( int index) throws RPGException
 /**
  * Gets the long integer value the {@link ScriptVariable} references.
  * @return <code>long</code>
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public long getLongVal() throws RPGException
+public long getLongVal() 
 {
 		if (type != ScriptConstants.TYPE_G_06_LONG
 				&& type != ScriptConstants.TYPE_L_14_LONG) {
@@ -254,9 +254,9 @@ public String getName()
 /**
  * Gets the text value the {@link ScriptVariable} references.
  * @return {@link String}
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public String getText() throws RPGException
+public String getText() 
 {
 		if (type != ScriptConstants.TYPE_G_00_TEXT
 				&& type != ScriptConstants.TYPE_L_08_TEXT) {
@@ -272,9 +272,9 @@ public String getText() throws RPGException
 /**
  * Gets the {@link String} array value the {@link ScriptVariable} references.
  * @return {@link String}[]
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public String[] getTextArrayVal() throws RPGException
+public String[] getTextArrayVal() 
 {
 		if (type != ScriptConstants.TYPE_G_01_TEXT_ARR
 				&& type != ScriptConstants.TYPE_L_09_TEXT_ARR) {
@@ -283,8 +283,8 @@ public String[] getTextArrayVal() throws RPGException
     }
     String []
     arr = new String[0];
-		for (int i = 0, len = textaval.length; i<len; i++) {
-			arr = ArrayUtilities.getInstance().extendArray(
+		for (int i = 0, len = textaval.Length; i<len; i++) {
+			arr = ArrayUtilities.GetInstance().extendArray(
 
                     new String(textaval[i]), arr);
 		}
@@ -295,16 +295,16 @@ public String[] getTextArrayVal() throws RPGException
 	 * {@link ScriptVariable} references.
 	 * @param index the value's index
 	 * @return {@link String}
-	 * @throws RPGException if the type is invalid
+	 * @ if the type is invalid
 	 */
-	public String getTextArrayVal( int index) throws RPGException
+	public String getTextArrayVal( int index) 
 {
 		if (type != ScriptConstants.TYPE_G_01_TEXT_ARR
 				&& type != ScriptConstants.TYPE_L_09_TEXT_ARR) {
         throw new RPGException(
                 ErrorMessage.INTERNAL_ERROR, "Not a string array");
     }
-		if (index >= textaval.length) {
+		if (index >= textaval.Length) {
         throw new RPGException(
                 ErrorMessage.INTERNAL_ERROR, "Invalid index");
     }
@@ -322,11 +322,11 @@ public String[] getTextArrayVal() throws RPGException
  * Sets a value in the array the {@link ScriptVariable} references.
  * @param index the array index
  * @param value the value to set
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
 public void set( int index,  Object value)
 
-            throws RPGException
+            
 {
     bool throwException = false;
 		switch (type) {
@@ -336,11 +336,11 @@ public void set( int index,  Object value)
         {
             textaval = new byte[0][];
         }
-        if (index >= textaval.length)
+        if (index >= textaval.Length)
         {
             // add a new value
             byte[][] dest = new byte[index + 1][];
-            System.arraycopy(textaval, 0, dest, 0, textaval.length);
+            System.arraycopy(textaval, 0, dest, 0, textaval.Length);
             textaval = dest;
             dest = null;
         }
@@ -348,9 +348,9 @@ public void set( int index,  Object value)
         {
             textaval[index] = null;
         }
-        else if (value instanceof String) {
+        else if (value is String) {
             textaval[index] = ((String)value).getBytes();
-        } else if (value instanceof char[]) {
+        } else if (value is char[]) {
             textaval[index] = new String((char[])value).getBytes();
         } else {
             textaval[index] = value.toString().getBytes();
@@ -362,11 +362,11 @@ public void set( int index,  Object value)
         {
             faval = new float[0];
         }
-        if (index >= faval.length)
+        if (index >= faval.Length)
         {
             // add a new value
             float[] dest = new float[index + 1];
-            System.arraycopy(faval, 0, dest, 0, faval.length);
+            System.arraycopy(faval, 0, dest, 0, faval.Length);
             faval = dest;
             dest = null;
         }
@@ -374,13 +374,13 @@ public void set( int index,  Object value)
         {
             throwException = true;
         }
-        else if (value instanceof Float) {
+        else if (value is Float) {
             faval[index] = (float)value;
-        } else if (value instanceof Double) {
+        } else if (value is Double) {
             faval[index] = Double.valueOf((double)value).floatValue();
-        } else if (value instanceof Integer) {
+        } else if (value is Integer) {
             faval[index] = (int)value;
-        } else if (value instanceof String) {
+        } else if (value is String) {
             try
             {
                 faval[index] = Float.valueOf((String)value);
@@ -399,11 +399,11 @@ public void set( int index,  Object value)
         {
             iaval = new int[0];
         }
-        if (index >= iaval.length)
+        if (index >= iaval.Length)
         {
             // add a new value
             int[] dest = new int[index + 1];
-            System.arraycopy(iaval, 0, dest, 0, iaval.length);
+            System.arraycopy(iaval, 0, dest, 0, iaval.Length);
             iaval = dest;
             dest = null;
         }
@@ -411,13 +411,13 @@ public void set( int index,  Object value)
         {
             throwException = true;
         }
-        else if (value instanceof Float) {
+        else if (value is Float) {
             iaval[index] = Float.valueOf((float)value).intValue();
-        } else if (value instanceof Double) {
+        } else if (value is Double) {
             iaval[index] = Double.valueOf((double)value).intValue();
-        } else if (value instanceof Integer) {
+        } else if (value is Integer) {
             iaval[index] = (int)value;
-        } else if (value instanceof String) {
+        } else if (value is String) {
             try
             {
                 iaval[index] = Integer.valueOf((String)value);
@@ -436,11 +436,11 @@ public void set( int index,  Object value)
         {
             laval = new long[0];
         }
-        if (index >= laval.length)
+        if (index >= laval.Length)
         {
             // add a new value
             long[] dest = new long[index + 1];
-            System.arraycopy(laval, 0, dest, 0, laval.length);
+            System.arraycopy(laval, 0, dest, 0, laval.Length);
             laval = dest;
             dest = null;
         }
@@ -448,15 +448,15 @@ public void set( int index,  Object value)
         {
             throwException = true;
         }
-        else if (value instanceof Float) {
+        else if (value is Float) {
             laval[index] = Float.valueOf((float)value).longValue();
-        } else if (value instanceof Double) {
+        } else if (value is Double) {
             laval[index] = Double.valueOf((double)value).longValue();
-        } else if (value instanceof Integer) {
+        } else if (value is Integer) {
             laval[index] = (int)value;
-        } else if (value instanceof Long) {
+        } else if (value is Long) {
             laval[index] = (long)value;
-        } else if (value instanceof String) {
+        } else if (value is String) {
             try
             {
                 laval[index] = Long.valueOf((String)value);
@@ -474,7 +474,7 @@ public void set( int index,  Object value)
     }
 		if (throwException) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Invalid ScriptVariable type - ");
@@ -483,13 +483,13 @@ public void set( int index,  Object value)
         }
         catch (PooledException e)
         {
-            sb.returnToPool();
+            sb.ReturnToPool();
             sb = null;
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(
                 ErrorMessage.BAD_PARAMETERS, sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -497,9 +497,9 @@ public void set( int index,  Object value)
 /**
  * Sets the value the {@link ScriptVariable} references.
  * @param value the floating-point array value to set
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public void set( Object value) throws RPGException
+public void set( Object value) 
 {
     bool throwException = false;
 		switch (type) {
@@ -509,9 +509,9 @@ public void set( Object value) throws RPGException
         {
             text = null;
         }
-        else if (value instanceof String) {
+        else if (value is String) {
             text = ((String)value).getBytes();
-        } else if (value instanceof char[]) {
+        } else if (value is char[]) {
             text = new String((char[])value).getBytes();
         } else {
             text = value.toString().getBytes();
@@ -523,21 +523,21 @@ public void set( Object value) throws RPGException
         {
             textaval = new byte[0][];
         }
-        else if (value instanceof String) {
+        else if (value is String) {
             textaval = new byte[][] { ((String)value).getBytes() };
-        } else if (value instanceof char[]) {
+        } else if (value is char[]) {
             text = new String((char[])value).getBytes();
             textaval = new byte[][] {
                     new String((char[]) value).getBytes() };
-        } else if (value instanceof String[]) {
-            textaval = new byte[((String[])value).length][];
-            for (int i = 0, len = ((String[])value).length; i < len; i++)
+        } else if (value is String[]) {
+            textaval = new byte[((String[])value).Length][];
+            for (int i = 0, len = ((String[])value).Length; i < len; i++)
             {
                 textaval[i] = ((String[])value)[i].getBytes();
             }
-        } else if (value instanceof char[][]) {
-            textaval = new byte[((char[][])value).length][];
-            for (int i = 0, len = ((char[][])value).length; i < len; i++)
+        } else if (value is char[][]) {
+            textaval = new byte[((char[][])value).Length][];
+            for (int i = 0, len = ((char[][])value).Length; i < len; i++)
             {
                 textaval[i] = new String(((char[][])value)[i]).getBytes();
             }
@@ -551,15 +551,15 @@ public void set( Object value) throws RPGException
         {
             fval = 0;
         }
-        else if (value instanceof Float) {
+        else if (value is Float) {
             fval = (float)value;
-        } else if (value instanceof Double) {
+        } else if (value is Double) {
             fval = Double.valueOf((double)value).floatValue();
-        } else if (value instanceof Integer) {
+        } else if (value is Integer) {
             fval = Integer.valueOf((int)value);
-        } else if (value instanceof Integer) {
+        } else if (value is Integer) {
             fval = Integer.valueOf((int)value);
-        } else if (value instanceof String) {
+        } else if (value is String) {
             try
             {
                 fval = Float.valueOf((String)value);
@@ -578,26 +578,26 @@ public void set( Object value) throws RPGException
         {
             faval = new float[0];
         }
-        else if (value instanceof float[]) {
+        else if (value is float[]) {
             faval = (float[])value;
         } else {
             if (faval == null)
             {
                 faval = new float[0];
             }
-            if (value instanceof Float) {
-                faval = ArrayUtilities.getInstance().extendArray(
+            if (value is Float) {
+                faval = ArrayUtilities.GetInstance().extendArray(
                         (Float)value, faval);
-            } else if (value instanceof Double) {
-                faval = ArrayUtilities.getInstance().extendArray(
+            } else if (value is Double) {
+                faval = ArrayUtilities.GetInstance().extendArray(
                         Double.valueOf((double)value).floatValue(), faval);
-            } else if (value instanceof Integer) {
-                faval = ArrayUtilities.getInstance().extendArray(
+            } else if (value is Integer) {
+                faval = ArrayUtilities.GetInstance().extendArray(
                         Integer.valueOf((int)value), faval);
-            } else if (value instanceof String) {
+            } else if (value is String) {
                 try
                 {
-                    faval = ArrayUtilities.getInstance().extendArray(
+                    faval = ArrayUtilities.GetInstance().extendArray(
                             Float.valueOf((String)value), faval);
                 }
                 catch (Exception ex)
@@ -615,13 +615,13 @@ public void set( Object value) throws RPGException
         {
             ival = 0;
         }
-        else if (value instanceof Float) {
+        else if (value is Float) {
             ival = Float.valueOf((float)value).intValue();
-        } else if (value instanceof Double) {
+        } else if (value is Double) {
             ival = Double.valueOf((double)value).intValue();
-        } else if (value instanceof Integer) {
+        } else if (value is Integer) {
             ival = (int)value;
-        } else if (value instanceof String) {
+        } else if (value is String) {
             try
             {
                 ival = Integer.valueOf((String)value);
@@ -640,26 +640,26 @@ public void set( Object value) throws RPGException
         {
             iaval = new int[0];
         }
-        else if (value instanceof int[]) {
+        else if (value is int[]) {
             iaval = (int[])value;
         } else {
             if (iaval == null)
             {
                 iaval = new int[0];
             }
-            if (value instanceof Float) {
-                iaval = ArrayUtilities.getInstance().extendArray(
+            if (value is Float) {
+                iaval = ArrayUtilities.GetInstance().extendArray(
                         Float.valueOf((float)value).intValue(), iaval);
-            } else if (value instanceof Double) {
-                iaval = ArrayUtilities.getInstance().extendArray(
+            } else if (value is Double) {
+                iaval = ArrayUtilities.GetInstance().extendArray(
                         Double.valueOf((double)value).intValue(), iaval);
-            } else if (value instanceof Integer) {
-                iaval = ArrayUtilities.getInstance().extendArray(
+            } else if (value is Integer) {
+                iaval = ArrayUtilities.GetInstance().extendArray(
                         (int)value, iaval);
-            } else if (value instanceof String) {
+            } else if (value is String) {
                 try
                 {
-                    iaval = ArrayUtilities.getInstance().extendArray(
+                    iaval = ArrayUtilities.GetInstance().extendArray(
                             Integer.valueOf((String)value), iaval);
                 }
                 catch (Exception ex)
@@ -677,15 +677,15 @@ public void set( Object value) throws RPGException
         {
             lval = 0L;
         }
-        else if (value instanceof Float) {
+        else if (value is Float) {
             lval = Float.valueOf((float)value).longValue();
-        } else if (value instanceof Double) {
+        } else if (value is Double) {
             lval = Double.valueOf((double)value).longValue();
-        } else if (value instanceof Integer) {
+        } else if (value is Integer) {
             lval = (int)value;
-        } else if (value instanceof Long) {
+        } else if (value is Long) {
             lval = (long)value;
-        } else if (value instanceof String) {
+        } else if (value is String) {
             try
             {
                 lval = Long.valueOf((String)value);
@@ -705,29 +705,29 @@ public void set( Object value) throws RPGException
         {
             laval = new long[0];
         }
-        else if (value instanceof long[]) {
+        else if (value is long[]) {
             laval = (long[])value;
         } else {
             if (laval == null)
             {
                 laval = new long[0];
             }
-            if (value instanceof Float) {
-                laval = ArrayUtilities.getInstance().extendArray(
+            if (value is Float) {
+                laval = ArrayUtilities.GetInstance().extendArray(
                         Float.valueOf((float)value).longValue(), laval);
-            } else if (value instanceof Double) {
-                laval = ArrayUtilities.getInstance().extendArray(
+            } else if (value is Double) {
+                laval = ArrayUtilities.GetInstance().extendArray(
                         Double.valueOf((double)value).longValue(), laval);
-            } else if (value instanceof Integer) {
-                laval = ArrayUtilities.getInstance().extendArray(
+            } else if (value is Integer) {
+                laval = ArrayUtilities.GetInstance().extendArray(
                         (int)value, laval);
-            } else if (value instanceof Long) {
-                laval = ArrayUtilities.getInstance().extendArray(
+            } else if (value is Long) {
+                laval = ArrayUtilities.GetInstance().extendArray(
                         (long)value, laval);
-            } else if (value instanceof String) {
+            } else if (value is String) {
                 try
                 {
-                    laval = ArrayUtilities.getInstance().extendArray(
+                    laval = ArrayUtilities.GetInstance().extendArray(
                             Long.valueOf((String)value), laval);
                 }
                 catch (Exception ex)
@@ -742,7 +742,7 @@ public void set( Object value) throws RPGException
     }
 		if (throwException) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Invalid value ");
@@ -757,22 +757,22 @@ public void set( Object value) throws RPGException
         }
         RPGException ex = new RPGException(
                 ErrorMessage.BAD_PARAMETERS, sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         throw ex;
     }
 }
 /**
  * Sets the {@link ScriptVariable}'s name.
  * @param value the name to set
- * @throws RPGException if the value field is invalid
+ * @ if the value field is invalid
  */
-public void setName( String value) throws RPGException
+public void setName( String value) 
 {
 		if (value == null) {
         throw new RPGException(
                 ErrorMessage.BAD_PARAMETERS, "Name field is null.");
     }
-		if (value.trim().length() == 0) {
+		if (value.trim().Length() == 0) {
         throw new RPGException(
                 ErrorMessage.BAD_PARAMETERS, "Name field is empty.");
     }
@@ -782,9 +782,9 @@ public void setName( String value) throws RPGException
  * Sets the {@link ScriptVariable}'s type.
  * @param val the type to set
  * @throws PooledException if one occurs
- * @throws RPGException if the type is invalid
+ * @ if the type is invalid
  */
-public void setType( int val) throws PooledException, RPGException {
+public void setType( int val)  {
 		type = val;
 
         validateType();
@@ -793,14 +793,14 @@ public void setType( int val) throws PooledException, RPGException {
 	}
 	/**
 	 * Validates the variable type.
-	 * @throws RPGException if the type is invalid
+	 * @ if the type is invalid
 	 */
-	private void validateType() throws RPGException
+	private void validateType() 
 {
 		if (type < ScriptConstants.TYPE_G_00_TEXT
 				|| type > ScriptConstants.TYPE_L_15_LONG_ARR) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Invalid ScriptVariable type - ");
@@ -813,7 +813,7 @@ public void setType( int val) throws PooledException, RPGException {
         }
         RPGException ex = new RPGException(
                 ErrorMessage.BAD_PARAMETERS, sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         throw ex;
     }
 }

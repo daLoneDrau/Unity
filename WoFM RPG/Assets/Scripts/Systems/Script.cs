@@ -20,7 +20,7 @@ namespace RPGBase.Systems
      * Gives access to the singleton instance of {@link Script}.
      * @return {@link Script}
      */
-    public static Script getInstance()
+    public static Script GetInstance()
         {
             return Script.instance;
         }
@@ -55,29 +55,29 @@ namespace RPGBase.Systems
             if (io != null
                     && group != null)
             {
-                io.addGroup(group);
+                io.AddGroup(group);
             }
         }
-        public  void allowInterScriptExecution() throws RPGException
+        public  void allowInterScriptExecution() 
         {
         int ppos = 0;
 
         if (!PauseScript && !EDITMODE && !ARXPausedTime) {
             this.eventSender = null;
 
-            int numm = Math.min(Interactive.getInstance().getMaxIORefId(), 10);
+            int numm = Math.min(Interactive.GetInstance().getMaxIORefId(), 10);
 
             for (int n = 0; n<numm; n++) {
                 int i = ppos;
         ppos++;
 
-                if (ppos >= Interactive.getInstance().getMaxIORefId()) {
+                if (ppos >= Interactive.GetInstance().getMaxIORefId()) {
                     ppos = 0;
                     break;
                 }
-                if (Interactive.getInstance().hasIO(i)) {
-                    IO io = (IO)Interactive.getInstance().getIO(i);
-                    if (io.hasGameFlag(IoGlobals.GFLAG_ISINTREATZONE)) {
+                if (Interactive.GetInstance().hasIO(i)) {
+                    IO io = (IO)Interactive.GetInstance().getIO(i);
+                    if (io.HasGameFlag(IoGlobals.GFLAG_ISINTREATZONE)) {
                         if (io.getMainevent() != null) {
                             sendIOScriptEvent(io, 0, null, io.getMainevent());
 } else {
@@ -96,10 +96,10 @@ protected abstract void clearAdditionalEventStacksForIO(IO io);
  * {@link IO}.
  * @param src the source {@link IO}
  * @param dest the destination {@link IO}
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void cloneLocalVars( IO src,  IO dest)
-            throws RPGException
+            
 {
         if (dest != null
                 && src != null) {
@@ -123,7 +123,7 @@ public  int countTimers()
 {
     int activeTimers = 0;
     TIMER[] scriptTimers = getScriptTimers();
-    for (int i = scriptTimers.length - 1; i >= 0; i--)
+    for (int i = scriptTimers.Length - 1; i >= 0; i--)
     {
         if (scriptTimers[i] != null
                 && scriptTimers[i].exists())
@@ -245,7 +245,7 @@ public  void eventStackClearForIo( IO io)
     for (int i = 0; i < ScriptConstants.MAX_EVENT_STACK; i++)
     {
         if (getStackedEvent(i).exists()
-                && io.equals(getStackedEvent(i).getIo()))
+                && io.Equals(getStackedEvent(i).getIo()))
         {
             getStackedEvent(i).setParams(null);
             getStackedEvent(i).setEventname(null);
@@ -257,20 +257,20 @@ public  void eventStackClearForIo( IO io)
     }
     clearAdditionalEventStacksForIO(io);
 }
-public  void eventStackExecute() throws RPGException
+public  void eventStackExecute() 
 {
         int count = 0;
         for (int i = 0; i < ScriptConstants.MAX_EVENT_STACK; i++) {
         if (getStackedEvent(i).exists())
         {
-            int ioid = getStackedEvent(i).getIo().getRefId();
-            if (Interactive.getInstance().hasIO(ioid))
+            int ioid = getStackedEvent(i).getIo().GetRefId();
+            if (Interactive.GetInstance().hasIO(ioid))
             {
                 if (getStackedEvent(i).getSender() != null)
                 {
                     int senderid =
-                            getStackedEvent(i).getSender().getRefId();
-                    if (Interactive.getInstance().hasIO(senderid))
+                            getStackedEvent(i).getSender().GetRefId();
+                    if (Interactive.GetInstance().hasIO(senderid))
                     {
                         eventSender = getStackedEvent(i).getSender();
                     }
@@ -303,7 +303,7 @@ public  void eventStackExecute() throws RPGException
     }
     executeAdditionalStacks();
 }
-public  void eventStackExecuteAll() throws RPGException
+public  void eventStackExecuteAll() 
 {
     stackFlow = 9999999;
     eventStackExecute();
@@ -312,31 +312,31 @@ public  void eventStackExecuteAll() throws RPGException
 public abstract void eventStackInit();
 protected abstract void executeAdditionalStacks();
 public  void forceDeath( IO io,  String target)
-            throws RPGException
+            
 {
         int tioid = -1;
         if (target.equalsIgnoreCase("me")
                 || target.equalsIgnoreCase("self")) {
-        tioid = Interactive.getInstance().GetInterNum(io);
+        tioid = Interactive.GetInstance().GetInterNum(io);
     } else {
-        tioid = Interactive.getInstance().getTargetByNameTarget(target);
+        tioid = Interactive.GetInstance().getTargetByNameTarget(target);
         if (tioid == -2)
         {
-            tioid = Interactive.getInstance().GetInterNum(io);
+            tioid = Interactive.GetInstance().GetInterNum(io);
         }
     }
         if (tioid >= 0) {
-        IO tio = (IO)Interactive.getInstance().getIO(tioid);
-        if (tio.hasIOFlag(IoGlobals.IO_03_NPC))
+        IO tio = (IO)Interactive.GetInstance().getIO(tioid);
+        if (tio.HasIOFlag(IoGlobals.IO_03_NPC))
         {
             tio.getNPCData().forceDeath(io);
         }
     }
 }
-public  void freeAllGlobalVariables() throws RPGException
+public  void freeAllGlobalVariables() 
 {
         if (gvars != null) {
-        for (int i = gvars.length - 1; i >= 0; i--)
+        for (int i = gvars.Length - 1; i >= 0; i--)
         {
             if (gvars[i] != null
                     && (gvars[i].getType() == ScriptConstants.TYPE_G_00_TEXT
@@ -353,9 +353,9 @@ public  void freeAllGlobalVariables() throws RPGException
 /**
  * Removes all local variables from an {@link IO} and frees up the memory.
  * @param io the {@link IO}
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public  void freeAllLocalVariables( IO io) throws RPGException
+public  void freeAllLocalVariables( IO io) 
 {
         if (io != null
                 && io.getScript() != null
@@ -389,18 +389,18 @@ public  IO getEventSender()
  * Gets the value of a global floating-point array variable.
  * @param name the name of the variable
  * @return <code>float</code>[]
- * @throws RPGException if the variable value was never set
+ * @ if the variable value was never set
  */
 public  float[] getGlobalFloatArrayVariableValue( String name)
-            throws RPGException
+            
 {
         if (gvars == null) {
         gvars = new ScriptVariable[0];
     }
         int index = -1;
-        for (int i = 0; i < gvars.length; i++) {
+        for (int i = 0; i < gvars.Length; i++) {
         if (gvars[i] != null
-                && gvars[i].getName().equals(name)
+                && gvars[i].getName().Equals(name)
                 && gvars[i].getType() == ScriptConstants.TYPE_G_03_FLOAT_ARR)
         {
             index = i;
@@ -409,7 +409,7 @@ public  float[] getGlobalFloatArrayVariableValue( String name)
     }
         if (index == -1) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Global Float Array variable ");
@@ -422,7 +422,7 @@ public  float[] getGlobalFloatArrayVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -432,18 +432,18 @@ public  float[] getGlobalFloatArrayVariableValue( String name)
  * Gets the global floating-point value assigned to a specific variable.
  * @param name the variable name
  * @return <code>float</code>
- * @throws RPGException if no such variable was assigned
+ * @ if no such variable was assigned
  */
 public  float getGlobalFloatVariableValue( String name)
-            throws RPGException
+            
 {
         if (gvars == null) {
         gvars = new ScriptVariable[0];
     }
         int index = -1;
-        for (int i = 0; i < gvars.length; i++) {
+        for (int i = 0; i < gvars.Length; i++) {
         if (gvars[i] != null
-                && gvars[i].getName().equals(name)
+                && gvars[i].getName().Equals(name)
                 && gvars[i].getType() == ScriptConstants.TYPE_G_02_FLOAT)
         {
             index = i;
@@ -452,7 +452,7 @@ public  float getGlobalFloatVariableValue( String name)
     }
         if (index == -1) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Global Float variable ");
@@ -465,7 +465,7 @@ public  float getGlobalFloatVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -475,18 +475,18 @@ public  float getGlobalFloatVariableValue( String name)
  * Gets the value of a global integer array variable.
  * @param name the name of the variable
  * @return <code>int</code>[]
- * @throws RPGException if the variable value was never set
+ * @ if the variable value was never set
  */
 public  int[] getGlobalIntArrayVariableValue( String name)
-            throws RPGException
+            
 {
         if (gvars == null) {
         gvars = new ScriptVariable[0];
     }
         int index = -1;
-        for (int i = 0; i < gvars.length; i++) {
+        for (int i = 0; i < gvars.Length; i++) {
         if (gvars[i] != null
-                && gvars[i].getName().equals(name)
+                && gvars[i].getName().Equals(name)
                 && gvars[i].getType() == ScriptConstants.TYPE_G_05_INT_ARR)
         {
             index = i;
@@ -495,7 +495,7 @@ public  int[] getGlobalIntArrayVariableValue( String name)
     }
         if (index == -1) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Global Integer Array variable ");
@@ -508,7 +508,7 @@ public  int[] getGlobalIntArrayVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -518,18 +518,18 @@ public  int[] getGlobalIntArrayVariableValue( String name)
  * Gets the value of a global integer variable.
  * @param name the name of the variable
  * @return <code>int</code>
- * @throws RPGException if the variable value was never set
+ * @ if the variable value was never set
  */
 public  int getGlobalIntVariableValue( String name)
-            throws RPGException
+            
 {
         if (gvars == null) {
         gvars = new ScriptVariable[0];
     }
         int index = -1;
-        for (int i = 0; i < gvars.length; i++) {
+        for (int i = 0; i < gvars.Length; i++) {
         if (gvars[i] != null
-                && gvars[i].getName().equals(name)
+                && gvars[i].getName().Equals(name)
                 && gvars[i].getType() == ScriptConstants.TYPE_G_04_INT)
         {
             index = i;
@@ -538,7 +538,7 @@ public  int getGlobalIntVariableValue( String name)
     }
         if (index == -1) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Global Integer variable ");
@@ -551,7 +551,7 @@ public  int getGlobalIntVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -561,18 +561,18 @@ public  int getGlobalIntVariableValue( String name)
  * Gets the value of a global long integer array variable.
  * @param name the name of the variable
  * @return <code>long</code>[]
- * @throws RPGException if the variable value was never set
+ * @ if the variable value was never set
  */
 public  long[] getGlobalLongArrayVariableValue( String name)
-            throws RPGException
+            
 {
         if (gvars == null) {
         gvars = new ScriptVariable[0];
     }
         int index = -1;
-        for (int i = 0; i < gvars.length; i++) {
+        for (int i = 0; i < gvars.Length; i++) {
         if (gvars[i] != null
-                && gvars[i].getName().equals(name)
+                && gvars[i].getName().Equals(name)
                 && gvars[i].getType() == ScriptConstants.TYPE_G_07_LONG_ARR)
         {
             index = i;
@@ -581,7 +581,7 @@ public  long[] getGlobalLongArrayVariableValue( String name)
     }
         if (index == -1) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Global Long Integer Array variable ");
@@ -594,7 +594,7 @@ public  long[] getGlobalLongArrayVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -604,18 +604,18 @@ public  long[] getGlobalLongArrayVariableValue( String name)
  * Gets the value of a global long integer variable.
  * @param name the name of the variable
  * @return <code>long</code>
- * @throws RPGException if the variable value was never set
+ * @ if the variable value was never set
  */
 public  long getGlobalLongVariableValue( String name)
-            throws RPGException
+            
 {
         if (gvars == null) {
         gvars = new ScriptVariable[0];
     }
         int index = -1;
-        for (int i = 0; i < gvars.length; i++) {
+        for (int i = 0; i < gvars.Length; i++) {
         if (gvars[i] != null
-                && gvars[i].getName().equals(name)
+                && gvars[i].getName().Equals(name)
                 && gvars[i].getType() == ScriptConstants.TYPE_G_06_LONG)
         {
             index = i;
@@ -624,7 +624,7 @@ public  long getGlobalLongVariableValue( String name)
     }
         if (index == -1) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Global Long Integer variable ");
@@ -637,7 +637,7 @@ public  long getGlobalLongVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -647,18 +647,18 @@ public  long getGlobalLongVariableValue( String name)
  * Gets the local text array value assigned to a specific variable.
  * @param name the variable name
  * @return {@link String}
- * @throws RPGException if no such variable was assigned
+ * @ if no such variable was assigned
  */
 public  String[] getGlobalStringArrayVariableValue( String name)
-            throws RPGException
+            
 {
         if (gvars == null) {
         gvars = new ScriptVariable[0];
     }
         int index = -1;
-        for (int i = 0; i < gvars.length; i++) {
+        for (int i = 0; i < gvars.Length; i++) {
         if (gvars[i] != null
-                && gvars[i].getName().equals(name)
+                && gvars[i].getName().Equals(name)
                 && gvars[i].getType() == ScriptConstants.TYPE_G_01_TEXT_ARR)
         {
             index = i;
@@ -667,7 +667,7 @@ public  String[] getGlobalStringArrayVariableValue( String name)
     }
         if (index == -1) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Global Text Array variable ");
@@ -680,7 +680,7 @@ public  String[] getGlobalStringArrayVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -690,18 +690,18 @@ public  String[] getGlobalStringArrayVariableValue( String name)
  * Gets the global text value assigned to a specific variable.
  * @param name the variable name
  * @return {@link String}
- * @throws RPGException if no such variable was assigned
+ * @ if no such variable was assigned
  */
 public  String getGlobalStringVariableValue( String name)
-            throws RPGException
+            
 {
         if (gvars == null) {
         gvars = new ScriptVariable[0];
     }
         int index = -1;
-        for (int i = 0; i < gvars.length; i++) {
+        for (int i = 0; i < gvars.Length; i++) {
         if (gvars[i] != null
-                && gvars[i].getName().equals(name)
+                && gvars[i].getName().Equals(name)
                 && gvars[i].getType() == ScriptConstants.TYPE_G_00_TEXT)
         {
             index = i;
@@ -710,7 +710,7 @@ public  String getGlobalStringVariableValue( String name)
     }
         if (index == -1) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Global String variable ");
@@ -723,7 +723,7 @@ public  String getGlobalStringVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -741,7 +741,7 @@ public int getGlobalTargetParam( IO io)
 public  ScriptVariable getGlobalVariable( String name)
 {
     ScriptVariable var = null;
-    for (int i = gvars.length - 1; i >= 0; i--)
+    for (int i = gvars.Length - 1; i >= 0; i--)
     {
         if (gvars[i] != null
                 && gvars[i].getName() != null
@@ -753,16 +753,16 @@ public  ScriptVariable getGlobalVariable( String name)
     }
     return var;
 }
-public  IO getIOMaxEvents() throws RPGException
+public  IO getIOMaxEvents() 
 {
         int max = -1;
         int ionum = -1;
     IO io = null;
-        int i = Interactive.getInstance().getMaxIORefId();
+        int i = Interactive.GetInstance().getMaxIORefId();
         for (; i >= 0; i--) {
-        if (Interactive.getInstance().hasIO(i))
+        if (Interactive.GetInstance().hasIO(i))
         {
-            IO hio = (IO)Interactive.getInstance().getIO(i);
+            IO hio = (IO)Interactive.GetInstance().getIO(i);
             if (hio.getStatCount() > max)
             {
                 ionum = i;
@@ -773,20 +773,20 @@ public  IO getIOMaxEvents() throws RPGException
     }
         if (max > 0
                 && ionum > -1) {
-        io = (IO)Interactive.getInstance().getIO(ionum);
+        io = (IO)Interactive.GetInstance().getIO(ionum);
     }
         return io;
 }
-public  IO getIOMaxEventsSent() throws RPGException
+public  IO getIOMaxEventsSent() 
 {
         int max = -1;
         int ionum = -1;
     IO io = null;
-        int i = Interactive.getInstance().getMaxIORefId();
+        int i = Interactive.GetInstance().getMaxIORefId();
         for (; i >= 0; i--) {
-        if (Interactive.getInstance().hasIO(i))
+        if (Interactive.GetInstance().hasIO(i))
         {
-            IO hio = (IO)Interactive.getInstance().getIO(i);
+            IO hio = (IO)Interactive.GetInstance().getIO(i);
             if (hio.getStatSent() > max)
             {
                 ionum = i;
@@ -796,7 +796,7 @@ public  IO getIOMaxEventsSent() throws RPGException
     }
         if (max > 0
                 && ionum > -1) {
-        io = (IO)Interactive.getInstance().getIO(ionum);
+        io = (IO)Interactive.GetInstance().getIO(ionum);
     }
         return io;
 }
@@ -841,7 +841,7 @@ public  int getSystemIOScript( IO io,  String name)
             TIMER[] scriptTimers = getScriptTimers();
             if (scriptTimers[i].exists())
             {
-                if (scriptTimers[i].getIo().equals(io)
+                if (scriptTimers[i].getIo().Equals(io)
                         && scriptTimers[i].getName().equalsIgnoreCase(
                                 name))
                 {
@@ -863,14 +863,14 @@ public  bool hasGlobalVariable( String name)
 {
     return getGlobalVariable(name) != null;
 }
-public  void initEventStats() throws RPGException
+public  void initEventStats() 
 {
     eventTotalCount = 0;
-        int i = Interactive.getInstance().getMaxIORefId();
+        int i = Interactive.GetInstance().getMaxIORefId();
         for (; i >= 0; i--) {
-        if (Interactive.getInstance().hasIO(i))
+        if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.getInstance().getIO(i);
+            IO io = (IO)Interactive.GetInstance().getIO(i);
             io.setStatCount(0);
             io.setStatSent(0);
         }
@@ -898,9 +898,9 @@ public  bool isIOInGroup( IO io,  String group)
     if (io != null
             && group != null)
     {
-        for (int i = 0; i < io.getNumIOGroups(); i++)
+        for (int i = 0; i < io.GetNumIOGroups(); i++)
         {
-            if (group.equalsIgnoreCase(io.getIOGroup(i)))
+            if (group.equalsIgnoreCase(io.GetIOGroup(i)))
             {
                 val = true;
                 break;
@@ -925,7 +925,7 @@ private void MakeSSEPARAMS(String params)
     }
     if (params != null) {
         String[] split = params.split(" ");
-        for (int i = 0, len = split.length - 1; i < len; i++)
+        for (int i = 0, len = split.Length - 1; i < len; i++)
         {
             if (i / 2 < MAX_SYSTEM_PARAMS)
             {
@@ -944,17 +944,17 @@ private void MakeSSEPARAMS(String params)
  * @param msg the message
  * @param params the script parameters
  * @return {@link int}
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  int notifyIOEvent( IO io,  int msg,
-         String params) throws RPGException
+         String params) 
 {
         int acceptance = ScriptConstants.REFUSE;
         if (sendIOScriptEvent(io, msg, null, null) != acceptance) {
         switch (msg)
         {
             case ScriptConstants.SM_017_DIE:
-                if (io != null && Interactive.getInstance().hasIO(io))
+                if (io != null && Interactive.GetInstance().hasIO(io))
                 {
                     // TODO - set death color
                     // io->infracolor.b = 1.f;
@@ -976,24 +976,24 @@ public  int notifyIOEvent( IO io,  int msg,
  * @param targetName the target's name
  * @param hideOn if true, the hidden flags are set; otherwise all hidden
  *            flags are removed
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void objectHide( IO io,  bool megahide,
-         String targetName,  bool hideOn) throws RPGException
+         String targetName,  bool hideOn) 
 {
         int targetId =
-                Interactive.getInstance().getTargetByNameTarget(targetName);
+                Interactive.GetInstance().getTargetByNameTarget(targetName);
         if (targetId == -2) {
-        targetId = io.getRefId();
+        targetId = io.GetRefId();
     }
-        if (Interactive.getInstance().hasIO(targetId)) {
-        IO tio = (IO)Interactive.getInstance().getIO(targetId);
-        tio.removeGameFlag(IoGlobals.GFLAG_MEGAHIDE);
+        if (Interactive.GetInstance().hasIO(targetId)) {
+        IO tio = (IO)Interactive.GetInstance().getIO(targetId);
+        tio.RemoveGameFlag(IoGlobals.GFLAG_MEGAHIDE);
         if (hideOn)
         {
             if (megahide)
             {
-                tio.addGameFlag(IoGlobals.GFLAG_MEGAHIDE);
+                tio.AddGameFlag(IoGlobals.GFLAG_MEGAHIDE);
                 tio.setShow(IoGlobals.SHOW_FLAG_MEGAHIDE);
             }
             else
@@ -1005,7 +1005,7 @@ public  void objectHide( IO io,  bool megahide,
               || tio.getShow() == IoGlobals.SHOW_FLAG_HIDDEN)
         {
             tio.setShow(IoGlobals.SHOW_FLAG_IN_SCENE);
-            if (tio.hasIOFlag(IoGlobals.IO_03_NPC)
+            if (tio.HasIOFlag(IoGlobals.IO_03_NPC)
                     && tio.getNPCData().getBaseLife() <= 0f)
             {
                 // tio.animlayer[0].cur_anim =
@@ -1024,9 +1024,9 @@ public  void objectHide( IO io,  bool megahide,
 public  void releaseAllGroups( IO io)
 {
     while (io != null
-            && io.getNumIOGroups() > 0)
+            && io.GetNumIOGroups() > 0)
     {
-        io.removeGroup(io.getIOGroup(0));
+        io.RemoveGroup(io.GetIOGroup(0));
     }
 }
 /**
@@ -1044,12 +1044,12 @@ public  void releaseScript( SCRIPTABLE event)
  * @param io the IO
  * @param group the group
  */
-public  void removeGroup( IO io,  String group)
+public  void RemoveGroup( IO io,  String group)
 {
     if (io != null
             && group != null)
     {
-        io.removeGroup(group);
+        io.RemoveGroup(group);
     }
 }
 /**
@@ -1057,10 +1057,10 @@ public  void removeGroup( IO io,  String group)
  * @param io the object
  * @param initialize if <tt>true</tt> and the object is script-loaded, it
  *            will be initialized again
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void reset( IO io,  bool initialize)
-            throws RPGException
+            
 {
         // Release Script Local Variables
         if (io.getScript().getLocalVarArrayLength() > 0) {
@@ -1095,15 +1095,15 @@ public  void reset( IO io,  bool initialize)
  * Resets all interactive objects.
  * @param initialize if <tt>true</tt> and an object is script-loaded, it
  *            will be initialized again
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public  void resetAll( bool initialize) throws RPGException
+public  void resetAll( bool initialize) 
 {
-        int i = Interactive.getInstance().getMaxIORefId();
+        int i = Interactive.GetInstance().getMaxIORefId();
         for (; i >= 0; i--) {
-        if (Interactive.getInstance().hasIO(i))
+        if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.getInstance().getIO(i);
+            IO io = (IO)Interactive.GetInstance().getIO(i);
             if (!io.isScriptLoaded())
             {
                 resetObject(io, initialize);
@@ -1116,15 +1116,15 @@ public  void resetAll( bool initialize) throws RPGException
  * @param io the IO
  * @param initialize if <tt>true</tt>, the object needs to be initialized as
  *            well
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void resetObject( IO io,  bool initialize)
-            throws RPGException
+            
 {
         // Now go for Script INIT/RESET depending on Mode
-        int num = Interactive.getInstance().GetInterNum(io);
-        if (Interactive.getInstance().hasIO(num)) {
-        IO objIO = (IO)Interactive.getInstance().getIO(num);
+        int num = Interactive.GetInstance().GetInterNum(io);
+        if (Interactive.GetInstance().hasIO(num)) {
+        IO objIO = (IO)Interactive.GetInstance().getIO(num);
         if (objIO != null
                 && objIO.getScript() != null)
         {
@@ -1138,7 +1138,7 @@ public  void resetObject( IO io,  bool initialize)
                         objIO,
                         null);
             }
-            objIO = (IO)Interactive.getInstance().getIO(num);
+            objIO = (IO)Interactive.GetInstance().getIO(num);
             if (objIO != null)
             {
                 setMainEvent(objIO, "MAIN");
@@ -1146,7 +1146,7 @@ public  void resetObject( IO io,  bool initialize)
         }
 
         // Do the same for Local Script
-        objIO = (IO)Interactive.getInstance().getIO(num);
+        objIO = (IO)Interactive.GetInstance().getIO(num);
         if (objIO != null
                 && objIO.getOverscript() != null)
         {
@@ -1165,7 +1165,7 @@ public  void resetObject( IO io,  bool initialize)
         // Sends InitEnd Event
         if (initialize)
         {
-            objIO = (IO)Interactive.getInstance().getIO(num);
+            objIO = (IO)Interactive.GetInstance().getIO(num);
             if (objIO != null
                     && objIO.getScript() != null)
             {
@@ -1175,7 +1175,7 @@ public  void resetObject( IO io,  bool initialize)
                         objIO,
                         null);
             }
-            objIO = (IO)Interactive.getInstance().getIO(num);
+            objIO = (IO)Interactive.GetInstance().getIO(num);
             if (objIO != null
                     && objIO.getOverscript() != null)
             {
@@ -1187,15 +1187,15 @@ public  void resetObject( IO io,  bool initialize)
             }
         }
 
-        objIO = (IO)Interactive.getInstance().getIO(num);
+        objIO = (IO)Interactive.GetInstance().getIO(num);
         if (objIO != null)
         {
-            objIO.removeGameFlag(IoGlobals.GFLAG_NEEDINIT);
+            objIO.RemoveGameFlag(IoGlobals.GFLAG_NEEDINIT);
         }
     }
 }
 protected void runEvent(SCRIPTABLE script, String eventName, IO io)
-            throws RPGException
+            
 {
         int msg = 0;
         if (eventName.equalsIgnoreCase("INIT")) {
@@ -1214,12 +1214,12 @@ protected void runEvent(SCRIPTABLE script, String eventName, IO io)
             if (!eventName.startsWith("on"))
             {
                 PooledStringBuilder sb =
-                        StringBuilderPool.getInstance().getStringBuilder();
+                        StringBuilderPool.GetInstance().GetStringBuilder();
                 sb.append("on");
                 sb.append(eventName.toUpperCase().charAt(0));
                 sb.append(eventName.substring(1));
                 method = script.getClass().getMethod(sb.toString());
-                sb.returnToPool();
+                sb.ReturnToPool();
                 sb = null;
             }
             else
@@ -1237,7 +1237,7 @@ protected void runEvent(SCRIPTABLE script, String eventName, IO io)
         }
     }
     protected void runMessage(SCRIPTABLE script, int msg, IO io)
-            throws RPGException
+            
 {
         switch (msg) {
         case ScriptConstants.SM_001_INIT:
@@ -1288,7 +1288,7 @@ protected void runEvent(SCRIPTABLE script, String eventName, IO io)
     }
 }
 public  void sendEvent( IO io,  SendParameters params)
-            throws RPGException
+            
 {
     IO oes = eventSender;
     eventSender = io;
@@ -1296,15 +1296,15 @@ public  void sendEvent( IO io,  SendParameters params)
         // SEND EVENT TO ALL OBJECTS IN A RADIUS
 
         // LOOP THROUGH ALL IOs.
-        int i = Interactive.getInstance().getMaxIORefId();
+        int i = Interactive.GetInstance().getMaxIORefId();
         for (; i >= 0; i--)
         {
-            if (Interactive.getInstance().hasIO(i))
+            if (Interactive.GetInstance().hasIO(i))
             {
-                IO iio = (IO)Interactive.getInstance().getIO(i);
+                IO iio = (IO)Interactive.GetInstance().getIO(i);
                 // skip cameras and markers
-                // if (iio.hasIOFlag(IoGlobals.io_camera)
-                // || iio.hasIOFlag(IoGlobals.io_marker)) {
+                // if (iio.HasIOFlag(IoGlobals.io_camera)
+                // || iio.HasIOFlag(IoGlobals.io_marker)) {
                 // continue;
                 // }
                 // skip IOs not in required group
@@ -1318,16 +1318,16 @@ public  void sendEvent( IO io,  SendParameters params)
         // if for Items, send to Items, etc...
         if ((params.hasFlag(SendParameters.IONpcData)
 
-                && iio.hasIOFlag(IoGlobals.IO_03_NPC))
+                && iio.HasIOFlag(IoGlobals.IO_03_NPC))
                             // || (params.hasFlag(SendParameters.FIX)
-                            // && iio.hasIOFlag(IoGlobals.IO_FIX))
+                            // && iio.HasIOFlag(IoGlobals.IO_FIX))
                             || (params.hasFlag(SendParameters.IOItemData)
-                                    && iio.hasIOFlag(IoGlobals.IO_02_ITEM))) {
+                                    && iio.HasIOFlag(IoGlobals.IO_02_ITEM))) {
             Vector2 senderPos = new Vector2(),
                     ioPos = new Vector2();
-            Interactive.getInstance().GetItemWorldPosition(io,
+            Interactive.GetInstance().GetItemWorldPosition(io,
                     senderPos);
-            Interactive.getInstance().GetItemWorldPosition(iio,
+            Interactive.GetInstance().GetItemWorldPosition(iio,
                     ioPos);
             // IF IO IS IN SENDER RADIUS, SEND EVENT
             io.setStatSent(io.getStatSent() + 1);
@@ -1346,13 +1346,13 @@ public  void sendEvent( IO io,  SendParameters params)
 
             // if (ap != NULL) {
             // LOOP THROUGH ALL IOs.
-            int i = Interactive.getInstance().getMaxIORefId();
+            int i = Interactive.GetInstance().getMaxIORefId();
             for (; i >= 0; i--) {
-                if (Interactive.getInstance().hasIO(i)) {
-                    IO iio = (IO)Interactive.getInstance().getIO(i);
+                if (Interactive.GetInstance().hasIO(i)) {
+                    IO iio = (IO)Interactive.GetInstance().getIO(i);
                     // skip cameras and markers
-                    // if (iio.hasIOFlag(IoGlobals.io_camera)
-                    // || iio.hasIOFlag(IoGlobals.io_marker)) {
+                    // if (iio.HasIOFlag(IoGlobals.io_camera)
+                    // || iio.HasIOFlag(IoGlobals.io_marker)) {
                     // continue;
                     // }
                     // skip IOs not in required group
@@ -1364,13 +1364,13 @@ public  void sendEvent( IO io,  SendParameters params)
                     // if send event is for NPCs, send to NPCs,
                     // if for Items, send to Items, etc...
                     if ((params.hasFlag(SendParameters.IONpcData)
-                            && iio.hasIOFlag(IoGlobals.IO_03_NPC))
+                            && iio.HasIOFlag(IoGlobals.IO_03_NPC))
                             // || (params.hasFlag(SendParameters.FIX)
-                            // && iio.hasIOFlag(IoGlobals.IO_FIX))
+                            // && iio.HasIOFlag(IoGlobals.IO_FIX))
                             || (params.hasFlag(SendParameters.IOItemData)
-                                    && iio.hasIOFlag(IoGlobals.IO_02_ITEM))) {
+                                    && iio.HasIOFlag(IoGlobals.IO_02_ITEM))) {
                         Vector2 ioPos = new Vector2();
-Interactive.getInstance().GetItemWorldPosition(iio,
+Interactive.GetInstance().GetItemWorldPosition(iio,
         ioPos);
 // IF IO IS IN ZONE, SEND EVENT
 // if (ARX_PATH_IsPosInZone(ap, _pos.x, _pos.y, _pos.z))
@@ -1389,10 +1389,10 @@ io.setStatSent(io.getStatSent() + 1);
         if (params.hasFlag(SendParameters.GROUP)) {
             // sends an event to all members of a group
             // LOOP THROUGH ALL IOs.
-            int i = Interactive.getInstance().getMaxIORefId();
+            int i = Interactive.GetInstance().getMaxIORefId();
             for (; i >= 0; i--) {
-                if (Interactive.getInstance().hasIO(i)) {
-                    IO iio = (IO)Interactive.getInstance().getIO(i);
+                if (Interactive.GetInstance().hasIO(i)) {
+                    IO iio = (IO)Interactive.GetInstance().getIO(i);
                     // skip IOs not in required group
                     if (!this.isIOInGroup(iio, params.getGroupName())) {
     continue;
@@ -1407,16 +1407,16 @@ iio.setStatSent(io.getStatSent() + 1);
             }
         } else {
             // SINGLE OBJECT EVENT
-            int tioid = Interactive.getInstance().getTargetByNameTarget(
+            int tioid = Interactive.GetInstance().getTargetByNameTarget(
                     params.getTargetName());
 
             if (tioid == -2) {
-                tioid = Interactive.getInstance().GetInterNum(io);
+                tioid = Interactive.GetInstance().GetInterNum(io);
             }
-            if (Interactive.getInstance().hasIO(tioid)) {
+            if (Interactive.GetInstance().hasIO(tioid)) {
                 io.setStatSent(io.getStatSent() + 1);
                 this.stackSendIOScriptEvent(
-                        (IO) Interactive.getInstance().getIO(tioid),
+                        (IO) Interactive.GetInstance().getIO(tioid),
                         0,
                         params.getEventParameters(),
                         params.getEventName());
@@ -1429,21 +1429,21 @@ iio.setStatSent(io.getStatSent() + 1);
  * local script first, followed by the over script.
  * @param io the IO
  * @return {@link int}
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public  int sendInitScriptEvent( IO io) throws RPGException
+public  int sendInitScriptEvent( IO io) 
 {
         if (io == null) {
         return -1;
     }
-        int num = io.getRefId();
-        if (!Interactive.getInstance().hasIO(num)) {
+        int num = io.GetRefId();
+        if (!Interactive.GetInstance().hasIO(num)) {
         return -1;
     }
     IO oldEventSender = eventSender;
     eventSender = null;
     // send script the init message
-    IO hio = (IO) Interactive.getInstance().getIO(num);
+    IO hio = (IO) Interactive.GetInstance().getIO(num);
         if (hio.getScript() != null) {
         GLOB = 0;
         sendScriptEvent((SCRIPTABLE)hio.getScript(),
@@ -1454,8 +1454,8 @@ public  int sendInitScriptEvent( IO io) throws RPGException
     }
     hio = null;
         // send overscript the init message
-        if (Interactive.getInstance().getIO(num) != null) {
-        hio = (IO)Interactive.getInstance().getIO(num);
+        if (Interactive.GetInstance().getIO(num) != null) {
+        hio = (IO)Interactive.GetInstance().getIO(num);
         if (hio.getOverscript() != null)
         {
             GLOB = 0;
@@ -1468,8 +1468,8 @@ public  int sendInitScriptEvent( IO io) throws RPGException
         hio = null;
     }
         // send script the init end message
-        if (Interactive.getInstance().getIO(num) != null) {
-        hio = (IO)Interactive.getInstance().getIO(num);
+        if (Interactive.GetInstance().getIO(num) != null) {
+        hio = (IO)Interactive.GetInstance().getIO(num);
         if (hio.getScript() != null)
         {
             GLOB = 0;
@@ -1482,8 +1482,8 @@ public  int sendInitScriptEvent( IO io) throws RPGException
         hio = null;
     }
         // send overscript the init end message
-        if (Interactive.getInstance().getIO(num) != null) {
-        hio = (IO)Interactive.getInstance().getIO(num);
+        if (Interactive.GetInstance().getIO(num) != null) {
+        hio = (IO)Interactive.GetInstance().getIO(num);
         if (hio.getOverscript() != null)
         {
             GLOB = 0;
@@ -1507,32 +1507,32 @@ public  int sendInitScriptEvent( IO io) throws RPGException
  * @param eventname the name of the event, for example, new Object[]
  *            {"key0", value, "key1", new int[] {0, 0}}
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  int sendIOScriptEvent( IO target,  int msg,
-         Object[] params,  String eventname) throws RPGException
+         Object[] params,  String eventname) 
 {
         // checks invalid IO
         if (target == null) {
         return -1;
     }
-        int num = target.getRefId();
+        int num = target.GetRefId();
 
-        if (Interactive.getInstance().hasIO(num)) {
+        if (Interactive.GetInstance().hasIO(num)) {
         IO originalEventSender = eventSender;
         if (msg == ScriptConstants.SM_001_INIT
                 || msg == ScriptConstants.SM_033_INITEND)
         {
-            IO hio = (IO)Interactive.getInstance().getIO(num);
+            IO hio = (IO)Interactive.GetInstance().getIO(num);
             sendIOScriptEventReverse(hio, msg, params, eventname);
             eventSender = originalEventSender;
             hio = null;
         }
 
-        if (Interactive.getInstance().hasIO(num))
+        if (Interactive.GetInstance().hasIO(num))
         {
             // if this IO only has a Local script, send event to it
-            IO hio = (IO)Interactive.getInstance().getIO(num);
+            IO hio = (IO)Interactive.GetInstance().getIO(num);
             if (hio.getOverscript() == null)
             {
                 GLOB = 0;
@@ -1559,9 +1559,9 @@ public  int sendIOScriptEvent( IO target,  int msg,
                 eventSender = originalEventSender;
                 GLOB = 0;
 
-                if (Interactive.getInstance().hasIO(num))
+                if (Interactive.GetInstance().hasIO(num))
                 {
-                    hio = (IO)Interactive.getInstance().getIO(num);
+                    hio = (IO)Interactive.GetInstance().getIO(num);
                     int ret = sendScriptEvent(
                             (SCRIPTABLE)hio.getScript(),
                             msg,
@@ -1585,7 +1585,7 @@ public  int sendIOScriptEvent( IO target,  int msg,
         return ScriptConstants.REFUSE;
 }
 private int sendIOScriptEventReverse( IO io,  int msg,
-         Object[] params,  String eventname) throws RPGException
+         Object[] params,  String eventname) 
 {
         // checks invalid IO
         if (io == null) {
@@ -1596,9 +1596,9 @@ private int sendIOScriptEventReverse( IO io,  int msg,
                 && io.getScript() == null) {
         return -1;
     }
-        int num = io.getRefId();
-        if (Interactive.getInstance().hasIO(num)) {
-        IO hio = (IO)Interactive.getInstance().getIO(num);
+        int num = io.GetRefId();
+        if (Interactive.GetInstance().hasIO(num)) {
+        IO hio = (IO)Interactive.GetInstance().getIO(num);
         // if this IO only has a Local script, send event to it
         if (hio.getOverscript() == null
                 && hio.getScript() != null)
@@ -1614,9 +1614,9 @@ private int sendIOScriptEventReverse( IO io,  int msg,
 
         // If this IO has a Global script send to Local (if exists)
         // then to global if no overriden by Local
-        if (Interactive.getInstance().hasIO(num))
+        if (Interactive.GetInstance().hasIO(num))
         {
-            hio = (IO)Interactive.getInstance().getIO(num);
+            hio = (IO)Interactive.GetInstance().getIO(num);
             int s = sendScriptEvent(
                     (SCRIPTABLE)hio.getScript(),
                     msg,
@@ -1626,7 +1626,7 @@ private int sendIOScriptEventReverse( IO io,  int msg,
             if (s != ScriptConstants.REFUSE)
             {
                 GLOB = 0;
-                if (Interactive.getInstance().hasIO(io.getRefId()))
+                if (Interactive.GetInstance().hasIO(io.GetRefId()))
                 {
                     return sendScriptEvent(
                             (SCRIPTABLE)io.getOverscript(),
@@ -1652,17 +1652,17 @@ private int sendIOScriptEventReverse( IO io,  int msg,
  * @param msg the message
  * @param dat any script variables
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  int sendMsgToAllIO( int msg,  Object[] dat)
-            throws RPGException
+            
 {
         int ret = ScriptConstants.ACCEPT;
-        int i = Interactive.getInstance().getMaxIORefId();
+        int i = Interactive.GetInstance().getMaxIORefId();
         for (; i >= 0; i--) {
-        if (Interactive.getInstance().hasIO(i))
+        if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.getInstance().getIO(i);
+            IO io = (IO)Interactive.GetInstance().getIO(i);
             if (sendIOScriptEvent(io, msg, dat,
                     null) == ScriptConstants.REFUSE)
             {
@@ -1681,11 +1681,11 @@ public  int sendMsgToAllIO( int msg,  Object[] dat)
  * @param eventName
  * @param info
  * @return
- * @throws RPGException
+ * @
  */
 public  int sendScriptEvent( SCRIPTABLE localScript,
          int msg,  Object[] params,  IO io,
-         String eventName) throws RPGException
+         String eventName) 
 {
         int retVal = ScriptConstants.ACCEPT;
     bool keepGoing = true;
@@ -1694,7 +1694,7 @@ public  int sendScriptEvent( SCRIPTABLE localScript,
                 ErrorMessage.INVALID_PARAM, "script cannot be null");
     }
         if (io != null) {
-        if (io.hasGameFlag(IoGlobals.GFLAG_MEGAHIDE)
+        if (io.HasGameFlag(IoGlobals.GFLAG_MEGAHIDE)
                 && msg != ScriptConstants.SM_043_RELOAD)
         {
             return ScriptConstants.ACCEPT;
@@ -1708,7 +1708,7 @@ public  int sendScriptEvent( SCRIPTABLE localScript,
         eventTotalCount++;
         io.setStatCount(io.getStatCount() + 1);
 
-        if (io.hasIOFlag(IoGlobals.IO_06_FREEZESCRIPT))
+        if (io.HasIOFlag(IoGlobals.IO_06_FREEZESCRIPT))
         {
             if (msg == ScriptConstants.SM_041_LOAD)
             {
@@ -1717,8 +1717,8 @@ public  int sendScriptEvent( SCRIPTABLE localScript,
             return ScriptConstants.REFUSE;
         }
 
-        if (io.hasIOFlag(IoGlobals.IO_03_NPC)
-                && !io.hasIOFlag(IoGlobals.IO_09_DWELLING))
+        if (io.HasIOFlag(IoGlobals.IO_03_NPC)
+                && !io.HasIOFlag(IoGlobals.IO_09_DWELLING))
         {
             if (io.getNPCData().getBaseLife() <= 0.f
                     && msg != ScriptConstants.SM_001_INIT
@@ -1746,14 +1746,14 @@ public  int sendScriptEvent( SCRIPTABLE localScript,
     }
         // set parameters on script that will be used
         if (params != null
-                && params.length > 0) {
-        for (int i = 0; i < params.length; i += 2) {
+                && params.Length > 0) {
+        for (int i = 0; i < params.Length; i += 2) {
             script.setLocalVariable((String) params[i], params[i + 1]);
 }
         }
         // run the event
         if (eventName != null
-                && eventName.length() > 0) {
+                && eventName.Length() > 0) {
             runEvent(script, eventName, io);
         } else {
             if (eventIsDisallowed(msg, script)) {
@@ -1891,16 +1891,16 @@ public  void setEventSender( IO val)
  * Sets a global variable.
  * @param name the name of the global variable
  * @param value the variable's value
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void setGlobalVariable( String name,  Object value)
-            throws RPGException
+            
 {
         if (gvars == null) {
         gvars = new ScriptVariable[0];
     }
     bool found = false;
-        for (int i = gvars.length - 1; i >= 0; i--) {
+        for (int i = gvars.Length - 1; i >= 0; i--) {
         ScriptVariable var = gvars[i];
         if (var != null
                 && var.getName() != null
@@ -1915,38 +1915,38 @@ public  void setGlobalVariable( String name,  Object value)
         if (!found) {
         // create a new variable and add to the global array
         ScriptVariable var = null;
-        if (value instanceof String
-                    || value instanceof char[]) {
+        if (value is String
+                    || value is char[]) {
             var = new ScriptVariable(name, ScriptConstants.TYPE_G_00_TEXT,
                     value);
-        } else if (value instanceof String[]
-                    || value instanceof char[][]) {
+        } else if (value is String[]
+                    || value is char[][]) {
             var = new ScriptVariable(name,
                     ScriptConstants.TYPE_G_01_TEXT_ARR, value);
-        } else if (value instanceof Float) {
+        } else if (value is Float) {
             var = new ScriptVariable(name, ScriptConstants.TYPE_G_02_FLOAT,
                     value);
-        } else if (value instanceof Double) {
+        } else if (value is Double) {
             var = new ScriptVariable(name, ScriptConstants.TYPE_G_02_FLOAT,
                     value);
-        } else if (value instanceof float[]) {
+        } else if (value is float[]) {
             var = new ScriptVariable(name,
                     ScriptConstants.TYPE_G_03_FLOAT_ARR, value);
-        } else if (value instanceof Integer) {
+        } else if (value is Integer) {
             var = new ScriptVariable(name, ScriptConstants.TYPE_G_04_INT,
                     value);
-        } else if (value instanceof int[]) {
+        } else if (value is int[]) {
             var = new ScriptVariable(name,
                     ScriptConstants.TYPE_G_05_INT_ARR, value);
-        } else if (value instanceof Long) {
+        } else if (value is Long) {
             var = new ScriptVariable(name, ScriptConstants.TYPE_G_06_LONG,
                     value);
-        } else if (value instanceof long[]) {
+        } else if (value is long[]) {
             var = new ScriptVariable(name,
                     ScriptConstants.TYPE_G_07_LONG_ARR, value);
         } else {
             PooledStringBuilder sb =
-                    StringBuilderPool.getInstance().getStringBuilder();
+                    StringBuilderPool.GetInstance().GetStringBuilder();
             try
             {
                 sb.append("Global variable ");
@@ -1963,11 +1963,11 @@ public  void setGlobalVariable( String name,  Object value)
             }
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                     sb.toString());
-            sb.returnToPool();
+            sb.ReturnToPool();
             sb = null;
             throw ex;
         }
-        gvars = ArrayUtilities.getInstance().extendArray(var, gvars);
+        gvars = ArrayUtilities.GetInstance().extendArray(var, gvars);
     }
 }
 /**
@@ -2002,9 +2002,9 @@ protected abstract void setScriptTimer(int index, TIMER timer);
  * Processes and IO's speech.
  * @param io the IO
  * @param params the {@link SpeechParameters}
- * @throws RPGException 
+ * @ 
  */
-public  void speak( IO io,  SpeechParameters params) throws RPGException
+public  void speak( IO io,  SpeechParameters params) 
 {
         // speech variables
         // ARX_CINEMATIC_SPEECH acs;
@@ -2169,7 +2169,7 @@ public  void speak( IO io,  SpeechParameters params) throws RPGException
         long speechnum = 0;
 
         if (params.getSpeechName() == null
-                || params.getSpeechName().length() == 0) {
+                || params.getSpeechName().Length() == 0) {
             // ARX_SPEECH_ClearIOSpeech(io);
         } else {
             if (params.hasFlag(SpeechParameters.NO_TEXT)) {
@@ -2183,7 +2183,7 @@ public  void speak( IO io,  SpeechParameters params) throws RPGException
             } else {
                 // speechnum = ARX_SPEECH_AddSpeech(io, temp1,
                 // PARAM_LOCALISED, mood, voixoff);
-                speechnum = Speech.getInstance().ARX_SPEECH_AddSpeech(io,
+                speechnum = Speech.GetInstance().ARX_SPEECH_AddSpeech(io,
                         mood, params.getSpeechName(), voixoff);
             }
 
@@ -2213,17 +2213,17 @@ public  void speak( IO io,  SpeechParameters params) throws RPGException
  * @param msg the script message
  * @param params the parameters assigned to the script
  * @param eventname the event name
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void stackSendGroupScriptEvent( String group,
          int msg,  Object[] params,  String eventname)
-            throws RPGException
+            
 {
-        int i = Interactive.getInstance().getMaxIORefId();
+        int i = Interactive.GetInstance().getMaxIORefId();
         for (; i >= 0; i--) {
-        if (Interactive.getInstance().hasIO(i))
+        if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.getInstance().getIO(i);
+            IO io = (IO)Interactive.GetInstance().getIO(i);
             if (isIOInGroup(io, group))
             {
                 stackSendIOScriptEvent(io, msg, params, eventname);
@@ -2248,13 +2248,13 @@ public  void stackSendIOScriptEvent( IO io,
         if (!getStackedEvent(i).exists())
         {
             if (params != null
-                    && params.length > 0) {
+                    && params.Length > 0) {
         getStackedEvent(i).setParams(params);
     } else {
         getStackedEvent(i).setParams(null);
     }
     if (eventname != null
-            && eventname.length() > 0)
+            && eventname.Length() > 0)
     {
         getStackedEvent(i).setEventname(eventname);
     }
@@ -2275,17 +2275,17 @@ public  void stackSendIOScriptEvent( IO io,
      * Adds messages for all NPCs to the event stack.
      * @param msg the message
      * @param dat the message parameters
-     * @throws RPGException if an error occurs
+     * @ if an error occurs
      */
     public  void stackSendMsgToAllNPCIO( int msg,  Object[] dat)
-            throws RPGException
+            
 {
-        int i = Interactive.getInstance().getMaxIORefId();
+        int i = Interactive.GetInstance().getMaxIORefId();
         for (; i >= 0; i--) {
-        if (Interactive.getInstance().hasIO(i))
+        if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.getInstance().getIO(i);
-            if (io.hasIOFlag(IoGlobals.IO_03_NPC))
+            IO io = (IO)Interactive.GetInstance().getIO(i);
+            if (io.HasIOFlag(IoGlobals.IO_03_NPC))
             {
                 stackSendIOScriptEvent(io, msg, dat, null);
             }
@@ -2307,7 +2307,7 @@ public  void startTimer(
     timer.setCycleLength(params.getMilliseconds());
     if (params.getName() == null
             || (params.getName() != null
-                    && params.getName().length() == 0)) {
+                    && params.getName().Length() == 0)) {
         timer.setName(timerGetDefaultName());
     } else {
         timer.setName(params.getName());
@@ -2329,23 +2329,23 @@ public  void startTimer(
  * @param initPosition flag indicating the object being teleported goes to
  *            its initial position
  * @param target the name of teleport destination
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void teleport( IO io,  bool behind,
          bool isPlayer,  bool initPosition,
-         String target) throws RPGException
+         String target) 
 {
         if (behind) {
-        Interactive.getInstance().ARX_INTERACTIVE_TeleportBehindTarget(io);
+        Interactive.GetInstance().ARX_INTERACTIVE_TeleportBehindTarget(io);
     } else {
         if (!initPosition)
         {
             int ioid =
-                    Interactive.getInstance().getTargetByNameTarget(target);
+                    Interactive.GetInstance().getTargetByNameTarget(target);
 
             if (ioid == -2)
             {
-                ioid = Interactive.getInstance().GetInterNum(io);
+                ioid = Interactive.GetInstance().GetInterNum(io);
             }
             if (ioid != -1
                     && ioid != -2)
@@ -2360,37 +2360,37 @@ public  void teleport( IO io,  bool behind,
                     {
                         io.setShow(IoGlobals.SHOW_FLAG_IN_SCENE);
                     }
-                    IO pio = (IO)Interactive.getInstance().getIO(
-                            ProjectConstants.getInstance().getPlayer());
-                    Interactive.getInstance().ARX_INTERACTIVE_Teleport(
+                    IO pio = (IO)Interactive.GetInstance().getIO(
+                            ProjectConstants.GetInstance().getPlayer());
+                    Interactive.GetInstance().ARX_INTERACTIVE_Teleport(
                             io, pio.getPosition());
                     pio = null;
                 }
                 else
                 {
-                    if (Interactive.getInstance().hasIO(ioid))
+                    if (Interactive.GetInstance().hasIO(ioid))
                     {
-                        IO tio = (IO)Interactive.getInstance().getIO(ioid);
+                        IO tio = (IO)Interactive.GetInstance().getIO(ioid);
                         Vector2 pos = new Vector2();
 
-                        if (Interactive.getInstance()
+                        if (Interactive.GetInstance()
                                 .GetItemWorldPosition(tio, pos))
                         {
                             if (isPlayer)
                             {
-                                IO pio = (IO)Interactive.getInstance()
+                                IO pio = (IO)Interactive.GetInstance()
                                         .getIO(
                                                 ProjectConstants
-                                                        .getInstance()
+                                                        .GetInstance()
                                                         .getPlayer());
-                                Interactive.getInstance()
+                                Interactive.GetInstance()
                                         .ARX_INTERACTIVE_Teleport(
                                                 pio, pos);
                                 pio = null;
                             }
                             else
                             {
-                                if (io.hasIOFlag(IoGlobals.IO_03_NPC)
+                                if (io.HasIOFlag(IoGlobals.IO_03_NPC)
                                         && io.getNPCData()
                                                 .getBaseLife() <= 0)
                                 {
@@ -2404,7 +2404,7 @@ public  void teleport( IO io,  bool behind,
                                         io.setShow(
                                                 IoGlobals.SHOW_FLAG_IN_SCENE);
                                     }
-                                    Interactive.getInstance()
+                                    Interactive.GetInstance()
                                             .ARX_INTERACTIVE_Teleport(
                                                     io, pos);
                                 }
@@ -2421,12 +2421,12 @@ public  void teleport( IO io,  bool behind,
                 if (isPlayer)
                 {
                     Vector2 pos = new Vector2();
-                    if (Interactive.getInstance().GetItemWorldPosition(io,
+                    if (Interactive.GetInstance().GetItemWorldPosition(io,
                             pos))
                     {
-                        IO pio = (IO)Interactive.getInstance().getIO(
-                                ProjectConstants.getInstance().getPlayer());
-                        Interactive.getInstance().ARX_INTERACTIVE_Teleport(
+                        IO pio = (IO)Interactive.GetInstance().getIO(
+                                ProjectConstants.GetInstance().getPlayer());
+                        Interactive.GetInstance().ARX_INTERACTIVE_Teleport(
                                 pio, pos);
                         pio = null;
 
@@ -2434,7 +2434,7 @@ public  void teleport( IO io,  bool behind,
                 }
                 else
                 {
-                    if (io.hasIOFlag(IoGlobals.IO_03_NPC)
+                    if (io.HasIOFlag(IoGlobals.IO_03_NPC)
                             && io.getNPCData().getBaseLife() <= 0)
                     {
                         // do nothing
@@ -2446,7 +2446,7 @@ public  void teleport( IO io,  bool behind,
                         {
                             io.setShow(IoGlobals.SHOW_FLAG_IN_SCENE);
                         }
-                        Interactive.getInstance().ARX_INTERACTIVE_Teleport(
+                        Interactive.GetInstance().ARX_INTERACTIVE_Teleport(
                                 io, io.getInitPosition());
                     }
                 }
@@ -2454,7 +2454,7 @@ public  void teleport( IO io,  bool behind,
         }
     }
 }
-public  void timerCheck() throws RPGException
+public  void timerCheck() 
 {
         if (countTimers() > 0) {
         for (int i = 0, len = this.maxTimerScript; i < len; i++)
@@ -2462,14 +2462,14 @@ public  void timerCheck() throws RPGException
             TIMER timer = getScriptTimers()[i];
             if (timer.exists())
             {
-                long currentTime = Time.getInstance().getGameTime();
+                long currentTime = Time.GetInstance().getGameTime();
                 if (timer.isTurnBased())
                 {
-                    currentTime = Time.getInstance().getGameRound();
+                    currentTime = Time.GetInstance().getGameRound();
                 }
                 if (timer.hasFlag(1))
                 {
-                    if (!timer.getIo().hasGameFlag(
+                    if (!timer.getIo().HasGameFlag(
                             IoGlobals.GFLAG_ISINTREATZONE))
                     {
                         while (timer.getLastTimeCheck()
@@ -2509,7 +2509,7 @@ public  void timerCheck() throws RPGException
                                 + timer.getCycleLength());
                     }
                     if (script != null
-                            && Interactive.getInstance().hasIO(io))
+                            && Interactive.GetInstance().hasIO(io))
                     {
                         timer.getAction().process();
                     }
@@ -2536,9 +2536,9 @@ public  void timerClearAllLocalsForIO( IO io)
     {
         if (scriptTimers[i].exists())
         {
-            if (scriptTimers[i].getIo().equals(io)
+            if (scriptTimers[i].getIo().Equals(io)
                     && scriptTimers[i].getScript()
-                            .equals(io.getOverscript()))
+                            .Equals(io.getOverscript()))
             {
                 timerClearByNum(i);
             }
@@ -2559,7 +2559,7 @@ public  void timerClearByIO( IO io)
             if (scriptTimers[i] != null
                     && scriptTimers[i].exists())
             {
-                if (scriptTimers[i].getIo().getRefId() == io.getRefId())
+                if (scriptTimers[i].getIo().GetRefId() == io.GetRefId())
                 {
                     timerClearByNum(i);
                 }
@@ -2578,7 +2578,7 @@ public  void timerClearByNameAndIO( String timername,
             if (scriptTimers[i] != null
                     && scriptTimers[i].exists())
             {
-                if (scriptTimers[i].getIo().getRefId() == io.getRefId()
+                if (scriptTimers[i].getIo().GetRefId() == io.GetRefId()
                         && timername.equalsIgnoreCase(
                                 scriptTimers[i].getName()))
                 {
@@ -2653,7 +2653,7 @@ private String timerGetDefaultName()
     while (true)
     {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("TIMER_");
@@ -2669,11 +2669,11 @@ private String timerGetDefaultName()
         if (timerExist(sb.toString()) == -1)
         {
             texx = sb.toString();
-            sb.returnToPool();
+            sb.ReturnToPool();
             sb = null;
             break;
         }
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
     }
     return texx;
@@ -2718,7 +2718,7 @@ public bool amISpeaking( IO io)
 }
 public long getGameSeconds()
 {
-    return Time.getInstance().getGameTime(false);
+    return Time.GetInstance().getGameTime(false);
 }
     }
 }

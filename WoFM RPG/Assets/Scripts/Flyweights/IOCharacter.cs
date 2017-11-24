@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.Flyweights
+namespace RPGBase.Flyweights
 {
     class IOCharacter
     {
@@ -18,11 +18,11 @@ namespace Assets.Scripts.Flyweights
          * the list of {@link Watcher}s associated with this {@link IOCharacter}.
          */
         private Watcher[] watchers = new Watcher[0];
-        protected IOCharacter() throws RPGException
+        protected IOCharacter() 
         {
             watchers = new Watcher[0];
         defineAttributes();
-        initEquippedItems(ProjectConstants.getInstance().getMaxEquipped());
+        initEquippedItems(ProjectConstants.GetInstance().getMaxEquipped());
     }
     /**
      * {@inheritDoc}
@@ -33,7 +33,7 @@ namespace Assets.Scripts.Flyweights
         if (watcher != null)
         {
             int index = -1;
-            for (int i = watchers.length - 1; i >= 0; i--)
+            for (int i = watchers.Length - 1; i >= 0; i--)
             {
                 if (watchers[i] == null)
                 {
@@ -47,7 +47,7 @@ namespace Assets.Scripts.Flyweights
             }
             else
             {
-                watchers = ArrayUtilities.getInstance().extendArray(
+                watchers = ArrayUtilities.GetInstance().extendArray(
                         watcher, watchers);
             }
         }
@@ -56,10 +56,10 @@ namespace Assets.Scripts.Flyweights
      * Adjusts the attribute modifier for a specific attribute.
      * @param attr the attribute name
      * @param val the modifier
-     * @throws RPGException if the attribute name is missing or incorrect
+     * @ if the attribute name is missing or incorrect
      */
     public  void adjustAttributeModifier( String attr,
-             float val) throws RPGException
+             float val) 
     {
         if (attr == null) {
             throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT,
@@ -71,27 +71,27 @@ namespace Assets.Scripts.Flyweights
         }
         attributes.get(attr).adjustModifier(val);
         }
-    protected abstract void applyRulesModifiers() throws RPGException;
+    protected abstract void applyRulesModifiers() ;
     protected abstract void applyRulesPercentModifiers();
     /**
      * Gets the total modifier for a specific element type from the equipment
      * the player is wielding.
      * @param elementType the type of element
      * @return {@link float}
-     * @throws RPGException if an error occurs
+     * @ if an error occurs
      */
     public  float ARX_EQUIPMENT_Apply( int elementType)
-            throws RPGException
+            
     {
         float toadd = 0;
-        int i = ProjectConstants.getInstance().getMaxEquipped() - 1;
+        int i = ProjectConstants.GetInstance().getMaxEquipped() - 1;
         for (; i >= 0; i--) {
             if (equippedItems[i] >= 0
-                    && Interactive.getInstance().hasIO(equippedItems[i]))
+                    && Interactive.GetInstance().hasIO(equippedItems[i]))
             {
                 IO toequip =
-                        (IO)Interactive.getInstance().getIO(equippedItems[i]);
-                if (toequip.hasIOFlag(IoGlobals.IO_02_ITEM)
+                        (IO)Interactive.GetInstance().getIO(equippedItems[i]);
+                if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
                         && toequip.getItemData() != null
                         && toequip.getItemData().getEquipitem() != null)
                 {
@@ -114,20 +114,20 @@ namespace Assets.Scripts.Flyweights
      * @param elementType the type of element
      * @param trueval the true value
      * @return {@link float}
-     * @throws RPGException if an error occurs
+     * @ if an error occurs
      */
     public  float ARX_EQUIPMENT_ApplyPercent( int elementType,
-             float trueval) throws RPGException
+             float trueval) 
     {
         float toadd = 0;
-        int i = ProjectConstants.getInstance().getMaxEquipped() - 1;
+        int i = ProjectConstants.GetInstance().getMaxEquipped() - 1;
         for (; i >= 0; i--) {
             if (equippedItems[i] >= 0
-                    && Interactive.getInstance().hasIO(equippedItems[i]))
+                    && Interactive.GetInstance().hasIO(equippedItems[i]))
             {
                 IO toequip =
-                        (IO)Interactive.getInstance().getIO(equippedItems[i]);
-                if (toequip.hasIOFlag(IoGlobals.IO_02_ITEM)
+                        (IO)Interactive.GetInstance().getIO(equippedItems[i]);
+                if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
                         && toequip.getItemData() != null
                         && toequip.getItemData().getEquipitem() != null)
                 {
@@ -148,11 +148,11 @@ namespace Assets.Scripts.Flyweights
     /**
      * Releases an equipped IO.
      * @param id the IO's reference id
-     * @throws RPGException if an error occurs
+     * @ if an error occurs
      */
-    public  void ARX_EQUIPMENT_Release( int id) throws RPGException
+    public  void ARX_EQUIPMENT_Release( int id) 
     {
-        int i = ProjectConstants.getInstance().getMaxEquipped() - 1;
+        int i = ProjectConstants.GetInstance().getMaxEquipped() - 1;
         for (; i >= 0; i--) {
             if (equippedItems[i] == id)
             {
@@ -163,23 +163,23 @@ namespace Assets.Scripts.Flyweights
     /**
      * Removes all the player's equipment.
      * @throws PooledException if an error occurs
-     * @throws RPGException if an error occurs
+     * @ if an error occurs
      */
     public  void ARX_EQUIPMENT_UnEquipAll()
-            throws RPGException
+            
     {
-        int i = ProjectConstants.getInstance().getMaxEquipped() - 1;
+        int i = ProjectConstants.GetInstance().getMaxEquipped() - 1;
         for (; i >= 0; i--) {
             if (equippedItems[i] >= 0)
             {
-                if (!Interactive.getInstance().hasIO(equippedItems[i]))
+                if (!Interactive.GetInstance().hasIO(equippedItems[i]))
                 {
                     throw new RPGException(ErrorMessage.INVALID_DATA_TYPE,
                             "Equipped unregistered item in slot " + i);
                 }
-                IO itemIO = (IO)Interactive.getInstance().getIO(
+                IO itemIO = (IO)Interactive.GetInstance().getIO(
                         equippedItems[i]);
-                if (!itemIO.hasIOFlag(IoGlobals.IO_02_ITEM))
+                if (!itemIO.HasIOFlag(IoGlobals.IO_02_ITEM))
                 {
                     throw new RPGException(ErrorMessage.INVALID_DATA_TYPE,
                             "Equipped item without IO_02_ITEM in slot " + i);
@@ -220,9 +220,9 @@ namespace Assets.Scripts.Flyweights
     /**
      * Compute FULL versions of player stats including equipped items, spells,
      * and any other effect altering them.
-     * @throws RPGException if an error occurs
+     * @ if an error occurs
      */
-    public  void computeFullStats() throws RPGException
+    public  void computeFullStats() 
     {
         // clear mods
         clearModAbilityScores();
@@ -230,14 +230,14 @@ namespace Assets.Scripts.Flyweights
         Object []
         []
         map = getAttributeMap();
-        for (int i = map.length - 1; i >= 0; i--) {
+        for (int i = map.Length - 1; i >= 0; i--) {
             adjustAttributeModifier((String)map[i][0],
                     ARX_EQUIPMENT_Apply((int)map[i][2]));
         }
         // apply modifiers based on rules
         applyRulesModifiers();
         // apply percent modifiers
-        for (int i = map.length - 1; i >= 0; i--) {
+        for (int i = map.Length - 1; i >= 0; i--) {
             float percentModifier = ARX_EQUIPMENT_ApplyPercent((int)map[i][2],
                     getBaseAttributeScore((String)map[i][0])
                             + getAttributeModifier((String)map[i][0]));
@@ -248,13 +248,13 @@ namespace Assets.Scripts.Flyweights
     }
     /**
      * Defines the IOPcData's attributes.
-     * @throws RPGException if an error occurs
+     * @ if an error occurs
      */
-    protected  void defineAttributes() throws RPGException
+    protected  void defineAttributes() 
     {
         attributes = new HashMap<String, Attribute>();
         Object[][] map = getAttributeMap();
-        for (int i = map.length - 1; i >= 0; i--) {
+        for (int i = map.Length - 1; i >= 0; i--) {
             attributes.put((String) map[i][0],
                     new Attribute((String) map[i][0], (String) map[i][1]));
         }
@@ -318,15 +318,15 @@ public  float getBaseAttributeScore( String attr)
  * a specific equipment slot. -1 is returned if no item is equipped.
  * @param slot the equipment slot
  * @return <code>int</code>
- * @throws RPGException if the equipment slot was never defined
+ * @ if the equipment slot was never defined
  */
-public  int getEquippedItem( int slot) throws RPGException
+public  int getEquippedItem( int slot) 
 {
         int id = -1;
         if (slot < 0
-                || slot >= equippedItems.length) {
+                || slot >= equippedItems.Length) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Error - equipment slot ");
@@ -339,7 +339,7 @@ public  int getEquippedItem( int slot) throws RPGException
         }
         RPGException ex = new RPGException(
                 ErrorMessage.BAD_PARAMETERS, sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         throw ex;
     }
     id = equippedItems [slot];
@@ -368,7 +368,7 @@ public abstract float getMaxLife();
 private void initEquippedItems( int total)
 {
     equippedItems = new int[total];
-    for (int i = 0; i < equippedItems.length; i++)
+    for (int i = 0; i < equippedItems.Length; i++)
     {
         equippedItems[i] = -1;
     }
@@ -379,7 +379,7 @@ private void initEquippedItems( int total)
 @Override
     public  void notifyWatchers()
 {
-    for (int i = watchers.length - 1; i >= 0; i--)
+    for (int i = watchers.Length - 1; i >= 0; i--)
     {
         watchers[i].watchUpdated(this);
     }
@@ -391,9 +391,9 @@ private void initEquippedItems( int total)
     public  void removeWatcher( Watcher watcher)
 {
     int index = -1;
-    for (int i = watchers.length - 1; i >= 0; i--)
+    for (int i = watchers.Length - 1; i >= 0; i--)
     {
-        if (watchers[i].equals(watcher))
+        if (watchers[i].Equals(watcher))
         {
             index = i;
             break;
@@ -402,7 +402,7 @@ private void initEquippedItems( int total)
     if (index > -1)
     {
         watchers =
-                ArrayUtilities.getInstance().removeIndex(index, watchers);
+                ArrayUtilities.GetInstance().removeIndex(index, watchers);
     }
 }
 /**
@@ -420,16 +420,16 @@ public  void setBaseAttributeScore( String attr,
  * a specific equipment slot.
  * @param slot the equipment slot
  * @param item the item being equipped
- * @throws RPGException if the equipment slot was never defined
+ * @ if the equipment slot was never defined
  */
 public  void setEquippedItem( int slot,
          BaseInteractiveObject item)
-            throws RPGException
+            
 {
         if (slot < 0
-                || slot >= equippedItems.length) {
+                || slot >= equippedItems.Length) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Error - equipment slot ");
@@ -442,13 +442,13 @@ public  void setEquippedItem( int slot,
         }
         RPGException ex = new RPGException(
                 ErrorMessage.BAD_PARAMETERS, sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         throw ex;
     }
         if (item == null) {
         equippedItems[slot] = -1;
     } else {
-        equippedItems[slot] = item.getRefId();
+        equippedItems[slot] = item.GetRefId();
     }
 }
 /**
@@ -456,15 +456,15 @@ public  void setEquippedItem( int slot,
  * a specific equipment slot.
  * @param slot the equipment slot
  * @param id the item's reference id
- * @throws RPGException if the equipment slot was never defined
+ * @ if the equipment slot was never defined
  */
 public  void setEquippedItem( int slot,  int id)
-            throws RPGException
+            
 {
         if (slot < 0
-                || slot >= equippedItems.length) {
+                || slot >= equippedItems.Length) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Error - equipment slot ");
@@ -477,7 +477,7 @@ public  void setEquippedItem( int slot,  int id)
         }
         RPGException ex = new RPGException(
                 ErrorMessage.BAD_PARAMETERS, sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         throw ex;
     }
     equippedItems [slot] = id;

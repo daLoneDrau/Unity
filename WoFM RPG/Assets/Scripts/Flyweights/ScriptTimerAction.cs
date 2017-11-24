@@ -50,9 +50,9 @@ namespace Assets.Scripts.Flyweights
         }
         /**
          * Process the associated action.
-         * @throws RPGException if an error occurs
+         * @ if an error occurs
          */
-        public void process() throws RPGException
+        public void process() 
         {
 		if (exists) {
 			exists = false;

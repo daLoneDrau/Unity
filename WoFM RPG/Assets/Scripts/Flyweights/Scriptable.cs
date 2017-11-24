@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.Flyweights
+namespace RPGBase.Flyweights
 {
-    class Scriptable
+    public class Scriptable
     {
         /** bit flag storing which events are allowed. */
         private long allowedEvent;
@@ -42,7 +42,7 @@ namespace Assets.Scripts.Flyweights
         public  void addLocalVariable( ScriptVariable svar)
         {
             int index = -1;
-            for (int i = 0; i < lvar.length; i++)
+            for (int i = 0; i < lvar.Length; i++)
             {
                 if (lvar[i] == null)
                 {
@@ -53,7 +53,7 @@ namespace Assets.Scripts.Flyweights
             }
             if (index == -1)
             {
-                lvar = ArrayUtilities.getInstance().extendArray(svar, lvar);
+                lvar = ArrayUtilities.GetInstance().extendArray(svar, lvar);
             }
         }
         /**
@@ -71,7 +71,7 @@ namespace Assets.Scripts.Flyweights
             if (action != null)
             {
                 action.setScript(this);
-                eventActions.put(eventID, ArrayUtilities.getInstance().extendArray(
+                eventActions.put(eventID, ArrayUtilities.GetInstance().extendArray(
                         action, eventActions.get(eventID)));
             }
         }
@@ -88,7 +88,7 @@ namespace Assets.Scripts.Flyweights
          */
         public  void behavior( BehaviorParameters params)
         {
-            if (io.hasIOFlag(IoGlobals.IO_03_NPC))
+            if (io.HasIOFlag(IoGlobals.IO_03_NPC))
             {
                 if ("STACK".equalsIgnoreCase(params.getAction()))
                 {
@@ -129,7 +129,7 @@ namespace Assets.Scripts.Flyweights
          */
         public  void clearLocalVariable( String varName)
         {
-            for (int i = lvar.length - 1; i >= 0; i--)
+            for (int i = lvar.Length - 1; i >= 0; i--)
             {
                 if (lvar[i] != null
                         && lvar[i].getName() != null
@@ -143,7 +143,7 @@ namespace Assets.Scripts.Flyweights
         /** Clears all local variables assigned to the {@link Scriptable}. */
         public  void clearLocalVariables()
         {
-            for (int i = lvar.length - 1; i >= 0; i--)
+            for (int i = lvar.Length - 1; i >= 0; i--)
             {
                 if (lvar[i] != null)
                 {
@@ -180,21 +180,21 @@ namespace Assets.Scripts.Flyweights
          * @param name the variable name
          * @return {@link String}
          * @throws PooledException if one occurs
-         * @throws RPGException if no such variable was assigned
+         * @ if no such variable was assigned
          */
         public  float[] getLocalFloatArrayVariableValue( String name)
-            throws PooledException, RPGException {
+             {
         ScriptVariable svar = getLocalVariable(name);
         if (svar == null
                 || svar.getType() != ScriptConstants.TYPE_L_11_FLOAT_ARR) {
             PooledStringBuilder sb =
-                    StringBuilderPool.getInstance().getStringBuilder();
+                    StringBuilderPool.GetInstance().GetStringBuilder();
         sb.append("Local floating-point array type variable ");
             sb.append(name);
             sb.append(" was never set.");
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                     sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
             throw ex;
         }
         return svar.getFloatArrayVal();
@@ -204,16 +204,16 @@ namespace Assets.Scripts.Flyweights
  * @param name the variable name
  * @return {@link String}
  * @throws PooledException if one occurs
- * @throws RPGException if no such variable was assigned
+ * @ if no such variable was assigned
  */
 public  float getLocalFloatVariableValue( String name)
-            throws RPGException
+            
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
                 || svar.getType() != ScriptConstants.TYPE_L_10_FLOAT) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Local floating-point variable ");
@@ -226,7 +226,7 @@ public  float getLocalFloatVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -237,21 +237,21 @@ public  float getLocalFloatVariableValue( String name)
  * @param name the variable name
  * @return {@link String}
  * @throws PooledException if one occurs
- * @throws RPGException if no such variable was assigned
+ * @ if no such variable was assigned
  */
 public  int[] getLocalIntArrayVariableValue( String name)
-            throws PooledException, RPGException {
+             {
         ScriptVariable svar = getLocalVariable(name);
         if (svar == null
                 || svar.getType() != ScriptConstants.TYPE_L_13_INT_ARR) {
             PooledStringBuilder sb =
-                    StringBuilderPool.getInstance().getStringBuilder();
+                    StringBuilderPool.GetInstance().GetStringBuilder();
 sb.append("Local floating-point variable ");
             sb.append(name);
             sb.append(" was never set.");
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                     sb.toString());
-sb.returnToPool();
+sb.ReturnToPool();
             throw ex;
         }
         return svar.getIntArrayVal();
@@ -260,16 +260,16 @@ sb.returnToPool();
      * Gets the local integer value assigned to a specific variable.
      * @param name the variable name
      * @return {@link String}
-     * @throws RPGException if no such variable was assigned
+     * @ if no such variable was assigned
      */
     public  int getLocalIntVariableValue( String name)
-            throws RPGException
+            
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
                 || svar.getType() != ScriptConstants.TYPE_L_12_INT) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Local integer variable ");
@@ -282,7 +282,7 @@ sb.returnToPool();
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         throw ex;
     }
         return svar.getIntVal();
@@ -292,21 +292,21 @@ sb.returnToPool();
  * @param name the variable name
  * @return {@link String}
  * @throws PooledException if one occurs
- * @throws RPGException if no such variable was assigned
+ * @ if no such variable was assigned
  */
 public  long[] getLocalLongArrayVariableValue( String name)
-            throws PooledException, RPGException {
+             {
         ScriptVariable svar = getLocalVariable(name);
         if (svar == null
                 || svar.getType() != ScriptConstants.TYPE_L_15_LONG_ARR) {
             PooledStringBuilder sb =
-                    StringBuilderPool.getInstance().getStringBuilder();
+                    StringBuilderPool.GetInstance().GetStringBuilder();
 sb.append("Local floating-point variable ");
             sb.append(name);
             sb.append(" was never set.");
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                     sb.toString());
-sb.returnToPool();
+sb.ReturnToPool();
             throw ex;
         }
         return svar.getLongArrayVal();
@@ -318,13 +318,13 @@ sb.returnToPool();
      * @throws PooledException if one occurs
      */
     public  long getLocalLongVariableValue( String name)
-            throws RPGException
+            
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
                 || svar.getType() != ScriptConstants.TYPE_L_14_LONG) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Local long integer variable ");
@@ -337,7 +337,7 @@ sb.returnToPool();
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         throw ex;
     }
         return svar.getLongVal();
@@ -346,16 +346,16 @@ sb.returnToPool();
  * Gets the local text array value assigned to a specific variable.
  * @param name the variable name
  * @return {@link String}
- * @throws RPGException if no such variable was assigned
+ * @ if no such variable was assigned
  */
 public  String[] getLocalStringArrayVariableValue( String name)
-            throws RPGException
+            
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
                 || svar.getType() != ScriptConstants.TYPE_L_09_TEXT_ARR) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Local string array variable ");
@@ -368,7 +368,7 @@ public  String[] getLocalStringArrayVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         throw ex;
     }
         return svar.getTextArrayVal();
@@ -377,16 +377,16 @@ public  String[] getLocalStringArrayVariableValue( String name)
  * Gets the local text value assigned to a specific variable.
  * @param name the variable name
  * @return {@link String}
- * @throws RPGException if no such variable was assigned
+ * @ if no such variable was assigned
  */
 public  String getLocalStringVariableValue( String name)
-            throws RPGException
+            
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
                 || svar.getType() != ScriptConstants.TYPE_L_08_TEXT) {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Local string variable ");
@@ -399,7 +399,7 @@ public  String getLocalStringVariableValue( String name)
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         throw ex;
     }
         return svar.getText();
@@ -410,7 +410,7 @@ public  String getLocalStringVariableValue( String name)
  */
 public  int getLocalVarArrayLength()
 {
-    return lvar.length;
+    return lvar.Length;
 }
 /**
  * Gets a local {@link Scriptable} variable.
@@ -421,7 +421,7 @@ public  ScriptVariable getLocalVariable( int index)
 {
     ScriptVariable svar = null;
     if (index >= 0
-            && index < lvar.length)
+            && index < lvar.Length)
     {
         svar = lvar[index];
     }
@@ -435,7 +435,7 @@ public  ScriptVariable getLocalVariable( int index)
 public  ScriptVariable getLocalVariable( String name)
 {
     ScriptVariable svar = null;
-    for (int i = lvar.length - 1; i >= 0; i--)
+    for (int i = lvar.Length - 1; i >= 0; i--)
     {
         if (lvar[i] != null
                 && lvar[i].getName() != null
@@ -454,13 +454,13 @@ public  ScriptVariable getLocalVariable( String name)
 public  Scriptable<IO> getMaster() {
     return master;
 }
-public  void getTargetPos(IO io, long smoothing) throws RPGException
+public  void getTargetPos(IO io, long smoothing) 
 {
         if (io == null) {
         return;
     }
 
-        if (io.hasIOFlag(IoGlobals.IO_03_NPC)) {
+        if (io.HasIOFlag(IoGlobals.IO_03_NPC)) {
         if (io.getNPCData().hasBehavior(Behaviour.BEHAVIOUR_NONE))
         {
             io.getTarget().setX(io.getPosition().getX());
@@ -485,7 +485,7 @@ public  void getTargetPos(IO io, long smoothing) throws RPGException
             io.getTarget().setZ(0);
             return;
         }
-        if (io.hasIOFlag(IoGlobals.IO_03_NPC)
+        if (io.HasIOFlag(IoGlobals.IO_03_NPC)
                 && io.getNPCData().getPathfinding().getListnb() != -1
                 && io.getNPCData().getPathfinding().hasList()
                 && !io.getNPCData()
@@ -501,10 +501,10 @@ public  void getTargetPos(IO io, long smoothing) throws RPGException
                 // io.getTarget().setY(ACTIVEBKG->anchors[pos].pos.y;
                 // io.getTarget().setZ(ACTIVEBKG->anchors[pos].pos.z;
             }
-            else if (Interactive.getInstance().hasIO(
+            else if (Interactive.GetInstance().hasIO(
                   io.getNPCData().getPathfinding().getTruetarget()))
             {
-                IO ioo = (IO)Interactive.getInstance().getIO(
+                IO ioo = (IO)Interactive.GetInstance().getIO(
                         io.getNPCData().getPathfinding()
                                 .getTruetarget());
                 io.getTarget().setX(ioo.getPosition().getX());
@@ -553,20 +553,20 @@ public  void getTargetPos(IO io, long smoothing) throws RPGException
     }
         if (io.getTargetinfo() == ScriptConstants.TARGET_PLAYER
                 || io.getTargetinfo() == -1) {
-        IO player = (IO)Interactive.getInstance().getIO(
-                ProjectConstants.getInstance().getPlayer());
+        IO player = (IO)Interactive.GetInstance().getIO(
+                ProjectConstants.GetInstance().getPlayer());
         io.getTarget().setX(player.getPosition().getX());
         io.getTarget().setY(player.getPosition().getY());
         io.getTarget().setZ(0);
         player = null;
         return;
     } else {
-        if (Interactive.getInstance().hasIO(io.getTargetinfo()))
+        if (Interactive.GetInstance().hasIO(io.getTargetinfo()))
         {
-            IO tio = (IO)Interactive.getInstance()
+            IO tio = (IO)Interactive.GetInstance()
                     .getIO(io.getTargetinfo());
             Vector2 pos = new Vector2();
-            if (Interactive.getInstance().GetItemWorldPosition(tio, pos))
+            if (Interactive.GetInstance().GetItemWorldPosition(tio, pos))
             {
                 io.getTarget().setX(pos.getX());
                 io.getTarget().setY(pos.getY());
@@ -595,9 +595,9 @@ public  int getTimer( int index)
 /**
  * Shorthand method to get the type variable.
  * @return {@link String}
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-protected  String getType() throws RPGException
+protected  String getType() 
 {
         return getLocalStringVariableValue("type");
 }
@@ -629,7 +629,7 @@ public  bool hasLocalVariable( String name)
 public  bool hasLocalVariables()
 {
     bool has = false;
-    for (int i = lvar.length - 1; i >= 0; i--)
+    for (int i = lvar.Length - 1; i >= 0; i--)
     {
         if (lvar[i] != null)
         {
@@ -644,285 +644,285 @@ public  bool hasLocalVariables()
  * type.
  * @param type the type
  * @return {@link bool}
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-protected  bool isType( String type) throws RPGException
+protected  bool isType( String type) 
 {
         return getLocalStringVariableValue("type").equalsIgnoreCase(type);
 }
 /**
  * Script run when the {@link Scriptable} is added to a party.
  * @return {@link int}
- * @throws RPGException when an error occurs
+ * @ when an error occurs
  */
-public int onAddToParty() throws RPGException
+public int onAddToParty() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * Script run when the {@link Scriptable} is a target of aggression.
  * @return {@link int}
- * @throws RPGException when an error occurs
+ * @ when an error occurs
  */
-public int onAggression() throws RPGException
+public int onAggression() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onAttackPlayer() throws RPGException
+public int onAttackPlayer() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onCallHelp() throws RPGException
+public int onCallHelp() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO chat start.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onChat() throws RPGException
+public int onChat() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onCheatDie() throws RPGException
+public int onCheatDie() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onCollideDoor() throws RPGException
+public int onCollideDoor() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onCollideNPC() throws RPGException
+public int onCollideNPC() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onCollisionError() throws RPGException
+public int onCollisionError() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO combine.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onCombine() throws RPGException
+public int onCombine() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onControlsOff() throws RPGException
+public int onControlsOff() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onControlsOn() throws RPGException
+public int onControlsOn() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onDelation() throws RPGException
+public int onDelation() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onDetectPlayer() throws RPGException
+public int onDetectPlayer() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO dies.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onDie() throws RPGException
+public int onDie() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onDoorLocked() throws RPGException
+public int onDoorLocked() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO equipped.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onEquip() throws RPGException
+public int onEquip() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onFleeEnd() throws RPGException
+public int onFleeEnd() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onGameReady() throws RPGException
+public int onGameReady() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onHear() throws RPGException
+public int onHear() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO hit.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onHit() throws RPGException
+public int onHit() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO attempt to identify.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onIdentify() throws RPGException
+public int onIdentify() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO initialization.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onInit() throws RPGException
+public int onInit() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO initialization end.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onInitEnd() throws RPGException
+public int onInitEnd() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO closes inventory.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onInventoryClose() throws RPGException
+public int onInventoryClose() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO goes into inventory.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onInventoryIn() throws RPGException
+public int onInventoryIn() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO opens inventory.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onInventoryOpen() throws RPGException
+public int onInventoryOpen() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO comes out of inventory.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onInventoryOut() throws RPGException
+public int onInventoryOut() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO is used inside inventory.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onInventoryUse() throws RPGException
+public int onInventoryUse() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onLoad() throws RPGException
+public int onLoad() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onLookFor() throws RPGException
+public int onLookFor() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onLookMe() throws RPGException
+public int onLookMe() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO traveling on the game map.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onMovement() throws RPGException
+public int onMovement() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO ouch.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onOuch() throws RPGException
+public int onOuch() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onPlayerEnemy() throws RPGException
+public int onPlayerEnemy() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onReachedTarget() throws RPGException
+public int onReachedTarget() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onReload() throws RPGException
+public int onReload() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * Causes an IONpcData to
  * @return
- * @throws RPGException
+ * @
  */
-public int onSpeakNoRepeat() throws RPGException
+public int onSpeakNoRepeat() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onSpellcast() throws RPGException
+public int onSpellcast() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onSteal() throws RPGException
+public int onSteal() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO successfully strikes a target.
  * @return {@link int}
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onStrike() throws RPGException
+public int onStrike() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onTargetDeath() throws RPGException
+public int onTargetDeath() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onUndetectPlayer() throws RPGException
+public int onUndetectPlayer() 
 {
         return ScriptConstants.ACCEPT;
 }
 /**
  * On IO unequipped.
  * @return <code>int</code>
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public int onUnequip() throws RPGException
+public int onUnequip() 
 {
         return ScriptConstants.ACCEPT;
 }
@@ -947,25 +947,25 @@ public  void setIO( IO val)
  * @param index the index of the variable
  * @param svar the local {@link ScriptVariable}
  * @throws PooledException if one occurs
- * @throws RPGException if no such variable was assigned
+ * @ if no such variable was assigned
  */
 public  void setLocalVariable( int index,
-         ScriptVariable svar) throws RPGException
+         ScriptVariable svar) 
 {
         // if the index number is valid
         if (index >= 0) {
         // if the local variables array needs to be extended, do so
-        if (index >= lvar.length)
+        if (index >= lvar.Length)
         {
             ScriptVariable[] dest = new ScriptVariable[index + 1];
-            System.arraycopy(lvar, 0, dest, 0, lvar.length);
+            System.arraycopy(lvar, 0, dest, 0, lvar.Length);
             lvar = dest;
             dest = null;
         }
         lvar[index] = svar;
     } else {
         PooledStringBuilder sb =
-                StringBuilderPool.getInstance().getStringBuilder();
+                StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
             sb.append("Invalid array index ");
@@ -974,13 +974,13 @@ public  void setLocalVariable( int index,
         }
         catch (PooledException e)
         {
-            sb.returnToPool();
+            sb.ReturnToPool();
             sb = null;
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                 sb.toString());
-        sb.returnToPool();
+        sb.ReturnToPool();
         sb = null;
         throw ex;
     }
@@ -994,7 +994,7 @@ public  void setLocalVariable( ScriptVariable svar)
     if (svar != null)
     {
         bool found = false;
-        for (int i = lvar.length - 1; i >= 0; i--)
+        for (int i = lvar.Length - 1; i >= 0; i--)
         {
             if (lvar[i] != null
                     && lvar[i].getName() != null
@@ -1009,7 +1009,7 @@ public  void setLocalVariable( ScriptVariable svar)
         if (!found)
         {
             // find an empty index
-            int i = lvar.length - 1;
+            int i = lvar.Length - 1;
             for (; i >= 0; i--)
             {
                 if (lvar[i] == null)
@@ -1023,7 +1023,7 @@ public  void setLocalVariable( ScriptVariable svar)
             }
             else
             {
-                lvar = ArrayUtilities.getInstance().extendArray(svar, lvar);
+                lvar = ArrayUtilities.GetInstance().extendArray(svar, lvar);
             }
         }
     }
@@ -1032,13 +1032,13 @@ public  void setLocalVariable( ScriptVariable svar)
  * Sets a global variable.
  * @param name the name of the global variable
  * @param value the variable's value
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void setLocalVariable( String name,  Object value)
-            throws RPGException
+            
 {
     bool found = false;
-        for (int i = 0, len = lvar.length; i < len; i++) {
+        for (int i = 0, len = lvar.Length; i < len; i++) {
         ScriptVariable svar = lvar[i];
         if (svar != null
                 && svar.getName() != null
@@ -1052,38 +1052,38 @@ public  void setLocalVariable( String name,  Object value)
         if (!found) {
         // create a new variable and add to the global array
         ScriptVariable svar = null;
-        if (value instanceof String
-                    || value instanceof char[]) {
+        if (value is String
+                    || value is char[]) {
             svar = new ScriptVariable(name, ScriptConstants.TYPE_L_08_TEXT,
                     value);
-        } else if (value instanceof String[]
-                    || value instanceof char[][]) {
+        } else if (value is String[]
+                    || value is char[][]) {
             svar = new ScriptVariable(name,
                     ScriptConstants.TYPE_L_09_TEXT_ARR, value);
-        } else if (value instanceof Float) {
+        } else if (value is Float) {
             svar = new ScriptVariable(name, ScriptConstants.TYPE_L_10_FLOAT,
                     value);
-        } else if (value instanceof Double) {
+        } else if (value is Double) {
             svar = new ScriptVariable(name, ScriptConstants.TYPE_L_10_FLOAT,
                     value);
-        } else if (value instanceof float[]) {
+        } else if (value is float[]) {
             svar = new ScriptVariable(name,
                     ScriptConstants.TYPE_L_11_FLOAT_ARR, value);
-        } else if (value instanceof Integer) {
+        } else if (value is Integer) {
             svar = new ScriptVariable(name, ScriptConstants.TYPE_L_12_INT,
                     value);
-        } else if (value instanceof int[]) {
+        } else if (value is int[]) {
             svar = new ScriptVariable(name,
                     ScriptConstants.TYPE_L_13_INT_ARR, value);
-        } else if (value instanceof Long) {
+        } else if (value is Long) {
             svar = new ScriptVariable(name, ScriptConstants.TYPE_L_14_LONG,
                     value);
-        } else if (value instanceof long[]) {
+        } else if (value is long[]) {
             svar = new ScriptVariable(name,
                     ScriptConstants.TYPE_L_15_LONG_ARR, value);
         } else {
             PooledStringBuilder sb =
-                    StringBuilderPool.getInstance().getStringBuilder();
+                    StringBuilderPool.GetInstance().GetStringBuilder();
             try
             {
                 sb.append("Local variable ");
@@ -1099,11 +1099,11 @@ public  void setLocalVariable( String name,  Object value)
             }
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
                     sb.toString());
-            sb.returnToPool();
+            sb.ReturnToPool();
             sb = null;
             throw ex;
         }
-        lvar = ArrayUtilities.getInstance().extendArray(svar, lvar);
+        lvar = ArrayUtilities.GetInstance().extendArray(svar, lvar);
     }
 }
 /**
@@ -1115,9 +1115,9 @@ public  void setMaster( Scriptable<IO> script)
     master = script;
 }
 public  void setTarget( TargetParameters params)
-            throws RPGException
+            
 {
-        if (io.hasIOFlag(IoGlobals.IO_03_NPC)) {
+        if (io.HasIOFlag(IoGlobals.IO_03_NPC)) {
         io.getNPCData().getPathfinding()
                 .removeFlag(ScriptConstants.PATHFIND_ALWAYS);
         io.getNPCData().getPathfinding()
@@ -1151,9 +1151,9 @@ public  void setTarget( TargetParameters params)
 
         if (t == -2)
         {
-            t = Interactive.getInstance().GetInterNum(io);
+            t = Interactive.GetInstance().GetInterNum(io);
         }
-        // if (io.hasIOFlag(ioglobals.io_camera)) {
+        // if (io.HasIOFlag(ioglobals.io_camera)) {
         // EERIE_CAMERA * cam = (EERIE_CAMERA *)io->_camdata;
         // cam->translatetarget.x = 0.f;
         // cam->translatetarget.y = 0.f;
@@ -1170,7 +1170,7 @@ public  void setTarget( TargetParameters params)
         }
         else
         {
-            if (Interactive.getInstance().hasIO(t))
+            if (Interactive.GetInstance().hasIO(t))
             {
                 io.setTargetinfo(t); // TARGET_PATH;
                 getTargetPos(io, 0);
@@ -1195,19 +1195,19 @@ public  void setTimer( int index,  int refId)
 {
     timers[index] = refId;
 }
-public int onOtherReflection() throws RPGException
+public int onOtherReflection() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onMiscReflection() throws RPGException
+public int onMiscReflection() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onPathfinderFailure() throws RPGException
+public int onPathfinderFailure() 
 {
         return ScriptConstants.ACCEPT;
 }
-public int onSpellEnd() throws RPGException
+public int onSpellEnd() 
 {
         return ScriptConstants.ACCEPT;
 }

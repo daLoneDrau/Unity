@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace RPGBaseCS.Pooled
+namespace RPGBase.Pooled
 {
     public sealed class PooledStringBuilder : PoolableObject
     {

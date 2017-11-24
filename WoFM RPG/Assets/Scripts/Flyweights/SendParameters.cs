@@ -39,10 +39,10 @@ namespace Assets.Scripts.Flyweights
             radius = rad;
             eventParameters = eventParams;
             if (initParams != null
-                    && initParams.length() > 0)
+                    && initParams.Length() > 0)
             {
                 String[] split = initParams.split(" ");
-                for (int i = split.length - 1; i >= 0; i--)
+                for (int i = split.Length - 1; i >= 0; i--)
                 {
                     if (split[i].equalsIgnoreCase("GROUP"))
                     {

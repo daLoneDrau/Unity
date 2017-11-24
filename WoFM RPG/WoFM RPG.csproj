@@ -115,6 +115,7 @@
     <Compile Include="Assets\Scripts\Flyweights\ErrorMessage.cs" />
     <Compile Include="Assets\Scripts\Flyweights\IONpcData.cs" />
     <Compile Include="Assets\Scripts\Flyweights\IOPcData.cs" />
+    <Compile Include="Assets\Scripts\Flyweights\IOSpellCastData.cs" />
     <Compile Include="Assets\Scripts\Flyweights\RPGException.cs" />
     <Compile Include="Assets\Scripts\Flyweights\Scriptable.cs" />
     <Compile Include="Assets\Scripts\Flyweights\ScriptAction.cs" />

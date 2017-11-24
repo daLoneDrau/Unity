@@ -17,11 +17,11 @@ namespace RPGBase.Flyweights
          * Sends messages between an item and its owner that it is now in inventory.
          * @param invOwnerIO the owner
          * @param itemIO the item
-         * @throws RPGException if an error occurs
+         * @ if an error occurs
          */
         public  void ARX_INVENTORY_Declare_InventoryIn(
                  IO invOwnerIO,
-                 IO itemIO) throws RPGException
+                 IO itemIO) 
         {
 		if (itemIO != null) {
 			// TODO - handle ignition
@@ -40,37 +40,37 @@ namespace RPGBase.Flyweights
 			// }
 
 			// send event from item to inventory owner
-			Script.getInstance().setEventSender(itemIO);
-        Script.getInstance().sendIOScriptEvent(invOwnerIO,
+			Script.GetInstance().setEventSender(itemIO);
+        Script.GetInstance().sendIOScriptEvent(invOwnerIO,
                 ScriptConsts.SM_002_INVENTORYIN, new Object[0], null);
 			// send event from inventory owner to item
-			Script.getInstance().setEventSender(invOwnerIO);
-        Script.getInstance().sendIOScriptEvent(itemIO,
+			Script.GetInstance().setEventSender(invOwnerIO);
+        Script.GetInstance().sendIOScriptEvent(itemIO,
                 ScriptConsts.SM_002_INVENTORYIN, new Object[0], null);
 			// clear global event sender
-			Script.getInstance().setEventSender(null);
+			Script.GetInstance().setEventSender(null);
     }
 }
 /**
  * Action when a player attempts to identify an item.
  * @param playerIO the player's {@link IO}
  * @param itemIO the itme's {@link IO}
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void ARX_INVENTORY_IdentifyIO( IO playerIO,
-         IO itemIO) throws RPGException
+         IO itemIO) 
 {
 		if (playerIO != null
-				&& playerIO.hasIOFlag(IoGlobals.IO_01_PC)
+				&& playerIO.HasIOFlag(IoGlobals.IO_01_PC)
 				&& playerIO.getPCData() != null
 				&& itemIO != null
-				&& itemIO.hasIOFlag(IoGlobals.IO_02_ITEM)
+				&& itemIO.HasIOFlag(IoGlobals.IO_02_ITEM)
 				&& itemIO.getItemData() != null
 				&& itemIO.getItemData().getEquipitem() != null) {
         if (playerIO.getPCData().canIdentifyEquipment(
                 itemIO.getItemData().getEquipitem()))
         {
-            Script.getInstance().sendIOScriptEvent(
+            Script.GetInstance().sendIOScriptEvent(
                     itemIO, ScriptConsts.SM_69_IDENTIFY, null, "");
         }
     }
@@ -80,28 +80,28 @@ public  void ARX_INVENTORY_IdentifyIO( IO playerIO,
  * @param itemIO the item
  * @return <tt>true</tt> if the item can be put in inventory; <tt>false</tt>
  *         otherwise
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  bool CanBePutInInventory( IO itemIO)
 
-            throws RPGException
+            
 {
     bool can = false;
 		if (itemIO != null
-				&& !itemIO.hasIOFlag(IoGlobals.IO_15_MOVABLE)) {
-        if (itemIO.hasIOFlag(IoGlobals.IO_10_GOLD)
-                && io.hasIOFlag(IoGlobals.IO_01_PC))
+				&& !itemIO.HasIOFlag(IoGlobals.IO_15_MOVABLE)) {
+        if (itemIO.HasIOFlag(IoGlobals.IO_10_GOLD)
+                && io.HasIOFlag(IoGlobals.IO_01_PC))
         {
             io.getPCData().adjustGold(itemIO.getItemData().getPrice());
             if (itemIO.isScriptLoaded())
             {
-                Interactive.getInstance().RemoveFromAllInventories(itemIO);
-                Interactive.getInstance().releaseIO(itemIO);
+                Interactive.GetInstance().RemoveFromAllInventories(itemIO);
+                Interactive.GetInstance().releaseIO(itemIO);
             }
             else
             {
                 itemIO.setShow(IoGlobals.SHOW_FLAG_KILLED);
-                itemIO.removeGameFlag(IoGlobals.GFLAG_ISINTREATZONE);
+                itemIO.RemoveGameFlag(IoGlobals.GFLAG_ISINTREATZONE);
             }
             can = true;
         }
@@ -113,7 +113,7 @@ public  bool CanBePutInInventory( IO itemIO)
                 IO slotIO = (IO)slots[i].getIo();
                 if (slotIO != null
                         && slotIO.getItemData().getStackSize() > 1
-                        && Interactive.getInstance().isSameObject(itemIO,
+                        && Interactive.GetInstance().isSameObject(itemIO,
                                 slotIO))
                 {
                     // found a matching item - try to stack
@@ -145,19 +145,19 @@ public  bool CanBePutInInventory( IO itemIO)
                         {
                             if (itemIO.isScriptLoaded())
                             {
-                                int inner = Interactive.getInstance()
+                                int inner = Interactive.GetInstance()
                                         .getMaxIORefId();
                                 for (; inner >= 0; inner--)
                                 {
-                                    if (Interactive.getInstance().hasIO(
+                                    if (Interactive.GetInstance().hasIO(
                                             inner))
                                     {
                                         IO innerIO = (IO)
-                                                Interactive.getInstance()
+                                                Interactive.GetInstance()
                                                 .getIO(inner);
-                                        if (innerIO.equals(itemIO))
+                                        if (innerIO.Equals(itemIO))
                                         {
-                                            Interactive.getInstance()
+                                            Interactive.GetInstance()
                                             .releaseIO(innerIO);
                                             innerIO = null;
                                         }
@@ -201,16 +201,16 @@ public  bool CanBePutInInventory( IO itemIO)
  * UNTESTED DO NOT USE Replaces an item in an IO's inventory.
  * @param itemIO the item being added
  * @param old the item being replaced
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void CheckForInventoryReplaceMe( IO itemIO,  IO old)
 
-            throws RPGException
+            
 {
 		if (itemIO != null
 				&& old != null) {
         bool handled = false;
-        if (io.hasIOFlag(IoGlobals.IO_01_PC))
+        if (io.HasIOFlag(IoGlobals.IO_01_PC))
         {
             if (IsInPlayerInventory(old))
             {
@@ -227,10 +227,10 @@ public  void CheckForInventoryReplaceMe( IO itemIO,  IO old)
         }
         if (!handled)
         {
-            int i = Interactive.getInstance().getMaxIORefId();
+            int i = Interactive.GetInstance().getMaxIORefId();
             for (; i >= 0; i--)
             {
-                IO io = (IO)Interactive.getInstance().getIO(i);
+                IO io = (IO)Interactive.GetInstance().getIO(i);
                 if (io != null
                         && io.getInventory() != null)
                 {
@@ -316,7 +316,7 @@ public  bool IsInPlayerInventory( IO io)
     {
         IO ioo = (IO)slots[i].getIo();
         if (ioo != null
-                && ioo.equals(io))
+                && ioo.Equals(io))
         {
 
                 is = true;
@@ -336,35 +336,35 @@ public abstract void PutInFrontOfPlayer(IO itemIO,
  * Replaces an item in all inventories.
  * @param oldItemIO the old item being replaced
  * @param newItemIO the new item
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void ReplaceInAllInventories( IO oldItemIO,
          IO newItemIO)
 
-                    throws RPGException
+                    
 {
 		if (oldItemIO != null
-				&& !oldItemIO.hasIOFlag(IoGlobals.IO_15_MOVABLE)
+				&& !oldItemIO.HasIOFlag(IoGlobals.IO_15_MOVABLE)
 				&& newItemIO != null
-						&& !newItemIO.hasIOFlag(IoGlobals.IO_15_MOVABLE)) {
-        int oldIORefId = Interactive.getInstance().GetInterNum(oldItemIO);
-        int newIORefId = Interactive.getInstance().GetInterNum(newItemIO);
-        int i = Interactive.getInstance().getMaxIORefId();
+						&& !newItemIO.HasIOFlag(IoGlobals.IO_15_MOVABLE)) {
+        int oldIORefId = Interactive.GetInstance().GetInterNum(oldItemIO);
+        int newIORefId = Interactive.GetInstance().GetInterNum(newItemIO);
+        int i = Interactive.GetInstance().getMaxIORefId();
         for (; i >= 0; i--)
         {
             if (i == oldIORefId
                     || i == newIORefId
-                    || !Interactive.getInstance().hasIO(i))
+                    || !Interactive.GetInstance().hasIO(i))
             {
                 continue;
             }
-            IO invOwner = (IO)Interactive.getInstance().getIO(i);
+            IO invOwner = (IO)Interactive.GetInstance().getIO(i);
             if (invOwner.getInventory() != null)
             {
                 InventoryData inv = invOwner.getInventory();
                 for (int j = inv.numInventorySlots - 1; j >= 0; j--)
                 {
-                    if (inv.slots[j].getIo().equals(oldItemIO))
+                    if (inv.slots[j].getIo().Equals(oldItemIO))
                     {
                         inv.slots[j].setIo(newItemIO);
                     }
@@ -377,25 +377,25 @@ public  void ReplaceInAllInventories( IO oldItemIO,
  * Sends a scripted command to an item in inventory.
  * @param itemName the item name
  * @param message the message
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void SendInventoryObjectCommand( String itemName,
-         int message) throws RPGException
+         int message) 
 {
 		if (itemName != null
-				&& itemName.length() > 0) {
+				&& itemName.Length() > 0) {
         for (int i = numInventorySlots - 1; i >= 0; i--)
         {
             IO slotIO = (IO)slots[i].getIo();
             if (slotIO != null
-                    && slotIO.hasGameFlag(IoGlobals.GFLAG_INTERACTIVITY)
+                    && slotIO.HasGameFlag(IoGlobals.GFLAG_INTERACTIVITY)
                     && slotIO.getItemData() != null)
             {
                 String ioName =
                         new String(slotIO.getItemData().getItemName());
                 if (itemName.equalsIgnoreCase(ioName))
                 {
-                    Script.getInstance().sendIOScriptEvent(
+                    Script.GetInstance().sendIOScriptEvent(
                             slotIO, message, null, "");
                     slotIO = null;
                     break;
@@ -421,7 +421,7 @@ public  void setIo( IO newIO)
 protected  void setSlots( SLOT[] val)
 {
     slots = val;
-    numInventorySlots = slots.length;
+    numInventorySlots = slots.Length;
 }
 /** flag indicating the left ring needs to be replaced. */
 private bool leftRing = false;

@@ -11,13 +11,13 @@ namespace Assets.Scripts.Flyweights
         private int targetInfo = -1;
         /**
          * @param initParams
-         * @throws RPGException 
+         * @ 
          */
-        public TargetParameters( String initParams) throws RPGException
+        public TargetParameters( String initParams) 
         {
             String []
             split = initParams.split(" ");
-        for (int i = split.length - 1; i >= 0; i--) {
+        for (int i = split.Length - 1; i >= 0; i--) {
             if (split[i].startsWith("-")) {
                 if (split[i].toUpperCase().contains("S")) {
                     this.addFlag(ScriptConstants.PATHFIND_ONCE);
@@ -33,23 +33,23 @@ namespace Assets.Scripts.Flyweights
                 targetInfo = -2;
             }
             if (split[i].equalsIgnoreCase("PLAYER")) {
-                targetInfo = Interactive.getInstance().getTargetByNameTarget(
+                targetInfo = Interactive.GetInstance().getTargetByNameTarget(
                         "PLAYER");
             }
             if (split[i].equalsIgnoreCase("NONE")) {
                 targetInfo = ScriptConstants.TARGET_NONE;
             }
             if (split[i].startsWith("NODE_")) {
-                targetInfo = Interactive.getInstance().getTargetByNameTarget(
+                targetInfo = Interactive.GetInstance().getTargetByNameTarget(
                         split[i].replace("NODE_", ""));
             }
             if (split[i].startsWith("OBJECT_")) {
-                targetInfo = Interactive.getInstance().getTargetByNameTarget(
+                targetInfo = Interactive.GetInstance().getTargetByNameTarget(
                         split[i].replace("OBJECT_", ""));
             }
             if (split[i].startsWith("ID_")) {
                 int id = Integer.parseInt(split[i].replace("ID_", ""));
-                if (Interactive.getInstance().hasIO(id)) {
+                if (Interactive.GetInstance().hasIO(id)) {
                     targetInfo = id;
                 }
             }

@@ -65,7 +65,7 @@ namespace RPGBase.Flyweights
         public string Title { get; set; }
         /**
          * Creates a new instance of {@link IOItemData}.
-         * @throws RPGException
+         * @
          */
         public IOItemData()
         {
@@ -141,7 +141,7 @@ namespace RPGBase.Flyweights
                         {
                             BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
                             if (io.GetWeaponmaterial() != null
-                                    && io.GetWeaponmaterial().length() > 0)
+                                    && io.GetWeaponmaterial().Length() > 0)
                             {
                                 wmat = io.GetWeaponmaterial();
                             }
@@ -174,7 +174,7 @@ namespace RPGBase.Flyweights
                             {
                                 BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
                                 if (io.GetWeaponmaterial() != null
-                                        && io.GetWeaponmaterial().length() > 0)
+                                        && io.GetWeaponmaterial().Length() > 0)
                                 {
                                     wmat = io.GetWeaponmaterial();
                                 }
@@ -184,7 +184,7 @@ namespace RPGBase.Flyweights
                             {
                                 if (io_source.GetWeaponmaterial() != null
                                         && io_source.GetWeaponmaterial()
-                                                .length() > 0)
+                                                .Length() > 0)
                                 {
                                     wmat = io_source.GetWeaponmaterial();
                                 }
@@ -232,7 +232,7 @@ namespace RPGBase.Flyweights
                     // }
                     // }
                     if (io_target.GetArmormaterial() != null
-                            && io.GetArmormaterial().length() > 0)
+                            && io.GetArmormaterial().Length() > 0)
                     {
                         amat = io.GetArmormaterial();
                     }
@@ -254,7 +254,7 @@ namespace RPGBase.Flyweights
                         {
                             BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(armrId);
                             if (io.GetArmormaterial() != null
-                                    && io.GetArmormaterial().length() > 0)
+                                    && io.GetArmormaterial().Length() > 0)
                             {
                                 amat = io.GetArmormaterial();
                             }
@@ -297,7 +297,7 @@ namespace RPGBase.Flyweights
          * Equips the item on a target BaseInteractiveObject.
          * @param target the target BaseInteractiveObject
          * @throws PooledException if an error occurs
-         * @throws RPGException if an error occurs
+         * @ if an error occurs
          */
         public void Equip(BaseInteractiveObject target)
         {
@@ -326,7 +326,7 @@ namespace RPGBase.Flyweights
                     {
                         if (Interactive.GetInstance().hasIO(i)
                                 && Interactive.GetInstance().getIO(i) != null
-                                && io.equals(Interactive.GetInstance().getIO(i)))
+                                && io.Equals(Interactive.GetInstance().getIO(i)))
                         {
                             validid = i;
                             break;
@@ -412,13 +412,13 @@ namespace RPGBase.Flyweights
          * Sets the item's object type.
          * @param flag the type flag
          * @param added if <tt>true</tt>, the type is set; otherwise it is removed
-         * @throws RPGException if an error occurs
+         * @ if an error occurs
          */
         public  void ARX_EQUIPMENT_SetObjectType( int flag,
-                 bool added) throws RPGException
+                 bool added) 
         {
         if (added) {
-        io.addTypeFlag(flag);
+        io.AddTypeFlag(flag);
     } else {
         io.removeTypeFlag(flag);
     }
@@ -428,10 +428,10 @@ namespace RPGBase.Flyweights
  * @param target the targeted BaseInteractiveObject
  * @param isDestroyed if<tt>true</tt> the item is destroyed afterwards
  * @throws PooledException if an error occurs
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public void ARX_EQUIPMENT_UnEquip( BaseInteractiveObject target,
-         bool isDestroyed) throws RPGException
+         bool isDestroyed) 
 {
         if (target != null) {
         if (target.HasIOFlag(IoGlobals.IO_01_PC))
@@ -444,7 +444,7 @@ public void ARX_EQUIPMENT_UnEquip( BaseInteractiveObject target,
                 if (itemRefId >= 0
                         && Interactive.GetInstance().hasIO(itemRefId)
                         && Interactive.GetInstance().getIO(
-                                itemRefId).equals(io))
+                                itemRefId).Equals(io))
                 {
                     // EERIE_LINKEDOBJ_UnLinkObjectFromObject(
                     // target->obj, tounequip->obj);
@@ -489,9 +489,9 @@ protected abstract float CalculateArmorDeflection();
 /**
  * Equips a ring on a character.
  * @param charData the character data
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-private void EquipRing( IOCharacter charData) throws RPGException
+private void EquipRing( IOCharacter charData) 
 {
     // check left and right finger
     // to see if it can be equipped
@@ -579,9 +579,9 @@ private void EquipRing( IOCharacter charData) throws RPGException
 /**
  * Equips a shield on a character.
  * @param charData the character data
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-private void EquipShield( IOCharacter charData) throws RPGException
+private void EquipShield( IOCharacter charData) 
 {
     // unequip old shield
     UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_SHIELD);
@@ -610,9 +610,9 @@ private void EquipShield( IOCharacter charData) throws RPGException
 /**
  * Equips a weapon for a character.
  * @param charData the character data
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-private void EquipWeapon( IOCharacter charData) throws RPGException
+private void EquipWeapon( IOCharacter charData) 
 {
     // unequip old weapon
     UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_WEAPON);
@@ -777,9 +777,9 @@ public  void setCount( int val)
 /**
  * Sets the {@link IOItemData}'s description.
  * @param val the name to set
- * @throws RPGException if the parameter is null
+ * @ if the parameter is null
  */
-public  void setDescription( char[] val) throws RPGException
+public  void setDescription( char[] val) 
 {
         if (val == null) {
         throw new RPGException(ErrorMessage.BAD_PARAMETERS,
@@ -790,9 +790,9 @@ public  void setDescription( char[] val) throws RPGException
 /**
  * Sets the {@link IOItemData}'s description.
  * @param val the name to set
- * @throws RPGException if the parameter is null
+ * @ if the parameter is null
  */
-public  void setDescription( String val) throws RPGException
+public  void setDescription( String val) 
 {
         if (val == null) {
         throw new RPGException(ErrorMessage.BAD_PARAMETERS,
@@ -832,9 +832,9 @@ public void setIo( BaseInteractiveObject val)
 /**
  * Sets the item's name.
  * @param val the name to set
- * @throws RPGException if the parameter is null
+ * @ if the parameter is null
  */
-public  void setItemName( char[] val) throws RPGException
+public  void setItemName( char[] val) 
 {
         if (val == null) {
         throw new RPGException(ErrorMessage.BAD_PARAMETERS,
@@ -845,9 +845,9 @@ public  void setItemName( char[] val) throws RPGException
 /**
  * Sets the item's name.
  * @param val the name to set
- * @throws RPGException if the parameter is null
+ * @ if the parameter is null
  */
-public  void setItemName( String val) throws RPGException
+public  void setItemName( String val) 
 {
         if (val == null) {
         throw new RPGException(ErrorMessage.BAD_PARAMETERS,
@@ -912,7 +912,7 @@ public  void setWeight( float f)
     weight = f;
 }
 private void UnequipItemInSlot( IOCharacter player,  int slot)
-            throws RPGException
+            
 {
         if (player.getEquippedItem(slot) >= 0) {
         int slotioid = player.getEquippedItem(slot);

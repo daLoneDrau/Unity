@@ -87,9 +87,9 @@ namespace RPGBase.Flyweights
         private int xpvalue;
         /**
          * Creates a new instance of {@link IoNpcData}.
-         * @throws RPGException if there is an error defining attributes
+         * @ if there is an error defining attributes
          */
-        protected IoNpcData() throws RPGException
+        protected IoNpcData() 
         {
             
         name = new char[0];
@@ -139,25 +139,25 @@ protected abstract void adjustMana(float dmg);
  * Applies extra damage from a poisoned attack.
  * @param srcIoid the source of the damage
  * @param isSpellDamage flag indicating whether the damage is from a spell
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 private void applyPoisonDamage( int srcIoid,
-         bool isSpellDamage) throws RPGException
+         bool isSpellDamage) 
 {
-        if (Interactive.getInstance().hasIO(srcIoid)) {
+        if (Interactive.GetInstance().hasIO(srcIoid)) {
         IO poisonWeaponIO = null;
-        IO sourceIO = (IO)Interactive.getInstance().getIO(
+        IO sourceIO = (IO)Interactive.GetInstance().getIO(
                 srcIoid);
-        if (sourceIO.hasIOFlag(IoGlobals.IO_01_PC))
+        if (sourceIO.HasIOFlag(IoGlobals.IO_01_PC))
         {
             IoPcData player = sourceIO.getPCData();
             if (player.getEquippedItem(
                     EquipmentGlobals.EQUIP_SLOT_WEAPON) > 0
-                    && Interactive.getInstance().hasIO(
+                    && Interactive.GetInstance().hasIO(
                             player.getEquippedItem(
                                     EquipmentGlobals.EQUIP_SLOT_WEAPON)))
             {
-                poisonWeaponIO = (IO)Interactive.getInstance()
+                poisonWeaponIO = (IO)Interactive.GetInstance()
                         .getIO(player.getEquippedItem(
                                 EquipmentGlobals.EQUIP_SLOT_WEAPON));
 
@@ -173,7 +173,7 @@ private void applyPoisonDamage( int srcIoid,
         }
         else
         {
-            if (sourceIO.hasIOFlag(IoGlobals.IO_03_NPC))
+            if (sourceIO.HasIOFlag(IoGlobals.IO_03_NPC))
             {
                 poisonWeaponIO =
                         (IO)sourceIO.getNPCData().getWeapon();
@@ -346,10 +346,10 @@ public abstract void ARX_NPC_ManagePoison();
 /**
  * Revives the IONpcData.
  * @param reposition if <tt>true</tt> IONpcData is moved to their initial position
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  void ARX_NPC_Revive( bool reposition)
-            throws RPGException
+            
 {
     // TODO - check if secondary inventory belongs to the IONpcData
     // and kill it
@@ -357,11 +357,11 @@ public  void ARX_NPC_Revive( bool reposition)
     // TSecondaryInventory = NULL;
     // }
 
-    Script.getInstance().setMainEvent(getIo(), "MAIN");
+    Script.GetInstance().setMainEvent(getIo(), "MAIN");
 
     getIo().removeIOFlag(IoGlobals.IO_07_NO_COLLISIONS);
     restoreLifeToMax();
-    Script.getInstance().resetObject(io, true);
+    Script.GetInstance().resetObject(io, true);
     restoreLifeToMax();
 
         if (reposition) {
@@ -409,24 +409,24 @@ public  void clearNPCFlags()
  * @param dmg the amount of damage
  * @param srcIoid the source of the damage
  * @param isSpellDamage flag indicating whether the damage is from a spell
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 protected abstract void damageNonLivingNPC(float dmg, int srcIoid,
-        bool isSpellDamage) throws RPGException;
+        bool isSpellDamage) ;
 /**
  * Damages an IONpcData.
  * @param dmg the amount of damage
  * @param srcIoid the source of the damage
  * @param isSpellDamage flag indicating whether the damage is from a spell
  * @return {@link float}
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 public  float damageNPC( float dmg,  int srcIoid,
-         bool isSpellDamage) throws RPGException
+         bool isSpellDamage) 
 {
         float damagesdone = 0.f;
         if (io.getShow() > 0
-                && !io.hasIOFlag(IoGlobals.IO_08_INVULNERABILITY)) {
+                && !io.HasIOFlag(IoGlobals.IO_08_INVULNERABILITY)) {
         if (getBaseLife() <= 0f)
         {
             damageNonLivingNPC(dmg, srcIoid, isSpellDamage);
@@ -459,15 +459,15 @@ public  float damageNPC( float dmg,  int srcIoid,
 /**
  * Forces the IONpcData to die.
  * @param killerIO the IO that killed the IONpcData
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public  void forceDeath( IO killerIO) throws RPGException
+public  void forceDeath( IO killerIO) 
 {
         if (io.getMainevent() == null
                 || (io.getMainevent() != null
                         && !io.getMainevent().equalsIgnoreCase("DEAD"))) {
-        IO oldSender = (IO)Script.getInstance().getEventSender();
-        Script.getInstance().setEventSender(killerIO);
+        IO oldSender = (IO)Script.GetInstance().getEventSender();
+        Script.GetInstance().setEventSender(killerIO);
 
         // TODO - reset drag IO
         // if (io == DRAGINTER)
@@ -503,17 +503,17 @@ public  void forceDeath( IO killerIO) throws RPGException
         // ARX_SPEECH_ReleaseIOSpeech(io);
 
         // Kill all Timers...
-        Script.getInstance().timerClearByIO(io);
+        Script.GetInstance().timerClearByIO(io);
 
         if (io.getMainevent() == null
                 || (io.getMainevent() != null
                         && !io.getMainevent().equalsIgnoreCase("DEAD")))
         {
-            Script.getInstance().notifyIOEvent(
+            Script.GetInstance().notifyIOEvent(
                     io, ScriptConsts.SM_017_DIE, "");
         }
 
-        if (Interactive.getInstance().hasIO(io))
+        if (Interactive.GetInstance().hasIO(io))
         {
             io.setMainevent("DEAD");
 
@@ -528,46 +528,46 @@ public  void forceDeath( IO killerIO) throws RPGException
 
             setWeaponInHand(-1);
 
-            Interactive.getInstance().ARX_INTERACTIVE_DestroyDynamicInfo(
+            Interactive.GetInstance().ARX_INTERACTIVE_DestroyDynamicInfo(
                     io);
 
             // set killer name
             if (killerIO != null
-                    && killerIO.hasIOFlag(IoGlobals.IO_01_PC))
+                    && killerIO.HasIOFlag(IoGlobals.IO_01_PC))
             {
                 killer = "PLAYER";
             }
             else if (killerIO != null
-                  && killerIO.hasIOFlag(IoGlobals.IO_03_NPC))
+                  && killerIO.HasIOFlag(IoGlobals.IO_03_NPC))
             {
                 killer = new String(killerIO.getNPCData().getName());
             }
-            int i = Interactive.getInstance().getMaxIORefId();
+            int i = Interactive.GetInstance().getMaxIORefId();
             for (; i >= 0; i--)
             {
-                if (!Interactive.getInstance().hasIO(i))
+                if (!Interactive.GetInstance().hasIO(i))
                 {
                     continue;
                 }
-                IO ioo = (IO)Interactive.getInstance().getIO(i);
+                IO ioo = (IO)Interactive.GetInstance().getIO(i);
                 if (ioo == null)
                 {
                     continue;
                 }
-                if (ioo.equals(io))
+                if (ioo.Equals(io))
                 {
                     continue;
                 }
-                if (ioo.hasIOFlag(IoGlobals.IO_03_NPC))
+                if (ioo.HasIOFlag(IoGlobals.IO_03_NPC))
                 {
-                    if (Interactive.getInstance().hasIO(
+                    if (Interactive.GetInstance().hasIO(
                             ioo.getTargetinfo()))
                     {
-                        if (Interactive.getInstance().getIO(
-                                ioo.getTargetinfo()).equals(io))
+                        if (Interactive.GetInstance().getIO(
+                                ioo.getTargetinfo()).Equals(io))
                         {
-                            Script.getInstance().setEventSender(io);
-                            Script.getInstance().stackSendIOScriptEvent(ioo,
+                            Script.GetInstance().setEventSender(io);
+                            Script.GetInstance().stackSendIOScriptEvent(ioo,
                                     0,
                                     new Object[] { "killer", killer },
                                     "onTargetDeath");
@@ -601,10 +601,10 @@ public  void forceDeath( IO killerIO) throws RPGException
             if (getWeapon() != null)
             {
                 IO wpnIO = getWeapon();
-                if (Interactive.getInstance().hasIO(wpnIO))
+                if (Interactive.GetInstance().hasIO(wpnIO))
                 {
                     wpnIO.setShow(IoGlobals.SHOW_FLAG_IN_SCENE);
-                    wpnIO.addIOFlag(IoGlobals.IO_07_NO_COLLISIONS);
+                    wpnIO.AddIOFlag(IoGlobals.IO_07_NO_COLLISIONS);
                     // TODO - reset positioning and velocity
                     // ioo->pos.x =
                     // ioo->obj->vertexlist3[ioo->obj->origin].v.x;
@@ -619,7 +619,7 @@ public  void forceDeath( IO killerIO) throws RPGException
                 }
             }
         }
-        Script.getInstance().setEventSender(oldSender);
+        Script.GetInstance().setEventSender(oldSender);
     }
 }
 /**
@@ -822,21 +822,21 @@ protected abstract void moveToInitialPosition();
  * @param dmg
  * @param srcIoid
  * @return
- * @throws RPGException
+ * @
  */
 private float processDamage( float dmg,  int srcIoid)
-            throws RPGException
+            
 {
         float damagesdone = Math.min(dmg, getBaseLife());
     adjustLife(-dmg);
         if (getBaseLife() <= 0.f) { // IONpcData is dead
                                     // base life should be 0
-        if (Interactive.getInstance().hasIO(srcIoid))
+        if (Interactive.GetInstance().hasIO(srcIoid))
         {
             int xp = xpvalue;
-            IO srcIO = (IO)Interactive.getInstance().getIO(srcIoid);
+            IO srcIO = (IO)Interactive.GetInstance().getIO(srcIoid);
             forceDeath(srcIO);
-            if (srcIO.hasIOFlag(IoGlobals.IO_01_PC))
+            if (srcIO.HasIOFlag(IoGlobals.IO_01_PC))
             {
                 awardXpForNpcDeath(xp, srcIO);
             }
@@ -892,23 +892,23 @@ protected abstract void restoreLifeToMax();
  * @param dmg the amount of damage
  * @param srcIoid the source of the damage
  * @param isSpellDamage flag indicating whether the damage is from a spell
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 private int sendHitEvent( float dmg,  int srcIoid,
-         bool isSpellDamage) throws RPGException
+         bool isSpellDamage) 
 {
-        if (Interactive.getInstance().hasIO(srcIoid)) {
-        Script.getInstance().setEventSender(
-                Interactive.getInstance().getIO(srcIoid));
+        if (Interactive.GetInstance().hasIO(srcIoid)) {
+        Script.GetInstance().setEventSender(
+                Interactive.GetInstance().getIO(srcIoid));
     } else {
-        Script.getInstance().setEventSender(null);
+        Script.GetInstance().setEventSender(null);
     }
 
     Object [] params;
-        if (Script.getInstance().getEventSender() != null
-                && Script.getInstance().getEventSender().hasIOFlag(
+        if (Script.GetInstance().getEventSender() != null
+                && Script.GetInstance().getEventSender().HasIOFlag(
                         IoGlobals.IO_01_PC)) {
-        IO plrIO = (IO)Script.getInstance().getEventSender();
+        IO plrIO = (IO)Script.GetInstance().getEventSender();
         if (isSpellDamage)
         {
                 params = new Object[] { "SPELL_DMG", dmg };
@@ -917,7 +917,7 @@ private int sendHitEvent( float dmg,  int srcIoid,
         {
             int wpnId = plrIO.getPCData().getEquippedItem(
                     EquipmentGlobals.EQUIP_SLOT_WEAPON);
-            IO wpnIO = (IO)Interactive.getInstance().getIO(wpnId);
+            IO wpnIO = (IO)Interactive.GetInstance().getIO(wpnId);
             int wpnType = EquipmentGlobals.WEAPON_BARE;
             if (wpnIO != null)
             {
@@ -952,10 +952,10 @@ private int sendHitEvent( float dmg,  int srcIoid,
     }
         // if player summoned object causing damage,
         // change event sender to player
-        if (summonerIsPlayer((IO) Script.getInstance().getEventSender())) {
-        IO summonerIO = (IO)Interactive.getInstance().getIO(
-                Script.getInstance().getEventSender().getSummoner());
-        Script.getInstance().setEventSender(summonerIO);
+        if (summonerIsPlayer((IO) Script.GetInstance().getEventSender())) {
+        IO summonerIO = (IO)Interactive.GetInstance().getIO(
+                Script.GetInstance().getEventSender().getSummoner());
+        Script.GetInstance().setEventSender(summonerIO);
         summonerIO = null;
             params = new Object[] { "SUMMONED_DMG", dmg };
     } else {
@@ -963,29 +963,29 @@ private int sendHitEvent( float dmg,  int srcIoid,
                     "SUMMONED_OUCH", 0f,
                     "OUCH", io.getDamageSum() };
     }
-        return Script.getInstance().sendIOScriptEvent(
+        return Script.GetInstance().sendIOScriptEvent(
                 io, ScriptConsts.SM_016_HIT, params, null);
 }
 /**
  * Sends the IONpcData IO an 'Ouch' event.
  * @param dmg the amount of damage
  * @param srcIoid the source of the damage
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
 private void sendOuchEvent( float dmg,  int srcIoid)
-            throws RPGException
+            
 {
     io.setDamageSum(io.getDamageSum() + dmg);
         // set the event sender
-        if (Interactive.getInstance().hasIO(srcIoid)) {
-        Script.getInstance().setEventSender(
-                Interactive.getInstance().getIO(srcIoid));
+        if (Interactive.GetInstance().hasIO(srcIoid)) {
+        Script.GetInstance().setEventSender(
+                Interactive.GetInstance().getIO(srcIoid));
     } else {
-        Script.getInstance().setEventSender(null);
+        Script.GetInstance().setEventSender(null);
     }
     // check to see if the damage is coming from a summoned object
     Object [] params;
-        if (summonerIsPlayer((IO) Script.getInstance().getEventSender())) {
+        if (summonerIsPlayer((IO) Script.GetInstance().getEventSender())) {
             params = new Object[] {
                     "SUMMONED_OUCH", io.getDamageSum(),
                     "OUCH", 0f };
@@ -994,7 +994,7 @@ private void sendOuchEvent( float dmg,  int srcIoid)
                     "SUMMONED_OUCH", 0f,
                     "OUCH", io.getDamageSum() };
     }
-    Script.getInstance().sendIOScriptEvent(io,
+    Script.GetInstance().sendIOScriptEvent(io,
                 ScriptConsts.SM_045_OUCH, params, null);
     io.setDamageSum(0f);
 }
@@ -1108,7 +1108,7 @@ public  void setWeapon( IO wpnIO)
     weapon = wpnIO;
     if (weapon != null)
     {
-        weaponInHand = weapon.getRefId();
+        weaponInHand = weapon.GetRefId();
     }
     else
     {
@@ -1118,13 +1118,13 @@ public  void setWeapon( IO wpnIO)
 /**
  * Sets the value of the weaponInHand.
  * @param ioid the new value to set
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-public  void setWeaponInHand( int ioid) throws RPGException
+public  void setWeaponInHand( int ioid) 
 {
         this.weaponInHand = ioid;
-        if (Interactive.getInstance().hasIO(weaponInHand)) {
-        weapon = (IO)Interactive.getInstance().getIO(weaponInHand);
+        if (Interactive.GetInstance().hasIO(weaponInHand)) {
+        weapon = (IO)Interactive.GetInstance().getIO(weaponInHand);
     } else {
         weapon = null;
     }
@@ -1146,17 +1146,17 @@ protected abstract void stopIdleAnimation();
  * @param io the IO
  * @return <tt>true</tt> if the summoner is a player; <tt>false</tt>
  *         otherwise
- * @throws RPGException if an error occurs
+ * @ if an error occurs
  */
-private bool summonerIsPlayer(IO io) throws RPGException
+private bool summonerIsPlayer(IO io) 
 {
     bool isPlayer = false;
         if (io != null) {
         int summonerId = io.getSummoner();
-        if (Interactive.getInstance().hasIO(summonerId))
+        if (Interactive.GetInstance().hasIO(summonerId))
         {
-            IO summoner = (IO)Interactive.getInstance().getIO(summonerId);
-            if (summoner.hasIOFlag(IoGlobals.IO_01_PC))
+            IO summoner = (IO)Interactive.GetInstance().getIO(summonerId);
+            if (summoner.HasIOFlag(IoGlobals.IO_01_PC))
             {
                 isPlayer = true;
             }

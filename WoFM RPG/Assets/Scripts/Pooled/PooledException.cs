@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RPGBaseCS.Pooled
+namespace RPGBase.Pooled
 {
     public sealed class PooledException : Exception
     {

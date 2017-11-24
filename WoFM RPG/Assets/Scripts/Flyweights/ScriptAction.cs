@@ -9,7 +9,7 @@ namespace RPGBase.Flyweights
     {
         /**
          * Executes the script action.
-         * @throws RPGException if an error occurs
+         * @ if an error occurs
          */
         void Execute();
         /**
