@@ -41,32 +41,32 @@ namespace Assets.Scripts.Flyweights
             if (initParams != null
                     && initParams.Length() > 0)
             {
-                String[] split = initParams.split(" ");
+                String[] split = initParams.Split(" ");
                 for (int i = split.Length - 1; i >= 0; i--)
                 {
                     if (split[i].equalsIgnoreCase("GROUP"))
                     {
-                        addFlag(SendParameters.GROUP);
+                        AddFlag(SendParameters.GROUP);
                     }
                     if (split[i].equalsIgnoreCase("FIX"))
                     {
-                        addFlag(SendParameters.FIX);
+                        AddFlag(SendParameters.FIX);
                     }
                     if (split[i].equalsIgnoreCase("IOItemData"))
                     {
-                        addFlag(SendParameters.IOItemData);
+                        AddFlag(SendParameters.IOItemData);
                     }
                     if (split[i].equalsIgnoreCase("IONpcData"))
                     {
-                        addFlag(SendParameters.IONpcData);
+                        AddFlag(SendParameters.IONpcData);
                     }
                     if (split[i].equalsIgnoreCase("RADIUS"))
                     {
-                        addFlag(SendParameters.RADIUS);
+                        AddFlag(SendParameters.RADIUS);
                     }
                     if (split[i].equalsIgnoreCase("ZONE"))
                     {
-                        addFlag(SendParameters.ZONE);
+                        AddFlag(SendParameters.ZONE);
                     }
                 }
             }
@@ -75,7 +75,7 @@ namespace Assets.Scripts.Flyweights
          * Adds a flag.
          * @param flag the flag
          */
-        public void addFlag( long flag)
+        public void AddFlag( long flag)
         {
             flags |= flag;
         }
@@ -135,7 +135,7 @@ namespace Assets.Scripts.Flyweights
          * @return true if the {@link BaseInteractiveObject} has the flag; false
          *         otherwise
          */
-        public  bool hasFlag( long flag)
+        public  bool HasFlag( long flag)
         {
             return (flags & flag) == flag;
         }
@@ -143,7 +143,7 @@ namespace Assets.Scripts.Flyweights
          * Removes a flag.
          * @param flag the flag
          */
-        public  void removeFlag( long flag)
+        public  void RemoveFlag( long flag)
         {
             flags &= ~flag;
         }

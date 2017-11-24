@@ -11,12 +11,12 @@ namespace RPGBase.Flyweights
         private long allowedEvent;
         /** the list of actions for an event. */
         private Map<Integer, ScriptAction[]> eventActions;
-        /** the IO associated with this script. */
-        private IO io;
+        /** the BaseInteractiveObject associated with this script. */
+        private BaseInteractiveObject io;
         /** the array of local {@link ScriptVariable}s. */
         private ScriptVariable[] lvar;
         /** the master script. */
-        private Scriptable<IO> master;
+        private Scriptable<BaseInteractiveObject> master;
         /** the list of script timers. */
         private  int[] timers;
         /** Creates a new instance of {@link Scriptable}. */
@@ -26,11 +26,11 @@ namespace RPGBase.Flyweights
         }
         /**
          * Creates a new instance of {@link Scriptable}.
-         * @param ioInstance the IO associated with this script
+         * @param ioInstance the BaseInteractiveObject associated with this script
          */
-        public Scriptable( IO ioInstance)
+        public Scriptable( BaseInteractiveObject ioInstance)
         {
-            timers = new int[ScriptConstants.MAX_SCRIPTTIMERS];
+            timers = new int[ScriptConsts.MAX_SCRIPTTIMERS];
             lvar = new ScriptVariable[0];
             eventActions = new HashMap<Integer, ScriptAction[]>();
             io = ioInstance;
@@ -83,28 +83,28 @@ namespace RPGBase.Flyweights
             allowedEvent |= event;
         }
         /**
-         * Changes the IO's behavior.
+         * Changes the BaseInteractiveObject's behavior.
          * @param params the behavior parameters
          */
         public  void behavior( BehaviorParameters params)
         {
             if (io.HasIOFlag(IoGlobals.IO_03_NPC))
             {
-                if ("STACK".equalsIgnoreCase(params.getAction()))
+                if ("STACK".equalsIgnoreCase(params.GetAction()))
                 {
                     io.getNPCData().ARX_NPC_Behaviour_Stack();
                 }
-                else if ("UNSTACK".equalsIgnoreCase(params.getAction()))
+                else if ("UNSTACK".equalsIgnoreCase(params.GetAction()))
                 {
                     io.getNPCData().ARX_NPC_Behaviour_UnStack();
                 }
-                else if ("UNSTACKALL".equalsIgnoreCase(params.getAction()))
+                else if ("UNSTACKALL".equalsIgnoreCase(params.GetAction()))
                 {
                     io.getNPCData().resetBehavior();
                 }
                 else
                 {
-                    io.getNPCData().ARX_NPC_Behaviour_Change(params.getFlags(),
+                    io.getNPCData().ARX_NPC_Behaviour_Change(params.GetFlags(),
                             (long) params.getBehaviorParam());
                     if (params.getMovemode() > -1) {
                         io.getNPCData().setMovemode(params.getMovemode());
@@ -135,7 +135,7 @@ namespace RPGBase.Flyweights
                         && lvar[i].getName() != null
                         && lvar[i].getName().equalsIgnoreCase(varName))
                 {
-                    lvar[i].clear();
+                    lvar[i].Clear();
                 }
                 lvar[i] = null;
             }
@@ -147,7 +147,7 @@ namespace RPGBase.Flyweights
             {
                 if (lvar[i] != null)
                 {
-                    lvar[i].clear();
+                    lvar[i].Clear();
                 }
                 lvar[i] = null;
             }
@@ -167,10 +167,10 @@ namespace RPGBase.Flyweights
             return eventActions.get(eventID);
         }
         /**
-         * Gets the IO associated with this script.
-         * @return {@link IO}
+         * Gets the BaseInteractiveObject associated with this script.
+         * @return {@link BaseInteractiveObject}
          */
-        public  IO getIO()
+        public  BaseInteractiveObject getIO()
         {
             return io;
         }
@@ -186,14 +186,14 @@ namespace RPGBase.Flyweights
              {
         ScriptVariable svar = getLocalVariable(name);
         if (svar == null
-                || svar.getType() != ScriptConstants.TYPE_L_11_FLOAT_ARR) {
+                || svar.getType() != ScriptConsts.TYPE_L_11_FLOAT_ARR) {
             PooledStringBuilder sb =
                     StringBuilderPool.GetInstance().GetStringBuilder();
-        sb.append("Local floating-point array type variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+        sb.Append("Local floating-point array type variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                    sb.toString());
+                    sb.ToString());
         sb.ReturnToPool();
             throw ex;
         }
@@ -211,21 +211,21 @@ public  float getLocalFloatVariableValue( String name)
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
-                || svar.getType() != ScriptConstants.TYPE_L_10_FLOAT) {
+                || svar.getType() != ScriptConsts.TYPE_L_10_FLOAT) {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Local floating-point variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Local floating-point variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
@@ -243,14 +243,14 @@ public  int[] getLocalIntArrayVariableValue( String name)
              {
         ScriptVariable svar = getLocalVariable(name);
         if (svar == null
-                || svar.getType() != ScriptConstants.TYPE_L_13_INT_ARR) {
+                || svar.getType() != ScriptConsts.TYPE_L_13_INT_ARR) {
             PooledStringBuilder sb =
                     StringBuilderPool.GetInstance().GetStringBuilder();
-sb.append("Local floating-point variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+sb.Append("Local floating-point variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                    sb.toString());
+                    sb.ToString());
 sb.ReturnToPool();
             throw ex;
         }
@@ -267,21 +267,21 @@ sb.ReturnToPool();
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
-                || svar.getType() != ScriptConstants.TYPE_L_12_INT) {
+                || svar.getType() != ScriptConsts.TYPE_L_12_INT) {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Local integer variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Local integer variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         throw ex;
     }
@@ -298,14 +298,14 @@ public  long[] getLocalLongArrayVariableValue( String name)
              {
         ScriptVariable svar = getLocalVariable(name);
         if (svar == null
-                || svar.getType() != ScriptConstants.TYPE_L_15_LONG_ARR) {
+                || svar.getType() != ScriptConsts.TYPE_L_15_LONG_ARR) {
             PooledStringBuilder sb =
                     StringBuilderPool.GetInstance().GetStringBuilder();
-sb.append("Local floating-point variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+sb.Append("Local floating-point variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                    sb.toString());
+                    sb.ToString());
 sb.ReturnToPool();
             throw ex;
         }
@@ -322,21 +322,21 @@ sb.ReturnToPool();
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
-                || svar.getType() != ScriptConstants.TYPE_L_14_LONG) {
+                || svar.getType() != ScriptConsts.TYPE_L_14_LONG) {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Local long integer variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Local long integer variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         throw ex;
     }
@@ -353,21 +353,21 @@ public  String[] getLocalStringArrayVariableValue( String name)
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
-                || svar.getType() != ScriptConstants.TYPE_L_09_TEXT_ARR) {
+                || svar.getType() != ScriptConsts.TYPE_L_09_TEXT_ARR) {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Local string array variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Local string array variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         throw ex;
     }
@@ -384,21 +384,21 @@ public  String getLocalStringVariableValue( String name)
 {
     ScriptVariable svar = getLocalVariable(name);
         if (svar == null
-                || svar.getType() != ScriptConstants.TYPE_L_08_TEXT) {
+                || svar.getType() != ScriptConsts.TYPE_L_08_TEXT) {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Local string variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Local string variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         throw ex;
     }
@@ -449,12 +449,12 @@ public  ScriptVariable getLocalVariable( String name)
 }
 /**
  * Gets the master script.
- * @return {@link Scriptable<IO>}
+ * @return {@link Scriptable<BaseInteractiveObject>}
  */
-public  Scriptable<IO> getMaster() {
+public  Scriptable<BaseInteractiveObject> getMaster() {
     return master;
 }
-public  void getTargetPos(IO io, long smoothing) 
+public  void getTargetPos(BaseInteractiveObject io, long smoothing) 
 {
         if (io == null) {
         return;
@@ -504,7 +504,7 @@ public  void getTargetPos(IO io, long smoothing)
             else if (Interactive.GetInstance().hasIO(
                   io.getNPCData().getPathfinding().getTruetarget()))
             {
-                IO ioo = (IO)Interactive.GetInstance().getIO(
+                BaseInteractiveObject ioo = (BaseInteractiveObject)Interactive.GetInstance().getIO(
                         io.getNPCData().getPathfinding()
                                 .getTruetarget());
                 io.getTarget().setX(ioo.getPosition().getX());
@@ -514,7 +514,7 @@ public  void getTargetPos(IO io, long smoothing)
             return;
         }
     }
-        if (io.getTargetinfo() == ScriptConstants.TARGET_PATH) {
+        if (io.getTargetinfo() == ScriptConsts.TARGET_PATH) {
         // if (io->usepath == NULL)
         // {
         // io->target.x = io->pos.x;
@@ -545,15 +545,15 @@ public  void getTargetPos(IO io, long smoothing)
         // return;
     }
 
-        if (io.getTargetinfo() == ScriptConstants.TARGET_NONE) {
+        if (io.getTargetinfo() == ScriptConsts.TARGET_NONE) {
         io.getTarget().setX(io.getPosition().getX());
         io.getTarget().setY(io.getPosition().getY());
         io.getTarget().setZ(0);
         return;
     }
-        if (io.getTargetinfo() == ScriptConstants.TARGET_PLAYER
+        if (io.getTargetinfo() == ScriptConsts.TARGET_PLAYER
                 || io.getTargetinfo() == -1) {
-        IO player = (IO)Interactive.GetInstance().getIO(
+        BaseInteractiveObject player = (BaseInteractiveObject)Interactive.GetInstance().getIO(
                 ProjectConstants.GetInstance().getPlayer());
         io.getTarget().setX(player.getPosition().getX());
         io.getTarget().setY(player.getPosition().getY());
@@ -563,7 +563,7 @@ public  void getTargetPos(IO io, long smoothing)
     } else {
         if (Interactive.GetInstance().hasIO(io.getTargetinfo()))
         {
-            IO tio = (IO)Interactive.GetInstance()
+            BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.GetInstance()
                     .getIO(io.getTargetinfo());
             Vector2 pos = new Vector2();
             if (Interactive.GetInstance().GetItemWorldPosition(tio, pos))
@@ -657,7 +657,7 @@ protected  bool isType( String type)
  */
 public int onAddToParty() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
  * Script run when the {@link Scriptable} is a target of aggression.
@@ -666,222 +666,222 @@ public int onAddToParty()
  */
 public int onAggression() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onAttackPlayer() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onCallHelp() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO chat start.
+ * On BaseInteractiveObject chat start.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onChat() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onCheatDie() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onCollideDoor() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onCollideNPC() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onCollisionError() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO combine.
+ * On BaseInteractiveObject combine.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onCombine() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onControlsOff() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onControlsOn() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onDelation() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onDetectPlayer() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO dies.
+ * On BaseInteractiveObject dies.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onDie() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onDoorLocked() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO equipped.
+ * On BaseInteractiveObject equipped.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onEquip() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onFleeEnd() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onGameReady() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onHear() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO hit.
+ * On BaseInteractiveObject hit.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onHit() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO attempt to identify.
+ * On BaseInteractiveObject attempt to identify.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onIdentify() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO initialization.
+ * On BaseInteractiveObject initialization.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onInit() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO initialization end.
+ * On BaseInteractiveObject initialization end.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onInitEnd() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO closes inventory.
+ * On BaseInteractiveObject closes inventory.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onInventoryClose() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO goes into inventory.
+ * On BaseInteractiveObject goes into inventory.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onInventoryIn() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO opens inventory.
+ * On BaseInteractiveObject opens inventory.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onInventoryOpen() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO comes out of inventory.
+ * On BaseInteractiveObject comes out of inventory.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onInventoryOut() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO is used inside inventory.
+ * On BaseInteractiveObject is used inside inventory.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onInventoryUse() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onLoad() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onLookFor() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onLookMe() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO traveling on the game map.
+ * On BaseInteractiveObject traveling on the game map.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onMovement() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO ouch.
+ * On BaseInteractiveObject ouch.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onOuch() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onPlayerEnemy() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onReachedTarget() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onReload() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
  * Causes an IONpcData to
@@ -890,41 +890,41 @@ public int onReload()
  */
 public int onSpeakNoRepeat() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onSpellcast() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onSteal() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO successfully strikes a target.
+ * On BaseInteractiveObject successfully strikes a target.
  * @return {@link int}
  * @ if an error occurs
  */
 public int onStrike() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onTargetDeath() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onUndetectPlayer() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
- * On IO unequipped.
+ * On BaseInteractiveObject unequipped.
  * @return <code>int</code>
  * @ if an error occurs
  */
 public int onUnequip() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 /**
  * Removed an event from the list of allowed events.
@@ -935,10 +935,10 @@ public  void removeDisallowedEvent( int event)
     allowedEvent = allowedEvent & ~event;
 }
 /**
- * Sets the IO associated with this script.
- * @param val the IO to set
+ * Sets the BaseInteractiveObject associated with this script.
+ * @param val the BaseInteractiveObject to set
  */
-public  void setIO( IO val)
+public  void setIO( BaseInteractiveObject val)
 {
     io = val;
 }
@@ -968,9 +968,9 @@ public  void setLocalVariable( int index,
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Invalid array index ");
-            sb.append(index);
-            sb.append(".");
+            sb.Append("Invalid array index ");
+            sb.Append(index);
+            sb.Append(".");
         }
         catch (PooledException e)
         {
@@ -979,7 +979,7 @@ public  void setLocalVariable( int index,
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
@@ -1054,51 +1054,51 @@ public  void setLocalVariable( String name,  Object value)
         ScriptVariable svar = null;
         if (value is String
                     || value is char[]) {
-            svar = new ScriptVariable(name, ScriptConstants.TYPE_L_08_TEXT,
+            svar = new ScriptVariable(name, ScriptConsts.TYPE_L_08_TEXT,
                     value);
         } else if (value is String[]
                     || value is char[][]) {
             svar = new ScriptVariable(name,
-                    ScriptConstants.TYPE_L_09_TEXT_ARR, value);
+                    ScriptConsts.TYPE_L_09_TEXT_ARR, value);
         } else if (value is Float) {
-            svar = new ScriptVariable(name, ScriptConstants.TYPE_L_10_FLOAT,
+            svar = new ScriptVariable(name, ScriptConsts.TYPE_L_10_FLOAT,
                     value);
         } else if (value is Double) {
-            svar = new ScriptVariable(name, ScriptConstants.TYPE_L_10_FLOAT,
+            svar = new ScriptVariable(name, ScriptConsts.TYPE_L_10_FLOAT,
                     value);
         } else if (value is float[]) {
             svar = new ScriptVariable(name,
-                    ScriptConstants.TYPE_L_11_FLOAT_ARR, value);
+                    ScriptConsts.TYPE_L_11_FLOAT_ARR, value);
         } else if (value is Integer) {
-            svar = new ScriptVariable(name, ScriptConstants.TYPE_L_12_INT,
+            svar = new ScriptVariable(name, ScriptConsts.TYPE_L_12_INT,
                     value);
         } else if (value is int[]) {
             svar = new ScriptVariable(name,
-                    ScriptConstants.TYPE_L_13_INT_ARR, value);
+                    ScriptConsts.TYPE_L_13_INT_ARR, value);
         } else if (value is Long) {
-            svar = new ScriptVariable(name, ScriptConstants.TYPE_L_14_LONG,
+            svar = new ScriptVariable(name, ScriptConsts.TYPE_L_14_LONG,
                     value);
         } else if (value is long[]) {
             svar = new ScriptVariable(name,
-                    ScriptConstants.TYPE_L_15_LONG_ARR, value);
+                    ScriptConsts.TYPE_L_15_LONG_ARR, value);
         } else {
             PooledStringBuilder sb =
                     StringBuilderPool.GetInstance().GetStringBuilder();
             try
             {
-                sb.append("Local variable ");
-                sb.append(name);
-                sb.append(" was passed new value of type ");
-                sb.append(value.getClass().getCanonicalName());
-                sb.append(". Only String, Float, float[], Integer, int[],");
-                sb.append(" Long, or long[] allowed.");
+                sb.Append("Local variable ");
+                sb.Append(name);
+                sb.Append(" was passed new value of type ");
+                sb.Append(value.getClass().getCanonicalName());
+                sb.Append(". Only String, Float, float[], Integer, int[],");
+                sb.Append(" Long, or long[] allowed.");
             }
             catch (PooledException e)
             {
                 throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
             }
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                    sb.toString());
+                    sb.ToString());
             sb.ReturnToPool();
             sb = null;
             throw ex;
@@ -1110,7 +1110,7 @@ public  void setLocalVariable( String name,  Object value)
  * Sets the master script.
  * @param script the script to set
  */
-public  void setMaster( Scriptable<IO> script)
+public  void setMaster( Scriptable<BaseInteractiveObject> script)
 {
     master = script;
 }
@@ -1119,22 +1119,22 @@ public  void setTarget( TargetParameters params)
 {
         if (io.HasIOFlag(IoGlobals.IO_03_NPC)) {
         io.getNPCData().getPathfinding()
-                .removeFlag(ScriptConstants.PATHFIND_ALWAYS);
+                .RemoveFlag(ScriptConsts.PATHFIND_ALWAYS);
         io.getNPCData().getPathfinding()
-                .removeFlag(ScriptConstants.PATHFIND_ONCE);
+                .RemoveFlag(ScriptConsts.PATHFIND_ONCE);
         io.getNPCData().getPathfinding()
-                .removeFlag(ScriptConstants.PATHFIND_NO_UPDATE);
-        if (params.hasFlag(ScriptConstants.PATHFIND_ALWAYS)) {
+                .RemoveFlag(ScriptConsts.PATHFIND_NO_UPDATE);
+        if (params.HasFlag(ScriptConsts.PATHFIND_ALWAYS)) {
             io.getNPCData().getPathfinding()
-                    .addFlag(ScriptConstants.PATHFIND_ALWAYS);
+                    .AddFlag(ScriptConsts.PATHFIND_ALWAYS);
         }
-        if (params.hasFlag(ScriptConstants.PATHFIND_ONCE)) {
+        if (params.HasFlag(ScriptConsts.PATHFIND_ONCE)) {
             io.getNPCData().getPathfinding()
-                    .addFlag(ScriptConstants.PATHFIND_ONCE);
+                    .AddFlag(ScriptConsts.PATHFIND_ONCE);
         }
-        if (params.hasFlag(ScriptConstants.PATHFIND_NO_UPDATE)) {
+        if (params.HasFlag(ScriptConsts.PATHFIND_NO_UPDATE)) {
             io.getNPCData().getPathfinding()
-                    .addFlag(ScriptConstants.PATHFIND_NO_UPDATE);
+                    .AddFlag(ScriptConsts.PATHFIND_NO_UPDATE);
         }
         int old_target = -12;
         if (io.getNPCData().hasReachedtarget())
@@ -1159,14 +1159,14 @@ public  void setTarget( TargetParameters params)
         // cam->translatetarget.y = 0.f;
         // cam->translatetarget.z = 0.f;
         // }
-        if (t == ScriptConstants.TARGET_PATH)
+        if (t == ScriptConsts.TARGET_PATH)
         {
             io.setTargetinfo(t); // TARGET_PATH;
             getTargetPos(io, 0);
         }
-        else if (t == ScriptConstants.TARGET_NONE)
+        else if (t == ScriptConsts.TARGET_NONE)
         {
-            io.setTargetinfo(ScriptConstants.TARGET_NONE);
+            io.setTargetinfo(ScriptConsts.TARGET_NONE);
         }
         else
         {
@@ -1197,19 +1197,19 @@ public  void setTimer( int index,  int refId)
 }
 public int onOtherReflection() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onMiscReflection() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onPathfinderFailure() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
 public int onSpellEnd() 
 {
-        return ScriptConstants.ACCEPT;
+        return ScriptConsts.ACCEPT;
 }
     }
 }

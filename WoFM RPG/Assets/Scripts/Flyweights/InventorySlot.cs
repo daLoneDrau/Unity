@@ -2,79 +2,65 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RPGBase.Utilities;
 
-namespace Assets.Scripts.Flyweights
+namespace RPGBase.Flyweights
 {
-    class InventorySlot
+    /// <summary>
+    /// 
+    /// </summary>
+    public class InventorySlot : Watchable
     {
-        /** the item occupying the inventory slot. */
-        private IO io;
-        /** a flag indicating the item is showing and should be rendered. */
-        private bool show;
-        /**
-         * the list of {@link Watcher}s associated with this {@link IoPcData}.
-         */
-        private  ArrayList<Watcher>    watchers    = new ArrayList<Watcher>();
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-    public  void addWatcher( Watcher watcher)
+        private BaseInteractiveObject io;
+        /// <summary>
+        /// the item occupying the inventory slot.
+        /// </summary>
+        public BaseInteractiveObject Io
         {
-            watchers.add(watcher);
-        }
-        /**
-         * Gets the item occupying the inventory slot.
-         * @return {@link IO}
-         */
-        public  IO getIo()
-        {
-            return io;
-        }
-        /**
-         * Gets the flag indicating the item is showing and should be rendered.
-         * @return <code>bool</code>
-         */
-        public  bool isShow()
-        {
-            return show;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-    public  void notifyWatchers()
-        {
-            for (int i = 0; i < watchers.size(); i++)
+            get
             {
-                watchers.get(i).watchUpdated(this);
+                return io;
+            }
+            set
+            {
+                io = value;
+                NotifyWatchers();
             }
         }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-    public  void removeWatcher( Watcher watcher)
+        private bool show;
+        /// <summary>
+        /// a flag indicating the item is showing and should be rendered.
+        /// </summary>
+        public bool Show
         {
-            watchers.remove(watcher);
+            get
+            {
+                return show;
+            }
+            set
+            {
+                show = value;
+                NotifyWatchers();
+            }
         }
-        /**
-         * Sets the item occupying the inventory slot.
-         * @param val the val to set
-         */
-        public  void setIo( IO val)
+        /// <summary>
+        /// the list of <see cref="Watcher"/>s associated with this <see cref="InventorySlot"/>.
+        /// </summary>
+        private List<Watcher> watchers = new List<Watcher>();
+        public override void AddWatcher(Watcher watcher)
         {
-            io = val;
-            notifyWatchers();
+            watchers.Add(watcher);
         }
-        /**
-         * Sets the flag indicating the item is showing and should be rendered.
-         * @param flag the show to set
-         */
-        public  void setShow( bool flag)
+        public override void NotifyWatchers()
         {
-            show = flag;
-            notifyWatchers();
+            for (int i = watchers.Count - 1; i >= 0; i--)
+            {
+                watchers[i].WatchUpdated(this);
+            }
+        }
+        public override void RemoveWatcher(Watcher watcher)
+        {
+            watchers.Remove(watcher);
         }
     }
 }

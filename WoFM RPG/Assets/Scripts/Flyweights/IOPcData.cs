@@ -15,8 +15,8 @@ namespace RPGBase.Flyweights
         private float gold;
         /** interface flags. */
         private int interfaceFlags;
-        /** the IO associated with this {@link IoPcData}. */
-        private IO io;
+        /** the BaseInteractiveObject associated with this {@link IoPcData}. */
+        private BaseInteractiveObject io;
         /** the player's key ring. */
         private char[][] keyring;
         /** the {@link IoPcData}'s level. */
@@ -123,14 +123,14 @@ namespace RPGBase.Flyweights
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("M");
-            sb.append(ls);
+            sb.Append("M");
+            sb.Append(ls);
         }
         catch (PooledException e)
         {
             JOGLErrorHandler.GetInstance().fatalError(e);
         }
-        String mls = sb.toString();
+        String mls = sb.ToString();
         sb.ReturnToPool();
         sb = null;
         setBaseAttributeScore(getLifeAttribute(), getBaseLife() + dmg);
@@ -193,7 +193,7 @@ namespace RPGBase.Flyweights
 
             // TODO - add timer for ouch
             // if (ARXTime > inter.iobj[0]->ouch_time + 500) {
-            IO oes = (IO)Script.GetInstance().getEventSender();
+            BaseInteractiveObject oes = (BaseInteractiveObject)Script.GetInstance().getEventSender();
 
             if (Interactive.GetInstance().hasIO(source))
             {
@@ -218,14 +218,14 @@ namespace RPGBase.Flyweights
             {
                 if (Interactive.GetInstance().hasIO(source))
                 {
-                    IO poisonWeaponIO = null;
-                    IO sourceIO =
-                            (IO)Interactive.GetInstance()
+                    BaseInteractiveObject poisonWeaponIO = null;
+                    BaseInteractiveObject sourceIO =
+                            (BaseInteractiveObject)Interactive.GetInstance()
                                     .getIO(source);
 
                     if (sourceIO.HasIOFlag(IoGlobals.IO_03_NPC))
                     {
-                        poisonWeaponIO = (IO)sourceIO.getNPCData().getWeapon();
+                        poisonWeaponIO = (BaseInteractiveObject)sourceIO.getNPCData().getWeapon();
                         if (poisonWeaponIO != null
                                 && (poisonWeaponIO.getPoisonLevel() == 0
                                         || poisonWeaponIO
@@ -290,7 +290,7 @@ namespace RPGBase.Flyweights
                             {
                                 continue;
                             }
-                            IO ioo = (IO)Interactive.GetInstance().getIO(i);
+                            BaseInteractiveObject ioo = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
                             // tell all IOs not to target player anymore
                             if (ioo != null
                                     && ioo.HasIOFlag(IoGlobals.IO_03_NPC))
@@ -312,8 +312,8 @@ namespace RPGBase.Flyweights
                                     else if (Interactive.GetInstance()
                                           .hasIO(source))
                                     {
-                                        IO sourceIO =
-                                                (IO)Interactive
+                                        BaseInteractiveObject sourceIO =
+                                                (BaseInteractiveObject)Interactive
                                                         .GetInstance().getIO(
                                                                 source);
                                         if (sourceIO.HasIOFlag(
@@ -401,7 +401,7 @@ namespace RPGBase.Flyweights
 		int wpnId = getEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
 		if (wpnId >= 0
 		        && Interactive.GetInstance().hasIO(wpnId)) {
-            IO weapon = (IO)Interactive.GetInstance().getIO(wpnId);
+            BaseInteractiveObject weapon = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
             if (weapon.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_DAGGER))
             {
                 type = EquipmentGlobals.WEAPON_DAGGER;
@@ -430,7 +430,7 @@ namespace RPGBase.Flyweights
 	 * @throws PooledException if an error occurs
 	 * @ if an error occurs
 	 */
-    public  bool ARX_EQUIPMENT_IsPlayerEquip( IO itemIO)
+    public  bool ARX_EQUIPMENT_IsPlayerEquip( BaseInteractiveObject itemIO)
 
             
     {
@@ -440,7 +440,7 @@ namespace RPGBase.Flyweights
             if (this.getEquippedItem(i) >= 0
                     && Interactive.GetInstance().hasIO(getEquippedItem(i)))
             {
-                IO toequip = (IO)Interactive.GetInstance().getIO(
+                BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.GetInstance().getIO(
                         getEquippedItem(i));
                 if (toequip.Equals(itemIO))
                 {
@@ -465,8 +465,8 @@ namespace RPGBase.Flyweights
 		int wpnId = getEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
 		if (wpnId >= 0
 		        && Interactive.GetInstance().hasIO(wpnId)) {
-            IO weapon = (IO)Interactive.GetInstance().getIO(wpnId);
-            weapon.getItemData().ARX_EQUIPMENT_UnEquip(io, false);
+            BaseInteractiveObject weapon = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
+            weapon.ItemData.ARX_EQUIPMENT_UnEquip(io, false);
         }
         setEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON, -1);
     }
@@ -525,10 +525,10 @@ namespace RPGBase.Flyweights
         return gold;
     }
     /**
-	 * Gets the IO associated with this {@link IoPcData}.
-	 * @return {@link IO}
+	 * Gets the BaseInteractiveObject associated with this {@link IoPcData}.
+	 * @return {@link BaseInteractiveObject}
 	 */
-    public  IO getIo()
+    public  BaseInteractiveObject getIo()
     {
         return io;
     }
@@ -733,14 +733,14 @@ namespace RPGBase.Flyweights
         notifyWatchers();
     }
     /**
-	 * Sets the IO associated with the pc data.
-	 * @param newIO the IO to set
+	 * Sets the BaseInteractiveObject associated with the pc data.
+	 * @param newIO the BaseInteractiveObject to set
 	 */
-    public  void setIo( IO newIO)
+    public  void setIo( BaseInteractiveObject newIO)
     {
         io = newIO;
         if (newIO != null
-                && newIO.getPCData() == null)
+                && newIO.PcData == null)
         {
             newIO.setPCData(this);
         }

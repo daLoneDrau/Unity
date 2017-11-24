@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace RPGBase.Flyweights
+﻿namespace RPGBase.Flyweights
 {
     /// <summary>
     /// Equipped item element modifiers. An equipped item can have 0 or more of these modifiers applied; an element that modifies the wielder's strength, an element that modifies the wielder's to-hit score, etc.

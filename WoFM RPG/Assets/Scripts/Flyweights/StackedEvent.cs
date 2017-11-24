@@ -11,14 +11,14 @@ namespace Assets.Scripts.Flyweights
         private String eventname;
         /** flag indicating whether the event still exists. */
         private bool exist;
-        /** the IO associated with the event. */
-        private IO io;
+        /** the BaseInteractiveObject associated with the event. */
+        private BaseInteractiveObject io;
         /** the event message. */
         private int msg;
         /** the event parameters. */
         private Object[]	params;
 	/** the event sender. */
-	private IO sender;
+	private BaseInteractiveObject sender;
         /**
          * Gets the flag indicating whether the event still exists.
          * @return <code>bool</code>
@@ -36,10 +36,10 @@ namespace Assets.Scripts.Flyweights
             return eventname;
         }
         /**
-         * Gets the IO associated with the event.
-         * @return {@link IO}
+         * Gets the BaseInteractiveObject associated with the event.
+         * @return {@link BaseInteractiveObject}
          */
-        public  IO getIo()
+        public  BaseInteractiveObject getIo()
         {
             return io;
         }
@@ -61,9 +61,9 @@ namespace Assets.Scripts.Flyweights
         }
         /**
          * Gets the event sender.
-         * @return {@link IO}
+         * @return {@link BaseInteractiveObject}
          */
-        public  IO getSender()
+        public  BaseInteractiveObject getSender()
         {
             return sender;
         }
@@ -84,10 +84,10 @@ namespace Assets.Scripts.Flyweights
             this.exist = val;
         }
         /**
-         * Sets the IO associated with the event.
+         * Sets the BaseInteractiveObject associated with the event.
          * @param val the io to set
          */
-        public  void setIo( IO val)
+        public  void setIo( BaseInteractiveObject val)
         {
             this.io = val;
         }
@@ -111,7 +111,7 @@ namespace Assets.Scripts.Flyweights
          * Sets the event sender.
          * @param val the sender to set
          */
-        public  void setSender( IO val)
+        public  void setSender( BaseInteractiveObject val)
         {
             this.sender = val;
         }

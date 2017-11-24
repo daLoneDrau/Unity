@@ -16,17 +16,17 @@ namespace Assets.Scripts.Flyweights
         public TargetParameters( String initParams) 
         {
             String []
-            split = initParams.split(" ");
+            split = initParams.Split(" ");
         for (int i = split.Length - 1; i >= 0; i--) {
             if (split[i].startsWith("-")) {
                 if (split[i].toUpperCase().contains("S")) {
-                    this.addFlag(ScriptConstants.PATHFIND_ONCE);
+                    this.AddFlag(ScriptConsts.PATHFIND_ONCE);
     }
                 if (split[i].toUpperCase().contains("A")) {
-                    this.addFlag(ScriptConstants.PATHFIND_ALWAYS);
+                    this.AddFlag(ScriptConsts.PATHFIND_ALWAYS);
                 }
                 if (split[i].toUpperCase().contains("N")) {
-                    this.addFlag(ScriptConstants.PATHFIND_NO_UPDATE);
+                    this.AddFlag(ScriptConsts.PATHFIND_NO_UPDATE);
                 }
 }
             if (split[i].equalsIgnoreCase("PATH")) {
@@ -37,7 +37,7 @@ namespace Assets.Scripts.Flyweights
                         "PLAYER");
             }
             if (split[i].equalsIgnoreCase("NONE")) {
-                targetInfo = ScriptConstants.TARGET_NONE;
+                targetInfo = ScriptConsts.TARGET_NONE;
             }
             if (split[i].startsWith("NODE_")) {
                 targetInfo = Interactive.GetInstance().getTargetByNameTarget(
@@ -59,18 +59,18 @@ namespace Assets.Scripts.Flyweights
      * Adds a flag.
      * @param flag the flag
      */
-    public void addFlag( long flag)
+    public void AddFlag( long flag)
 {
     flags |= flag;
 }
-private void clearFlags()
+private void ClearFlags()
 {
     flags = 0;
 }
 /**
  * @return the flags
  */
-public int getFlags()
+public int GetFlags()
 {
     return flags;
 }
@@ -87,7 +87,7 @@ public int getTargetInfo()
  * @return true if the {@link BaseInteractiveObject} has the flag; false
  *         otherwise
  */
-public  bool hasFlag( long flag)
+public  bool HasFlag( long flag)
 {
     return (flags & flag) == flag;
 }
@@ -95,7 +95,7 @@ public  bool hasFlag( long flag)
  * Removes a flag.
  * @param flag the flag
  */
-public  void removeFlag( long flag)
+public  void RemoveFlag( long flag)
 {
     flags &= ~flag;
 }

@@ -89,14 +89,14 @@ namespace RPGBase.Flyweights
             if (equippedItems[i] >= 0
                     && Interactive.GetInstance().hasIO(equippedItems[i]))
             {
-                IO toequip =
-                        (IO)Interactive.GetInstance().getIO(equippedItems[i]);
+                BaseInteractiveObject toequip =
+                        (BaseInteractiveObject)Interactive.GetInstance().getIO(equippedItems[i]);
                 if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
-                        && toequip.getItemData() != null
-                        && toequip.getItemData().getEquipitem() != null)
+                        && toequip.ItemData != null
+                        && toequip.ItemData.getEquipitem() != null)
                 {
                     EquipmentItemModifier element =
-                            toequip.getItemData().getEquipitem().getElement(
+                            toequip.ItemData.getEquipitem().getElement(
                                     elementType);
                     if (!element.isPercentage())
                     {
@@ -125,14 +125,14 @@ namespace RPGBase.Flyweights
             if (equippedItems[i] >= 0
                     && Interactive.GetInstance().hasIO(equippedItems[i]))
             {
-                IO toequip =
-                        (IO)Interactive.GetInstance().getIO(equippedItems[i]);
+                BaseInteractiveObject toequip =
+                        (BaseInteractiveObject)Interactive.GetInstance().getIO(equippedItems[i]);
                 if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
-                        && toequip.getItemData() != null
-                        && toequip.getItemData().getEquipitem() != null)
+                        && toequip.ItemData != null
+                        && toequip.ItemData.getEquipitem() != null)
                 {
                     EquipmentItemModifier element =
-                            toequip.getItemData().getEquipitem().getElement(
+                            toequip.ItemData.getEquipitem().getElement(
                                     elementType);
                     if (element.isPercentage())
                     {
@@ -146,8 +146,8 @@ namespace RPGBase.Flyweights
     }
     public abstract void ARX_EQUIPMENT_RecreatePlayerMesh();
     /**
-     * Releases an equipped IO.
-     * @param id the IO's reference id
+     * Releases an equipped BaseInteractiveObject.
+     * @param id the BaseInteractiveObject's reference id
      * @ if an error occurs
      */
     public  void ARX_EQUIPMENT_Release( int id) 
@@ -177,19 +177,19 @@ namespace RPGBase.Flyweights
                     throw new RPGException(ErrorMessage.INVALID_DATA_TYPE,
                             "Equipped unregistered item in slot " + i);
                 }
-                IO itemIO = (IO)Interactive.GetInstance().getIO(
+                BaseInteractiveObject itemIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(
                         equippedItems[i]);
                 if (!itemIO.HasIOFlag(IoGlobals.IO_02_ITEM))
                 {
                     throw new RPGException(ErrorMessage.INVALID_DATA_TYPE,
                             "Equipped item without IO_02_ITEM in slot " + i);
                 }
-                if (itemIO.getItemData() == null)
+                if (itemIO.ItemData == null)
                 {
                     throw new RPGException(ErrorMessage.INVALID_DATA_TYPE,
                             "Equipped item with null item data in slot " + i);
                 }
-                itemIO.getItemData().ARX_EQUIPMENT_UnEquip(getIo(), false);
+                itemIO.ItemData.ARX_EQUIPMENT_UnEquip(getIo(), false);
             }
         }
         computeFullStats();
@@ -329,16 +329,16 @@ public  int getEquippedItem( int slot)
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Error - equipment slot ");
-            sb.append(slot);
-            sb.append(" is outside array bounds.");
+            sb.Append("Error - equipment slot ");
+            sb.Append(slot);
+            sb.Append(" is outside array bounds.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(
-                ErrorMessage.BAD_PARAMETERS, sb.toString());
+                ErrorMessage.BAD_PARAMETERS, sb.ToString());
         sb.ReturnToPool();
         throw ex;
     }
@@ -356,10 +356,10 @@ public  float getFullAttributeScore( String attr)
 }
 public abstract float getFullDamage();
 /**
- * Gets the IO associated with this {@link IOCharacter}.
- * @return {@link IO}
+ * Gets the BaseInteractiveObject associated with this {@link IOCharacter}.
+ * @return {@link BaseInteractiveObject}
  */
-public abstract IO getIo();
+public abstract BaseInteractiveObject getIo();
 public abstract float getMaxLife();
 /**
  * Initializes the items the {@link IOCharacter} has equipped.
@@ -432,16 +432,16 @@ public  void setEquippedItem( int slot,
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Error - equipment slot ");
-            sb.append(slot);
-            sb.append(" is outside array bounds.");
+            sb.Append("Error - equipment slot ");
+            sb.Append(slot);
+            sb.Append(" is outside array bounds.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(
-                ErrorMessage.BAD_PARAMETERS, sb.toString());
+                ErrorMessage.BAD_PARAMETERS, sb.ToString());
         sb.ReturnToPool();
         throw ex;
     }
@@ -467,16 +467,16 @@ public  void setEquippedItem( int slot,  int id)
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Error - equipment slot ");
-            sb.append(slot);
-            sb.append(" is outside array bounds.");
+            sb.Append("Error - equipment slot ");
+            sb.Append(slot);
+            sb.Append(" is outside array bounds.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(
-                ErrorMessage.BAD_PARAMETERS, sb.toString());
+                ErrorMessage.BAD_PARAMETERS, sb.ToString());
         sb.ReturnToPool();
         throw ex;
     }

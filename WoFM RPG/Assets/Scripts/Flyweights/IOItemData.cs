@@ -97,7 +97,7 @@ namespace RPGBase.Flyweights
             // send event to target. someone attacked you!
             Script.GetInstance().setEventSender(io_source);
             Script.GetInstance().sendIOScriptEvent(io_target,
-                        ScriptConstants.SM_057_AGGRESSION, null, null);
+                        ScriptConsts.SM_057_AGGRESSION, null, null);
             if (io_source != null
                     && io_target != null)
             {
@@ -150,16 +150,16 @@ namespace RPGBase.Flyweights
                         attack = io_source.GetPCData().GetFullDamage();
                         if (io_source.GetPCData().CalculateCriticalHit()
                                 && Script.GetInstance().sendIOScriptEvent(
-                                        io_source, ScriptConstants.SM_054_CRITICAL,
-                                        null, null) != ScriptConstants.REFUSE)
+                                        io_source, ScriptConsts.SM_054_CRITICAL,
+                                        null, null) != ScriptConsts.REFUSE)
                         {
                             critical = true;
                         }
                         damages = attack * dmgModifier;
                         if (io_source.GetPCData().calculateBackstab()
                                 && Script.GetInstance().sendIOScriptEvent(
-                                        io_source, ScriptConstants.SM_056_BACKSTAB,
-                                        null, null) != ScriptConstants.REFUSE)
+                                        io_source, ScriptConsts.SM_056_BACKSTAB,
+                                        null, null) != ScriptConsts.REFUSE)
                         {
                             backstab = this.GetBackstabModifier();
                         }
@@ -193,8 +193,8 @@ namespace RPGBase.Flyweights
                             if (io_source.GetNPCData().CalculateCriticalHit()
                                     && Script.GetInstance().sendIOScriptEvent(
                                             io_source,
-                                            ScriptConstants.SM_054_CRITICAL,
-                                            null, null) != ScriptConstants.REFUSE)
+                                            ScriptConsts.SM_054_CRITICAL,
+                                            null, null) != ScriptConsts.REFUSE)
                             {
                                 critical = true;
                             }
@@ -202,8 +202,8 @@ namespace RPGBase.Flyweights
                             if (io_source.GetNPCData().calculateBackstab()
                                     && Script.GetInstance().sendIOScriptEvent(
                                             io_source,
-                                            ScriptConstants.SM_056_BACKSTAB,
-                                            null, null) != ScriptConstants.REFUSE)
+                                            ScriptConsts.SM_056_BACKSTAB,
+                                            null, null) != ScriptConsts.REFUSE)
                             {
                                 backstab = this.GetBackstabModifier();
                             }
@@ -420,7 +420,7 @@ namespace RPGBase.Flyweights
         if (added) {
         io.AddTypeFlag(flag);
     } else {
-        io.removeTypeFlag(flag);
+        io.RemoveTypeFlag(flag);
     }
 }
 /**
@@ -500,7 +500,7 @@ private void EquipRing( IOCharacter charData)
                 EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
         if (Interactive.GetInstance().hasIO(ioid)) {
         BaseInteractiveObject oldRing = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
-        if (oldRing.getItemData().getRingType() == ringType)
+        if (oldRing.ItemData.getRingType() == ringType)
         {
             // already wearing that type
             // of ring on left finger
@@ -514,7 +514,7 @@ private void EquipRing( IOCharacter charData)
         if (Interactive.GetInstance().hasIO(ioid))
         {
             BaseInteractiveObject oldRing = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
-            if (oldRing.getItemData().getRingType() == ringType)
+            if (oldRing.ItemData.getRingType() == ringType)
             {
                 // already wearing that type
                 // of ring on right finger
@@ -824,7 +824,7 @@ public void setIo( BaseInteractiveObject val)
 {
     io = val;
     if (val != null
-            && val.getItemData() == null)
+            && val.ItemData == null)
     {
         val.setItemData(this);
     }
@@ -920,9 +920,9 @@ private void UnequipItemInSlot( IOCharacter player,  int slot)
         {
             BaseInteractiveObject equipIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(slotioid);
             if (equipIO.HasIOFlag(IoGlobals.IO_02_ITEM)
-                    && equipIO.getItemData() != null)
+                    && equipIO.ItemData != null)
             {
-                equipIO.getItemData().ARX_EQUIPMENT_UnEquip(
+                equipIO.ItemData.ARX_EQUIPMENT_UnEquip(
                         player.getIo(), false);
             }
             equipIO = null;

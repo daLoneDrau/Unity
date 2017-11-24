@@ -14,8 +14,8 @@ namespace Assets.Scripts.Flyweights
         private Object[] args;
         /** the flags set on the timer. */
         private long flagValues;
-        /** the {@link IO} associated with the timer. */
-        private IO io;
+        /** the {@link BaseInteractiveObject} associated with the timer. */
+        private BaseInteractiveObject io;
         /** the {@link Method} invoked on the associated {@link Object}. */
         private Method method;
         /** the number of milliseconds in the timer's cycle. */
@@ -31,7 +31,7 @@ namespace Assets.Scripts.Flyweights
         /** the time when the timer starts. */
         private long startTime;
         /** Clears all parameters. */
-        public void clear()
+        public void Clear()
         {
             args = null;
             flagValues = 0;
@@ -62,10 +62,10 @@ namespace Assets.Scripts.Flyweights
             return flagValues;
         }
         /**
-         * Gets the {@link IO} associated with the timer.
-         * @return {@link IO}
+         * Gets the {@link BaseInteractiveObject} associated with the timer.
+         * @return {@link BaseInteractiveObject}
          */
-        public IO getIo()
+        public BaseInteractiveObject getIo()
         {
             return io;
         }
@@ -112,7 +112,7 @@ namespace Assets.Scripts.Flyweights
         }
         /**
          * Gets the {@link Scriptable} associated with the timer.
-         * @return {@link Scriptable<IO>}
+         * @return {@link Scriptable<BaseInteractiveObject>}
          */
         public Scriptable getScript()
         {
@@ -144,10 +144,10 @@ namespace Assets.Scripts.Flyweights
             flagValues = val;
         }
         /**
-         * Sets the {@link IO} associated with the timer.
+         * Sets the {@link BaseInteractiveObject} associated with the timer.
          * @param val the new value to set
          */
-        public void setIo( IO val)
+        public void setIo( BaseInteractiveObject val)
         {
             io = val;
         }

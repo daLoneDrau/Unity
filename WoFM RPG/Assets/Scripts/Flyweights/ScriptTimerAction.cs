@@ -32,7 +32,7 @@ namespace Assets.Scripts.Flyweights
             args = a;
         }
         /** Clears the action without processing. */
-        public void clear()
+        public void Clear()
         {
             exists = false;
             object = null;

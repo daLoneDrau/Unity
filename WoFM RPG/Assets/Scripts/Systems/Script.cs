@@ -2,25 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RPGBase.Flyweights;
 
 namespace RPGBase.Systems
 {
     public abstract class Script
     {
-        private static  int ANIM_TALK_ANGRY = 0;
-        private static  int ANIM_TALK_HAPPY = 0;
-        private static  int ANIM_TALK_NEUTRAL = 0;
+        private static int ANIM_TALK_ANGRY = 0;
+        private static int ANIM_TALK_HAPPY = 0;
+        private static int ANIM_TALK_NEUTRAL = 0;
         /** the one and only instance of the <tt>Script</tt> class. */
         private static Script instance;
         /** the maximum number of system parameters. */
-        public static  int MAX_SYSTEM_PARAMS = 5;
+        public static int MAX_SYSTEM_PARAMS = 5;
         /** the list of system parameters. */
-        private static  String[] SYSTEM_PARAMS = new String[MAX_SYSTEM_PARAMS];
-    /**
-     * Gives access to the singleton instance of {@link Script}.
-     * @return {@link Script}
-     */
-    public static Script GetInstance()
+        private static String[] SYSTEM_PARAMS = new String[MAX_SYSTEM_PARAMS];
+        /**
+         * Gives access to the singleton instance of {@link Script}.
+         * @return {@link Script}
+         */
+        public static Script GetInstance()
         {
             return Script.instance;
         }
@@ -28,7 +29,7 @@ namespace RPGBase.Systems
          * Sets the singleton instance.
          * @param i the instance to set
          */
-        protected static void setInstance( Script i)
+        protected static void SetInstance(Script i)
         {
             Script.instance = i;
         }
@@ -36,7 +37,7 @@ namespace RPGBase.Systems
         /** the flag indicating whether debug output is turned on. */
         private bool debug;
         private bool EDITMODE;
-        private IO eventSender;
+        private BaseInteractiveObject eventSender;
         private int eventTotalCount;
         private int GLOB;
         /** the list of global script variables. */
@@ -46,11 +47,11 @@ namespace RPGBase.Systems
         private bool PauseScript;
         private int stackFlow = 8;
         /**
-         * Adds an IO to a specific group.
-         * @param io the IO
+         * Adds an BaseInteractiveObject to a specific group.
+         * @param io the BaseInteractiveObject
          * @param group the group name
          */
-        public  void addToGroup( IO io,  String group)
+        public void addToGroup(BaseInteractiveObject io, String group)
         {
             if (io != null
                     && group != null)
@@ -58,191 +59,200 @@ namespace RPGBase.Systems
                 io.AddGroup(group);
             }
         }
-        public  void allowInterScriptExecution() 
+        public void allowInterScriptExecution()
         {
-        int ppos = 0;
+            int ppos = 0;
 
-        if (!PauseScript && !EDITMODE && !ARXPausedTime) {
-            this.eventSender = null;
+            if (!PauseScript && !EDITMODE && !ARXPausedTime)
+            {
+                this.eventSender = null;
 
-            int numm = Math.min(Interactive.GetInstance().getMaxIORefId(), 10);
+                int numm = Math.min(Interactive.GetInstance().getMaxIORefId(), 10);
 
-            for (int n = 0; n<numm; n++) {
-                int i = ppos;
-        ppos++;
+                for (int n = 0; n < numm; n++)
+                {
+                    int i = ppos;
+                    ppos++;
 
-                if (ppos >= Interactive.GetInstance().getMaxIORefId()) {
-                    ppos = 0;
-                    break;
-                }
-                if (Interactive.GetInstance().hasIO(i)) {
-                    IO io = (IO)Interactive.GetInstance().getIO(i);
-                    if (io.HasGameFlag(IoGlobals.GFLAG_ISINTREATZONE)) {
-                        if (io.getMainevent() != null) {
-                            sendIOScriptEvent(io, 0, null, io.getMainevent());
-} else {
-                            sendIOScriptEvent(
-                                    io, ScriptConstants.SM_008_MAIN, null, null);
+                    if (ppos >= Interactive.GetInstance().getMaxIORefId())
+                    {
+                        ppos = 0;
+                        break;
+                    }
+                    if (Interactive.GetInstance().hasIO(i))
+                    {
+                        BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
+                        if (io.HasGameFlag(IoGlobals.GFLAG_ISINTREATZONE))
+                        {
+                            if (io.getMainevent() != null)
+                            {
+                                sendIOScriptEvent(io, 0, null, io.getMainevent());
+                            }
+                            else
+                            {
+                                sendIOScriptEvent(
+                                        io, ScriptConsts.SM_008_MAIN, null, null);
+                            }
                         }
                     }
                 }
             }
         }
-    }
-    protected abstract void clearAdditionalEventStacks();
-protected abstract void clearAdditionalEventStacksForIO(IO io);
-/**
- * Clones all local variables from the source {@link IO} to the destination
- * {@link IO}.
- * @param src the source {@link IO}
- * @param dest the destination {@link IO}
- * @ if an error occurs
- */
-public  void cloneLocalVars( IO src,  IO dest)
-            
-{
-        if (dest != null
-                && src != null) {
-        freeAllLocalVariables(dest);
-        if (src.getScript().hasLocalVariables())
+        protected abstract void clearAdditionalEventStacks();
+        protected abstract void clearAdditionalEventStacksForIO(BaseInteractiveObject io);
+        /**
+         * Clones all local variables from the source {@link BaseInteractiveObject} to the destination
+         * {@link BaseInteractiveObject}.
+         * @param src the source {@link BaseInteractiveObject}
+         * @param dest the destination {@link BaseInteractiveObject}
+         * @ if an error occurs
+         */
+        public void cloneLocalVars(BaseInteractiveObject src, BaseInteractiveObject dest)
+
         {
-            int i = src.getScript().getLocalVarArrayLength() - 1;
-            for (; i >= 0; i--)
+            if (dest != null
+                    && src != null)
             {
-                dest.getScript().setLocalVariable(new ScriptVariable(
-                        src.getScript().getLocalVariable(i)));
+                freeAllLocalVariables(dest);
+                if (src.getScript().hasLocalVariables())
+                {
+                    int i = src.getScript().getLocalVarArrayLength() - 1;
+                    for (; i >= 0; i--)
+                    {
+                        dest.getScript().setLocalVariable(new ScriptVariable(
+                                src.getScript().getLocalVariable(i)));
+                    }
+                }
             }
         }
-    }
-}
-/**
- * Count the number of active script timers.
- * @return <code>int</code>
- */
-public  int countTimers()
-{
-    int activeTimers = 0;
-    TIMER[] scriptTimers = getScriptTimers();
-    for (int i = scriptTimers.Length - 1; i >= 0; i--)
-    {
-        if (scriptTimers[i] != null
-                && scriptTimers[i].exists())
+        /**
+         * Count the number of active script timers.
+         * @return <code>int</code>
+         */
+        public int countTimers()
         {
-            activeTimers++;
+            int activeTimers = 0;
+            TIMER[] scriptTimers = getScriptTimers();
+            for (int i = scriptTimers.Length - 1; i >= 0; i--)
+            {
+                if (scriptTimers[i] != null
+                        && scriptTimers[i].exists())
+                {
+                    activeTimers++;
+                }
+            }
+            return activeTimers;
         }
-    }
-    return activeTimers;
-}
-protected abstract void destroyScriptTimers();
-/**
- * Checks to see if a scripted event is disallowed.
- * @param msg the event message id
- * @param script the {@link Scriptable} script
- * @return <tt>true</tt> if the event is not allowed; <tt>false</tt>
- *         otherwise
- */
-private bool eventIsDisallowed( int msg,
-         Scriptable script)
-{
-    bool disallowed = false;
-    // check to see if message is for an event that was disabled
-    switch (msg)
-    {
-        case ScriptConstants.SM_055_COLLIDE_NPC:
-            if (script.hasAllowedEvent(ScriptConstants.DISABLE_COLLIDE_NPC))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_010_CHAT:
-            if (script.hasAllowedEvent(ScriptConstants.DISABLE_CHAT))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_016_HIT:
-            if (script.hasAllowedEvent(ScriptConstants.DISABLE_HIT))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_028_INVENTORY2_OPEN:
-            if (script.hasAllowedEvent(
-                    ScriptConstants.DISABLE_INVENTORY2_OPEN))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_046_HEAR:
-            if (script.hasAllowedEvent(ScriptConstants.DISABLE_HEAR))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_023_UNDETECTPLAYER:
-        case ScriptConstants.SM_022_DETECTPLAYER:
-            if (script.hasAllowedEvent(ScriptConstants.DISABLE_DETECT))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_057_AGGRESSION:
-            if (script.hasAllowedEvent(
-                    ScriptConstants.DISABLE_AGGRESSION))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_008_MAIN:
-            if (script.hasAllowedEvent(ScriptConstants.DISABLE_MAIN))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_073_CURSORMODE:
-            if (script.hasAllowedEvent(
-                    ScriptConstants.DISABLE_CURSORMODE))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_074_EXPLORATIONMODE:
-            if (script.hasAllowedEvent(
-                    ScriptConstants.DISABLE_EXPLORATIONMODE))
-            {
-                disallowed = true;
-            }
-            break;
-        case ScriptConstants.SM_061_KEY_PRESSED:
-            // float dwCurrTime = ARX_TIME_Get();
-            // if ((dwCurrTime - g_TimeStartCinemascope) < 3000) {
-            // return ScriptConstants.REFUSE;
-            // }
-            break;
-        default:
-            break;
-    }
-    return disallowed;
-}
-public  void eventStackClear()
-{
-    for (int i = 0; i < ScriptConstants.MAX_EVENT_STACK; i++)
-    {
-        if (getStackedEvent(i).exists())
+        protected abstract void destroyScriptTimers();
+        /**
+         * Checks to see if a scripted event is disallowed.
+         * @param msg the event message id
+         * @param script the {@link Scriptable} script
+         * @return <tt>true</tt> if the event is not allowed; <tt>false</tt>
+         *         otherwise
+         */
+        private bool eventIsDisallowed(int msg,
+                 Scriptable script)
         {
-            getStackedEvent(i).setParams(null);
-            getStackedEvent(i).setEventname(null);
-            getStackedEvent(i).setSender(null);
-            getStackedEvent(i).setExist(false);
-            getStackedEvent(i).setIo(null);
+            bool disallowed = false;
+            // check to see if message is for an event that was disabled
+            switch (msg)
+            {
+                case ScriptConsts.SM_055_COLLIDE_NPC:
+                    if (script.hasAllowedEvent(ScriptConsts.DISABLE_COLLIDE_NPC))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_010_CHAT:
+                    if (script.hasAllowedEvent(ScriptConsts.DISABLE_CHAT))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_016_HIT:
+                    if (script.hasAllowedEvent(ScriptConsts.DISABLE_HIT))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_028_INVENTORY2_OPEN:
+                    if (script.hasAllowedEvent(
+                            ScriptConsts.DISABLE_INVENTORY2_OPEN))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_046_HEAR:
+                    if (script.hasAllowedEvent(ScriptConsts.DISABLE_HEAR))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_023_UNDETECTPLAYER:
+                case ScriptConsts.SM_022_DETECTPLAYER:
+                    if (script.hasAllowedEvent(ScriptConsts.DISABLE_DETECT))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_057_AGGRESSION:
+                    if (script.hasAllowedEvent(
+                            ScriptConsts.DISABLE_AGGRESSION))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_008_MAIN:
+                    if (script.hasAllowedEvent(ScriptConsts.DISABLE_MAIN))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_073_CURSORMODE:
+                    if (script.hasAllowedEvent(
+                            ScriptConsts.DISABLE_CURSORMODE))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_074_EXPLORATIONMODE:
+                    if (script.hasAllowedEvent(
+                            ScriptConsts.DISABLE_EXPLORATIONMODE))
+                    {
+                        disallowed = true;
+                    }
+                    break;
+                case ScriptConsts.SM_061_KEY_PRESSED:
+                    // float dwCurrTime = ARX_TIME_Get();
+                    // if ((dwCurrTime - g_TimeStartCinemascope) < 3000) {
+                    // return ScriptConsts.REFUSE;
+                    // }
+                    break;
+                default:
+                    break;
+            }
+            return disallowed;
+        }
+        public void eventStackClear()
+        {
+            for (int i = 0; i < ScriptConsts.MAX_EVENT_STACK; i++)
+            {
+                if (getStackedEvent(i).exists())
+                {
+                    getStackedEvent(i).setParams(null);
+                    getStackedEvent(i).setEventname(null);
+                    getStackedEvent(i).setSender(null);
+                    getStackedEvent(i).setExist(false);
+                    getStackedEvent(i).Io = null);
             getStackedEvent(i).setMsg(0);
         }
     }
     clearAdditionalEventStacks();
 }
-public  void eventStackClearForIo( IO io)
+public void eventStackClearForIo(BaseInteractiveObject io)
 {
-    for (int i = 0; i < ScriptConstants.MAX_EVENT_STACK; i++)
+    for (int i = 0; i < ScriptConsts.MAX_EVENT_STACK; i++)
     {
         if (getStackedEvent(i).exists()
                 && io.Equals(getStackedEvent(i).getIo()))
@@ -251,16 +261,17 @@ public  void eventStackClearForIo( IO io)
             getStackedEvent(i).setEventname(null);
             getStackedEvent(i).setSender(null);
             getStackedEvent(i).setExist(false);
-            getStackedEvent(i).setIo(null);
-            getStackedEvent(i).setMsg(0);
-        }
+            getStackedEvent(i).Io = null);
+    getStackedEvent(i).setMsg(0);
+}
     }
     clearAdditionalEventStacksForIO(io);
 }
-public  void eventStackExecute() 
+public void eventStackExecute()
 {
-        int count = 0;
-        for (int i = 0; i < ScriptConstants.MAX_EVENT_STACK; i++) {
+    int count = 0;
+    for (int i = 0; i < ScriptConsts.MAX_EVENT_STACK; i++)
+    {
         if (getStackedEvent(i).exists())
         {
             int ioid = getStackedEvent(i).getIo().GetRefId();
@@ -292,18 +303,18 @@ public  void eventStackExecute()
             getStackedEvent(i).setEventname(null);
             getStackedEvent(i).setSender(null);
             getStackedEvent(i).setExist(false);
-            getStackedEvent(i).setIo(null);
-            getStackedEvent(i).setMsg(0);
-            count++;
-            if (count >= stackFlow)
-            {
-                break;
-            }
-        }
+            getStackedEvent(i).Io = null);
+    getStackedEvent(i).setMsg(0);
+    count++;
+    if (count >= stackFlow)
+    {
+        break;
+    }
+}
     }
     executeAdditionalStacks();
 }
-public  void eventStackExecuteAll() 
+public void eventStackExecuteAll()
 {
     stackFlow = 9999999;
     eventStackExecute();
@@ -311,37 +322,42 @@ public  void eventStackExecuteAll()
 }
 public abstract void eventStackInit();
 protected abstract void executeAdditionalStacks();
-public  void forceDeath( IO io,  String target)
-            
+public void forceDeath(BaseInteractiveObject io, String target)
+
 {
-        int tioid = -1;
-        if (target.equalsIgnoreCase("me")
-                || target.equalsIgnoreCase("self")) {
+    int tioid = -1;
+    if (target.equalsIgnoreCase("me")
+            || target.equalsIgnoreCase("self"))
+    {
         tioid = Interactive.GetInstance().GetInterNum(io);
-    } else {
+    }
+    else
+    {
         tioid = Interactive.GetInstance().getTargetByNameTarget(target);
         if (tioid == -2)
         {
             tioid = Interactive.GetInstance().GetInterNum(io);
         }
     }
-        if (tioid >= 0) {
-        IO tio = (IO)Interactive.GetInstance().getIO(tioid);
+    if (tioid >= 0)
+    {
+        BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.GetInstance().getIO(tioid);
         if (tio.HasIOFlag(IoGlobals.IO_03_NPC))
         {
             tio.getNPCData().forceDeath(io);
         }
     }
 }
-public  void freeAllGlobalVariables() 
+public void freeAllGlobalVariables()
 {
-        if (gvars != null) {
+    if (gvars != null)
+    {
         for (int i = gvars.Length - 1; i >= 0; i--)
         {
             if (gvars[i] != null
-                    && (gvars[i].getType() == ScriptConstants.TYPE_G_00_TEXT
+                    && (gvars[i].getType() == ScriptConsts.TYPE_G_00_TEXT
                             || gvars[i]
-                                    .getType() == ScriptConstants.TYPE_L_08_TEXT)
+                                    .getType() == ScriptConsts.TYPE_L_08_TEXT)
                     && gvars[i].getText() != null)
             {
                 gvars[i].set(null);
@@ -351,23 +367,24 @@ public  void freeAllGlobalVariables()
     }
 }
 /**
- * Removes all local variables from an {@link IO} and frees up the memory.
- * @param io the {@link IO}
+ * Removes all local variables from an {@link BaseInteractiveObject} and frees up the memory.
+ * @param io the {@link BaseInteractiveObject}
  * @ if an error occurs
  */
-public  void freeAllLocalVariables( IO io) 
+public void freeAllLocalVariables(BaseInteractiveObject io)
 {
-        if (io != null
-                && io.getScript() != null
-                && io.getScript().hasLocalVariables()) {
+    if (io != null
+            && io.getScript() != null
+            && io.getScript().hasLocalVariables())
+    {
         int i = io.getScript().getLocalVarArrayLength() - 1;
         for (; i >= 0; i--)
         {
             if (io.getScript().getLocalVariable(i) != null
                     && (io.getScript().getLocalVariable(i)
-                            .getType() == ScriptConstants.TYPE_G_00_TEXT
+                            .getType() == ScriptConsts.TYPE_G_00_TEXT
                             || io.getScript().getLocalVariable(i)
-                                    .getType() == ScriptConstants.TYPE_L_08_TEXT)
+                                    .getType() == ScriptConsts.TYPE_L_08_TEXT)
                     && io.getScript().getLocalVariable(i)
                             .getText() != null)
             {
@@ -381,7 +398,7 @@ public  void freeAllLocalVariables( IO io)
  * Gets the EVENT_SENDER global.
  * @return {@link BaseInteractiveObject}
  */
-public  IO getEventSender()
+public BaseInteractiveObject getEventSender()
 {
     return eventSender;
 }
@@ -391,42 +408,45 @@ public  IO getEventSender()
  * @return <code>float</code>[]
  * @ if the variable value was never set
  */
-public  float[] getGlobalFloatArrayVariableValue( String name)
-            
+public float[] getGlobalFloatArrayVariableValue(String name)
+
 {
-        if (gvars == null) {
+    if (gvars == null)
+    {
         gvars = new ScriptVariable[0];
     }
-        int index = -1;
-        for (int i = 0; i < gvars.Length; i++) {
+    int index = -1;
+    for (int i = 0; i < gvars.Length; i++)
+    {
         if (gvars[i] != null
                 && gvars[i].getName().Equals(name)
-                && gvars[i].getType() == ScriptConstants.TYPE_G_03_FLOAT_ARR)
+                && gvars[i].getType() == ScriptConsts.TYPE_G_03_FLOAT_ARR)
         {
             index = i;
             break;
         }
     }
-        if (index == -1) {
+    if (index == -1)
+    {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Global Float Array variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Global Float Array variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
     }
-        return gvars [index].getFloatArrayVal();
+    return gvars[index].getFloatArrayVal();
 }
 /**
  * Gets the global floating-point value assigned to a specific variable.
@@ -434,42 +454,45 @@ public  float[] getGlobalFloatArrayVariableValue( String name)
  * @return <code>float</code>
  * @ if no such variable was assigned
  */
-public  float getGlobalFloatVariableValue( String name)
-            
+public float getGlobalFloatVariableValue(String name)
+
 {
-        if (gvars == null) {
+    if (gvars == null)
+    {
         gvars = new ScriptVariable[0];
     }
-        int index = -1;
-        for (int i = 0; i < gvars.Length; i++) {
+    int index = -1;
+    for (int i = 0; i < gvars.Length; i++)
+    {
         if (gvars[i] != null
                 && gvars[i].getName().Equals(name)
-                && gvars[i].getType() == ScriptConstants.TYPE_G_02_FLOAT)
+                && gvars[i].getType() == ScriptConsts.TYPE_G_02_FLOAT)
         {
             index = i;
             break;
         }
     }
-        if (index == -1) {
+    if (index == -1)
+    {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Global Float variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Global Float variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
     }
-        return gvars [index].getFloatVal();
+    return gvars[index].getFloatVal();
 }
 /**
  * Gets the value of a global integer array variable.
@@ -477,42 +500,45 @@ public  float getGlobalFloatVariableValue( String name)
  * @return <code>int</code>[]
  * @ if the variable value was never set
  */
-public  int[] getGlobalIntArrayVariableValue( String name)
-            
+public int[] getGlobalIntArrayVariableValue(String name)
+
 {
-        if (gvars == null) {
+    if (gvars == null)
+    {
         gvars = new ScriptVariable[0];
     }
-        int index = -1;
-        for (int i = 0; i < gvars.Length; i++) {
+    int index = -1;
+    for (int i = 0; i < gvars.Length; i++)
+    {
         if (gvars[i] != null
                 && gvars[i].getName().Equals(name)
-                && gvars[i].getType() == ScriptConstants.TYPE_G_05_INT_ARR)
+                && gvars[i].getType() == ScriptConsts.TYPE_G_05_INT_ARR)
         {
             index = i;
             break;
         }
     }
-        if (index == -1) {
+    if (index == -1)
+    {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Global Integer Array variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Global Integer Array variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
     }
-        return gvars [index].getIntArrayVal();
+    return gvars[index].getIntArrayVal();
 }
 /**
  * Gets the value of a global integer variable.
@@ -520,42 +546,45 @@ public  int[] getGlobalIntArrayVariableValue( String name)
  * @return <code>int</code>
  * @ if the variable value was never set
  */
-public  int getGlobalIntVariableValue( String name)
-            
+public int getGlobalIntVariableValue(String name)
+
 {
-        if (gvars == null) {
+    if (gvars == null)
+    {
         gvars = new ScriptVariable[0];
     }
-        int index = -1;
-        for (int i = 0; i < gvars.Length; i++) {
+    int index = -1;
+    for (int i = 0; i < gvars.Length; i++)
+    {
         if (gvars[i] != null
                 && gvars[i].getName().Equals(name)
-                && gvars[i].getType() == ScriptConstants.TYPE_G_04_INT)
+                && gvars[i].getType() == ScriptConsts.TYPE_G_04_INT)
         {
             index = i;
             break;
         }
     }
-        if (index == -1) {
+    if (index == -1)
+    {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Global Integer variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Global Integer variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
     }
-        return gvars [index].getIntVal();
+    return gvars[index].getIntVal();
 }
 /**
  * Gets the value of a global long integer array variable.
@@ -563,42 +592,45 @@ public  int getGlobalIntVariableValue( String name)
  * @return <code>long</code>[]
  * @ if the variable value was never set
  */
-public  long[] getGlobalLongArrayVariableValue( String name)
-            
+public long[] getGlobalLongArrayVariableValue(String name)
+
 {
-        if (gvars == null) {
+    if (gvars == null)
+    {
         gvars = new ScriptVariable[0];
     }
-        int index = -1;
-        for (int i = 0; i < gvars.Length; i++) {
+    int index = -1;
+    for (int i = 0; i < gvars.Length; i++)
+    {
         if (gvars[i] != null
                 && gvars[i].getName().Equals(name)
-                && gvars[i].getType() == ScriptConstants.TYPE_G_07_LONG_ARR)
+                && gvars[i].getType() == ScriptConsts.TYPE_G_07_LONG_ARR)
         {
             index = i;
             break;
         }
     }
-        if (index == -1) {
+    if (index == -1)
+    {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Global Long Integer Array variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Global Long Integer Array variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
     }
-        return gvars [index].getLongArrayVal();
+    return gvars[index].getLongArrayVal();
 }
 /**
  * Gets the value of a global long integer variable.
@@ -606,42 +638,45 @@ public  long[] getGlobalLongArrayVariableValue( String name)
  * @return <code>long</code>
  * @ if the variable value was never set
  */
-public  long getGlobalLongVariableValue( String name)
-            
+public long getGlobalLongVariableValue(String name)
+
 {
-        if (gvars == null) {
+    if (gvars == null)
+    {
         gvars = new ScriptVariable[0];
     }
-        int index = -1;
-        for (int i = 0; i < gvars.Length; i++) {
+    int index = -1;
+    for (int i = 0; i < gvars.Length; i++)
+    {
         if (gvars[i] != null
                 && gvars[i].getName().Equals(name)
-                && gvars[i].getType() == ScriptConstants.TYPE_G_06_LONG)
+                && gvars[i].getType() == ScriptConsts.TYPE_G_06_LONG)
         {
             index = i;
             break;
         }
     }
-        if (index == -1) {
+    if (index == -1)
+    {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Global Long Integer variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Global Long Integer variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
     }
-        return gvars [index].getLongVal();
+    return gvars[index].getLongVal();
 }
 /**
  * Gets the local text array value assigned to a specific variable.
@@ -649,42 +684,45 @@ public  long getGlobalLongVariableValue( String name)
  * @return {@link String}
  * @ if no such variable was assigned
  */
-public  String[] getGlobalStringArrayVariableValue( String name)
-            
+public String[] getGlobalStringArrayVariableValue(String name)
+
 {
-        if (gvars == null) {
+    if (gvars == null)
+    {
         gvars = new ScriptVariable[0];
     }
-        int index = -1;
-        for (int i = 0; i < gvars.Length; i++) {
+    int index = -1;
+    for (int i = 0; i < gvars.Length; i++)
+    {
         if (gvars[i] != null
                 && gvars[i].getName().Equals(name)
-                && gvars[i].getType() == ScriptConstants.TYPE_G_01_TEXT_ARR)
+                && gvars[i].getType() == ScriptConsts.TYPE_G_01_TEXT_ARR)
         {
             index = i;
             break;
         }
     }
-        if (index == -1) {
+    if (index == -1)
+    {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Global Text Array variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Global Text Array variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
     }
-        return gvars [index].getTextArrayVal();
+    return gvars[index].getTextArrayVal();
 }
 /**
  * Gets the global text value assigned to a specific variable.
@@ -692,44 +730,47 @@ public  String[] getGlobalStringArrayVariableValue( String name)
  * @return {@link String}
  * @ if no such variable was assigned
  */
-public  String getGlobalStringVariableValue( String name)
-            
+public String getGlobalStringVariableValue(String name)
+
 {
-        if (gvars == null) {
+    if (gvars == null)
+    {
         gvars = new ScriptVariable[0];
     }
-        int index = -1;
-        for (int i = 0; i < gvars.Length; i++) {
+    int index = -1;
+    for (int i = 0; i < gvars.Length; i++)
+    {
         if (gvars[i] != null
                 && gvars[i].getName().Equals(name)
-                && gvars[i].getType() == ScriptConstants.TYPE_G_00_TEXT)
+                && gvars[i].getType() == ScriptConsts.TYPE_G_00_TEXT)
         {
             index = i;
             break;
         }
     }
-        if (index == -1) {
+    if (index == -1)
+    {
         PooledStringBuilder sb =
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("Global String variable ");
-            sb.append(name);
-            sb.append(" was never set.");
+            sb.Append("Global String variable ");
+            sb.Append(name);
+            sb.Append(" was never set.");
         }
         catch (PooledException e)
         {
             throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
         }
         RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION,
-                sb.toString());
+                sb.ToString());
         sb.ReturnToPool();
         sb = null;
         throw ex;
     }
-        return gvars [index].getText();
+    return gvars[index].getText();
 }
-public int getGlobalTargetParam( IO io)
+public int getGlobalTargetParam(BaseInteractiveObject io)
 {
     return io.getTargetinfo();
 }
@@ -738,7 +779,7 @@ public int getGlobalTargetParam( IO io)
  * @param name the name of the variable
  * @return {@link ScriptVariable}
  */
-public  ScriptVariable getGlobalVariable( String name)
+public ScriptVariable getGlobalVariable(String name)
 {
     ScriptVariable var = null;
     for (int i = gvars.Length - 1; i >= 0; i--)
@@ -753,16 +794,17 @@ public  ScriptVariable getGlobalVariable( String name)
     }
     return var;
 }
-public  IO getIOMaxEvents() 
+public BaseInteractiveObject getIOMaxEvents()
 {
-        int max = -1;
-        int ionum = -1;
-    IO io = null;
-        int i = Interactive.GetInstance().getMaxIORefId();
-        for (; i >= 0; i--) {
+    int max = -1;
+    int ionum = -1;
+    BaseInteractiveObject io = null;
+    int i = Interactive.GetInstance().getMaxIORefId();
+    for (; i >= 0; i--)
+    {
         if (Interactive.GetInstance().hasIO(i))
         {
-            IO hio = (IO)Interactive.GetInstance().getIO(i);
+            BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
             if (hio.getStatCount() > max)
             {
                 ionum = i;
@@ -771,22 +813,24 @@ public  IO getIOMaxEvents()
             hio = null;
         }
     }
-        if (max > 0
-                && ionum > -1) {
-        io = (IO)Interactive.GetInstance().getIO(ionum);
+    if (max > 0
+            && ionum > -1)
+    {
+        io = (BaseInteractiveObject)Interactive.GetInstance().getIO(ionum);
     }
-        return io;
+    return io;
 }
-public  IO getIOMaxEventsSent() 
+public BaseInteractiveObject getIOMaxEventsSent()
 {
-        int max = -1;
-        int ionum = -1;
-    IO io = null;
-        int i = Interactive.GetInstance().getMaxIORefId();
-        for (; i >= 0; i--) {
+    int max = -1;
+    int ionum = -1;
+    BaseInteractiveObject io = null;
+    int i = Interactive.GetInstance().getMaxIORefId();
+    for (; i >= 0; i--)
+    {
         if (Interactive.GetInstance().hasIO(i))
         {
-            IO hio = (IO)Interactive.GetInstance().getIO(i);
+            BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
             if (hio.getStatSent() > max)
             {
                 ionum = i;
@@ -794,17 +838,18 @@ public  IO getIOMaxEventsSent()
             }
         }
     }
-        if (max > 0
-                && ionum > -1) {
-        io = (IO)Interactive.GetInstance().getIO(ionum);
+    if (max > 0
+            && ionum > -1)
+    {
+        io = (BaseInteractiveObject)Interactive.GetInstance().getIO(ionum);
     }
-        return io;
+    return io;
 }
 /**
  * Gets the maximum number of timer scripts.
  * @return <code>int</code>
  */
-public  int getMaxTimerScript()
+public int getMaxTimerScript()
 {
     return maxTimerScript;
 }
@@ -826,12 +871,12 @@ protected abstract TIMER[] getScriptTimers();
  */
 protected abstract STACKED getStackedEvent(int index);
 /**
- * Gets the id of a named script assigned to a specific IO.
- * @param io the IO
+ * Gets the id of a named script assigned to a specific BaseInteractiveObject.
+ * @param io the BaseInteractiveObject
  * @param name the script's name
  * @return the script's id, if found. If no script exists, -1 is returned
  */
-public  int getSystemIOScript( IO io,  String name)
+public int getSystemIOScript(BaseInteractiveObject io, String name)
 {
     int index = -1;
     if (countTimers() > 0)
@@ -859,18 +904,19 @@ public  int getSystemIOScript( IO io,  String name)
  * @return <tt>true</tt> if the {@link Script} has the local variable;
  *         <tt>false</tt> otherwise
  */
-public  bool hasGlobalVariable( String name)
+public bool hasGlobalVariable(String name)
 {
     return getGlobalVariable(name) != null;
 }
-public  void initEventStats() 
+public void initEventStats()
 {
     eventTotalCount = 0;
-        int i = Interactive.GetInstance().getMaxIORefId();
-        for (; i >= 0; i--) {
+    int i = Interactive.GetInstance().getMaxIORefId();
+    for (; i >= 0; i--)
+    {
         if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.GetInstance().getIO(i);
+            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
             io.setStatCount(0);
             io.setStatSent(0);
         }
@@ -882,17 +928,17 @@ protected abstract void initScriptTimers();
  * @return <tt>true</tt> if the debug output is turned on; <tt>false</tt>
  *         otherwise
  */
-public  bool isDebug()
+public bool isDebug()
 {
     return debug;
 }
 /**
- * Determines if an IO is in a specific group.
- * @param io the IO
+ * Determines if an BaseInteractiveObject is in a specific group.
+ * @param io the BaseInteractiveObject
  * @param group the group name
- * @return true if the IO is in the group; false otherwise
+ * @return true if the BaseInteractiveObject is in the group; false otherwise
  */
-public  bool isIOInGroup( IO io,  String group)
+public bool isIOInGroup(BaseInteractiveObject io, String group)
 {
     bool val = false;
     if (io != null
@@ -909,7 +955,7 @@ public  bool isIOInGroup( IO io,  String group)
     }
     return val;
 }
-public bool isPlayerInvisible(IO io)
+public bool isPlayerInvisible(BaseInteractiveObject io)
 {
     bool invisible = false;
     // if (inter.iobj[0]->invisibility > 0.3f) {
@@ -924,7 +970,7 @@ private void MakeSSEPARAMS(String params)
         SYSTEM_PARAMS[i] = null;
     }
     if (params != null) {
-        String[] split = params.split(" ");
+        String[] split = params.Split(" ");
         for (int i = 0, len = split.Length - 1; i < len; i++)
         {
             if (i / 2 < MAX_SYSTEM_PARAMS)
@@ -939,21 +985,22 @@ private void MakeSSEPARAMS(String params)
     }
 }
 /**
- * Sends an event message to the IO.
- * @param io the IO
+ * Sends an event message to the BaseInteractiveObject.
+ * @param io the BaseInteractiveObject
  * @param msg the message
  * @param params the script parameters
  * @return {@link int}
  * @ if an error occurs
  */
-public  int notifyIOEvent( IO io,  int msg,
-         String params) 
+public int notifyIOEvent(BaseInteractiveObject io, int msg,
+         String params)
 {
-        int acceptance = ScriptConstants.REFUSE;
-        if (sendIOScriptEvent(io, msg, null, null) != acceptance) {
+    int acceptance = ScriptConsts.REFUSE;
+    if (sendIOScriptEvent(io, msg, null, null) != acceptance)
+    {
         switch (msg)
         {
-            case ScriptConstants.SM_017_DIE:
+            case ScriptConsts.SM_017_DIE:
                 if (io != null && Interactive.GetInstance().hasIO(io))
                 {
                     // TODO - set death color
@@ -965,46 +1012,48 @@ public  int notifyIOEvent( IO io,  int msg,
             default:
                 break;
         }
-        acceptance = ScriptConstants.ACCEPT;
+        acceptance = ScriptConsts.ACCEPT;
     }
-        return acceptance;
+    return acceptance;
 }
 /**
- * Hides a target IO.
- * @param io the IO sending the event.
- * @param megahide if true, the target IO is "mega-hidden"
+ * Hides a target BaseInteractiveObject.
+ * @param io the BaseInteractiveObject sending the event.
+ * @param megahide if true, the target BaseInteractiveObject is "mega-hidden"
  * @param targetName the target's name
  * @param hideOn if true, the hidden flags are set; otherwise all hidden
  *            flags are removed
  * @ if an error occurs
  */
-public  void objectHide( IO io,  bool megahide,
-         String targetName,  bool hideOn) 
+public void objectHide(BaseInteractiveObject io, bool megahide,
+         String targetName, bool hideOn)
 {
-        int targetId =
-                Interactive.GetInstance().getTargetByNameTarget(targetName);
-        if (targetId == -2) {
+    int targetId =
+            Interactive.GetInstance().getTargetByNameTarget(targetName);
+    if (targetId == -2)
+    {
         targetId = io.GetRefId();
     }
-        if (Interactive.GetInstance().hasIO(targetId)) {
-        IO tio = (IO)Interactive.GetInstance().getIO(targetId);
+    if (Interactive.GetInstance().hasIO(targetId))
+    {
+        BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.GetInstance().getIO(targetId);
         tio.RemoveGameFlag(IoGlobals.GFLAG_MEGAHIDE);
         if (hideOn)
         {
             if (megahide)
             {
                 tio.AddGameFlag(IoGlobals.GFLAG_MEGAHIDE);
-                tio.setShow(IoGlobals.SHOW_FLAG_MEGAHIDE);
+                tio.show = IoGlobals.SHOW_FLAG_MEGAHIDE);
             }
             else
             {
-                tio.setShow(IoGlobals.SHOW_FLAG_HIDDEN);
+                tio.show = IoGlobals.SHOW_FLAG_HIDDEN);
             }
         }
         else if (tio.getShow() == IoGlobals.SHOW_FLAG_MEGAHIDE
               || tio.getShow() == IoGlobals.SHOW_FLAG_HIDDEN)
         {
-            tio.setShow(IoGlobals.SHOW_FLAG_IN_SCENE);
+            tio.show = IoGlobals.SHOW_FLAG_IN_SCENE);
             if (tio.HasIOFlag(IoGlobals.IO_03_NPC)
                     && tio.getNPCData().getBaseLife() <= 0f)
             {
@@ -1018,10 +1067,10 @@ public  void objectHide( IO io,  bool megahide,
     }
 }
 /**
- * Removes an IO from all groups to which it was assigned.
- * @param io the IO
+ * Removes an BaseInteractiveObject from all groups to which it was assigned.
+ * @param io the BaseInteractiveObject
  */
-public  void releaseAllGroups( IO io)
+public void releaseAllGroups(BaseInteractiveObject io)
 {
     while (io != null
             && io.GetNumIOGroups() > 0)
@@ -1033,18 +1082,18 @@ public  void releaseAllGroups( IO io)
  * Releases an event, clearing all variables.
  * @param event the scriptable event
  */
-public  void releaseScript( SCRIPTABLE event)
+public void releaseScript(SCRIPTABLE event)
 {
     if (event != null) {
             event.clearLocalVariables();
     }
 }
 /**
- * Removes an IO from a group.
- * @param io the IO
+ * Removes an BaseInteractiveObject from a group.
+ * @param io the BaseInteractiveObject
  * @param group the group
  */
-public  void RemoveGroup( IO io,  String group)
+public void RemoveGroup(BaseInteractiveObject io, String group)
 {
     if (io != null
             && group != null)
@@ -1059,11 +1108,12 @@ public  void RemoveGroup( IO io,  String group)
  *            will be initialized again
  * @ if an error occurs
  */
-public  void reset( IO io,  bool initialize)
-            
+public void reset(BaseInteractiveObject io, bool initialize)
+
 {
-        // Release Script Local Variables
-        if (io.getScript().getLocalVarArrayLength() > 0) {
+    // Release Script Local Variables
+    if (io.getScript().getLocalVarArrayLength() > 0)
+    {
         int i = io.getScript().getLocalVarArrayLength() - 1;
         for (; i >= 0; i--)
         {
@@ -1075,8 +1125,9 @@ public  void reset( IO io,  bool initialize)
         }
     }
 
-        // Release Script Over-Script Local Variables
-        if (io.getOverscript().getLocalVarArrayLength() > 0) {
+    // Release Script Over-Script Local Variables
+    if (io.getOverscript().getLocalVarArrayLength() > 0)
+    {
         int i = io.getOverscript().getLocalVarArrayLength() - 1;
         for (; i >= 0; i--)
         {
@@ -1087,7 +1138,8 @@ public  void reset( IO io,  bool initialize)
             }
         }
     }
-        if (!io.isScriptLoaded()) {
+    if (!io.ScriptLoaded)
+    {
         resetObject(io, initialize);
     }
 }
@@ -1097,14 +1149,15 @@ public  void reset( IO io,  bool initialize)
  *            will be initialized again
  * @ if an error occurs
  */
-public  void resetAll( bool initialize) 
+public void resetAll(bool initialize)
 {
-        int i = Interactive.GetInstance().getMaxIORefId();
-        for (; i >= 0; i--) {
+    int i = Interactive.GetInstance().getMaxIORefId();
+    for (; i >= 0; i--)
+    {
         if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.GetInstance().getIO(i);
-            if (!io.isScriptLoaded())
+            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
+            if (!io.ScriptLoaded)
             {
                 resetObject(io, initialize);
             }
@@ -1112,19 +1165,20 @@ public  void resetAll( bool initialize)
     }
 }
 /**
- * Resets the IO.
- * @param io the IO
+ * Resets the BaseInteractiveObject.
+ * @param io the BaseInteractiveObject
  * @param initialize if <tt>true</tt>, the object needs to be initialized as
  *            well
  * @ if an error occurs
  */
-public  void resetObject( IO io,  bool initialize)
-            
+public void resetObject(BaseInteractiveObject io, bool initialize)
+
 {
-        // Now go for Script INIT/RESET depending on Mode
-        int num = Interactive.GetInstance().GetInterNum(io);
-        if (Interactive.GetInstance().hasIO(num)) {
-        IO objIO = (IO)Interactive.GetInstance().getIO(num);
+    // Now go for Script INIT/RESET depending on Mode
+    int num = Interactive.GetInstance().GetInterNum(io);
+    if (Interactive.GetInstance().hasIO(num))
+    {
+        BaseInteractiveObject objIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
         if (objIO != null
                 && objIO.getScript() != null)
         {
@@ -1133,12 +1187,12 @@ public  void resetObject( IO io,  bool initialize)
             if (initialize)
             {
                 sendScriptEvent((SCRIPTABLE)objIO.getScript(),
-                        ScriptConstants.SM_001_INIT,
+                        ScriptConsts.SM_001_INIT,
                         new Object[0],
                         objIO,
                         null);
             }
-            objIO = (IO)Interactive.GetInstance().getIO(num);
+            objIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
             if (objIO != null)
             {
                 setMainEvent(objIO, "MAIN");
@@ -1146,7 +1200,7 @@ public  void resetObject( IO io,  bool initialize)
         }
 
         // Do the same for Local Script
-        objIO = (IO)Interactive.GetInstance().getIO(num);
+        objIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
         if (objIO != null
                 && objIO.getOverscript() != null)
         {
@@ -1155,7 +1209,7 @@ public  void resetObject( IO io,  bool initialize)
             if (initialize)
             {
                 sendScriptEvent((SCRIPTABLE)objIO.getOverscript(),
-                        ScriptConstants.SM_001_INIT,
+                        ScriptConsts.SM_001_INIT,
                         new Object[0],
                         objIO,
                         null);
@@ -1165,49 +1219,57 @@ public  void resetObject( IO io,  bool initialize)
         // Sends InitEnd Event
         if (initialize)
         {
-            objIO = (IO)Interactive.GetInstance().getIO(num);
+            objIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
             if (objIO != null
                     && objIO.getScript() != null)
             {
                 sendScriptEvent((SCRIPTABLE)objIO.getScript(),
-                        ScriptConstants.SM_033_INITEND,
+                        ScriptConsts.SM_033_INITEND,
                         new Object[0],
                         objIO,
                         null);
             }
-            objIO = (IO)Interactive.GetInstance().getIO(num);
+            objIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
             if (objIO != null
                     && objIO.getOverscript() != null)
             {
                 sendScriptEvent((SCRIPTABLE)objIO.getOverscript(),
-                        ScriptConstants.SM_033_INITEND,
+                        ScriptConsts.SM_033_INITEND,
                         new Object[0],
                         objIO,
                         null);
             }
         }
 
-        objIO = (IO)Interactive.GetInstance().getIO(num);
+        objIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
         if (objIO != null)
         {
             objIO.RemoveGameFlag(IoGlobals.GFLAG_NEEDINIT);
         }
     }
 }
-protected void runEvent(SCRIPTABLE script, String eventName, IO io)
-            
+protected void runEvent(SCRIPTABLE script, String eventName, BaseInteractiveObject io)
+
 {
-        int msg = 0;
-        if (eventName.equalsIgnoreCase("INIT")) {
-        msg = ScriptConstants.SM_001_INIT;
-    } else if (eventName.equalsIgnoreCase("HIT")) {
-        msg = ScriptConstants.SM_016_HIT;
-    } else if (eventName.equalsIgnoreCase("INIT_END")) {
-        msg = ScriptConstants.SM_033_INITEND;
+    int msg = 0;
+    if (eventName.equalsIgnoreCase("INIT"))
+    {
+        msg = ScriptConsts.SM_001_INIT;
     }
-        if (msg > 0) {
+    else if (eventName.equalsIgnoreCase("HIT"))
+    {
+        msg = ScriptConsts.SM_016_HIT;
+    }
+    else if (eventName.equalsIgnoreCase("INIT_END"))
+    {
+        msg = ScriptConsts.SM_033_INITEND;
+    }
+    if (msg > 0)
+    {
         runMessage(script, msg, io);
-    } else {
+    }
+    else
+    {
         try
         {
             Method method;
@@ -1215,10 +1277,10 @@ protected void runEvent(SCRIPTABLE script, String eventName, IO io)
             {
                 PooledStringBuilder sb =
                         StringBuilderPool.GetInstance().GetStringBuilder();
-                sb.append("on");
-                sb.append(eventName.toUpperCase().charAt(0));
-                sb.append(eventName.substring(1));
-                method = script.getClass().getMethod(sb.toString());
+                sb.Append("on");
+                sb.Append(eventName.toUpperCase().charAt(0));
+                sb.Append(eventName.substring(1));
+                method = script.getClass().getMethod(sb.ToString());
                 sb.ReturnToPool();
                 sb = null;
             }
@@ -1236,63 +1298,64 @@ protected void runEvent(SCRIPTABLE script, String eventName, IO io)
         }
         }
     }
-    protected void runMessage(SCRIPTABLE script, int msg, IO io)
-            
-{
-        switch (msg) {
-        case ScriptConstants.SM_001_INIT:
-            script.onInit();
-        break;
-        case ScriptConstants.SM_002_INVENTORYIN:
-            script.onInventoryIn();
-        break;
-        case ScriptConstants.SM_004_INVENTORYUSE:
-            script.onInventoryUse();
-        break;
-        case ScriptConstants.SM_007_EQUIPOUT:
-            script.onUnequip();
-        break;
-        case ScriptConstants.SM_016_HIT:
-            script.onHit();
-        break;
-        case ScriptConstants.SM_017_DIE:
-            script.onDie();
-        break;
-        case ScriptConstants.SM_024_COMBINE:
-            script.onCombine();
-        break;
-        case ScriptConstants.SM_033_INITEND:
-            script.onInitEnd();
-        break;
-        case ScriptConstants.SM_041_LOAD:
-            script.onLoad();
-        break;
-        case ScriptConstants.SM_043_RELOAD:
-            script.onReload();
-        break;
-        case ScriptConstants.SM_045_OUCH:
-            script.onOuch();
-        break;
-        case ScriptConstants.SM_046_HEAR:
-            script.onHear();
-        break;
-        case ScriptConstants.SM_057_AGGRESSION:
-            script.onAggression();
-        break;
-        case ScriptConstants.SM_069_IDENTIFY:
-            script.onIdentify();
-        break;
-        default:
-            throw new RPGException(ErrorMessage.INVALID_PARAM,
-                    "No action defined for message " + msg);
+    protected void runMessage(SCRIPTABLE script, int msg, BaseInteractiveObject io)
+
+    {
+        switch (msg)
+        {
+            case ScriptConsts.SM_001_INIT:
+                script.onInit();
+                break;
+            case ScriptConsts.SM_002_INVENTORYIN:
+                script.onInventoryIn();
+                break;
+            case ScriptConsts.SM_004_INVENTORYUSE:
+                script.onInventoryUse();
+                break;
+            case ScriptConsts.SM_007_EQUIPOUT:
+                script.onUnequip();
+                break;
+            case ScriptConsts.SM_016_HIT:
+                script.onHit();
+                break;
+            case ScriptConsts.SM_017_DIE:
+                script.onDie();
+                break;
+            case ScriptConsts.SM_024_COMBINE:
+                script.onCombine();
+                break;
+            case ScriptConsts.SM_033_INITEND:
+                script.onInitEnd();
+                break;
+            case ScriptConsts.SM_041_LOAD:
+                script.onLoad();
+                break;
+            case ScriptConsts.SM_043_RELOAD:
+                script.onReload();
+                break;
+            case ScriptConsts.SM_045_OUCH:
+                script.onOuch();
+                break;
+            case ScriptConsts.SM_046_HEAR:
+                script.onHear();
+                break;
+            case ScriptConsts.SM_057_AGGRESSION:
+                script.onAggression();
+                break;
+            case ScriptConsts.SM_069_IDENTIFY:
+                script.onIdentify();
+                break;
+            default:
+                throw new RPGException(ErrorMessage.INVALID_PARAM,
+                        "No action defined for message " + msg);
+        }
     }
-}
-public  void sendEvent( IO io,  SendParameters params)
-            
-{
-    IO oes = eventSender;
-    eventSender = io;
-        if (params.hasFlag(SendParameters.RADIUS)) {
+    public void sendEvent(BaseInteractiveObject io, SendParameters params)
+
+    {
+        BaseInteractiveObject oes = eventSender;
+        eventSender = io;
+        if (params.HasFlag(SendParameters.RADIUS)) {
         // SEND EVENT TO ALL OBJECTS IN A RADIUS
 
         // LOOP THROUGH ALL IOs.
@@ -1301,14 +1364,14 @@ public  void sendEvent( IO io,  SendParameters params)
         {
             if (Interactive.GetInstance().hasIO(i))
             {
-                IO iio = (IO)Interactive.GetInstance().getIO(i);
+                BaseInteractiveObject iio = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
                 // skip cameras and markers
                 // if (iio.HasIOFlag(IoGlobals.io_camera)
                 // || iio.HasIOFlag(IoGlobals.io_marker)) {
                 // continue;
                 // }
                 // skip IOs not in required group
-                if (params.hasFlag(SendParameters.GROUP)) {
+                if (params.HasFlag(SendParameters.GROUP)) {
             if (!this.isIOInGroup(iio, params.getGroupName()))
             {
                 continue;
@@ -1316,12 +1379,12 @@ public  void sendEvent( IO io,  SendParameters params)
         }
         // if send event is for NPCs, send to NPCs,
         // if for Items, send to Items, etc...
-        if ((params.hasFlag(SendParameters.IONpcData)
+        if ((params.HasFlag(SendParameters.IONpcData)
 
                 && iio.HasIOFlag(IoGlobals.IO_03_NPC))
-                            // || (params.hasFlag(SendParameters.FIX)
+                            // || (params.HasFlag(SendParameters.FIX)
                             // && iio.HasIOFlag(IoGlobals.IO_FIX))
-                            || (params.hasFlag(SendParameters.IOItemData)
+                            || (params.HasFlag(SendParameters.IOItemData)
                                     && iio.HasIOFlag(IoGlobals.IO_02_ITEM))) {
             Vector2 senderPos = new Vector2(),
                     ioPos = new Vector2();
@@ -1329,7 +1392,7 @@ public  void sendEvent( IO io,  SendParameters params)
                     senderPos);
             Interactive.GetInstance().GetItemWorldPosition(iio,
                     ioPos);
-            // IF IO IS IN SENDER RADIUS, SEND EVENT
+            // IF BaseInteractiveObject IS IN SENDER RADIUS, SEND EVENT
             io.setStatSent(io.getStatSent() + 1);
             this.stackSendIOScriptEvent(
                     iio,
@@ -1340,7 +1403,7 @@ public  void sendEvent( IO io,  SendParameters params)
     }
 }
         }
-        if (params.hasFlag(SendParameters.ZONE)) {
+        if (params.HasFlag(SendParameters.ZONE)) {
             // SEND EVENT TO ALL OBJECTS IN A ZONE
             // ARX_PATH * ap = ARX_PATH_GetAddressByName(zonename);
 
@@ -1349,30 +1412,30 @@ public  void sendEvent( IO io,  SendParameters params)
             int i = Interactive.GetInstance().getMaxIORefId();
             for (; i >= 0; i--) {
                 if (Interactive.GetInstance().hasIO(i)) {
-                    IO iio = (IO)Interactive.GetInstance().getIO(i);
+                    BaseInteractiveObject iio = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
                     // skip cameras and markers
                     // if (iio.HasIOFlag(IoGlobals.io_camera)
                     // || iio.HasIOFlag(IoGlobals.io_marker)) {
                     // continue;
                     // }
                     // skip IOs not in required group
-                    if (params.hasFlag(SendParameters.GROUP)) {
+                    if (params.HasFlag(SendParameters.GROUP)) {
                         if (!this.isIOInGroup(iio, params.getGroupName())) {
     continue;
 }
 }
                     // if send event is for NPCs, send to NPCs,
                     // if for Items, send to Items, etc...
-                    if ((params.hasFlag(SendParameters.IONpcData)
+                    if ((params.HasFlag(SendParameters.IONpcData)
                             && iio.HasIOFlag(IoGlobals.IO_03_NPC))
-                            // || (params.hasFlag(SendParameters.FIX)
+                            // || (params.HasFlag(SendParameters.FIX)
                             // && iio.HasIOFlag(IoGlobals.IO_FIX))
-                            || (params.hasFlag(SendParameters.IOItemData)
+                            || (params.HasFlag(SendParameters.IOItemData)
                                     && iio.HasIOFlag(IoGlobals.IO_02_ITEM))) {
                         Vector2 ioPos = new Vector2();
 Interactive.GetInstance().GetItemWorldPosition(iio,
         ioPos);
-// IF IO IS IN ZONE, SEND EVENT
+// IF BaseInteractiveObject IS IN ZONE, SEND EVENT
 // if (ARX_PATH_IsPosInZone(ap, _pos.x, _pos.y, _pos.z))
 // {
 io.setStatSent(io.getStatSent() + 1);
@@ -1386,13 +1449,13 @@ io.setStatSent(io.getStatSent() + 1);
                 }
             }
         }
-        if (params.hasFlag(SendParameters.GROUP)) {
+        if (params.HasFlag(SendParameters.GROUP)) {
             // sends an event to all members of a group
             // LOOP THROUGH ALL IOs.
             int i = Interactive.GetInstance().getMaxIORefId();
             for (; i >= 0; i--) {
                 if (Interactive.GetInstance().hasIO(i)) {
-                    IO iio = (IO)Interactive.GetInstance().getIO(i);
+                    BaseInteractiveObject iio = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
                     // skip IOs not in required group
                     if (!this.isIOInGroup(iio, params.getGroupName())) {
     continue;
@@ -1416,7 +1479,7 @@ iio.setStatSent(io.getStatSent() + 1);
             if (Interactive.GetInstance().hasIO(tioid)) {
                 io.setStatSent(io.getStatSent() + 1);
                 this.stackSendIOScriptEvent(
-                        (IO) Interactive.GetInstance().getIO(tioid),
+                        (BaseInteractiveObject) Interactive.GetInstance().getIO(tioid),
                         0,
                         params.getEventParameters(),
                         params.getEventName());
@@ -1425,70 +1488,76 @@ iio.setStatSent(io.getStatSent() + 1);
         this.eventSender = oes;
     }
 /**
- * Sends an initialization event to an IO. The initialization event runs the
+ * Sends an initialization event to an BaseInteractiveObject. The initialization event runs the
  * local script first, followed by the over script.
- * @param io the IO
+ * @param io the BaseInteractiveObject
  * @return {@link int}
  * @ if an error occurs
  */
-public  int sendInitScriptEvent( IO io) 
+public int sendInitScriptEvent(BaseInteractiveObject io)
 {
-        if (io == null) {
+    if (io == null)
+    {
         return -1;
     }
-        int num = io.GetRefId();
-        if (!Interactive.GetInstance().hasIO(num)) {
+    int num = io.GetRefId();
+    if (!Interactive.GetInstance().hasIO(num))
+    {
         return -1;
     }
-    IO oldEventSender = eventSender;
+    BaseInteractiveObject oldEventSender = eventSender;
     eventSender = null;
     // send script the init message
-    IO hio = (IO) Interactive.GetInstance().getIO(num);
-        if (hio.getScript() != null) {
+    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
+    if (hio.getScript() != null)
+    {
         GLOB = 0;
         sendScriptEvent((SCRIPTABLE)hio.getScript(),
-                ScriptConstants.SM_001_INIT,
+                ScriptConsts.SM_001_INIT,
                 null,
                 hio,
                 null);
     }
     hio = null;
-        // send overscript the init message
-        if (Interactive.GetInstance().getIO(num) != null) {
-        hio = (IO)Interactive.GetInstance().getIO(num);
+    // send overscript the init message
+    if (Interactive.GetInstance().getIO(num) != null)
+    {
+        hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
         if (hio.getOverscript() != null)
         {
             GLOB = 0;
             sendScriptEvent((SCRIPTABLE)hio.getOverscript(),
-                    ScriptConstants.SM_001_INIT,
+                    ScriptConsts.SM_001_INIT,
                     null,
                     hio,
                     null);
         }
         hio = null;
     }
-        // send script the init end message
-        if (Interactive.GetInstance().getIO(num) != null) {
-        hio = (IO)Interactive.GetInstance().getIO(num);
+    // send script the init end message
+    if (Interactive.GetInstance().getIO(num) != null)
+    {
+        hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
         if (hio.getScript() != null)
         {
             GLOB = 0;
             sendScriptEvent((SCRIPTABLE)hio.getScript(),
-                    ScriptConstants.SM_033_INITEND,
+                    ScriptConsts.SM_033_INITEND,
                     null,
                     hio,
                     null);
         }
         hio = null;
     }
-        // send overscript the init end message
-        if (Interactive.GetInstance().getIO(num) != null) {
-        hio = (IO)Interactive.GetInstance().getIO(num);
+    // send overscript the init end message
+    if (Interactive.GetInstance().getIO(num) != null)
+    {
+        hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
         if (hio.getOverscript() != null)
         {
             GLOB = 0;
             sendScriptEvent((SCRIPTABLE)hio.getOverscript(),
-                    ScriptConstants.SM_033_INITEND,
+                    ScriptConsts.SM_033_INITEND,
                     null,
                     hio,
                     null);
@@ -1496,7 +1565,7 @@ public  int sendInitScriptEvent( IO io)
         hio = null;
     }
     eventSender = oldEventSender;
-        return ScriptConstants.ACCEPT;
+    return ScriptConsts.ACCEPT;
 }
 /**
  * Sends a script event to an interactive object. The returned value is a
@@ -1509,21 +1578,23 @@ public  int sendInitScriptEvent( IO io)
  * @return <code>int</code>
  * @ if an error occurs
  */
-public  int sendIOScriptEvent( IO target,  int msg,
-         Object[] params,  String eventname) 
+public int sendIOScriptEvent(BaseInteractiveObject target, int msg,
+         Object[] params, String eventname)
 {
-        // checks invalid IO
-        if (target == null) {
+    // checks invalid BaseInteractiveObject
+    if (target == null)
+    {
         return -1;
     }
-        int num = target.GetRefId();
+    int num = target.GetRefId();
 
-        if (Interactive.GetInstance().hasIO(num)) {
-        IO originalEventSender = eventSender;
-        if (msg == ScriptConstants.SM_001_INIT
-                || msg == ScriptConstants.SM_033_INITEND)
+    if (Interactive.GetInstance().hasIO(num))
+    {
+        BaseInteractiveObject originalEventSender = eventSender;
+        if (msg == ScriptConsts.SM_001_INIT
+                || msg == ScriptConsts.SM_033_INITEND)
         {
-            IO hio = (IO)Interactive.GetInstance().getIO(num);
+            BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
             sendIOScriptEventReverse(hio, msg, params, eventname);
             eventSender = originalEventSender;
             hio = null;
@@ -1531,8 +1602,8 @@ public  int sendIOScriptEvent( IO target,  int msg,
 
         if (Interactive.GetInstance().hasIO(num))
         {
-            // if this IO only has a Local script, send event to it
-            IO hio = (IO)Interactive.GetInstance().getIO(num);
+            // if this BaseInteractiveObject only has a Local script, send event to it
+            BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
             if (hio.getOverscript() == null)
             {
                 GLOB = 0;
@@ -1546,7 +1617,7 @@ public  int sendIOScriptEvent( IO target,  int msg,
                 return ret;
             }
 
-            // If this IO has a Global script send to Local (if exists)
+            // If this BaseInteractiveObject has a Global script send to Local (if exists)
             // then to Global if not overridden by Local
             int s = sendScriptEvent(
                     (SCRIPTABLE)hio.getOverscript(),
@@ -1554,14 +1625,14 @@ public  int sendIOScriptEvent( IO target,  int msg,
                         params,
                     hio,
                     eventname);
-            if (s != ScriptConstants.REFUSE)
+            if (s != ScriptConsts.REFUSE)
             {
                 eventSender = originalEventSender;
                 GLOB = 0;
 
                 if (Interactive.GetInstance().hasIO(num))
                 {
-                    hio = (IO)Interactive.GetInstance().getIO(num);
+                    hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
                     int ret = sendScriptEvent(
                             (SCRIPTABLE)hio.getScript(),
                             msg,
@@ -1573,7 +1644,7 @@ public  int sendIOScriptEvent( IO target,  int msg,
                 }
                 else
                 {
-                    return ScriptConstants.REFUSE;
+                    return ScriptConsts.REFUSE;
                 }
             }
             hio = null;
@@ -1581,25 +1652,28 @@ public  int sendIOScriptEvent( IO target,  int msg,
         GLOB = 0;
     }
 
-        // Refused further processing.
-        return ScriptConstants.REFUSE;
+    // Refused further processing.
+    return ScriptConsts.REFUSE;
 }
-private int sendIOScriptEventReverse( IO io,  int msg,
-         Object[] params,  String eventname) 
+private int sendIOScriptEventReverse(BaseInteractiveObject io, int msg,
+         Object[] params, String eventname)
 {
-        // checks invalid IO
-        if (io == null) {
+    // checks invalid BaseInteractiveObject
+    if (io == null)
+    {
         return -1;
     }
-        // checks for no script assigned
-        if (io.getOverscript() == null
-                && io.getScript() == null) {
+    // checks for no script assigned
+    if (io.getOverscript() == null
+            && io.getScript() == null)
+    {
         return -1;
     }
-        int num = io.GetRefId();
-        if (Interactive.GetInstance().hasIO(num)) {
-        IO hio = (IO)Interactive.GetInstance().getIO(num);
-        // if this IO only has a Local script, send event to it
+    int num = io.GetRefId();
+    if (Interactive.GetInstance().hasIO(num))
+    {
+        BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
+        // if this BaseInteractiveObject only has a Local script, send event to it
         if (hio.getOverscript() == null
                 && hio.getScript() != null)
         {
@@ -1612,18 +1686,18 @@ private int sendIOScriptEventReverse( IO io,  int msg,
                     eventname);
         }
 
-        // If this IO has a Global script send to Local (if exists)
+        // If this BaseInteractiveObject has a Global script send to Local (if exists)
         // then to global if no overriden by Local
         if (Interactive.GetInstance().hasIO(num))
         {
-            hio = (IO)Interactive.GetInstance().getIO(num);
+            hio = (BaseInteractiveObject)Interactive.GetInstance().getIO(num);
             int s = sendScriptEvent(
                     (SCRIPTABLE)hio.getScript(),
                     msg,
                         params,
                     hio,
                     eventname);
-            if (s != ScriptConstants.REFUSE)
+            if (s != ScriptConsts.REFUSE)
             {
                 GLOB = 0;
                 if (Interactive.GetInstance().hasIO(io.GetRefId()))
@@ -1637,15 +1711,15 @@ private int sendIOScriptEventReverse( IO io,  int msg,
                 }
                 else
                 {
-                    return ScriptConstants.REFUSE;
+                    return ScriptConsts.REFUSE;
                 }
             }
         }
         hio = null;
         GLOB = 0;
     }
-        // Refused further processing.
-        return ScriptConstants.REFUSE;
+    // Refused further processing.
+    return ScriptConsts.REFUSE;
 }
 /**
  * Sends a scripted event to all IOs.
@@ -1654,27 +1728,28 @@ private int sendIOScriptEventReverse( IO io,  int msg,
  * @return <code>int</code>
  * @ if an error occurs
  */
-public  int sendMsgToAllIO( int msg,  Object[] dat)
-            
+public int sendMsgToAllIO(int msg, Object[] dat)
+
 {
-        int ret = ScriptConstants.ACCEPT;
-        int i = Interactive.GetInstance().getMaxIORefId();
-        for (; i >= 0; i--) {
+    int ret = ScriptConsts.ACCEPT;
+    int i = Interactive.GetInstance().getMaxIORefId();
+    for (; i >= 0; i--)
+    {
         if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.GetInstance().getIO(i);
+            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
             if (sendIOScriptEvent(io, msg, dat,
-                    null) == ScriptConstants.REFUSE)
+                    null) == ScriptConsts.REFUSE)
             {
-                ret = ScriptConstants.REFUSE;
+                ret = ScriptConsts.REFUSE;
             }
         }
     }
-        return ret;
+    return ret;
 }
 /**
- * Sends a scripted event to an IO.
- * @param localScript the local script the IO shoulod follow
+ * Sends a scripted event to an BaseInteractiveObject.
+ * @param localScript the local script the BaseInteractiveObject shoulod follow
  * @param msg the event message
  * @param params any parameters to be applied
  * @param io
@@ -1683,70 +1758,73 @@ public  int sendMsgToAllIO( int msg,  Object[] dat)
  * @return
  * @
  */
-public  int sendScriptEvent( SCRIPTABLE localScript,
-         int msg,  Object[] params,  IO io,
-         String eventName) 
+public int sendScriptEvent(SCRIPTABLE localScript,
+         int msg, Object[] params, BaseInteractiveObject io,
+         String eventName)
 {
-        int retVal = ScriptConstants.ACCEPT;
+    int retVal = ScriptConsts.ACCEPT;
     bool keepGoing = true;
-        if (localScript == null) {
+    if (localScript == null)
+    {
         throw new RPGException(
                 ErrorMessage.INVALID_PARAM, "script cannot be null");
     }
-        if (io != null) {
+    if (io != null)
+    {
         if (io.HasGameFlag(IoGlobals.GFLAG_MEGAHIDE)
-                && msg != ScriptConstants.SM_043_RELOAD)
+                && msg != ScriptConsts.SM_043_RELOAD)
         {
-            return ScriptConstants.ACCEPT;
+            return ScriptConsts.ACCEPT;
         }
 
         if (io.getShow() == IoGlobals.SHOW_FLAG_DESTROYED)
         {
             // destroyed
-            return ScriptConstants.ACCEPT;
+            return ScriptConsts.ACCEPT;
         }
         eventTotalCount++;
         io.setStatCount(io.getStatCount() + 1);
 
         if (io.HasIOFlag(IoGlobals.IO_06_FREEZESCRIPT))
         {
-            if (msg == ScriptConstants.SM_041_LOAD)
+            if (msg == ScriptConsts.SM_041_LOAD)
             {
-                return ScriptConstants.ACCEPT;
+                return ScriptConsts.ACCEPT;
             }
-            return ScriptConstants.REFUSE;
+            return ScriptConsts.REFUSE;
         }
 
         if (io.HasIOFlag(IoGlobals.IO_03_NPC)
                 && !io.HasIOFlag(IoGlobals.IO_09_DWELLING))
         {
             if (io.getNPCData().getBaseLife() <= 0.f
-                    && msg != ScriptConstants.SM_001_INIT
-                    && msg != ScriptConstants.SM_012_DEAD
-                    && msg != ScriptConstants.SM_017_DIE
-                    && msg != ScriptConstants.SM_255_EXECUTELINE
-                    && msg != ScriptConstants.SM_043_RELOAD
-                    && msg != ScriptConstants.SM_255_EXECUTELINE
-                    && msg != ScriptConstants.SM_028_INVENTORY2_OPEN
-                    && msg != ScriptConstants.SM_029_INVENTORY2_CLOSE)
+                    && msg != ScriptConsts.SM_001_INIT
+                    && msg != ScriptConsts.SM_012_DEAD
+                    && msg != ScriptConsts.SM_017_DIE
+                    && msg != ScriptConsts.SM_255_EXECUTELINE
+                    && msg != ScriptConsts.SM_043_RELOAD
+                    && msg != ScriptConsts.SM_255_EXECUTELINE
+                    && msg != ScriptConsts.SM_028_INVENTORY2_OPEN
+                    && msg != ScriptConsts.SM_029_INVENTORY2_CLOSE)
             {
-                return ScriptConstants.ACCEPT;
+                return ScriptConsts.ACCEPT;
             }
         }
         // change weapon if one breaks
         /*
          * if (((io->ioflags & IO_FIX) || (io->ioflags & IO_ITEM)) && (msg
-         * == ScriptConstants.SM_BREAK)) { ManageCasseDArme(io); }
+         * == ScriptConsts.SM_BREAK)) { ManageCasseDArme(io); }
          */
     }
     // use master script if available
-    SCRIPTABLE script = (SCRIPTABLE) localScript.getMaster();
-        if (script == null) { // no master - use local script
+    SCRIPTABLE script = (SCRIPTABLE)localScript.getMaster();
+    if (script == null)
+    { // no master - use local script
         script = localScript;
     }
-        // set parameters on script that will be used
-        if (params != null
-                && params.Length > 0) {
+    // set parameters on script that will be used
+    if (params != null
+            && params.Length > 0) {
         for (int i = 0; i < params.Length; i += 2) {
             script.setLocalVariable((String) params[i], params[i + 1]);
 }
@@ -1757,125 +1835,125 @@ public  int sendScriptEvent( SCRIPTABLE localScript,
             runEvent(script, eventName, io);
         } else {
             if (eventIsDisallowed(msg, script)) {
-                return ScriptConstants.REFUSE;
+                return ScriptConsts.REFUSE;
             }
             runMessage(script, msg, io);
         }
-        int ret = ScriptConstants.ACCEPT;
+        int ret = ScriptConsts.ACCEPT;
         return ret;
     }
     /**
      * Sets the value for the flag indicating whether debug output is turned on.
      * @param val the value to set
      */
-    public  void setDebug( bool val)
+    public void setDebug(bool val)
 {
     this.debug = val;
 }
-public  void setEvent( IO io,  String event,
+public void setEvent(BaseInteractiveObject io, String event,
          bool isOn)
 {
     if (event.equalsIgnoreCase("COLLIDE_NPC")) {
         if (isOn)
         {
             io.getScript().removeDisallowedEvent(
-                    ScriptConstants.DISABLE_COLLIDE_NPC);
+                    ScriptConsts.DISABLE_COLLIDE_NPC);
         }
         else
         {
             io.getScript().assignDisallowedEvent(
-                    ScriptConstants.DISABLE_COLLIDE_NPC);
+                    ScriptConsts.DISABLE_COLLIDE_NPC);
         }
     } else if (event.equalsIgnoreCase("CHAT")) {
         if (isOn)
         {
-            io.getScript().removeDisallowedEvent(ScriptConstants.DISABLE_CHAT);
+            io.getScript().removeDisallowedEvent(ScriptConsts.DISABLE_CHAT);
         }
         else
         {
-            io.getScript().assignDisallowedEvent(ScriptConstants.DISABLE_CHAT);
+            io.getScript().assignDisallowedEvent(ScriptConsts.DISABLE_CHAT);
         }
     } else if (event.equalsIgnoreCase("HIT")) {
         if (isOn)
         {
-            io.getScript().removeDisallowedEvent(ScriptConstants.DISABLE_HIT);
+            io.getScript().removeDisallowedEvent(ScriptConsts.DISABLE_HIT);
         }
         else
         {
-            io.getScript().assignDisallowedEvent(ScriptConstants.DISABLE_HIT);
+            io.getScript().assignDisallowedEvent(ScriptConsts.DISABLE_HIT);
         }
     } else if (event.equalsIgnoreCase("INVENTORY2_OPEN")) {
         if (isOn)
         {
             io.getScript().removeDisallowedEvent(
-                    ScriptConstants.DISABLE_INVENTORY2_OPEN);
+                    ScriptConsts.DISABLE_INVENTORY2_OPEN);
         }
         else
         {
             io.getScript().assignDisallowedEvent(
-                    ScriptConstants.DISABLE_INVENTORY2_OPEN);
+                    ScriptConsts.DISABLE_INVENTORY2_OPEN);
         }
     } else if (event.equalsIgnoreCase("DETECTPLAYER")) {
         if (isOn)
         {
             io.getScript()
-                    .removeDisallowedEvent(ScriptConstants.DISABLE_DETECT);
+                    .removeDisallowedEvent(ScriptConsts.DISABLE_DETECT);
         }
         else
         {
             io.getScript()
-                    .assignDisallowedEvent(ScriptConstants.DISABLE_DETECT);
+                    .assignDisallowedEvent(ScriptConsts.DISABLE_DETECT);
         }
     } else if (event.equalsIgnoreCase("HEAR")) {
         if (isOn)
         {
-            io.getScript().removeDisallowedEvent(ScriptConstants.DISABLE_HEAR);
+            io.getScript().removeDisallowedEvent(ScriptConsts.DISABLE_HEAR);
         }
         else
         {
-            io.getScript().assignDisallowedEvent(ScriptConstants.DISABLE_HEAR);
+            io.getScript().assignDisallowedEvent(ScriptConsts.DISABLE_HEAR);
         }
     } else if (event.equalsIgnoreCase("AGGRESSION")) {
         if (isOn)
         {
             io.getScript()
-                    .removeDisallowedEvent(ScriptConstants.DISABLE_AGGRESSION);
+                    .removeDisallowedEvent(ScriptConsts.DISABLE_AGGRESSION);
         }
         else
         {
             io.getScript()
-                    .assignDisallowedEvent(ScriptConstants.DISABLE_AGGRESSION);
+                    .assignDisallowedEvent(ScriptConsts.DISABLE_AGGRESSION);
         }
     } else if (event.equalsIgnoreCase("MAIN")) {
         if (isOn)
         {
-            io.getScript().removeDisallowedEvent(ScriptConstants.DISABLE_MAIN);
+            io.getScript().removeDisallowedEvent(ScriptConsts.DISABLE_MAIN);
         }
         else
         {
-            io.getScript().assignDisallowedEvent(ScriptConstants.DISABLE_MAIN);
+            io.getScript().assignDisallowedEvent(ScriptConsts.DISABLE_MAIN);
         }
     } else if (event.equalsIgnoreCase("CURSORMODE")) {
         if (isOn)
         {
             io.getScript()
-                    .removeDisallowedEvent(ScriptConstants.DISABLE_CURSORMODE);
+                    .removeDisallowedEvent(ScriptConsts.DISABLE_CURSORMODE);
         }
         else
         {
             io.getScript()
-                    .assignDisallowedEvent(ScriptConstants.DISABLE_CURSORMODE);
+                    .assignDisallowedEvent(ScriptConsts.DISABLE_CURSORMODE);
         }
     } else if (event.equalsIgnoreCase("EXPLORATIONMODE")) {
         if (isOn)
         {
             io.getScript().removeDisallowedEvent(
-                    ScriptConstants.DISABLE_EXPLORATIONMODE);
+                    ScriptConsts.DISABLE_EXPLORATIONMODE);
         }
         else
         {
             io.getScript().assignDisallowedEvent(
-                    ScriptConstants.DISABLE_EXPLORATIONMODE);
+                    ScriptConsts.DISABLE_EXPLORATIONMODE);
         }
     }
 }
@@ -1883,7 +1961,7 @@ public  void setEvent( IO io,  String event,
  * Sets the value of the eventSender.
  * @param val the new value to set
  */
-public  void setEventSender( IO val)
+public void setEventSender(BaseInteractiveObject val)
 {
     eventSender = val;
 }
@@ -1893,14 +1971,16 @@ public  void setEventSender( IO val)
  * @param value the variable's value
  * @ if an error occurs
  */
-public  void setGlobalVariable( String name,  Object value)
-            
+public void setGlobalVariable(String name, Object value)
+
 {
-        if (gvars == null) {
+    if (gvars == null)
+    {
         gvars = new ScriptVariable[0];
     }
     bool found = false;
-        for (int i = gvars.Length - 1; i >= 0; i--) {
+    for (int i = gvars.Length - 1; i >= 0; i--)
+    {
         ScriptVariable var = gvars[i];
         if (var != null
                 && var.getName() != null
@@ -1912,57 +1992,77 @@ public  void setGlobalVariable( String name,  Object value)
             break;
         }
     }
-        if (!found) {
+    if (!found)
+    {
         // create a new variable and add to the global array
         ScriptVariable var = null;
         if (value is String
-                    || value is char[]) {
-            var = new ScriptVariable(name, ScriptConstants.TYPE_G_00_TEXT,
+                    || value is char[])
+        {
+            var = new ScriptVariable(name, ScriptConsts.TYPE_G_00_TEXT,
                     value);
-        } else if (value is String[]
-                    || value is char[][]) {
+        }
+        else if (value is String[]
+                  || value is char[][])
+        {
             var = new ScriptVariable(name,
-                    ScriptConstants.TYPE_G_01_TEXT_ARR, value);
-        } else if (value is Float) {
-            var = new ScriptVariable(name, ScriptConstants.TYPE_G_02_FLOAT,
+                    ScriptConsts.TYPE_G_01_TEXT_ARR, value);
+        }
+        else if (value is Float)
+        {
+            var = new ScriptVariable(name, ScriptConsts.TYPE_G_02_FLOAT,
                     value);
-        } else if (value is Double) {
-            var = new ScriptVariable(name, ScriptConstants.TYPE_G_02_FLOAT,
+        }
+        else if (value is Double)
+        {
+            var = new ScriptVariable(name, ScriptConsts.TYPE_G_02_FLOAT,
                     value);
-        } else if (value is float[]) {
+        }
+        else if (value is float[])
+        {
             var = new ScriptVariable(name,
-                    ScriptConstants.TYPE_G_03_FLOAT_ARR, value);
-        } else if (value is Integer) {
-            var = new ScriptVariable(name, ScriptConstants.TYPE_G_04_INT,
+                    ScriptConsts.TYPE_G_03_FLOAT_ARR, value);
+        }
+        else if (value is Integer)
+        {
+            var = new ScriptVariable(name, ScriptConsts.TYPE_G_04_INT,
                     value);
-        } else if (value is int[]) {
+        }
+        else if (value is int[])
+        {
             var = new ScriptVariable(name,
-                    ScriptConstants.TYPE_G_05_INT_ARR, value);
-        } else if (value is Long) {
-            var = new ScriptVariable(name, ScriptConstants.TYPE_G_06_LONG,
+                    ScriptConsts.TYPE_G_05_INT_ARR, value);
+        }
+        else if (value is Long)
+        {
+            var = new ScriptVariable(name, ScriptConsts.TYPE_G_06_LONG,
                     value);
-        } else if (value is long[]) {
+        }
+        else if (value is long[])
+        {
             var = new ScriptVariable(name,
-                    ScriptConstants.TYPE_G_07_LONG_ARR, value);
-        } else {
+                    ScriptConsts.TYPE_G_07_LONG_ARR, value);
+        }
+        else
+        {
             PooledStringBuilder sb =
                     StringBuilderPool.GetInstance().GetStringBuilder();
             try
             {
-                sb.append("Global variable ");
-                sb.append(name);
-                sb.append(" was passed new value of type ");
-                sb.append(value.getClass().getCanonicalName());
-                sb.append(". Only String, String[], char[][], Float, ");
-                sb.append("float[], Integer, int[], Long, or long[] ");
-                sb.append("allowed.");
+                sb.Append("Global variable ");
+                sb.Append(name);
+                sb.Append(" was passed new value of type ");
+                sb.Append(value.getClass().getCanonicalName());
+                sb.Append(". Only String, String[], char[][], Float, ");
+                sb.Append("float[], Integer, int[], Long, or long[] ");
+                sb.Append("allowed.");
             }
             catch (PooledException e)
             {
                 throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
             }
             RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                    sb.toString());
+                    sb.ToString());
             sb.ReturnToPool();
             sb = null;
             throw ex;
@@ -1971,11 +2071,11 @@ public  void setGlobalVariable( String name,  Object value)
     }
 }
 /**
- * Sets the main event for an IO.
- * @param io the IO
+ * Sets the main event for an BaseInteractiveObject.
+ * @param io the BaseInteractiveObject
  * @param newevent the event's name
  */
-public  void setMainEvent( IO io,  String newevent)
+public void setMainEvent(BaseInteractiveObject io, String newevent)
 {
     if (io != null)
     {
@@ -1993,46 +2093,46 @@ public  void setMainEvent( IO io,  String newevent)
  * Sets the maximum number of timer scripts.
  * @param val the maximum number of timer scripts to set
  */
-protected  void setMaxTimerScript( int val)
+protected void setMaxTimerScript(int val)
 {
     maxTimerScript = val;
 }
 protected abstract void setScriptTimer(int index, TIMER timer);
 /**
- * Processes and IO's speech.
- * @param io the IO
+ * Processes and BaseInteractiveObject's speech.
+ * @param io the BaseInteractiveObject
  * @param params the {@link SpeechParameters}
  * @ 
  */
-public  void speak( IO io,  SpeechParameters params) 
+public void speak(BaseInteractiveObject io, SpeechParameters params)
 {
-        // speech variables
-        // ARX_CINEMATIC_SPEECH acs;
-        // acs.type = ARX_CINE_SPEECH_NONE;
-        long voixoff = 0;
-        int mood = ANIM_TALK_NEUTRAL;
-        if (params.isKillAllSpeech()) {
+    // speech variables
+    // ARX_CINEMATIC_SPEECH acs;
+    // acs.type = ARX_CINE_SPEECH_NONE;
+    long voixoff = 0;
+    int mood = ANIM_TALK_NEUTRAL;
+    if (params.isKillAllSpeech()) {
         // ARX_SPEECH_Reset();
     } else {
-        if (params.hasFlag(SpeechParameters.HAPPY)) {
+        if (params.HasFlag(SpeechParameters.HAPPY)) {
             mood = ANIM_TALK_HAPPY;
         }
-        if (params.hasFlag(SpeechParameters.ANGRY)) {
+        if (params.HasFlag(SpeechParameters.ANGRY)) {
             mood = ANIM_TALK_ANGRY;
         }
-        if (params.hasFlag(SpeechParameters.OFF_VOICE)) {
+        if (params.HasFlag(SpeechParameters.OFF_VOICE)) {
             voixoff = 2;
         }
-        if (params.hasFlag(SpeechParameters.KEEP_SPEECH)
-                || params.hasFlag(SpeechParameters.ZOOM_SPEECH)
-                || params.hasFlag(SpeechParameters.SPEECH_CCCTALKER_L)
-                || params.hasFlag(SpeechParameters.SPEECH_CCCTALKER_R)
-                || params.hasFlag(SpeechParameters.SPEECH_CCCLISTENER_L)
-                || params.hasFlag(SpeechParameters.SPEECH_CCCLISTENER_R)
-                || params.hasFlag(SpeechParameters.SIDE_L)
-                || params.hasFlag(SpeechParameters.SIDE_R)) {
+        if (params.HasFlag(SpeechParameters.KEEP_SPEECH)
+                || params.HasFlag(SpeechParameters.ZOOM_SPEECH)
+                || params.HasFlag(SpeechParameters.SPEECH_CCCTALKER_L)
+                || params.HasFlag(SpeechParameters.SPEECH_CCCTALKER_R)
+                || params.HasFlag(SpeechParameters.SPEECH_CCCLISTENER_L)
+                || params.HasFlag(SpeechParameters.SPEECH_CCCLISTENER_R)
+                || params.HasFlag(SpeechParameters.SIDE_L)
+                || params.HasFlag(SpeechParameters.SIDE_R)) {
             // FRAME_COUNT = 0;
-            if (params.hasFlag(SpeechParameters.KEEP_SPEECH)) {
+            if (params.HasFlag(SpeechParameters.KEEP_SPEECH)) {
                 // acs.type = ARX_CINE_SPEECH_KEEP;
                 // acs.pos1.x = LASTCAMPOS.x;
                 // acs.pos1.y = LASTCAMPOS.y;
@@ -2041,7 +2141,7 @@ public  void speak( IO io,  SpeechParameters params)
                 // acs.pos2.b = LASTCAMANGLE.b;
                 // acs.pos2.g = LASTCAMANGLE.g;
             }
-            if (params.hasFlag(SpeechParameters.ZOOM_SPEECH)) {
+            if (params.HasFlag(SpeechParameters.ZOOM_SPEECH)) {
                 // acs.type = ARX_CINE_SPEECH_ZOOM;
                 // pos = GetNextWord(es, pos, temp2);
                 // acs.startangle.a = GetVarValueInterpretedAsFloat(temp2,
@@ -2072,16 +2172,16 @@ public  void speak( IO io,  SpeechParameters params)
                 // if (acs.ionum == -2) //means temp2 is "me" or "self"
                 // acs.ionum = GetInterNum(io);
 
-                if (params.hasFlag(SpeechParameters.PLAYER)) {
+                if (params.HasFlag(SpeechParameters.PLAYER)) {
                     // ComputeACSPos(&acs, inter.iobj[0], acs.ionum);
                 } else {
                     // ComputeACSPos(&acs, io, -1);
                 }
             }
-            if (params.hasFlag(SpeechParameters.SPEECH_CCCTALKER_L)
+            if (params.HasFlag(SpeechParameters.SPEECH_CCCTALKER_L)
                     || params
-                                .hasFlag(SpeechParameters.SPEECH_CCCTALKER_R)) {
-                if (params.hasFlag(SpeechParameters.SPEECH_CCCTALKER_L)) {
+                                .HasFlag(SpeechParameters.SPEECH_CCCTALKER_R)) {
+                if (params.HasFlag(SpeechParameters.SPEECH_CCCTALKER_L)) {
                     // acs.type = ARX_CINE_SPEECH_CCCTALKER_R;
                 } else {
                     // acs.type = ARX_CINE_SPEECH_CCCTALKER_L;
@@ -2098,16 +2198,16 @@ public  void speak( IO io,  SpeechParameters params)
                 // acs.endpos = GetVarValueInterpretedAsFloat(temp2, esss,
                 // io);
 
-                if (params.hasFlag(SpeechParameters.PLAYER)) {
+                if (params.HasFlag(SpeechParameters.PLAYER)) {
                     // ComputeACSPos(&acs, inter.iobj[0], acs.ionum);
                 } else {
                     // ComputeACSPos(&acs, io, acs.ionum);
                 }
             }
-            if (params.hasFlag(SpeechParameters.SPEECH_CCCLISTENER_L)
-                    || params.hasFlag(
+            if (params.HasFlag(SpeechParameters.SPEECH_CCCLISTENER_L)
+                    || params.HasFlag(
                             SpeechParameters.SPEECH_CCCLISTENER_R)) {
-                if (params.hasFlag(SpeechParameters.SPEECH_CCCLISTENER_L)) {
+                if (params.HasFlag(SpeechParameters.SPEECH_CCCLISTENER_L)) {
                     // acs.type = ARX_CINE_SPEECH_CCCLISTENER_L;
                 } else {
                     // acs.type = ARX_CINE_SPEECH_CCCLISTENER_R;
@@ -2124,15 +2224,15 @@ public  void speak( IO io,  SpeechParameters params)
                 // acs.endpos = GetVarValueInterpretedAsFloat(temp2, esss,
                 // io);
 
-                if (params.hasFlag(SpeechParameters.PLAYER)) {
+                if (params.HasFlag(SpeechParameters.PLAYER)) {
                     // ComputeACSPos(&acs, inter.iobj[0], acs.ionum);
                 } else {
                     // ComputeACSPos(&acs, io, acs.ionum);
                 }
             }
-            if (params.hasFlag(SpeechParameters.SIDE_L)
-                    || params.hasFlag(SpeechParameters.SIDE_R)) {
-                if (params.hasFlag(SpeechParameters.SIDE_L)) {
+            if (params.HasFlag(SpeechParameters.SIDE_L)
+                    || params.HasFlag(SpeechParameters.SIDE_R)) {
+                if (params.HasFlag(SpeechParameters.SIDE_L)) {
                     // acs.type = ARX_CINE_SPEECH_SIDE_LEFT;
                 } else {
                     // acs.type = ARX_CINE_SPEECH_SIDE;
@@ -2158,7 +2258,7 @@ public  void speak( IO io,  SpeechParameters params)
                 // pos = GetNextWord(es, pos, temp2);
                 // acs.f2 = GetVarValueInterpretedAsFloat(temp2, esss, io);
 
-                if (params.hasFlag(SpeechParameters.PLAYER)) {
+                if (params.HasFlag(SpeechParameters.PLAYER)) {
                     // ComputeACSPos(&acs, inter.iobj[0], acs.ionum);
                 } else {
                     // ComputeACSPos(&acs, io, acs.ionum);
@@ -2172,12 +2272,12 @@ public  void speak( IO io,  SpeechParameters params)
                 || params.getSpeechName().Length() == 0) {
             // ARX_SPEECH_ClearIOSpeech(io);
         } else {
-            if (params.hasFlag(SpeechParameters.NO_TEXT)) {
+            if (params.HasFlag(SpeechParameters.NO_TEXT)) {
                 // voixoff |= ARX_SPEECH_FLAG_NOTEXT;
             }
 
             // if (!CINEMASCOPE) voixoff |= ARX_SPEECH_FLAG_NOTEXT;
-            if (params.hasFlag(SpeechParameters.PLAYER)) {
+            if (params.HasFlag(SpeechParameters.PLAYER)) {
                 // speechnum = ARX_SPEECH_AddSpeech(inter.iobj[0], temp1,
                 // PARAM_LOCALISED, mood, voixoff);
             } else {
@@ -2194,7 +2294,7 @@ public  void speak( IO io,  SpeechParameters params)
                 // aspeech[speechnum].scrpos = pos;
                 // aspeech[speechnum].es = es;
                 // aspeech[speechnum].ioscript = io;
-                if (params.hasFlag(SpeechParameters.UNBREAKABLE)) {
+                if (params.HasFlag(SpeechParameters.UNBREAKABLE)) {
                     // aspeech[speechnum].flags |=
                     // ARX_SPEECH_FLAG_UNBREAKABLE;
                 }
@@ -2209,21 +2309,22 @@ public  void speak( IO io,  SpeechParameters params)
 /**
  * Sends a scripted event to the event stack for all members of a group, to
  * be fired during the game cycle.
- * @param group the name of the IO group
+ * @param group the name of the BaseInteractiveObject group
  * @param msg the script message
  * @param params the parameters assigned to the script
  * @param eventname the event name
  * @ if an error occurs
  */
-public  void stackSendGroupScriptEvent( String group,
-         int msg,  Object[] params,  String eventname)
-            
+public void stackSendGroupScriptEvent(String group,
+         int msg, Object[] params, String eventname)
+
 {
-        int i = Interactive.GetInstance().getMaxIORefId();
-        for (; i >= 0; i--) {
+    int i = Interactive.GetInstance().getMaxIORefId();
+    for (; i >= 0; i--)
+    {
         if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.GetInstance().getIO(i);
+            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
             if (isIOInGroup(io, group))
             {
                 stackSendIOScriptEvent(io, msg, params, eventname);
@@ -2233,17 +2334,17 @@ public  void stackSendGroupScriptEvent( String group,
     }
 }
 /**
- * Sends an IO scripted event to the event stack, to be fired during the
+ * Sends an BaseInteractiveObject scripted event to the event stack, to be fired during the
  * game cycle.
- * @param io the IO
+ * @param io the BaseInteractiveObject
  * @param msg the script message
  * @param params the parameters assigned to the script
  * @param eventname the event name
  */
-public  void stackSendIOScriptEvent( IO io,
-         int msg,  Object[] params,  String eventname)
+public void stackSendIOScriptEvent(BaseInteractiveObject io,
+         int msg, Object[] params, String eventname)
 {
-    for (int i = 0; i < ScriptConstants.MAX_EVENT_STACK; i++)
+    for (int i = 0; i < ScriptConsts.MAX_EVENT_STACK; i++)
     {
         if (!getStackedEvent(i).exists())
         {
@@ -2264,7 +2365,7 @@ public  void stackSendIOScriptEvent( IO io,
     }
 
     getStackedEvent(i).setSender(eventSender);
-    getStackedEvent(i).setIo(io);
+    getStackedEvent(i).Io = io);
     getStackedEvent(i).setMsg(msg);
     getStackedEvent(i).setExist(true);
     break;
@@ -2277,14 +2378,15 @@ public  void stackSendIOScriptEvent( IO io,
      * @param dat the message parameters
      * @ if an error occurs
      */
-    public  void stackSendMsgToAllNPCIO( int msg,  Object[] dat)
-            
+    public void stackSendMsgToAllNPCIO(int msg, Object[] dat)
+
 {
-        int i = Interactive.GetInstance().getMaxIORefId();
-        for (; i >= 0; i--) {
+    int i = Interactive.GetInstance().getMaxIORefId();
+    for (; i >= 0; i--)
+    {
         if (Interactive.GetInstance().hasIO(i))
         {
-            IO io = (IO)Interactive.GetInstance().getIO(i);
+            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
             if (io.HasIOFlag(IoGlobals.IO_03_NPC))
             {
                 stackSendIOScriptEvent(io, msg, dat, null);
@@ -2296,14 +2398,14 @@ public  void stackSendIOScriptEvent( IO io,
  * Starts a timer using a defined set of parameters.
  * @param params the parameters
  */
-public  void startTimer(
-         ScriptTimerInitializationParameters<IO, SCRIPTABLE> params)
+public void startTimer(
+         ScriptTimerInitializationParameters<BaseInteractiveObject, SCRIPTABLE> params)
 {
     int timerNum = timerGetFree();
     ScriptTimer timer = getScriptTimer(timerNum);
     timer.setScript(params.getScript());
     timer.setExists(true);
-    timer.setIo(params.getIo());
+    timer.Io =params.getIo());
     timer.setCycleLength(params.getMilliseconds());
     if (params.getName() == null
             || (params.getName() != null
@@ -2318,11 +2420,11 @@ public  void startTimer(
                 params.getArgs()));
     timer.setLastTimeCheck(params.getStartTime());
     timer.setRepeatTimes(params.getRepeatTimes());
-    timer.clearFlags();
-    timer.addFlag(params.getFlagValues());
+    timer.ClearFlags();
+    timer.AddFlag(params.getFlagValues());
 }
 /**
- * Teleports an IO to a target location.
+ * Teleports an BaseInteractiveObject to a target location.
  * @param io the io calling for the teleport event
  * @param behind flag indicating the target teleports behind
  * @param isPlayer flag indicating object being teleported is the player
@@ -2331,13 +2433,16 @@ public  void startTimer(
  * @param target the name of teleport destination
  * @ if an error occurs
  */
-public  void teleport( IO io,  bool behind,
-         bool isPlayer,  bool initPosition,
-         String target) 
+public void teleport(BaseInteractiveObject io, bool behind,
+         bool isPlayer, bool initPosition,
+         String target)
 {
-        if (behind) {
+    if (behind)
+    {
         Interactive.GetInstance().ARX_INTERACTIVE_TeleportBehindTarget(io);
-    } else {
+    }
+    else
+    {
         if (!initPosition)
         {
             int ioid =
@@ -2358,9 +2463,9 @@ public  void teleport( IO io,  bool behind,
                             && io.getShow() != IoGlobals.SHOW_FLAG_DESTROYED
                             && io.getShow() != IoGlobals.SHOW_FLAG_KILLED)
                     {
-                        io.setShow(IoGlobals.SHOW_FLAG_IN_SCENE);
+                        io.show = IoGlobals.SHOW_FLAG_IN_SCENE);
                     }
-                    IO pio = (IO)Interactive.GetInstance().getIO(
+                    BaseInteractiveObject pio = (BaseInteractiveObject)Interactive.GetInstance().getIO(
                             ProjectConstants.GetInstance().getPlayer());
                     Interactive.GetInstance().ARX_INTERACTIVE_Teleport(
                             io, pio.getPosition());
@@ -2370,7 +2475,7 @@ public  void teleport( IO io,  bool behind,
                 {
                     if (Interactive.GetInstance().hasIO(ioid))
                     {
-                        IO tio = (IO)Interactive.GetInstance().getIO(ioid);
+                        BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
                         Vector2 pos = new Vector2();
 
                         if (Interactive.GetInstance()
@@ -2378,7 +2483,7 @@ public  void teleport( IO io,  bool behind,
                         {
                             if (isPlayer)
                             {
-                                IO pio = (IO)Interactive.GetInstance()
+                                BaseInteractiveObject pio = (BaseInteractiveObject)Interactive.GetInstance()
                                         .getIO(
                                                 ProjectConstants
                                                         .GetInstance()
@@ -2401,7 +2506,7 @@ public  void teleport( IO io,  bool behind,
                                     if (io.getShow() != IoGlobals.SHOW_FLAG_HIDDEN
                                             && io.getShow() != IoGlobals.SHOW_FLAG_MEGAHIDE)
                                     {
-                                        io.setShow(
+                                        io.show =
                                                 IoGlobals.SHOW_FLAG_IN_SCENE);
                                     }
                                     Interactive.GetInstance()
@@ -2424,7 +2529,7 @@ public  void teleport( IO io,  bool behind,
                     if (Interactive.GetInstance().GetItemWorldPosition(io,
                             pos))
                     {
-                        IO pio = (IO)Interactive.GetInstance().getIO(
+                        BaseInteractiveObject pio = (BaseInteractiveObject)Interactive.GetInstance().getIO(
                                 ProjectConstants.GetInstance().getPlayer());
                         Interactive.GetInstance().ARX_INTERACTIVE_Teleport(
                                 pio, pos);
@@ -2444,7 +2549,7 @@ public  void teleport( IO io,  bool behind,
                         if (io.getShow() != IoGlobals.SHOW_FLAG_HIDDEN
                                 && io.getShow() != IoGlobals.SHOW_FLAG_MEGAHIDE)
                         {
-                            io.setShow(IoGlobals.SHOW_FLAG_IN_SCENE);
+                            io.show = IoGlobals.SHOW_FLAG_IN_SCENE);
                         }
                         Interactive.GetInstance().ARX_INTERACTIVE_Teleport(
                                 io, io.getInitPosition());
@@ -2454,9 +2559,10 @@ public  void teleport( IO io,  bool behind,
         }
     }
 }
-public  void timerCheck() 
+public void timerCheck()
 {
-        if (countTimers() > 0) {
+    if (countTimers() > 0)
+    {
         for (int i = 0, len = this.maxTimerScript; i < len; i++)
         {
             TIMER timer = getScriptTimers()[i];
@@ -2467,7 +2573,7 @@ public  void timerCheck()
                 {
                     currentTime = Time.GetInstance().getGameRound();
                 }
-                if (timer.hasFlag(1))
+                if (timer.HasFlag(1))
                 {
                     if (!timer.getIo().HasGameFlag(
                             IoGlobals.GFLAG_ISINTREATZONE))
@@ -2485,7 +2591,7 @@ public  void timerCheck()
                         + timer.getCycleLength() < currentTime)
                 {
                     SCRIPTABLE script = (SCRIPTABLE)timer.getScript();
-                    IO io = timer.getIo();
+                    BaseInteractiveObject io = timer.getIo();
                     if (script != null)
                     {
                         if (timer.getName().equalsIgnoreCase("_R_A_T_"))
@@ -2511,7 +2617,7 @@ public  void timerCheck()
                     if (script != null
                             && Interactive.GetInstance().hasIO(io))
                     {
-                        timer.getAction().process();
+                        timer.GetAction().process();
                     }
                     script = null;
                     io = null;
@@ -2522,14 +2628,14 @@ public  void timerCheck()
     }
 }
 /** Clears all timers in play. */
-public  void timerClearAll()
+public void timerClearAll()
 {
     for (int i = 0; i < maxTimerScript; i++)
     {
         timerClearByNum(i);
     }
 }
-public  void timerClearAllLocalsForIO( IO io)
+public void timerClearAllLocalsForIO(BaseInteractiveObject io)
 {
     TIMER[] scriptTimers = getScriptTimers();
     for (int i = 0; i < maxTimerScript; i++)
@@ -2546,10 +2652,10 @@ public  void timerClearAllLocalsForIO( IO io)
     }
 }
 /**
- * Clears a timer by the IO assigned to it.
- * @param io the IO
+ * Clears a timer by the BaseInteractiveObject assigned to it.
+ * @param io the BaseInteractiveObject
  */
-public  void timerClearByIO( IO io)
+public void timerClearByIO(BaseInteractiveObject io)
 {
     if (io != null)
     {
@@ -2567,8 +2673,8 @@ public  void timerClearByIO( IO io)
         }
     }
 }
-public  void timerClearByNameAndIO( String timername,
-         IO io)
+public void timerClearByNameAndIO(String timername,
+         BaseInteractiveObject io)
 {
     if (io != null)
     {
@@ -2592,7 +2698,7 @@ public  void timerClearByNameAndIO( String timername,
  * Clears a timer by its index on the timers list.
  * @param timeridx the index
  */
-public void timerClearByNum( int timeridx)
+public void timerClearByNum(int timeridx)
 {
     TIMER[] scriptTimers = getScriptTimers();
     if (scriptTimers[timeridx].exists())
@@ -2606,7 +2712,7 @@ public void timerClearByNum( int timeridx)
  * @param texx the timer's name
  * @return the timer's index if it exists, otherwise returns -1
  */
-private int timerExist( String texx)
+private int timerExist(String texx)
 {
     int index = -1;
     TIMER[] scriptTimers = getScriptTimers();
@@ -2628,7 +2734,7 @@ private int timerExist( String texx)
  * Initializes all game timers.
  * @param number the maximum number of timers used. Must be at least 100.
  */
-public  void timerFirstInit( int number)
+public void timerFirstInit(int number)
 {
     if (number < 100)
     {
@@ -2656,8 +2762,8 @@ private String timerGetDefaultName()
                 StringBuilderPool.GetInstance().GetStringBuilder();
         try
         {
-            sb.append("TIMER_");
-            sb.append(i);
+            sb.Append("TIMER_");
+            sb.Append(i);
         }
         catch (PooledException e)
         {
@@ -2666,9 +2772,9 @@ private String timerGetDefaultName()
         }
         i++;
 
-        if (timerExist(sb.toString()) == -1)
+        if (timerExist(sb.ToString()) == -1)
         {
-            texx = sb.toString();
+            texx = sb.ToString();
             sb.ReturnToPool();
             sb = null;
             break;
@@ -2682,7 +2788,7 @@ private String timerGetDefaultName()
  * Gets the index of a free script timer.
  * @return <code>int</code>
  */
-public  int timerGetFree()
+public int timerGetFree()
 {
     int index = -1;
     TIMER[] scriptTimers = getScriptTimers();
@@ -2697,14 +2803,14 @@ public  int timerGetFree()
     return index;
 }
 /**
- * Determines if an IO is speaking.
- * @param io the IO
- * @return <tt>true</tt> if the IO is speaking; <tt>false</tt> otherwise
+ * Determines if an BaseInteractiveObject is speaking.
+ * @param io the BaseInteractiveObject
+ * @return <tt>true</tt> if the BaseInteractiveObject is speaking; <tt>false</tt> otherwise
  */
-public bool amISpeaking( IO io)
+public bool amISpeaking(BaseInteractiveObject io)
 {
     // TODO Auto-generated method stub
-    // GO THROUGH ALL SPEECH INSTANCES.  IF THE IO IS SPEAKING
+    // GO THROUGH ALL SPEECH INSTANCES.  IF THE BaseInteractiveObject IS SPEAKING
     // RETURN FALSE.  OTHERWISE TRUE
     //for (long i = 0; i < MAX_ASPEECH; i++) {
     //if (aspeech[i].exist) {

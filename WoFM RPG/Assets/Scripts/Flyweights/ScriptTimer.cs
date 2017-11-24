@@ -13,8 +13,8 @@ namespace Assets.Scripts.Flyweights
         private bool exists;
         /** any flags set on the timer. */
         private int flags;
-        /** the {@link IO} associated with this timer. */
-        private IO io;
+        /** the {@link BaseInteractiveObject} associated with this timer. */
+        private BaseInteractiveObject io;
         /** the index of any array the timer is associated with. */
         private long longinfo;
         /** the timer's length in milliseconds. */
@@ -33,12 +33,12 @@ namespace Assets.Scripts.Flyweights
          * Adds a flag set on the timer..
          * @param flag the flag
          */
-        public  void addFlag( long flag)
+        public  void AddFlag( long flag)
         {
             flags |= flag;
         }
         /** Clears all flags that were set. */
-        public  void clearFlags()
+        public  void ClearFlags()
         {
             flags = 0;
         }
@@ -54,15 +54,15 @@ namespace Assets.Scripts.Flyweights
          * Gets the value for the action.
          * @return {@link ScriptTimerAction}
          */
-        public  ScriptTimerAction getAction()
+        public  ScriptTimerAction GetAction()
         {
             return action;
         }
         /**
-         * Gets the {@link IO} associated with this timer.
-         * @return {@link IO}
+         * Gets the {@link BaseInteractiveObject} associated with this timer.
+         * @return {@link BaseInteractiveObject}
          */
-        public  IO getIo()
+        public  BaseInteractiveObject getIo()
         {
             return io;
         }
@@ -92,9 +92,9 @@ namespace Assets.Scripts.Flyweights
         }
         /**
          * Gets the script associated with the timer.
-         * @return {@link Scriptable}<{@link IO}>
+         * @return {@link Scriptable}<{@link BaseInteractiveObject}>
          */
-        public  Scriptable<IO> getScript() {
+        public  Scriptable<BaseInteractiveObject> getScript() {
             return script;
         }
         /**
@@ -118,7 +118,7 @@ namespace Assets.Scripts.Flyweights
          * @param flag the flag
          * @return true if the {@link ScriptTimer} has the flag; false otherwise
          */
-        public  bool hasFlag( long flag)
+        public  bool HasFlag( long flag)
         {
             return (flags & flag) == flag;
         }
@@ -134,7 +134,7 @@ namespace Assets.Scripts.Flyweights
          * Removes a flag.
          * @param flag the flag
          */
-        public  void removeFlag( long flag)
+        public  void RemoveFlag( long flag)
         {
             flags &= ~flag;
         }
@@ -146,7 +146,7 @@ namespace Assets.Scripts.Flyweights
         {
             script = (Scriptable) params.getScript();
             exists = true;
-            io = (IO) params.getIo();
+            io = (BaseInteractiveObject) params.getIo();
             msecs = params.getMilliseconds();
             name = params.getName();
             action = new ScriptTimerAction(
@@ -155,8 +155,8 @@ namespace Assets.Scripts.Flyweights
     				params.getArgs());
             tim = params.getStartTime();
             times = params.getRepeatTimes();
-            clearFlags();
-            addFlag(params.getFlagValues());
+            ClearFlags();
+            AddFlag(params.getFlagValues());
         }
         /**
          * Sets the action taken when the script timer completes.
@@ -183,10 +183,10 @@ namespace Assets.Scripts.Flyweights
             exists = flag;
         }
         /**
-         * Sets the {@link IO} associated with this timer.
+         * Sets the {@link BaseInteractiveObject} associated with this timer.
          * @param val the value to set
          */
-        public  void setIo( IO val)
+        public  void setIo( BaseInteractiveObject val)
         {
             io = val;
         }
@@ -208,7 +208,7 @@ namespace Assets.Scripts.Flyweights
         }
         /**
          * Sets the script associated with the timer.
-         * @param val the {@link Scriptable}<{@link IO}> to set
+         * @param val the {@link Scriptable}<{@link BaseInteractiveObject}> to set
          */
         public  void setScript( Scriptable val)
         {

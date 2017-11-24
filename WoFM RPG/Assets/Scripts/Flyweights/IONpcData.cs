@@ -28,8 +28,8 @@ namespace RPGBase.Flyweights
         long fightdecision;
         /** the {@link IoNpcData}'s gender. */
         private int gender;
-        /** the IO associated with this {@link IoNpcData}. */
-        private IO io;
+        /** the BaseInteractiveObject associated with this {@link IoNpcData}. */
+        private BaseInteractiveObject io;
         float lastmouth;
         float life;
         float look_around_inc;
@@ -80,7 +80,7 @@ namespace RPGBase.Flyweights
 
         short walk_start_time;
         /** the IONpcData's weapon. */
-        private IO weapon;
+        private BaseInteractiveObject weapon;
         private int weaponInHand;
         char[] weaponname = new char[256];
         long weapontype;
@@ -107,7 +107,7 @@ pathfinder = new IOPathfind();
      */
     public void addBehavior( Behaviour behaviorEnum)
 {
-    behavior |= behaviorEnum.getFlag();
+    behavior |= behaviorEnum.GetFlag();
 }
 /**
  * Adds a behavior flag.
@@ -145,19 +145,19 @@ private void applyPoisonDamage( int srcIoid,
          bool isSpellDamage) 
 {
         if (Interactive.GetInstance().hasIO(srcIoid)) {
-        IO poisonWeaponIO = null;
-        IO sourceIO = (IO)Interactive.GetInstance().getIO(
+        BaseInteractiveObject poisonWeaponIO = null;
+        BaseInteractiveObject sourceIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(
                 srcIoid);
         if (sourceIO.HasIOFlag(IoGlobals.IO_01_PC))
         {
-            IoPcData player = sourceIO.getPCData();
+            IoPcData player = sourceIO.PcData;
             if (player.getEquippedItem(
                     EquipmentGlobals.EQUIP_SLOT_WEAPON) > 0
                     && Interactive.GetInstance().hasIO(
                             player.getEquippedItem(
                                     EquipmentGlobals.EQUIP_SLOT_WEAPON)))
             {
-                poisonWeaponIO = (IO)Interactive.GetInstance()
+                poisonWeaponIO = (BaseInteractiveObject)Interactive.GetInstance()
                         .getIO(player.getEquippedItem(
                                 EquipmentGlobals.EQUIP_SLOT_WEAPON));
 
@@ -176,7 +176,7 @@ private void applyPoisonDamage( int srcIoid,
             if (sourceIO.HasIOFlag(IoGlobals.IO_03_NPC))
             {
                 poisonWeaponIO =
-                        (IO)sourceIO.getNPCData().getWeapon();
+                        (BaseInteractiveObject)sourceIO.getNPCData().getWeapon();
                 if (poisonWeaponIO != null
                         && (poisonWeaponIO.getPoisonLevel() == 0
                                 || poisonWeaponIO
@@ -246,7 +246,7 @@ public  void ARX_NPC_Behaviour_Change( int newBehavior,
 {
     if (hasBehavior(Behaviour.BEHAVIOUR_FIGHT)
             && (newBehavior & Behaviour.BEHAVIOUR_FIGHT
-                    .getFlag()) == Behaviour.BEHAVIOUR_FIGHT.getFlag())
+                    .GetFlag()) == Behaviour.BEHAVIOUR_FIGHT.GetFlag())
     {
         stopActiveAnimation();
         // ANIM_USE * ause1 = &io->animlayer[1];
@@ -257,7 +257,7 @@ public  void ARX_NPC_Behaviour_Change( int newBehavior,
 
     if (hasBehavior(Behaviour.BEHAVIOUR_NONE)
             && (newBehavior & Behaviour.BEHAVIOUR_NONE
-                    .getFlag()) == Behaviour.BEHAVIOUR_NONE.getFlag())
+                    .GetFlag()) == Behaviour.BEHAVIOUR_NONE.GetFlag())
     {
         stopIdleAnimation();
         // ANIM_USE * ause0 = &io->animlayer[0];
@@ -283,7 +283,7 @@ public  void ARX_NPC_Behaviour_Change( int newBehavior,
     }
 
     if ((newBehavior & Behaviour.BEHAVIOUR_FRIENDLY
-            .getFlag()) == Behaviour.BEHAVIOUR_FRIENDLY.getFlag())
+            .GetFlag()) == Behaviour.BEHAVIOUR_FRIENDLY.GetFlag())
     {
         stopIdleAnimation();
         // ANIM_USE * ause0 = &io->animlayer[0];
@@ -359,7 +359,7 @@ public  void ARX_NPC_Revive( bool reposition)
 
     Script.GetInstance().setMainEvent(getIo(), "MAIN");
 
-    getIo().removeIOFlag(IoGlobals.IO_07_NO_COLLISIONS);
+    getIo().RemoveIOFlag(IoGlobals.IO_07_NO_COLLISIONS);
     restoreLifeToMax();
     Script.GetInstance().resetObject(io, true);
     restoreLifeToMax();
@@ -393,7 +393,7 @@ public  void ARX_NPC_Revive( bool reposition)
  * @param xp
  * @param killerIO
  */
-protected abstract void awardXpForNpcDeath( int xp,  IO killerIO);
+protected abstract void awardXpForNpcDeath( int xp,  BaseInteractiveObject killerIO);
 /** Clears all behavior flags that were set. */
 public void clearBehavior()
 {
@@ -440,14 +440,14 @@ public  float damageNPC( float dmg,  int srcIoid,
             if (dmg >= 0.f)
             {
                 this.applyPoisonDamage(srcIoid, isSpellDamage);
-                int accepted = ScriptConstants.ACCEPT;
-                // if IO has a script, send HIT event
+                int accepted = ScriptConsts.ACCEPT;
+                // if BaseInteractiveObject has a script, send HIT event
                 if (io.getScript() != null)
                 {
                     accepted = sendHitEvent(dmg, srcIoid, isSpellDamage);
                 }
                 // if HIT event doesn't handle damage, handle it here
-                if (accepted == ScriptConstants.ACCEPT)
+                if (accepted == ScriptConsts.ACCEPT)
                 {
                     damagesdone = processDamage(dmg, srcIoid);
                 }
@@ -458,34 +458,34 @@ public  float damageNPC( float dmg,  int srcIoid,
 }
 /**
  * Forces the IONpcData to die.
- * @param killerIO the IO that killed the IONpcData
+ * @param killerIO the BaseInteractiveObject that killed the IONpcData
  * @ if an error occurs
  */
-public  void forceDeath( IO killerIO) 
+public  void forceDeath( BaseInteractiveObject killerIO) 
 {
         if (io.getMainevent() == null
                 || (io.getMainevent() != null
                         && !io.getMainevent().equalsIgnoreCase("DEAD"))) {
-        IO oldSender = (IO)Script.GetInstance().getEventSender();
+        BaseInteractiveObject oldSender = (BaseInteractiveObject)Script.GetInstance().getEventSender();
         Script.GetInstance().setEventSender(killerIO);
 
-        // TODO - reset drag IO
+        // TODO - reset drag BaseInteractiveObject
         // if (io == DRAGINTER)
         // Set_DragInter(NULL);
 
-        // TODO - reset flying over (with mouse) IO
+        // TODO - reset flying over (with mouse) BaseInteractiveObject
         // if (io == FlyingOverIO)
         // FlyingOverIO = NULL;
 
-        // TODO - reset camera 1 when pointing to IO
+        // TODO - reset camera 1 when pointing to BaseInteractiveObject
         // if ((MasterCamera.exist & 1) && (MasterCamera.io == io))
         // MasterCamera.exist = 0;
 
-        // TODO - reset camera 2 when pointing to IO
+        // TODO - reset camera 2 when pointing to BaseInteractiveObject
         // if ((MasterCamera.exist & 2) && (MasterCamera.want_io == io))
         // MasterCamera.exist = 0;
 
-        // TODO - kill dynamic lighting for IO
+        // TODO - kill dynamic lighting for BaseInteractiveObject
         // if (ValidDynLight(io->dynlight))
         // DynLight[io->dynlight].exist = 0;
 
@@ -549,7 +549,7 @@ public  void forceDeath( IO killerIO)
                 {
                     continue;
                 }
-                IO ioo = (IO)Interactive.GetInstance().getIO(i);
+                BaseInteractiveObject ioo = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
                 if (ioo == null)
                 {
                     continue;
@@ -600,10 +600,10 @@ public  void forceDeath( IO killerIO)
 
             if (getWeapon() != null)
             {
-                IO wpnIO = getWeapon();
+                BaseInteractiveObject wpnIO = getWeapon();
                 if (Interactive.GetInstance().hasIO(wpnIO))
                 {
-                    wpnIO.setShow(IoGlobals.SHOW_FLAG_IN_SCENE);
+                    wpnIO.show =IoGlobals.SHOW_FLAG_IN_SCENE);
                     wpnIO.AddIOFlag(IoGlobals.IO_07_NO_COLLISIONS);
                     // TODO - reset positioning and velocity
                     // ioo->pos.x =
@@ -649,11 +649,11 @@ public  int getGender()
     return gender;
 }
 /**
- * Gets the IO associated with this {@link IoNpcData}.
- * @return {@link IO}
+ * Gets the BaseInteractiveObject associated with this {@link IoNpcData}.
+ * @return {@link BaseInteractiveObject}
  */
 @Override
-    public  IO getIo()
+    public  BaseInteractiveObject getIo()
 {
     return io;
 }
@@ -712,9 +712,9 @@ public  char[] getTitle()
 }
 /**
  * Gets the IONpcData's weapon.
- * @return {@link IO}
+ * @return {@link BaseInteractiveObject}
  */
-public  IO getWeapon()
+public  BaseInteractiveObject getWeapon()
 {
     return weapon;
 }
@@ -747,7 +747,7 @@ public long getXPValue()
  */
 public  bool hasBehavior( Behaviour behaviorEnum)
 {
-    return hasBehavior(behaviorEnum.getFlag());
+    return hasBehavior(behaviorEnum.GetFlag());
 }
 /**
  * Determines if the {@link BaseInteractiveObject} has a specific behavior
@@ -834,7 +834,7 @@ private float processDamage( float dmg,  int srcIoid)
         if (Interactive.GetInstance().hasIO(srcIoid))
         {
             int xp = xpvalue;
-            IO srcIO = (IO)Interactive.GetInstance().getIO(srcIoid);
+            BaseInteractiveObject srcIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(srcIoid);
             forceDeath(srcIO);
             if (srcIO.HasIOFlag(IoGlobals.IO_01_PC))
             {
@@ -854,7 +854,7 @@ private float processDamage( float dmg,  int srcIoid)
  */
 public  void removeBehavior( Behaviour behaviorEnum)
 {
-    behavior &= ~behaviorEnum.getFlag();
+    behavior &= ~behaviorEnum.GetFlag();
 }
 /**
  * Removes a behavior flag.
@@ -875,7 +875,7 @@ public  void removeNPCFlag( long flag)
 /** Resets the behavior. */
 public void resetBehavior()
 {
-    behavior = Behaviour.BEHAVIOUR_NONE.getFlag();
+    behavior = Behaviour.BEHAVIOUR_NONE.GetFlag();
     for (int i = 0; i < MAX_STACKED_BEHAVIOR; i++)
     {
         if (stacked[i] == null)
@@ -888,7 +888,7 @@ public void resetBehavior()
 /** Restores the IONpcData to their maximum life. */
 protected abstract void restoreLifeToMax();
 /**
- * Sends the IONpcData IO a 'Hit' event.
+ * Sends the IONpcData BaseInteractiveObject a 'Hit' event.
  * @param dmg the amount of damage
  * @param srcIoid the source of the damage
  * @param isSpellDamage flag indicating whether the damage is from a spell
@@ -908,20 +908,20 @@ private int sendHitEvent( float dmg,  int srcIoid,
         if (Script.GetInstance().getEventSender() != null
                 && Script.GetInstance().getEventSender().HasIOFlag(
                         IoGlobals.IO_01_PC)) {
-        IO plrIO = (IO)Script.GetInstance().getEventSender();
+        BaseInteractiveObject plrIO = (BaseInteractiveObject)Script.GetInstance().getEventSender();
         if (isSpellDamage)
         {
                 params = new Object[] { "SPELL_DMG", dmg };
         }
         else
         {
-            int wpnId = plrIO.getPCData().getEquippedItem(
+            int wpnId = plrIO.PcData.getEquippedItem(
                     EquipmentGlobals.EQUIP_SLOT_WEAPON);
-            IO wpnIO = (IO)Interactive.GetInstance().getIO(wpnId);
+            BaseInteractiveObject wpnIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
             int wpnType = EquipmentGlobals.WEAPON_BARE;
             if (wpnIO != null)
             {
-                wpnType = wpnIO.getItemData().getWeaponType();
+                wpnType = wpnIO.ItemData.getWeaponType();
             }
             switch (wpnType)
             {
@@ -952,8 +952,8 @@ private int sendHitEvent( float dmg,  int srcIoid,
     }
         // if player summoned object causing damage,
         // change event sender to player
-        if (summonerIsPlayer((IO) Script.GetInstance().getEventSender())) {
-        IO summonerIO = (IO)Interactive.GetInstance().getIO(
+        if (summonerIsPlayer((BaseInteractiveObject) Script.GetInstance().getEventSender())) {
+        BaseInteractiveObject summonerIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(
                 Script.GetInstance().getEventSender().getSummoner());
         Script.GetInstance().setEventSender(summonerIO);
         summonerIO = null;
@@ -967,7 +967,7 @@ private int sendHitEvent( float dmg,  int srcIoid,
                 io, ScriptConsts.SM_016_HIT, params, null);
 }
 /**
- * Sends the IONpcData IO an 'Ouch' event.
+ * Sends the IONpcData BaseInteractiveObject an 'Ouch' event.
  * @param dmg the amount of damage
  * @param srcIoid the source of the damage
  * @ if an error occurs
@@ -985,7 +985,7 @@ private void sendOuchEvent( float dmg,  int srcIoid)
     }
     // check to see if the damage is coming from a summoned object
     Object [] params;
-        if (summonerIsPlayer((IO) Script.GetInstance().getEventSender())) {
+        if (summonerIsPlayer((BaseInteractiveObject) Script.GetInstance().getEventSender())) {
             params = new Object[] {
                     "SUMMONED_OUCH", io.getDamageSum(),
                     "OUCH", 0f };
@@ -1016,10 +1016,10 @@ public  void setGender( int val)
     notifyWatchers();
 }
 /**
- * Sets the IO associated with this {@link IoNpcData}.
- * @param newIO the IO to set
+ * Sets the BaseInteractiveObject associated with this {@link IoNpcData}.
+ * @param newIO the BaseInteractiveObject to set
  */
-public  void setIo( IO newIO)
+public  void setIo( BaseInteractiveObject newIO)
 {
     this.io = newIO;
 }
@@ -1103,7 +1103,7 @@ public  void setTitle( String val)
  * Sets the IONpcData's weapon.
  * @param wpnIO the weapon to set
  */
-public  void setWeapon( IO wpnIO)
+public  void setWeapon( BaseInteractiveObject wpnIO)
 {
     weapon = wpnIO;
     if (weapon != null)
@@ -1124,7 +1124,7 @@ public  void setWeaponInHand( int ioid)
 {
         this.weaponInHand = ioid;
         if (Interactive.GetInstance().hasIO(weaponInHand)) {
-        weapon = (IO)Interactive.GetInstance().getIO(weaponInHand);
+        weapon = (BaseInteractiveObject)Interactive.GetInstance().getIO(weaponInHand);
     } else {
         weapon = null;
     }
@@ -1142,20 +1142,20 @@ protected abstract void stopActiveAnimation();
 /** Restores the IONpcData to their maximum life. */
 protected abstract void stopIdleAnimation();
 /**
- * Determines if a summoned IO's summoner is a IOPcData.
- * @param io the IO
+ * Determines if a summoned BaseInteractiveObject's summoner is a IOPcData.
+ * @param io the BaseInteractiveObject
  * @return <tt>true</tt> if the summoner is a player; <tt>false</tt>
  *         otherwise
  * @ if an error occurs
  */
-private bool summonerIsPlayer(IO io) 
+private bool summonerIsPlayer(BaseInteractiveObject io) 
 {
     bool isPlayer = false;
         if (io != null) {
         int summonerId = io.getSummoner();
         if (Interactive.GetInstance().hasIO(summonerId))
         {
-            IO summoner = (IO)Interactive.GetInstance().getIO(summonerId);
+            BaseInteractiveObject summoner = (BaseInteractiveObject)Interactive.GetInstance().getIO(summonerId);
             if (summoner.HasIOFlag(IoGlobals.IO_01_PC))
             {
                 isPlayer = true;

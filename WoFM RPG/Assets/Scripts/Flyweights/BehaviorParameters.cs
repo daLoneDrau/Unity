@@ -2,122 +2,123 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RPGBase.Constants;
 
 namespace Assets.Scripts.Flyweights
 {
-    class BehaviorParameters
+    public class BehaviorParameters
     {
-        private char[] action;
-        private float behaviorParam;
-        private int flags;
-        private int movemode = -1;
-        private int tactics = -1;
-        private int targetInfo = -1;
-        private char[] targetName;
+        public string Action { get; set; }
+        public float BehaviorParam { get; }
+        private long flags;
+        public int Movemode { get; set; } = -1;
+        public int Tactics { get; set; } = -1;
+        public int TargetInfo { get; set; } = -1;
+        public string TargetName { get; set; }
         /**
          * Creates a new instance of {@link BehaviorParameters}.
          * @param initParams a list of string parameters,
          * such as STACK, L, FRIENDLY, etc...
          * @param bParam the parameter applied to the behavior
          */
-        public BehaviorParameters( String initParams,  float bParam)
+        public BehaviorParameters(String initParams, float bParam)
         {
-            behaviorParam = bParam;
-            String[] split = initParams.split(" ");
+            BehaviorParam = bParam;
+            String[] split = initParams.Split(' ');
             for (int i = split.Length - 1; i >= 0; i--)
             {
-                if (split[i].equalsIgnoreCase("STACK"))
+                if (String.Equals(split[i], "STACK", StringComparison.OrdinalIgnoreCase))
                 {
-                    setAction("STACK");
+                    Action = "STACK";
                     break;
                 }
-                if (split[i].equalsIgnoreCase("UNSTACK"))
+                if (String.Equals(split[i], "UNSTACK", StringComparison.OrdinalIgnoreCase))
                 {
-                    setAction("UNSTACK");
+                    Action = "UNSTACK";
                     break;
                 }
-                if (split[i].equalsIgnoreCase("UNSTACKALL"))
+                if (String.Equals(split[i], "UNSTACKALL", StringComparison.OrdinalIgnoreCase))
                 {
-                    setAction("UNSTACKALL");
+                    Action = "UNSTACKALL";
                     break;
                 }
-                if (split[i].equalsIgnoreCase("L"))
+                if (String.Equals(split[i], "L", StringComparison.OrdinalIgnoreCase))
                 {
-                    addFlag(Behaviour.BEHAVIOUR_LOOK_AROUND.getFlag());
+                    AddFlag(Behaviour.BEHAVIOUR_LOOK_AROUND.GetFlag());
                 }
-                if (split[i].equalsIgnoreCase("S"))
+                if (String.Equals(split[i], "S", StringComparison.OrdinalIgnoreCase))
                 {
-                    addFlag(Behaviour.BEHAVIOUR_SNEAK.getFlag());
+                    AddFlag(Behaviour.BEHAVIOUR_SNEAK.GetFlag());
                 }
-                if (split[i].equalsIgnoreCase("D"))
+                if (String.Equals(split[i], "D", StringComparison.OrdinalIgnoreCase))
                 {
-                    addFlag(Behaviour.BEHAVIOUR_DISTANT.getFlag());
+                    AddFlag(Behaviour.BEHAVIOUR_DISTANT.GetFlag());
                 }
-                if (split[i].equalsIgnoreCase("M"))
+                if (String.Equals(split[i], "M", StringComparison.OrdinalIgnoreCase))
                 {
-                    addFlag(Behaviour.BEHAVIOUR_MAGIC.getFlag());
+                    AddFlag(Behaviour.BEHAVIOUR_MAGIC.GetFlag());
                 }
-                if (split[i].equalsIgnoreCase("F"))
+                if (String.Equals(split[i], "F", StringComparison.OrdinalIgnoreCase))
                 {
-                    addFlag(Behaviour.BEHAVIOUR_FIGHT.getFlag());
+                    AddFlag(Behaviour.BEHAVIOUR_FIGHT.GetFlag());
                 }
-                if (split[i].equalsIgnoreCase("A"))
+                if (String.Equals(split[i], "A", StringComparison.OrdinalIgnoreCase))
                 {
-                    addFlag(Behaviour.BEHAVIOUR_STARE_AT.getFlag());
+                    AddFlag(Behaviour.BEHAVIOUR_STARE_AT.GetFlag());
                 }
-                if (split[i].equalsIgnoreCase("0")
-                        || split[i].equalsIgnoreCase("1")
-                        || split[i].equalsIgnoreCase("2"))
+                if (String.Equals(split[i], "0", StringComparison.OrdinalIgnoreCase)
+                    || String.Equals(split[i], "1", StringComparison.OrdinalIgnoreCase)
+                    || String.Equals(split[i], "2", StringComparison.OrdinalIgnoreCase))
                 {
-                    tactics = 0;
+                    Tactics = 0;
                 }
-                if (split[i].equalsIgnoreCase("GO_HOME"))
+                if (String.Equals(split[i], "GO_HOME", StringComparison.OrdinalIgnoreCase))
                 {
-                    clearFlags();
-                    addFlag(Behaviour.BEHAVIOUR_GO_HOME.getFlag());
+                    ClearFlags();
+                    AddFlag(Behaviour.BEHAVIOUR_GO_HOME.GetFlag());
                 }
-                if (split[i].equalsIgnoreCase("FRIENDLY"))
+                if (String.Equals(split[i], "FRIENDLY", StringComparison.OrdinalIgnoreCase))
                 {
-                    clearFlags();
-                    addFlag(Behaviour.BEHAVIOUR_FRIENDLY.getFlag());
-                    movemode = IoGlobals.NOMOVEMODE;
+                    ClearFlags();
+                    AddFlag(Behaviour.BEHAVIOUR_FRIENDLY.GetFlag());
+                    Movemode = IoGlobals.NOMOVEMODE;
                 }
-                if (split[i].equalsIgnoreCase("MOVE_TO"))
+                if (String.Equals(split[i], "MOVE_TO", StringComparison.OrdinalIgnoreCase))
                 {
-                    clearFlags();
-                    addFlag(Behaviour.BEHAVIOUR_MOVE_TO.getFlag());
-                    movemode = IoGlobals.WALKMODE;
+                    ClearFlags();
+                    AddFlag(Behaviour.BEHAVIOUR_MOVE_TO.GetFlag());
+                    Movemode = IoGlobals.WALKMODE;
                 }
-                if (split[i].equalsIgnoreCase("FLEE"))
+                if (String.Equals(split[i], "FLEE", StringComparison.OrdinalIgnoreCase))
                 {
-                    clearFlags();
-                    addFlag(Behaviour.BEHAVIOUR_FLEE.getFlag());
-                    movemode = IoGlobals.RUNMODE;
+                    ClearFlags();
+                    AddFlag(Behaviour.BEHAVIOUR_FLEE.GetFlag());
+                    Movemode = IoGlobals.RUNMODE;
                 }
-                if (split[i].equalsIgnoreCase("LOOK_FOR"))
+                if (String.Equals(split[i], "LOOK_FOR", StringComparison.OrdinalIgnoreCase))
                 {
-                    clearFlags();
-                    addFlag(Behaviour.BEHAVIOUR_LOOK_FOR.getFlag());
-                    movemode = IoGlobals.WALKMODE;
+                    ClearFlags();
+                    AddFlag(Behaviour.BEHAVIOUR_LOOK_FOR.GetFlag());
+                    Movemode = IoGlobals.WALKMODE;
                 }
-                if (split[i].equalsIgnoreCase("HIDE"))
+                if (String.Equals(split[i], "HIDE", StringComparison.OrdinalIgnoreCase))
                 {
-                    clearFlags();
-                    addFlag(Behaviour.BEHAVIOUR_HIDE.getFlag());
-                    movemode = IoGlobals.WALKMODE;
+                    ClearFlags();
+                    AddFlag(Behaviour.BEHAVIOUR_HIDE.GetFlag());
+                    Movemode = IoGlobals.WALKMODE;
                 }
-                if (split[i].equalsIgnoreCase("WANDER_AROUND"))
+                if (String.Equals(split[i], "WANDER_AROUND", StringComparison.OrdinalIgnoreCase))
                 {
-                    clearFlags();
-                    addFlag(Behaviour.BEHAVIOUR_WANDER_AROUND.getFlag());
-                    movemode = IoGlobals.WALKMODE;
+                    ClearFlags();
+                    AddFlag(Behaviour.BEHAVIOUR_WANDER_AROUND.GetFlag());
+                    Movemode = IoGlobals.WALKMODE;
                 }
-                if (split[i].equalsIgnoreCase("GUARD"))
+                if (String.Equals(split[i], "GUARD", StringComparison.OrdinalIgnoreCase))
                 {
-                    clearFlags();
-                    addFlag(Behaviour.BEHAVIOUR_GUARD.getFlag());
-                    movemode = IoGlobals.NOMOVEMODE;
-                    targetInfo = -2;
+                    ClearFlags();
+                    AddFlag(Behaviour.BEHAVIOUR_GUARD.GetFlag());
+                    Movemode = IoGlobals.NOMOVEMODE;
+                    TargetInfo = -2;
                 }
             }
         }
@@ -125,72 +126,20 @@ namespace Assets.Scripts.Flyweights
          * Adds a flag.
          * @param flag the flag
          */
-        public void addFlag( long flag)
+        public void AddFlag(long flag)
         {
             flags |= flag;
         }
-        private void clearFlags()
+        private void ClearFlags()
         {
             flags = 0;
         }
         /**
-         * @return the speechName
-         */
-        public String getAction()
-        {
-            String s = null;
-            if (action != null)
-            {
-                s = new String(action);
-            }
-            return s;
-        }
-        /**
-         * @return the behaviorParam
-         */
-        public float getBehaviorParam()
-        {
-            return behaviorParam;
-        }
-        /**
          * @return the flags
          */
-        public int getFlags()
+        public long GetFlags()
         {
             return flags;
-        }
-        /**
-         * @return the movemode
-         */
-        public int getMovemode()
-        {
-            return movemode;
-        }
-        /**
-         * @return the tactics
-         */
-        public int getTactics()
-        {
-            return tactics;
-        }
-        /**
-         * @return the targetInfo
-         */
-        public int getTargetInfo()
-        {
-            return targetInfo;
-        }
-        /**
-         * @return the speechName
-         */
-        public String getTargetName()
-        {
-            String s = null;
-            if (targetName != null)
-            {
-                s = new String(targetName);
-            }
-            return s;
         }
         /**
          * Determines if the {@link BaseInteractiveObject} has a specific flag.
@@ -198,7 +147,7 @@ namespace Assets.Scripts.Flyweights
          * @return true if the {@link BaseInteractiveObject} has the flag; false
          *         otherwise
          */
-        public  bool hasFlag( long flag)
+        public bool HasFlag(long flag)
         {
             return (flags & flag) == flag;
         }
@@ -206,50 +155,9 @@ namespace Assets.Scripts.Flyweights
          * Removes a flag.
          * @param flag the flag
          */
-        public  void removeFlag( long flag)
+        public void RemoveFlag(long flag)
         {
             flags &= ~flag;
-        }
-        /**
-         * @param val the value to set
-         */
-        public void setAction(String val)
-        {
-            if (val != null)
-            {
-                action = val;
-            }
-        }
-        /**
-         * @param movemode the movemode to set
-         */
-        public void setMovemode(int movemode)
-        {
-            this.movemode = movemode;
-        }
-        /**
-         * @param tactics the tactics to set
-         */
-        public void setTactics(int tactics)
-        {
-            this.tactics = tactics;
-        }
-        /**
-         * @param targetInfo the targetInfo to set
-         */
-        public void setTargetInfo(int targetInfo)
-        {
-            this.targetInfo = targetInfo;
-        }
-        /**
-         * @param val the value to set
-         */
-        public void setTargetName(String val)
-        {
-            if (val != null)
-            {
-                targetName = val;
-            }
         }
     }
 }

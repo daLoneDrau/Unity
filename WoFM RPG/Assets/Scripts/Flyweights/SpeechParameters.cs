@@ -35,7 +35,7 @@ namespace Assets.Scripts.Flyweights
             if (initParams != null
                     && initParams.Length() > 0)
             {
-                String[] split = initParams.split(" ");
+                String[] split = initParams.Split(" ");
                 for (int i = split.Length - 1; i >= 0; i--)
                 {
                     if (split[i].equalsIgnoreCase("KILLALL"))
@@ -44,59 +44,59 @@ namespace Assets.Scripts.Flyweights
                     }
                     if (split[i].equalsIgnoreCase("T"))
                     {
-                        addFlag(SpeechParameters.NO_TEXT);
+                        AddFlag(SpeechParameters.NO_TEXT);
                     }
                     if (split[i].equalsIgnoreCase("U"))
                     {
-                        addFlag(SpeechParameters.UNBREAKABLE);
+                        AddFlag(SpeechParameters.UNBREAKABLE);
                     }
                     if (split[i].equalsIgnoreCase("P"))
                     {
-                        addFlag(SpeechParameters.PLAYER);
+                        AddFlag(SpeechParameters.PLAYER);
                     }
                     if (split[i].equalsIgnoreCase("H"))
                     {
-                        addFlag(SpeechParameters.HAPPY);
+                        AddFlag(SpeechParameters.HAPPY);
                     }
                     if (split[i].equalsIgnoreCase("A"))
                     {
-                        addFlag(SpeechParameters.ANGRY);
+                        AddFlag(SpeechParameters.ANGRY);
                     }
                     if (split[i].equalsIgnoreCase("O"))
                     {
-                        addFlag(SpeechParameters.OFF_VOICE);
+                        AddFlag(SpeechParameters.OFF_VOICE);
                     }
                     if (split[i].equalsIgnoreCase("KEEP"))
                     {
-                        addFlag(SpeechParameters.KEEP_SPEECH);
+                        AddFlag(SpeechParameters.KEEP_SPEECH);
                     }
                     if (split[i].equalsIgnoreCase("ZOOM"))
                     {
-                        addFlag(SpeechParameters.ZOOM_SPEECH);
+                        AddFlag(SpeechParameters.ZOOM_SPEECH);
                     }
                     if (split[i].equalsIgnoreCase("CCCTALKER_L"))
                     {
-                        addFlag(SpeechParameters.SPEECH_CCCTALKER_L);
+                        AddFlag(SpeechParameters.SPEECH_CCCTALKER_L);
                     }
                     if (split[i].equalsIgnoreCase("CCCTALKER_R"))
                     {
-                        addFlag(SpeechParameters.SPEECH_CCCTALKER_R);
+                        AddFlag(SpeechParameters.SPEECH_CCCTALKER_R);
                     }
                     if (split[i].equalsIgnoreCase("CCCLISTENER_L"))
                     {
-                        addFlag(SpeechParameters.SPEECH_CCCLISTENER_L);
+                        AddFlag(SpeechParameters.SPEECH_CCCLISTENER_L);
                     }
                     if (split[i].equalsIgnoreCase("CCCLISTENER_R"))
                     {
-                        addFlag(SpeechParameters.SPEECH_CCCLISTENER_R);
+                        AddFlag(SpeechParameters.SPEECH_CCCLISTENER_R);
                     }
                     if (split[i].equalsIgnoreCase("SIDE_L"))
                     {
-                        addFlag(SpeechParameters.SIDE_L);
+                        AddFlag(SpeechParameters.SIDE_L);
                     }
                     if (split[i].equalsIgnoreCase("SIDE_R"))
                     {
-                        addFlag(SpeechParameters.SIDE_R);
+                        AddFlag(SpeechParameters.SIDE_R);
                     }
                 }
             }
@@ -105,70 +105,70 @@ namespace Assets.Scripts.Flyweights
          * Adds a flag.
          * @param flag the flag
          */
-        public void addFlag( long flag)
+        public void AddFlag( long flag)
         {
             if (flag == ZOOM_SPEECH)
             {
-                removeFlag(SPEECH_CCCTALKER_L);
-                removeFlag(SPEECH_CCCTALKER_R);
-                removeFlag(SPEECH_CCCLISTENER_L);
-                removeFlag(SPEECH_CCCLISTENER_R);
-                removeFlag(SIDE_L);
-                removeFlag(SIDE_R);
+                RemoveFlag(SPEECH_CCCTALKER_L);
+                RemoveFlag(SPEECH_CCCTALKER_R);
+                RemoveFlag(SPEECH_CCCLISTENER_L);
+                RemoveFlag(SPEECH_CCCLISTENER_R);
+                RemoveFlag(SIDE_L);
+                RemoveFlag(SIDE_R);
             }
             else if (flag == SPEECH_CCCTALKER_L)
             {
-                removeFlag(ZOOM_SPEECH);
-                removeFlag(SPEECH_CCCTALKER_R);
-                removeFlag(SPEECH_CCCLISTENER_L);
-                removeFlag(SPEECH_CCCLISTENER_R);
-                removeFlag(SIDE_L);
-                removeFlag(SIDE_R);
+                RemoveFlag(ZOOM_SPEECH);
+                RemoveFlag(SPEECH_CCCTALKER_R);
+                RemoveFlag(SPEECH_CCCLISTENER_L);
+                RemoveFlag(SPEECH_CCCLISTENER_R);
+                RemoveFlag(SIDE_L);
+                RemoveFlag(SIDE_R);
             }
             else if (flag == SPEECH_CCCTALKER_R)
             {
-                removeFlag(ZOOM_SPEECH);
-                removeFlag(SPEECH_CCCTALKER_L);
-                removeFlag(SPEECH_CCCLISTENER_L);
-                removeFlag(SPEECH_CCCLISTENER_R);
-                removeFlag(SIDE_L);
-                removeFlag(SIDE_R);
+                RemoveFlag(ZOOM_SPEECH);
+                RemoveFlag(SPEECH_CCCTALKER_L);
+                RemoveFlag(SPEECH_CCCLISTENER_L);
+                RemoveFlag(SPEECH_CCCLISTENER_R);
+                RemoveFlag(SIDE_L);
+                RemoveFlag(SIDE_R);
             }
             else if (flag == SPEECH_CCCLISTENER_L)
             {
-                removeFlag(ZOOM_SPEECH);
-                removeFlag(SPEECH_CCCTALKER_L);
-                removeFlag(SPEECH_CCCTALKER_R);
-                removeFlag(SPEECH_CCCLISTENER_R);
-                removeFlag(SIDE_L);
-                removeFlag(SIDE_R);
+                RemoveFlag(ZOOM_SPEECH);
+                RemoveFlag(SPEECH_CCCTALKER_L);
+                RemoveFlag(SPEECH_CCCTALKER_R);
+                RemoveFlag(SPEECH_CCCLISTENER_R);
+                RemoveFlag(SIDE_L);
+                RemoveFlag(SIDE_R);
             }
             else if (flag == SPEECH_CCCLISTENER_R)
             {
-                removeFlag(ZOOM_SPEECH);
-                removeFlag(SPEECH_CCCTALKER_L);
-                removeFlag(SPEECH_CCCTALKER_R);
-                removeFlag(SPEECH_CCCLISTENER_L);
-                removeFlag(SIDE_L);
-                removeFlag(SIDE_R);
+                RemoveFlag(ZOOM_SPEECH);
+                RemoveFlag(SPEECH_CCCTALKER_L);
+                RemoveFlag(SPEECH_CCCTALKER_R);
+                RemoveFlag(SPEECH_CCCLISTENER_L);
+                RemoveFlag(SIDE_L);
+                RemoveFlag(SIDE_R);
             }
             else if (flag == SIDE_L)
             {
-                removeFlag(ZOOM_SPEECH);
-                removeFlag(SPEECH_CCCTALKER_L);
-                removeFlag(SPEECH_CCCTALKER_R);
-                removeFlag(SPEECH_CCCLISTENER_L);
-                removeFlag(SPEECH_CCCLISTENER_R);
-                removeFlag(SIDE_R);
+                RemoveFlag(ZOOM_SPEECH);
+                RemoveFlag(SPEECH_CCCTALKER_L);
+                RemoveFlag(SPEECH_CCCTALKER_R);
+                RemoveFlag(SPEECH_CCCLISTENER_L);
+                RemoveFlag(SPEECH_CCCLISTENER_R);
+                RemoveFlag(SIDE_R);
             }
             else if (flag == SIDE_R)
             {
-                removeFlag(ZOOM_SPEECH);
-                removeFlag(SPEECH_CCCTALKER_L);
-                removeFlag(SPEECH_CCCTALKER_R);
-                removeFlag(SPEECH_CCCLISTENER_L);
-                removeFlag(SPEECH_CCCLISTENER_R);
-                removeFlag(SIDE_L);
+                RemoveFlag(ZOOM_SPEECH);
+                RemoveFlag(SPEECH_CCCTALKER_L);
+                RemoveFlag(SPEECH_CCCTALKER_R);
+                RemoveFlag(SPEECH_CCCLISTENER_L);
+                RemoveFlag(SPEECH_CCCLISTENER_R);
+                RemoveFlag(SIDE_L);
             }
             flags |= flag;
         }
@@ -190,7 +190,7 @@ namespace Assets.Scripts.Flyweights
          * @return true if the {@link BaseInteractiveObject} has the flag; false
          *         otherwise
          */
-        public  bool hasFlag( long flag)
+        public  bool HasFlag( long flag)
         {
             return (flags & flag) == flag;
         }
@@ -205,7 +205,7 @@ namespace Assets.Scripts.Flyweights
          * Removes a flag.
          * @param flag the flag
          */
-        public  void removeFlag( long flag)
+        public  void RemoveFlag( long flag)
         {
             flags &= ~flag;
         }

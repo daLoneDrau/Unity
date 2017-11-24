@@ -29,12 +29,12 @@ namespace Assets.Scripts.Flyweights
          * Adds a flag.
          * @param flag the flag
          */
-        public void addFlag( long flag)
+        public void AddFlag( long flag)
         {
             flags |= flag;
         }
         /** Clears all flags that were set. */
-        public void clearFlags()
+        public void ClearFlags()
         {
             flags = 0;
         }
@@ -155,7 +155,7 @@ namespace Assets.Scripts.Flyweights
          * @param flag the flag
          * @return true if the {@link Spell} has the flag; false otherwise
          */
-        public bool hasFlag( long flag)
+        public bool HasFlag( long flag)
         {
             return (flags & flag) == flag;
         }
@@ -163,7 +163,7 @@ namespace Assets.Scripts.Flyweights
          * Removes a flag.
          * @param flag the flag
          */
-        public void removeFlag( long flag)
+        public void RemoveFlag( long flag)
         {
             flags &= ~flag;
         }
