@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoverageSession xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Summary numSequencePoints="0" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="0" maxCyclomaticComplexity="0" minCyclomaticComplexity="0" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="0" />
+  <Modules>
+    <Module skippedDueTo="Filter" hash="F5-3C-34-2E-DD-7A-90-24-5B-23-3B-C8-F9-40-F0-B4-29-A6-BE-7F">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_32\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll</ModulePath>
+      <ModuleTime>2017-07-01T19:17:27.392721Z</ModuleTime>
+      <ModuleName>mscorlib</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="DA-F3-C7-E5-46-71-05-CF-E0-28-EB-AF-FC-08-39-26-2F-1B-8F-F7">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\MSTest.exe</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>MSTest</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="C6-5C-DF-E7-E5-EB-93-A1-1E-27-D7-04-7B-52-0B-B6-2F-13-08-65">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.QualityTools.Common.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.Common</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="AB-69-36-06-FC-95-2A-FE-49-56-2F-FE-00-ED-41-A6-70-40-C5-58">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll</ModulePath>
+      <ModuleTime>2017-07-29T03:22:44.8277119Z</ModuleTime>
+      <ModuleName>System</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="83-4A-36-4F-35-F2-E2-06-56-FE-6D-F1-6C-5A-83-21-A3-73-0C-03">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.QualityTools.ExecutionCommon.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.ExecutionCommon</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="FA-78-9F-89-8D-8B-89-A1-E9-E1-CB-5C-5B-D3-57-92-DC-80-05-79">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.Resource.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.Resource</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="49-F6-B9-FA-89-1F-12-21-02-F2-B4-EB-98-8E-A0-5F-9D-8D-B9-EB">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:36.3463962Z</ModuleTime>
+      <ModuleName>System.Configuration</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="14-44-50-38-34-98-5F-C6-45-8B-50-B5-CF-D7-E1-0A-28-8F-5E-E8">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll</ModulePath>
+      <ModuleTime>2016-01-23T02:45:41.3556585Z</ModuleTime>
+      <ModuleName>System.Xml</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="CA-61-90-7B-B4-D1-E6-B9-3A-4B-E9-EB-8E-C9-8D-13-29-27-84-7A">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.CommandLine.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.CommandLine</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="56-D7-76-88-A1-E3-51-78-9F-50-37-12-DD-1D-24-7E-99-AC-EF-EF">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.TMI.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.TMI</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="2A-73-17-F7-F2-F7-21-07-74-F0-AF-A2-C8-0A-2D-34-E1-76-F3-24">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll</ModulePath>
+      <ModuleTime>2017-04-04T04:17:19.4490557Z</ModuleTime>
+      <ModuleName>System.Core</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="78-A1-A7-77-AC-AE-BC-C1-FE-EC-85-11-0D-F2-DE-06-3C-7A-F5-E3">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_32\System.Data\v4.0_4.0.0.0__b77a5c561934e089\System.Data.dll</ModulePath>
+      <ModuleTime>2017-02-22T01:42:26.0042922Z</ModuleTime>
+      <ModuleName>System.Data</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="CE-00-FC-74-00-4A-39-A6-92-09-02-14-FE-F5-83-F2-81-BC-DB-AF">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Numerics\v4.0_4.0.0.0__b77a5c561934e089\System.Numerics.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:38.0338917Z</ModuleTime>
+      <ModuleName>System.Numerics</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="71-CB-82-68-99-AF-70-7C-6D-47-83-2D-BD-B5-5D-5D-75-E1-90-AB">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_32\System.Web\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Web.dll</ModulePath>
+      <ModuleTime>2017-07-29T03:22:45.0777134Z</ModuleTime>
+      <ModuleName>System.Web</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="85-47-25-C7-61-DE-F7-3F-34-74-5D-B9-48-A0-E4-CE-AF-DF-F8-E1">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Tip.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Tip</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="BA-AF-76-8A-40-39-3D-DB-A3-EC-39-F9-A8-1D-15-00-45-59-09-B6">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="EA-66-DC-31-19-3E-D1-5F-C6-4B-DA-9A-CD-29-BB-FC-2C-18-84-97">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.UnitTestFramework</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="71-E8-9A-F7-80-D1-91-3C-91-56-FB-11-98-42-EF-DE-D3-D0-EB-00">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.Tips.UnitTest.AssemblyResolver.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.Tips.UnitTest.AssemblyResolver</ModuleName>
+      <Classes />
+    </Module>
+    <Module hash="16-01-46-AA-03-63-63-82-5A-FD-09-C7-C9-C8-5A-EE-6A-28-30-D1">
+      <Summary numSequencePoints="0" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="0" maxCyclomaticComplexity="0" minCyclomaticComplexity="0" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="0" />
+      <ModulePath>C:\Users\588648\Unity\WoFM RPG\RPGTests\bin\Debug\RPGTests.dll</ModulePath>
+      <ModuleTime>2017-11-29T17:58:25.2060397Z</ModuleTime>
+      <ModuleName>RPGTests</ModuleName>
+      <Files />
+      <Classes>
+        <Class skippedDueTo="Filter">
+          <FullName>&lt;Module&gt;</FullName>
+          <Methods />
+        </Class>
+        <Class skippedDueTo="Filter">
+          <FullName>RPGTests.AttributeTest</FullName>
+          <Methods />
+        </Class>
+        <Class skippedDueTo="Filter">
+          <FullName>RPGTests.Singletons.DicerollerTest</FullName>
+          <Methods />
+        </Class>
+        <Class skippedDueTo="Filter">
+          <FullName>RPGTests.Flyweights.RPGExceptionTest</FullName>
+          <Methods />
+        </Class>
+        <Class skippedDueTo="Filter">
+          <FullName>&lt;PrivateImplementationDetails&gt;</FullName>
+          <Methods />
+        </Class>
+      </Classes>
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="EA-2B-48-07-AD-84-F8-A6-99-87-6B-C9-88-A8-5F-B3-D3-7A-EC-CD">
+      <ModulePath>C:\Users\588648\Unity\WoFM RPG\RPGTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</ModulePath>
+      <ModuleTime>2017-05-31T04:27:42Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.TestPlatform.TestFramework</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="BC-7B-32-7E-3E-36-53-9E-4D-AA-4E-5B-B4-19-E7-43-BE-B4-5F-42">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Runtime\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Runtime.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:38.1276408Z</ModuleTime>
+      <ModuleName>System.Runtime</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="4E-FF-C8-76-98-D6-60-97-51-60-69-AE-0F-A3-05-F8-34-D3-A0-64">
+      <ModulePath>C:\Users\588648\Unity\WoFM RPG\RPGTests\bin\Debug\RPGBase.dll</ModulePath>
+      <ModuleTime>2017-11-29T17:58:24.5302061Z</ModuleTime>
+      <ModuleName>RPGBase</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="0F-EB-E4-2E-D6-32-D1-A7-37-3F-99-82-7D-F5-9B-6D-BA-5E-6E-9C">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Reflection\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Reflection.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:36.283896Z</ModuleTime>
+      <ModuleName>System.Reflection</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="39-E5-04-08-F4-3B-DD-AB-22-09-E2-25-60-EE-E9-04-56-46-55-43">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.ControllerObject.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.ControllerObject</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="58-F7-A7-3C-2F-01-BC-99-AA-F6-3C-A1-7B-FF-F7-37-62-A4-78-8F">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Resources.ResourceManager\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Resources.ResourceManager.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:34.2057783Z</ModuleTime>
+      <ModuleName>System.Resources.ResourceManager</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="05-17-DF-AC-99-ED-5F-0A-7A-E8-E6-CB-11-3D-E0-0B-D1-E4-59-C7">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Runtime.Extensions\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Runtime.Extensions.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:38.0495167Z</ModuleTime>
+      <ModuleName>System.Runtime.Extensions</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="58-96-1B-9B-46-25-3F-DA-DE-29-73-BB-93-35-54-6A-34-CE-62-F0">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Collections\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Collections.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:34.2214033Z</ModuleTime>
+      <ModuleName>System.Collections</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="87-3B-9D-CF-30-98-AC-50-63-6C-0D-B3-D1-ED-28-30-82-DA-59-6B">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Globalization\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Globalization.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:34.2682781Z</ModuleTime>
+      <ModuleName>System.Globalization</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="F5-60-6B-AD-8D-F6-AE-33-0B-82-DC-5F-7D-DA-19-9A-AB-05-04-E2">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Threading.Tasks\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Threading.Tasks.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:36.221397Z</ModuleTime>
+      <ModuleName>System.Threading.Tasks</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="86-E3-F7-74-7F-EF-8A-0F-4F-3A-43-C8-E1-74-E2-AD-73-F9-D9-32">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Diagnostics.Debug\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Diagnostics.Debug.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:34.2839023Z</ModuleTime>
+      <ModuleName>System.Diagnostics.Debug</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="5B-D8-9C-52-25-69-56-92-21-F7-FB-75-F3-34-2D-74-04-A8-EC-72">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Text.RegularExpressions\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Text.RegularExpressions.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:36.283896Z</ModuleTime>
+      <ModuleName>System.Text.RegularExpressions</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="B5-14-C2-16-C6-65-8D-3E-58-5D-B2-80-D4-2C-2F-31-20-D3-4F-93">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Diagnostics.Tools\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Diagnostics.Tools.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:34.0495297Z</ModuleTime>
+      <ModuleName>System.Diagnostics.Tools</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="DD-73-18-F9-C0-A0-0B-DC-AC-DB-47-9A-CC-21-69-C5-30-6F-1F-A6">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Threading\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Threading.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:36.3307716Z</ModuleTime>
+      <ModuleName>System.Threading</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="6E-44-FC-CC-71-A6-A8-63-74-B5-AA-3C-1A-E2-D1-35-43-2B-76-F0">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Reflection.Extensions\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Reflection.Extensions.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:31.4401619Z</ModuleTime>
+      <ModuleName>System.Reflection.Extensions</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="87-5E-1B-34-4F-70-D8-45-86-28-52-07-1E-E8-7E-25-87-5D-76-9B">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Linq\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Linq.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:31.4714116Z</ModuleTime>
+      <ModuleName>System.Linq</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="DD-60-CA-92-00-03-18-27-EF-8C-7B-2B-25-05-4E-C9-F7-2E-BA-53">
+      <ModulePath>c:\users\588648\unity\wofm rpg\rpgtests\bin\debug\System.Console.dll</ModulePath>
+      <ModuleTime>2016-06-12T03:13:26Z</ModuleTime>
+      <ModuleName>System.Console</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="AE-94-9A-2C-F7-F1-18-EF-C8-71-26-1B-22-A9-DC-0D-55-5F-74-07">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.AgentProcessManager.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.AgentProcessManager</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="F5-C7-D2-46-18-49-EE-30-98-55-E6-2E-A2-4C-78-F7-B1-84-82-DB">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.DataCollectionAgentObject.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.DataCollectionAgentObject</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="E5-81-3A-C0-B4-E4-42-17-2B-46-6B-2A-D6-47-7F-08-A1-F1-FB-47">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.AgentObject.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.AgentObject</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="B3-C8-45-AC-33-4F-FC-EE-92-B1-37-50-4F-BD-BC-37-A6-66-27-C9">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="14-19-97-1B-89-6A-CA-FC-45-69-3B-8E-5A-D5-00-A5-3D-D4-80-3E">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\DataCollectors\Microsoft.IntelliTrace.ConfigUI.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.IntelliTrace.ConfigUI</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="B3-73-2E-10-99-CC-DB-9A-51-0D-E7-3C-13-27-8F-95-EE-C7-4F-2F">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\PresentationFramework\v4.0_4.0.0.0__31bf3856ad364e35\PresentationFramework.dll</ModulePath>
+      <ModuleTime>2017-04-04T04:17:22.2327076Z</ModuleTime>
+      <ModuleName>PresentationFramework</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="41-9E-CD-A9-C4-19-E4-9D-E7-39-F0-8E-F0-71-76-89-2A-9C-D4-37">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_32\PresentationCore\v4.0_4.0.0.0__31bf3856ad364e35\PresentationCore.dll</ModulePath>
+      <ModuleTime>2017-04-04T04:17:21.4196336Z</ModuleTime>
+      <ModuleName>PresentationCore</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="66-8E-44-CE-32-C3-E4-36-B4-45-C5-2C-2C-EC-71-3D-FF-B6-D8-4E">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\WindowsBase\v4.0_4.0.0.0__31bf3856ad364e35\WindowsBase.dll</ModulePath>
+      <ModuleTime>2017-04-04T04:17:24.1886025Z</ModuleTime>
+      <ModuleName>WindowsBase</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="0D-F0-45-40-FD-6A-9B-83-4D-AC-FD-A3-3E-D8-5F-45-20-B8-54-53">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xaml\v4.0_4.0.0.0__b77a5c561934e089\System.Xaml.dll</ModulePath>
+      <ModuleTime>2017-04-04T04:17:21.3727553Z</ModuleTime>
+      <ModuleName>System.Xaml</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="66-8F-81-00-CC-D9-27-C9-22-47-0B-A0-34-B5-72-8F-A6-D4-B3-6A">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Windows.Forms\v4.0_4.0.0.0__b77a5c561934e089\System.Windows.Forms.dll</ModulePath>
+      <ModuleTime>2015-10-30T07:19:36.3932714Z</ModuleTime>
+      <ModuleName>System.Windows.Forms</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="Filter" hash="D3-53-C0-A1-D1-75-18-EE-E3-37-27-E8-7E-DA-42-46-27-9C-2E-F2">
+      <ModulePath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Drawing\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Drawing.dll</ModulePath>
+      <ModuleTime>2016-03-24T02:20:51.1131398Z</ModuleTime>
+      <ModuleName>System.Drawing</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="28-96-43-E5-20-8E-E0-A3-5B-2F-DE-FF-F3-5A-2D-5A-78-5D-5A-1D">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\DataCollectors\Microsoft.VisualStudio.PerformanceTools.DataCollection.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.PerformanceTools.DataCollection</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="BB-27-DD-7B-AF-07-C4-01-B0-B5-14-86-BB-A7-13-B4-D7-C2-04-7B">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\DataCollectors\Microsoft.VisualStudio.PerformanceTools.DataCollection.Editor.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.PerformanceTools.DataCollection.Editor</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="06-BE-19-C8-99-64-54-47-DC-74-36-45-F4-84-FF-12-89-D3-D7-CF">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\DataCollectors\Microsoft.VisualStudio.TraceCollector.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.TraceCollector</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="79-CD-AC-C4-47-F4-D2-A4-04-F3-40-3C-6B-EE-6B-47-E5-9D-A7-F1">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ArchitectureTools.PEReader.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.VisualStudio.ArchitectureTools.PEReader</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="F6-36-6B-00-C6-AF-90-4E-B0-8A-73-A9-04-BE-AC-20-7C-C4-26-26">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\Microsoft.IntelliTrace.Core.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>Microsoft.IntelliTrace.Core</ModuleName>
+      <Classes />
+    </Module>
+    <Module skippedDueTo="MissingPdb" hash="19-46-21-50-73-22-4A-FB-9F-3D-BC-B2-48-36-72-0E-91-D9-B9-74">
+      <ModulePath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\PrivateAssemblies\DataCollectors\VSPerfControl.Interop.dll</ModulePath>
+      <ModuleTime>2017-11-21T15:21:15.64557Z</ModuleTime>
+      <ModuleName>VSPerfControl.Interop</ModuleName>
+      <Classes />
+    </Module>
+  </Modules>
+</CoverageSession>

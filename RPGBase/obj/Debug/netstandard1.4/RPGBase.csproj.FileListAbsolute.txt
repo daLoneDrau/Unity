@@ -1,0 +1,8 @@
+C:\Users\588648\Unity\RPGBase\bin\Debug\netstandard1.4\RPGBase.deps.json
+C:\Users\588648\Unity\RPGBase\bin\Debug\netstandard1.4\RPGBase.dll
+C:\Users\588648\Unity\RPGBase\bin\Debug\netstandard1.4\RPGBase.pdb
+C:\Users\588648\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.csprojResolveAssemblyReference.cache
+C:\Users\588648\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.csproj.CoreCompileInputs.cache
+C:\Users\588648\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.AssemblyInfo.cs
+C:\Users\588648\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.dll
+C:\Users\588648\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.pdb
