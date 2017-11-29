@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using RPGBaseCS.Constants;
 
 public class LoseLifeButtonScript : MonoBehaviour {
 
@@ -12,12 +11,6 @@ public class LoseLifeButtonScript : MonoBehaviour {
     public void TaskOnClick()
     {
         print("You have clicked the button!");
-        print(Dice.ONE_D10.Roll());
-        print(Dice.ONE_D10.Roll());
-        print(Dice.ONE_D10.Roll());
-        print(Dice.ONE_D10.Roll());
-        print(Dice.ONE_D10.Roll());
-        print(Dice.ONE_D10.Roll());
         otherScript.Adjust(-33);
     }
     public int[] ConvertIntToPoint(int val)

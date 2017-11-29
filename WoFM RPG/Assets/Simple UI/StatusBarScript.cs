@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class StatusBarScript : Watcher
+public class StatusBarScript : MonoBehaviour
 {
     /// <summary>
     /// the image backing the status bar.
@@ -62,11 +62,5 @@ public class StatusBarScript : Watcher
         print("len " + len);
         image.rectTransform.offsetMax = new Vector2(image.rectTransform.offsetMax.x + len, image.rectTransform.offsetMax.y);
         print(image.rectTransform.rect);
-    }
-
-    public override void WatchUpdated(Watchable data)
-    {
-        // get new status value
-        // adjust bar
     }
 }

@@ -1,7 +1,7 @@
 
 Importing the CrossPlatformInput package adds a menu item to Unity, "CrossPlatformInput", which allows you to enable or disable the CrossPlatformInput in the editor. You must enable the CrossPlatformInput in order to see the control rigs in the editor, and to start using Unity Remote to control your game.
 
-The CrossPlatformInput sample assets contains two main sections. 
+The CrossPlatformInput sample assets Contains two main sections. 
 
 1) The folder of prefabs provide a variety of ready-to-use "MobileControlRigs". Each control rig is suitable for a different purpose, and each implements the touch or tilt-based equivalent of some of the default standalone axes or buttons. These are ready to drop into your scene, and to use them you simply need to read the axes via the CrossPlatformInput class, rather than Unity's regular Input class.
 
