@@ -108,6 +108,9 @@
   <ItemGroup>
     <Compile Include="Flyweights\AttributeTest.cs" />
     <Compile Include="Flyweights\RPGExceptionTest.cs" />
+    <Compile Include="Flyweights\BehaviorDataTest.cs" />
+    <Compile Include="Flyweights\EquipmentItemModifierTest.cs" />
+    <Compile Include="Flyweights\ScriptVariableTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Singletons\DicerollerTest.cs" />
   </ItemGroup>
