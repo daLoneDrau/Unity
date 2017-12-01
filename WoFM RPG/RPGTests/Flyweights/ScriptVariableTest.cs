@@ -127,8 +127,8 @@ namespace RPGTests.Flyweights
         {
             fVar.Set(null);
             const float delta = .001f;
-            Assert.AreEqual(0f, fVar.Fval, delta);            
-            fVar.Type=ScriptConsts.TYPE_G_02_FLOAT;
+            Assert.AreEqual(0f, fVar.Fval, delta);
+            fVar.Type = ScriptConsts.TYPE_G_02_FLOAT;
             fVar.Set(2.5);
             Assert.AreEqual(2.5f, fVar.Fval, delta);
             fVar.Set(0);
@@ -236,7 +236,7 @@ namespace RPGTests.Flyweights
             Assert.AreEqual("test", tVar.Text);
             tVar.Set(null);
             Assert.IsNull(tVar.Text);
-            tVar.Name="tVar";
+            tVar.Name = "tVar";
             Assert.AreEqual("tVar", tVar.Name);
         }
         [TestMethod]
@@ -269,217 +269,163 @@ namespace RPGTests.Flyweights
         {
             var f = faVar.Fval;
         }
-        /*
         [TestMethod]
         [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
         public void WillNotGetWrongTypeI()
         {
-            iVar.getIntArrayVal();
+            var f = iVar.Iaval;
         }
-
         [TestMethod]
         [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-        public void WillNotGetWrongTypeI2()
+        public void WillNotGetWrongTypeIA()
         {
-            iVar.getIntArrayVal(1);
+            var f = iaVar.Ival;
         }
-
         [TestMethod]
         [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-        public void willNotGetWrongTypeIA()
+        public void WillNotGetWrongTypeL()
         {
-            iaVar.getIntVal();
+            var f = lVar.Laval;
         }
-
         [TestMethod]
         [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-        public void willNotGetWrongTypeL()
+        public void WillNotGetWrongTypeLA()
         {
-            lVar.getLongArrayVal();
+            var f = laVar.Text;
         }
 
         [TestMethod]
         [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-        public void willNotGetWrongTypeL2()
+        public void WillNotGetWrongTypeT()
         {
-            lVar.getLongArrayVal(2);
+            var f = tVar.Lval;
         }
 
         [TestMethod]
         [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-        public void willNotGetWrongTypeLA()
+        public void WillNotSetInvalidFloat()
         {
-            laVar.getText();
+            fVar.Set(new Object());
         }
-
         [TestMethod]
         [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-        public void willNotGetWrongTypeT()
+        public void WillNotSetInvalidFloatArray()
         {
-            tVar.getLongVal();
+            faVar.Set(221L);
         }
-
         [TestMethod]
         [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-        public void willNotSetInvalidFloat() , PooledException {
-		fVar.Set(new Object());
-	}
-
-    [TestMethod]
-    [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-    public void willNotSetInvalidFloatArray()
-
-            , PooledException {
-		faVar.Set(221L);
-	}
-
-[TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidFloatArray2()
-
-            , PooledException {
-		faVar.Set(new Object());
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidFloatArrayIndex()
-
-            , PooledException {
-		faVar.Set(0, null);
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidFloatArrayIndex2()
-
-            , PooledException {
-		faVar.Set(0, "a");
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidFloatString()
-
-            , PooledException {
-		fVar.Set("a");
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidInt() , PooledException {
-		iVar.Set(221L);
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidIntArray()
-
-            , PooledException {
-		iaVar.Set(221L);
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidIntArrayIndex()
-
-            , PooledException {
-		iaVar.Set(0, null);
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidIntArrayIndex2()
-
-            , PooledException {
-		iaVar.Set(0, "a");
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidIntString()
-
-            , PooledException {
-		iVar.Set("a");
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidLong() , PooledException {
-		lVar.Set(new Object());
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidLongArray()
-
-            , PooledException {
-		laVar.Set(new int[] {});
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidLongArrayIndex()
-
-            , PooledException {
-		laVar.Set(0, null);
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidLongArrayIndex2()
-
-            , PooledException {
-		laVar.Set(0, "a");
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidLongString()
-
-            , PooledException {
-		lVar.Set("a");
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidNameEmpty()
-
-            , PooledException {
-		laVar.setName("");
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidNameNull()
-
-            , PooledException {
-		laVar.setName(null);
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidType()
-
-            , PooledException {
-		laVar.setType(-1);
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetInvalidType2()
-
-            , PooledException {
-		laVar.setType(16);
-	}
-
-    [TestMethod]
-[ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
-public void willNotSetNonArray()
-
-            , PooledException {
-		lVar.Set(0, 14);
-	}
-    */
+        public void WillNotSetInvalidFloatArray2()
+        {
+            faVar.Set(new Object());
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidFloatArrayIndex()
+        {
+            faVar.Set(0, null);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidFloatArrayIndex2()
+        {
+            faVar.Set(0, "a");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidFloatString()
+        {
+            fVar.Set("a");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidInt()
+        {
+            iVar.Set(221L);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidIntArray()
+        {
+            iaVar.Set(221L);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidIntArrayIndex()
+        {
+            iaVar.Set(0, null);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidIntArrayIndex2()
+        {
+            iaVar.Set(0, "a");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidIntString()
+        {
+            iVar.Set("a");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidLong()
+        {
+            lVar.Set(new Object());
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidLongArray()
+        {
+            laVar.Set(new int[] { });
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidLongArrayIndex()
+        {
+            laVar.Set(0, null);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidLongArrayIndex2()
+        {
+            laVar.Set(0, "a");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidLongString()
+        {
+            lVar.Set("a");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidNameEmpty()
+        {
+            laVar.Name = "";
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidNameNull()
+        {
+            laVar.Name = null;
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidType()
+        {
+            laVar.Type = -1;
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetInvalidType2()
+        {
+            laVar.Type = 16;
+        }
+        [TestMethod]
+        [ExpectedException(typeof(RPGException), "Exception was NOT thrown")]
+        public void WillNotSetNonArray()
+        {
+            lVar.Set(0, 14);
+        }
     }
 }

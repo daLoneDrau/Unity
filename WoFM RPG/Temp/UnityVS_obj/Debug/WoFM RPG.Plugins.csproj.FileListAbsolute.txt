@@ -29,3 +29,35 @@ C:\Users\588648\Unity\WoFM RPG\Temp\UnityVS_obj\Debug\WoFM RPG.Plugins.csprojRes
 C:\Users\588648\Unity\WoFM RPG\Temp\UnityVS_obj\Debug\WoFM RPG.Plugins.csproj.CoreCompileInputs.cache
 C:\Users\588648\Unity\WoFM RPG\Temp\UnityVS_obj\Debug\Assembly-CSharp-firstpass.dll.dll
 C:\Users\588648\Unity\WoFM RPG\Temp\UnityVS_obj\Debug\Assembly-CSharp-firstpass.dll.pdb
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\Assembly-CSharp-firstpass.dll.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\Assembly-CSharp-firstpass.dll.pdb
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\nunit.framework.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEditor.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.Analytics.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.HoloLens.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.Networking.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.TestRunner.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.VR.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\Mono.Cecil.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\Unity.SerializationLogic.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\Unity.DataContract.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\ICSharpCode.NRefactory.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\Unity.UNetWeaver.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\Unity.CecilTools.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\Mono.Cecil.Pdb.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\Mono.Cecil.Mdb.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.xml
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.Networking.xml
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.TestRunner.xml
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\nunit.framework.xml
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.Analytics.xml
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.HoloLens.xml
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEngine.VR.xml
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_bin\Debug\UnityEditor.xml
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_obj\Debug\WoFM RPG.Plugins.csprojResolveAssemblyReference.cache
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_obj\Debug\WoFM RPG.Plugins.csproj.CoreCompileInputs.cache
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_obj\Debug\Assembly-CSharp-firstpass.dll.dll
+C:\Users\Donald\Unity\WoFM RPG\Temp\UnityVS_obj\Debug\Assembly-CSharp-firstpass.dll.pdb

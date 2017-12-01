@@ -173,8 +173,17 @@ namespace RPGBase.Flyweights
          */
         public ScriptVariable(string newName, int newType, object value)
         {
+            if (newName == null)
+            {
+                throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Name field is null.");
+            }
+            if (newName.Trim().Length == 0)
+            {
+                throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Name field is empty.");
+            }
             name = newName;
             type = newType;
+            ValidateType();
             Set(value);
         }
         /**

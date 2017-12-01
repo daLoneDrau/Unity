@@ -3703,7 +3703,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\588648\\.nuget\\packages\\": {}
+    "C:\\Users\\Donald\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -3711,14 +3711,14 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\588648\\Unity\\RPGBase\\RPGBase.csproj",
+      "projectUniqueName": "C:\\Users\\Donald\\Unity\\RPGBase\\RPGBase.csproj",
       "projectName": "RPGBase",
-      "projectPath": "C:\\Users\\588648\\Unity\\RPGBase\\RPGBase.csproj",
-      "packagesPath": "C:\\Users\\588648\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\588648\\Unity\\RPGBase\\obj\\",
+      "projectPath": "C:\\Users\\Donald\\Unity\\RPGBase\\RPGBase.csproj",
+      "packagesPath": "C:\\Users\\Donald\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Donald\\Unity\\RPGBase\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\588648\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Donald\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
