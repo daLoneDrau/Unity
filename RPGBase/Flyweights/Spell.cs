@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.Flyweights
+namespace RPGBase.Flyweights
 {
-    class Spell
+    public class Spell
     {
         /** the caster's reference id. */
         private int Caster { get; set; }

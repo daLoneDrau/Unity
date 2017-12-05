@@ -11,12 +11,13 @@ namespace RPGBase.Flyweights
     /// </summary>
     public class IOEquipItem
     {
-        /** the list of equipment modifiers. */
+        /// <summary>
+        /// the list of equipment modifiers.
+        /// </summary>
         private EquipmentItemModifier[] elements;
-        /**
-         * Creates a new instance of {@link IOEquipItem}. 
-         * @
-         */
+        /// <summary>
+        /// Creates a new instance of <see cref="IOEquipItem"/>.
+        /// </summary>
         public IOEquipItem()
         {
             int numElements = ProjectConstants.GetInstance().GetNumberEquipmentElements();
@@ -26,7 +27,9 @@ namespace RPGBase.Flyweights
                 elements[i] = new EquipmentItemModifier();
             }
         }
-        /** Frees all resources. */
+        /// <summary>
+        /// Frees all resources.
+        /// </summary>
         public void Free()
         {
             for (int i = elements.Length - 1; i >= 0; i--)
@@ -34,12 +37,12 @@ namespace RPGBase.Flyweights
                 elements[i] = null;
             }
         }
-        /**
-         * Gets the element.
-         * @param element the element
-         * @return {@link EquipmentItemModifier}
-         */
-        public EquipmentItemModifier GetElement(int element)
+        /// <summary>
+        /// Gets the element.
+        /// </summary>
+        /// <param name="element">the element</param>
+        /// <returns><see cref="EquipmentItemModifier"/></returns>
+        public EquipmentItemModifier GetElementModifier(int element)
         {
             return elements[element];
         }
