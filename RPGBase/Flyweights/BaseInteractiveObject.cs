@@ -11,7 +11,7 @@ namespace RPGBase.Flyweights
     public abstract class BaseInteractiveObject
     {
         /** the <see cref="BaseInteractiveObject"/>'s armor material. */
-        private String Armormaterial { get; set; }
+        public String Armormaterial { get; set; }
         /** any flags that have been set. */
         private long behaviorFlags = 0;
         public float DamageSum { get; set; }
@@ -188,7 +188,7 @@ namespace RPGBase.Flyweights
         /// </summary>
         public String Weaponmaterial { get; set; }
         /**
-* Creates a new instance of {@link BaseInteractiveObject}.
+* Creates a new instance of <see cref="BaseInteractiveObject"/>.
 * @param id the reference id
 */
         protected BaseInteractiveObject(int id)
@@ -329,7 +329,7 @@ namespace RPGBase.Flyweights
             return ioGroups[index];
         }
         /**
-         * Gets the number of spells on the {@link BaseInteractiveObject}.
+         * Gets the number of spells on the <see cref="BaseInteractiveObject"/>.
          * @return <code>int</code>
          */
         public int GetNumberOfSpellsOn()
@@ -345,7 +345,7 @@ namespace RPGBase.Flyweights
             return this.ioGroups.Count;
         }
         /**
-         * Gets the {@link BaseInteractiveObject}'s reference id.
+         * Gets the <see cref="BaseInteractiveObject"/>'s reference id.
          * @return int
          */
         public int GetRefId()
@@ -365,10 +365,10 @@ namespace RPGBase.Flyweights
             return spellsOn[index];
         }
         /**
-         * Determines if the {@link BaseInteractiveObject} has a specific behavior
+         * Determines if the <see cref="BaseInteractiveObject"/> has a specific behavior
          * flag.
          * @param flag the flag
-         * @return true if the {@link BaseInteractiveObject} has the flag; false
+         * @return true if the <see cref="BaseInteractiveObject"/> has the flag; false
          *         otherwise
          */
         public bool HasBehaviorFlag(long flag)
@@ -376,9 +376,9 @@ namespace RPGBase.Flyweights
             return (behaviorFlags & flag) == flag;
         }
         /**
-         * Determines if the {@link BaseInteractiveObject} has a specific game flag.
+         * Determines if the <see cref="BaseInteractiveObject"/> has a specific game flag.
          * @param flag the flag
-         * @return true if the {@link BaseInteractiveObject} has the flag; false
+         * @return true if the <see cref="BaseInteractiveObject"/> has the flag; false
          *         otherwise
          */
         public bool HasGameFlag(long flag)
@@ -386,9 +386,9 @@ namespace RPGBase.Flyweights
             return (gameFlags & flag) == flag;
         }
         /**
-         * Determines if the {@link BaseInteractiveObject} has a specific flag.
+         * Determines if the <see cref="BaseInteractiveObject"/> has a specific flag.
          * @param flag the flag
-         * @return true if the {@link BaseInteractiveObject} has the flag; false
+         * @return true if the <see cref="BaseInteractiveObject"/> has the flag; false
          *         otherwise
          */
         public bool HasIOFlag(long flag)
@@ -396,9 +396,9 @@ namespace RPGBase.Flyweights
             return (ioFlags & flag) == flag;
         }
         /**
-         * Determines if the {@link BaseInteractiveObject} has a specific type flag.
+         * Determines if the <see cref="BaseInteractiveObject"/> has a specific type flag.
          * @param flag the flag
-         * @return true if the {@link BaseInteractiveObject} has the flag; false
+         * @return true if the <see cref="BaseInteractiveObject"/> has the flag; false
          *         otherwise
          */
         public bool HasTypeFlag(long flag)

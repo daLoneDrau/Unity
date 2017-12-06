@@ -30,6 +30,19 @@ namespace RPGBase.Flyweights
         /// the reference ids of all items equipped by the <see cref="IOCharacter"/> indexed by equipment slot.
         /// </summary>
         private int[] equippedItems;
+        private int gender = -1;
+        /// <summary>
+        /// the <see cref="IOCharacter"/>'s gender.
+        /// </summary>
+        private int Gender
+        {
+            get { return gender; }
+            set
+            {
+                gender = value;
+                NotifyWatchers();
+            }
+        }
         /// <summary>
         /// the list of <see cref="Watcher"/>s associated with this <see cref="IOCharacter"/>.
         /// </summary>
@@ -86,6 +99,38 @@ namespace RPGBase.Flyweights
             }
             attributes[attr].AdjustModifier(val);
         }
+        /// <summary>
+        /// Adjusts the <see cref="IOCharacter"/>'s life by a specific amount.
+        /// </summary>
+        /// <param name="dmg">the amount</param>
+        protected void AdjustLife(float dmg)
+        {
+            String ls = GetLifeAttribute();
+            PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+            sb.Append("M");
+            sb.Append(ls);
+            String mls = sb.ToString();
+            sb.ReturnToPool();
+            sb = null;
+            SetBaseAttributeScore(GetLifeAttribute(), GetBaseLife() + dmg);
+            if (GetBaseLife() > GetFullAttributeScore(mls))
+            {
+                // if Hit Points now > max
+                SetBaseAttributeScore(ls, GetFullAttributeScore(mls));
+            }
+            if (GetBaseLife() < 0f)
+            {
+                // if life now < 0
+                SetBaseAttributeScore(ls, 0f);
+            }
+            ls = null;
+            mls = null;
+        }
+        /// <summary>
+        /// Adjusts the <see cref="IOCharacter"/>'s mana by a specific amount.
+        /// </summary>
+        /// <param name="dmg">the amount</param>
+        protected abstract void AdjustMana(float dmg);
         /// <summary>
         /// Gets the total modifier for a specific element type from the equipment the player is wielding.
         /// </summary>
@@ -209,6 +254,12 @@ namespace RPGBase.Flyweights
             map = null;
         }
         /// <summary>
+        /// Drains mana from the <see cref="IOCharacter"/>, returning the full amount drained.
+        /// </summary>
+        /// <param name="dmg">the attempted amount of mana to be drained</param>
+        /// <returns></returns>
+        public abstract float DrainMana(float dmg);
+        /// <summary>
         /// Gets a specific attribute.
         /// </summary>
         /// <param name="abbr">the attribute's abbreviation</param>
@@ -258,6 +309,16 @@ namespace RPGBase.Flyweights
             return attributes[attr].BaseVal;
         }
         /// <summary>
+        /// Gets the <see cref="IOCharacter"/>'s base life value from the correct attribute.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract float GetBaseLife();
+        /// <summary>
+        /// Gets the <see cref="IOCharacter"/>'s base mana value from the correct attribute.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract float GetBaseMana();
+        /// <summary>
         /// Gets the reference id of the item the <see cref="IOCharacter"/> has equipped at a specific equipment slot. -1 is returned if no item is equipped.
         /// </summary>
         /// <param name="slot">the equipment slot</param>
@@ -297,7 +358,22 @@ namespace RPGBase.Flyweights
             return attributes[attr].Full;
         }
         public abstract float GetFullDamage();
+        protected abstract String GetLifeAttribute();
         public abstract float GetMaxLife();
+        /// <summary>
+        /// Heals the IONpcData's mana.
+        /// </summary>
+        /// <param name="dmg">the amount of healing</param>
+        public void HealMana(float dmg)
+        {
+            if (GetBaseMana() > 0f)
+            {
+                if (dmg > 0f)
+                {
+                    AdjustMana(dmg);
+                }
+            }
+        }
         /// <summary>
         /// Initializes the items the <see cref="IOCharacter"/> has equipped.
         /// </summary>

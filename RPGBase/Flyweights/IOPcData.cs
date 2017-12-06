@@ -14,19 +14,6 @@ namespace RPGBase.Flyweights
         /// the number of bags the player has.
         /// </summary>
         private int bags;
-        private int gender = -1;
-        /// <summary>
-        /// the <see cref="IoPcData"/>'s gender.
-        /// </summary>
-        private int Gender
-        {
-            get { return gender; }
-            set
-            {
-                gender = value;
-                NotifyWatchers();
-            }
-        }
         /// <summary>
         /// the character's gold.
         /// </summary>
@@ -158,38 +145,6 @@ namespace RPGBase.Flyweights
             }
             NotifyWatchers();
         }
-        /// <summary>
-        /// Adjusts the player's life by a specific amount.
-        /// </summary>
-        /// <param name="dmg">the amount</param>
-        private void AdjustLife(float dmg)
-        {
-            String ls = GetLifeAttribute();
-            PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
-            sb.Append("M");
-            sb.Append(ls);
-            String mls = sb.ToString();
-            sb.ReturnToPool();
-            sb = null;
-            SetBaseAttributeScore(GetLifeAttribute(), GetBaseLife() + dmg);
-            if (GetBaseLife() > GetFullAttributeScore(mls))
-            {
-                // if Hit Points now > max
-                SetBaseAttributeScore(ls, GetFullAttributeScore(mls));
-            }
-            if (GetBaseLife() < 0f)
-            {
-                // if life now < 0
-                SetBaseAttributeScore(ls, 0f);
-            }
-            ls = null;
-            mls = null;
-        }
-        /// <summary>
-        /// Adjusts the player's mana by a specific amount.
-        /// </summary>
-        /// <param name="dmg">the amount</param>
-        protected abstract void AdjustMana(float dmg);
         /// <summary>
         /// Adjusts the player's experience points by a specific amount.
         /// </summary>
@@ -386,12 +341,7 @@ namespace RPGBase.Flyweights
             }
             return damagesdone;
         }
-        /// <summary>
-        /// Drains mana from the IONpcData, returning the full amount drained.
-        /// </summary>
-        /// <param name="dmg">the attempted amount of mana to be drained</param>
-        /// <returns><see cref="float"/></returns>
-        public float DrainMana(float dmg)
+        public override float DrainMana(float dmg)
         {
             float manaDrained = 0;
             if (!io.HasIOFlag(IoGlobals.PLAYERFLAGS_NO_MANA_DRAIN))
@@ -410,18 +360,8 @@ namespace RPGBase.Flyweights
             return manaDrained;
         }
         /**
-         * Gets the player's base life value from the correct attribute.
-         * @return {@link float}
-         */
-        protected abstract float GetBaseLife();
-        /**
-         * Gets the player's base mana value from the correct attribute.
-         * @return {@link float}
-         */
-        protected abstract float GetBaseMana();
-        /**
          * Gets the BaseInteractiveObject associated with this {@link IoPcData}.
-         * @return {@link BaseInteractiveObject}
+         * @return <see cref="BaseInteractiveObject"/>
          */
         protected override BaseInteractiveObject GetIo()
         {
@@ -456,7 +396,6 @@ namespace RPGBase.Flyweights
             }
             return keyring.IndexOf(key);
         }
-        protected abstract String GetLifeAttribute();
         /**
          * Gets the value for the bags.
          * @return {@link int}

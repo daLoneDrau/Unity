@@ -139,9 +139,9 @@ namespace RPGBase.Flyweights
             return flags;
         }
         /**
-         * Determines if the {@link BaseInteractiveObject} has a specific flag.
+         * Determines if the <see cref="BaseInteractiveObject"/> has a specific flag.
          * @param flag the flag
-         * @return true if the {@link BaseInteractiveObject} has the flag; false
+         * @return true if the <see cref="BaseInteractiveObject"/> has the flag; false
          *         otherwise
          */
         public bool HasFlag(long flag)

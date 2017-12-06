@@ -55,8 +55,8 @@ namespace RPGBase.Flyweights
         }
         /**
          * Action when a player attempts to identify an item.
-         * @param playerIO the player's {@link BaseInteractiveObject}
-         * @param itemIO the itme's {@link BaseInteractiveObject}
+         * @param playerIO the player's <see cref="BaseInteractiveObject"/>
+         * @param itemIO the itme's <see cref="BaseInteractiveObject"/>
          * @ if an error occurs
          */
         public void IdentifyIO(BaseInteractiveObject playerIO, BaseInteractiveObject itemIO)

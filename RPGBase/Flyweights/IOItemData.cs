@@ -13,10 +13,15 @@ namespace RPGBase.Flyweights
         /// the current number in an inventory slot.
         /// </summary>
         public int Count { get; set; }
+        private string description;
         /// <summary>
         /// the item's description.
         /// </summary>
-        public string Description { get; set; }
+        public string Description
+        {
+            get { return description; }
+            set { description = value ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Description cannot be null"); }
+        }
         /// <summary>
         /// modifier data for the item.
         /// </summary>
@@ -25,14 +30,32 @@ namespace RPGBase.Flyweights
         /// dunno?
         /// </summary>
         public char FoodValue { get; set; }
+        private BaseInteractiveObject io;
         /// <summary>
         /// the BaseInteractiveObject associated with this data.
         /// </summary>
-        public BaseInteractiveObject Io { get; set; }
+        public BaseInteractiveObject Io
+        {
+            get { return io; }
+            set
+            {
+                io = value;
+                if (value != null
+                        && value.ItemData == null)
+                {
+                    value.ItemData = this;
+                }
+            }
+        }
+        private string itemName;
         /// <summary>
         /// the item's name.
         /// </summary>
-        public string ItemName { get; set; }
+        public string ItemName
+        {
+            get { return itemName; }
+            set { itemName = value ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Item name cannot be null"); }
+        }
         /// <summary>
         /// the item's light value.
         /// </summary>
@@ -137,25 +160,21 @@ namespace RPGBase.Flyweights
                         {
                             BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
                             if (io.Weaponmaterial != null
-                                    && io.Weaponmaterial.Length() > 0)
+                                    && io.Weaponmaterial.Length > 0)
                             {
                                 wmat = io.Weaponmaterial;
                             }
                             io = null;
                         }
-                        attack = io_source.GetPCData().GetFullDamage();
-                        if (io_source.GetPCData().CalculateCriticalHit()
-                                && Script.GetInstance().sendIOScriptEvent(
-                                        io_source, ScriptConsts.SM_054_CRITICAL,
-                                        null, null) != ScriptConsts.REFUSE)
+                        attack = io_source.PcData.GetFullDamage();
+                        if (io_source.PcData.CalculateCriticalHit()
+                                && Script.GetInstance().SendIOScriptEvent(io_source, ScriptConsts.SM_054_CRITICAL, null, null) != ScriptConsts.REFUSE)
                         {
                             critical = true;
                         }
                         damages = attack * dmgModifier;
-                        if (io_source.GetPCData().calculateBackstab()
-                                && Script.GetInstance().sendIOScriptEvent(
-                                        io_source, ScriptConsts.SM_056_BACKSTAB,
-                                        null, null) != ScriptConsts.REFUSE)
+                        if (io_source.PcData.CalculateBackstab()
+                                && Script.GetInstance().SendIOScriptEvent(io_source, ScriptConsts.SM_056_BACKSTAB, null, null) != ScriptConsts.REFUSE)
                         {
                             backstab = this.GetBackstabModifier();
                         }
@@ -164,13 +183,12 @@ namespace RPGBase.Flyweights
                     {
                         if (io_source.HasIOFlag(IoGlobals.IO_03_NPC))
                         {
-                            int wpnId = io_source.GetNPCData().getEquippedItem(
-                                    EquipmentGlobals.EQUIP_SLOT_WEAPON);
+                            int wpnId = io_source.NpcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
                             if (Interactive.GetInstance().hasIO(wpnId))
                             {
                                 BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
                                 if (io.Weaponmaterial != null
-                                        && io.Weaponmaterial.Length() > 0)
+                                        && io.Weaponmaterial.Length > 0)
                                 {
                                     wmat = io.Weaponmaterial;
                                 }
@@ -179,35 +197,27 @@ namespace RPGBase.Flyweights
                             else
                             {
                                 if (io_source.Weaponmaterial != null
-                                        && io_source.Weaponmaterial
-                                                .Length() > 0)
+                                        && io_source.Weaponmaterial.Length > 0)
                                 {
                                     wmat = io_source.Weaponmaterial;
                                 }
                             }
-                            attack = io_source.GetNPCData().GetFullDamage();
-                            if (io_source.GetNPCData().CalculateCriticalHit()
-                                    && Script.GetInstance().sendIOScriptEvent(
-                                            io_source,
-                                            ScriptConsts.SM_054_CRITICAL,
-                                            null, null) != ScriptConsts.REFUSE)
+                            attack = io_source.NpcData.GetFullDamage();
+                            if (io_source.NpcData.CalculateCriticalHit()
+                                    && Script.GetInstance().SendIOScriptEvent(io_source, ScriptConsts.SM_054_CRITICAL, null, null) != ScriptConsts.REFUSE)
                             {
                                 critical = true;
                             }
                             damages = attack * dmgModifier;
-                            if (io_source.GetNPCData().calculateBackstab()
-                                    && Script.GetInstance().sendIOScriptEvent(
-                                            io_source,
-                                            ScriptConsts.SM_056_BACKSTAB,
-                                            null, null) != ScriptConsts.REFUSE)
+                            if (io_source.NpcData.CalculateBackstab()
+                                    && Script.GetInstance().SendIOScriptEvent(io_source, ScriptConsts.SM_056_BACKSTAB, null, null) != ScriptConsts.REFUSE)
                             {
                                 backstab = this.GetBackstabModifier();
                             }
                         }
                         else
                         {
-                            throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                                    "Compute Damages call made by non-character");
+                            throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Compute Damages call made by non-character");
                         }
                     }
                     // calculate how much damage is absorbed by armor
@@ -227,10 +237,10 @@ namespace RPGBase.Flyweights
                     // absorb *= modif;
                     // }
                     // }
-                    if (io_target.GetArmormaterial() != null
-                            && io.GetArmormaterial().Length() > 0)
+                    if (io_target.Armormaterial != null
+                            && io.Armormaterial.Length > 0)
                     {
-                        amat = io.GetArmormaterial();
+                        amat = io.Armormaterial;
                     }
                     if (io_target.HasIOFlag(IoGlobals.IO_03_NPC)
                             || io_target.HasIOFlag(IoGlobals.IO_01_PC))
@@ -238,21 +248,19 @@ namespace RPGBase.Flyweights
                         int armrId;
                         if (io_target.HasIOFlag(IoGlobals.IO_03_NPC))
                         {
-                            armrId = io_target.GetNPCData().getEquippedItem(
-                                    EquipmentGlobals.EQUIP_SLOT_TORSO);
+                            armrId = io_target.NpcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_TORSO);
                         }
                         else
                         {
-                            armrId = io_target.GetPCData().getEquippedItem(
-                                    EquipmentGlobals.EQUIP_SLOT_TORSO);
+                            armrId = io_target.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_TORSO);
                         }
                         if (Interactive.GetInstance().hasIO(armrId))
                         {
                             BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(armrId);
-                            if (io.GetArmormaterial() != null
-                                    && io.GetArmormaterial().Length() > 0)
+                            if (io.Armormaterial != null
+                                    && io.Armormaterial.Length > 0)
                             {
-                                amat = io.GetArmormaterial();
+                                amat = io.Armormaterial;
                             }
                             io = null;
                         }
@@ -273,15 +281,13 @@ namespace RPGBase.Flyweights
                         {
                             // TODO - push player when hit
                             // ARX_DAMAGES_SCREEN_SPLATS_Add(&ppos, dmgs);
-                            io_target.GetPCData().ARX_DAMAGES_DamagePlayer(damages,
-                                    0, io_source.GetRefId());
+                            io_target.PcData.DamagePlayer(damages, 0, io_source.GetRefId());
                             // ARX_DAMAGES_DamagePlayerEquipment(dmgs);
                         }
                         else
                         {
                             // TODO - push IONpcData when hit
-                            io_target.GetNPCData().damageNPC(damages,
-                                    io_source.GetRefId(), false);
+                            io_target.NpcData.damageNPC(damages, io_source.GetRefId(), false);
                         }
                     }
                 }
@@ -299,8 +305,7 @@ namespace RPGBase.Flyweights
         {
             if (Io == null)
             {
-                throw new RPGException(ErrorMessage.INTERNAL_ERROR,
-                        "Cannot equip item with no BaseInteractiveObject data");
+                throw new RPGException(ErrorMessage.INTERNAL_ERROR, "Cannot equip item with no BaseInteractiveObject data");
             }
             if (target != null)
             {
@@ -310,11 +315,11 @@ namespace RPGBase.Flyweights
                     IOCharacter charData;
                     if (target.HasIOFlag(IoGlobals.IO_01_PC))
                     {
-                        charData = target.GetPCData();
+                        charData = target.PcData;
                     }
                     else
                     {
-                        charData = target.GetNPCData();
+                        charData = target.NpcData;
                     }
                     int validid = -1;
                     int i = Interactive.GetInstance().getMaxIORefId();
@@ -331,10 +336,10 @@ namespace RPGBase.Flyweights
                     if (validid >= 0)
                     {
                         Interactive.GetInstance().RemoveFromAllInventories(io);
-                        io.SetShow(IoGlobals.SHOW_FLAG_ON_PLAYER); // on player
-                                                                   // handle drag
-                                                                   // if (toequip == DRAGINTER)
-                                                                   // Set_DragInter(NULL);
+                        io.Show = IoGlobals.SHOW_FLAG_ON_PLAYER; // on player
+                                                                 // handle drag
+                                                                 // if (toequip == DRAGINTER)
+                                                                 // Set_DragInter(NULL);
                         if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_WEAPON))
                         {
                             EquipWeapon(charData);
@@ -352,56 +357,45 @@ namespace RPGBase.Flyweights
                         else if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_ARMOR))
                         {
                             // unequip old armor
-                            UnequipItemInSlot(
-                                    charData, EquipmentGlobals.EQUIP_SLOT_TORSO);
+                            UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_TORSO);
                             // equip new armor
-                            charData.setEquippedItem(
-                                    EquipmentGlobals.EQUIP_SLOT_TORSO, validid);
+                            charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_TORSO, validid);
                         }
-                        else if (io
-                              .HasTypeFlag(
-                                      EquipmentGlobals.OBJECT_TYPE_LEGGINGS))
+                        else if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_LEGGINGS))
                         {
                             // unequip old leggings
-                            UnequipItemInSlot(
-                                    charData, EquipmentGlobals.EQUIP_SLOT_LEGGINGS);
+                            UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_LEGGINGS);
                             // equip new leggings
-                            charData.setEquippedItem(
-                                    EquipmentGlobals.EQUIP_SLOT_LEGGINGS, validid);
+                            charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_LEGGINGS, validid);
                         }
-                        else if (io
-                              .HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_HELMET))
+                        else if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_HELMET))
                         {
                             // unequip old helmet
-                            UnequipItemInSlot(
-                                    charData, EquipmentGlobals.EQUIP_SLOT_HELMET);
+                            UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_HELMET);
                             // equip new helmet
-                            charData.setEquippedItem(
-                                    EquipmentGlobals.EQUIP_SLOT_HELMET, validid);
+                            charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_HELMET, validid);
                         }
                         if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_HELMET)
-                                || io.HasTypeFlag(
-                                        EquipmentGlobals.OBJECT_TYPE_ARMOR)
-                                || io.HasTypeFlag(
-                                        EquipmentGlobals.OBJECT_TYPE_LEGGINGS))
+                                || io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_ARMOR)
+                                || io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_LEGGINGS))
                         {
-                            charData.ARX_EQUIPMENT_RecreatePlayerMesh();
+                            charData.RecreatePlayerMesh();
                         }
-                        charData.computeFullStats();
+                        charData.ComputeFullStats();
                     }
                 }
             }
         }
-        public void ARX_EQUIPMENT_ReleaseAll()
+        public void ReleaseAll()
         {
-            ARX_EQUIPMENT_ReleaseEquipItem();
+            ReleaseEquipItem();
         }
         /** Releases the {@link IOEquipItem} data from the item. */
-        public void ARX_EQUIPMENT_ReleaseEquipItem()
+        public void ReleaseEquipItem()
         {
-            if (equipitem != null)
+            if (Equipitem != null)
             {
-                equipitem = null;
+                Equipitem = null;
             }
         }
         /**
@@ -410,8 +404,7 @@ namespace RPGBase.Flyweights
          * @param added if <tt>true</tt>, the type is set; otherwise it is removed
          * @ if an error occurs
          */
-        public void ARX_EQUIPMENT_SetObjectType(int flag,
-                 bool added)
+        public void SetObjectType(int flag, bool added)
         {
             if (added)
             {
@@ -429,18 +422,17 @@ namespace RPGBase.Flyweights
          * @throws PooledException if an error occurs
          * @ if an error occurs
          */
-        public void ARX_EQUIPMENT_UnEquip(BaseInteractiveObject target,
-                 bool isDestroyed)
+        public void UnEquip(BaseInteractiveObject target, bool isDestroyed)
         {
             if (target != null)
             {
                 if (target.HasIOFlag(IoGlobals.IO_01_PC))
                 {
-                    int i = ProjectConstants.GetInstance().getMaxEquipped() - 1;
+                    int i = ProjectConstants.GetInstance().GetMaxEquipped() - 1;
                     for (; i >= 0; i--)
                     {
-                        IoPcData player = target.GetPCData();
-                        int itemRefId = player.getEquippedItem(i);
+                        IOPcData player = target.PcData;
+                        int itemRefId = player.GetEquippedItem(i);
                         if (itemRefId >= 0
                                 && Interactive.GetInstance().hasIO(itemRefId)
                                 && Interactive.GetInstance().getIO(
@@ -448,7 +440,7 @@ namespace RPGBase.Flyweights
                         {
                             // EERIE_LINKEDOBJ_UnLinkObjectFromObject(
                             // target->obj, tounequip->obj);
-                            player.ARX_EQUIPMENT_Release(itemRefId);
+                            player.ReleaseEquipment(itemRefId);
                             // target->bbox1.x = 9999;
                             // target->bbox2.x = -9999;
 
@@ -458,21 +450,17 @@ namespace RPGBase.Flyweights
                                 // ARX_SOUND_PlayInterface(SND_INVSTD);
                                 // Set_DragInter(tounequip);
                                 // } else
-                                if (!target.getInventory().CanBePutInInventory(
-                                        io))
+                                if (!target.Inventory.CanBePutInInventory(io))
                                 {
-                                    target.getInventory().PutInFrontOfPlayer(
-                                            io, true);
+                                    target.Inventory.PutInFrontOfPlayer(io, true);
                                 }
                             }
                             // send event from this item to target to unequip
-                            Script.GetInstance().setEventSender(io);
-                            Script.GetInstance().sendIOScriptEvent(target,
-                                    ScriptConsts.SM_007_EQUIPOUT, null, null);
+                            Script.GetInstance().SetEventSender(io);
+                            Script.GetInstance().SendIOScriptEvent(target, ScriptConsts.SM_007_EQUIPOUT, null, null);
                             // send event from target to this item to unequip
-                            Script.GetInstance().setEventSender(target);
-                            Script.GetInstance().sendIOScriptEvent(io,
-                                    ScriptConsts.SM_007_EQUIPOUT, null, null);
+                            Script.GetInstance().SetEventSender(target);
+                            Script.GetInstance().SendIOScriptEvent(io, ScriptConsts.SM_007_EQUIPOUT, null, null);
                         }
                     }
                     if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_HELMET)
@@ -480,7 +468,7 @@ namespace RPGBase.Flyweights
                             || io.HasTypeFlag(
                                     EquipmentGlobals.OBJECT_TYPE_LEGGINGS))
                     {
-                        target.GetPCData().ARX_EQUIPMENT_RecreatePlayerMesh();
+                        target.PcData.RecreatePlayerMesh();
                     }
                 }
             }
@@ -496,12 +484,11 @@ namespace RPGBase.Flyweights
             // check left and right finger
             // to see if it can be equipped
             bool canEquip = true;
-            int ioid = charData.getEquippedItem(
-                    EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
+            int ioid = charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
             if (Interactive.GetInstance().hasIO(ioid))
             {
                 BaseInteractiveObject oldRing = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
-                if (oldRing.ItemData.getRingType() == ringType)
+                if (oldRing.ItemData.RingType == RingType)
                 {
                     // already wearing that type
                     // of ring on left finger
@@ -511,12 +498,11 @@ namespace RPGBase.Flyweights
             }
             if (canEquip)
             {
-                ioid = charData.getEquippedItem(
-                        EquipmentGlobals.EQUIP_SLOT_RING_RIGHT);
+                ioid = charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_RING_RIGHT);
                 if (Interactive.GetInstance().hasIO(ioid))
                 {
                     BaseInteractiveObject oldRing = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
-                    if (oldRing.ItemData.getRingType() == ringType)
+                    if (oldRing.ItemData.RingType == RingType)
                     {
                         // already wearing that type
                         // of ring on right finger
@@ -528,55 +514,49 @@ namespace RPGBase.Flyweights
             if (canEquip)
             {
                 int equipSlot = -1;
-                if (charData.getEquippedItem(
+                if (charData.GetEquippedItem(
                         EquipmentGlobals.EQUIP_SLOT_RING_LEFT) < 0)
                 {
                     equipSlot = EquipmentGlobals.EQUIP_SLOT_RING_LEFT;
                 }
-                if (charData.getEquippedItem(
+                if (charData.GetEquippedItem(
                         EquipmentGlobals.EQUIP_SLOT_RING_RIGHT) < 0)
                 {
                     equipSlot = EquipmentGlobals.EQUIP_SLOT_RING_RIGHT;
                 }
                 if (equipSlot == -1)
                 {
-                    if (!charData.getIo().getInventory().isLeftRing())
+                    if (!charData.getIo().Inventory.isLeftRing())
                     {
-                        ioid = charData.getEquippedItem(
-                                EquipmentGlobals.EQUIP_SLOT_RING_RIGHT);
+                        ioid = charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_RING_RIGHT);
                         if (Interactive.GetInstance().hasIO(ioid))
                         {
                             BaseInteractiveObject oldIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
                             if (oldIO.HasIOFlag(IoGlobals.IO_02_ITEM))
                             {
-                                UnequipItemInSlot(charData,
-                                        EquipmentGlobals.EQUIP_SLOT_RING_RIGHT);
+                                UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_RING_RIGHT);
                             }
                             oldIO = null;
                         }
-                        equipSlot =
-                                EquipmentGlobals.EQUIP_SLOT_RING_RIGHT;
+                        equipSlot = EquipmentGlobals.EQUIP_SLOT_RING_RIGHT;
                     }
                     else
                     {
-                        ioid = charData.getEquippedItem(
-                                EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
+                        ioid = charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
                         if (Interactive.GetInstance().hasIO(ioid))
                         {
                             BaseInteractiveObject oldIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
                             if (oldIO.HasIOFlag(IoGlobals.IO_02_ITEM))
                             {
-                                UnequipItemInSlot(charData,
-                                        EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
+                                UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
                             }
                             oldIO = null;
                         }
                         equipSlot = EquipmentGlobals.EQUIP_SLOT_RING_LEFT;
                     }
-                    charData.getIo().getInventory().setLeftRing(
-                            !charData.getIo().getInventory().isLeftRing());
+                    charData.getIo().Inventory.setLeftRing(!charData.getIo().Inventory.isLeftRing());
                 }
-                charData.setEquippedItem(equipSlot, io.GetRefId());
+                charData.SetEquippedItem(equipSlot, io.GetRefId());
             }
         }
         /**
@@ -589,13 +569,12 @@ namespace RPGBase.Flyweights
             // unequip old shield
             UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_SHIELD);
             // equip new shield
-            charData.setEquippedItem(
-                        EquipmentGlobals.EQUIP_SLOT_SHIELD, io.GetRefId());
+            charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_SHIELD, io.GetRefId());
             // TODO - attach new shield to mesh
             // EERIE_LINKEDOBJ_LinkObjectToObject(target->obj,
             // io->obj, "SHIELD_ATTACH", "SHIELD_ATTACH", io);
             int wpnID =
-                    charData.getEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+                    charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
             if (wpnID >= 0)
             {
                 if (Interactive.GetInstance().hasIO(wpnID))
@@ -605,8 +584,7 @@ namespace RPGBase.Flyweights
                             || wpn.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_BOW))
                     {
                         // unequip old weapon
-                        UnequipItemInSlot(
-                                charData, EquipmentGlobals.EQUIP_SLOT_WEAPON);
+                        UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_WEAPON);
                     }
                 }
             }
@@ -621,8 +599,7 @@ namespace RPGBase.Flyweights
             // unequip old weapon
             UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_WEAPON);
             // equip new weapon
-            charData.setEquippedItem(
-                        EquipmentGlobals.EQUIP_SLOT_WEAPON, io.GetRefId());
+            charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON, io.GetRefId());
             // attach it to player mesh
             if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_BOW))
             {
@@ -646,106 +623,10 @@ namespace RPGBase.Flyweights
         }
         protected abstract float GetBackstabModifier();
         /**
-         * Gets the current number in an inventory slot.
-         * @return {@link short}
-         */
-        public int getCount()
-        {
-            return Count;
-        }
-        /**
-         * Gets the item's description.
-         * @return {@link char[]}
-         */
-        public char[] getDescription()
-        {
-            return description;
-        }
-        /**
-         * Gets the list of equipment item modifiers.
-         * @return {@link EquipmentItemModifier}[]
-         */
-        public IOEquipItem getEquipitem()
-        {
-            return equipitem;
-        }
-        /**
-         * Gets the value for the foodValue.
-         * @return {@link char}
-         */
-        public char getFoodValue()
-        {
-            return foodValue;
-        }
-        /**
-         * Gets the BaseInteractiveObject associated with this data.
-         * @return {@link BaseInteractiveObject}
-         */
-        public BaseInteractiveObject getIo()
-        {
-            return io;
-        }
-        /**
-         * Gets the item's name.
-         * @return <code>char</code>[]
-         */
-        public char[] getItemName()
-        {
-            return itemName;
-        }
-        /**
-         * Gets the value for the lightValue.
-         * @return {@link int}
-         */
-        public int getLightValue()
-        {
-            return lightValue;
-        }
-        /**
-         * Gets the maximum number of the item the player can own.
-         * @return {@link int}
-         */
-        public int getMaxOwned()
-        {
-            return MaxOwned;
-        }
-        /**
-         * Gets the item's price.
-         * @return {@link float}
-         */
-        public float getPrice()
-        {
-            return price;
-        }
-        /**
-         * Gets the type of ring the item is.
-         * @return {@link int}
-         */
-        public int getRingType()
-        {
-            return ringType;
-        }
-        /**
-         * Gets the value for the stackSize.
-         * @return {@link int}
-         */
-        public int getStackSize()
-        {
-            return stackSize;
-        }
-        /**
-         * Gets the value for the stealvalue.
-         * @return {@link char}
-         */
-        public char getStealvalue()
-        {
-            return stealvalue;
-        }
-        /**
          * Gets the type of weapon an item is.
          * @return {@link int}
          */
-        public int getWeaponType()
+        public int GetWeaponType()
         {
             int type = EquipmentGlobals.WEAPON_BARE;
             if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_DAGGER))
@@ -766,189 +647,22 @@ namespace RPGBase.Flyweights
             }
             return type;
         }
-        /**
-         * Gets the item's weight.
-         * @return {@link float}
-         */
-        public float getWeight()
-        {
-            return weight;
-        }
-        /**
-         * Sets the current number in an inventory slot.
-         * @param val the new value to set
-         */
-        public void setCount(int val)
-        {
-            Count = val;
-        }
-        /**
-         * Sets the {@link IOItemData}'s description.
-         * @param val the name to set
-         * @ if the parameter is null
-         */
-        public void setDescription(char[] val)
-        {
-            if (val == null)
-            {
-                throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                        "Description cannot be null");
-            }
-            description = val;
-        }
-        /**
-         * Sets the {@link IOItemData}'s description.
-         * @param val the name to set
-         * @ if the parameter is null
-         */
-        public void setDescription(String val)
-        {
-            if (val == null)
-            {
-                throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                        "Description cannot be null");
-            }
-            description = val;
-        }
-        /**
-         * Sets the equipitem
-         * @param val the equipitem to set
-         */
-        public void setEquipitem(IOEquipItem val)
-        {
-            this.equipitem = val;
-        }
-        /**
-         * Sets the value of the foodValue.
-         * @param foodValue the new value to set
-         */
-        public void setFoodValue(char foodValue)
-        {
-            this.foodValue = foodValue;
-        }
-        /**
-         * Sets the the BaseInteractiveObject associated with this data.
-         * @param val the new value to set
-         */
-        public void setIo(BaseInteractiveObject val)
-        {
-            io = val;
-            if (val != null
-                    && val.ItemData == null)
-            {
-                val.setItemData(this);
-            }
-        }
-        /**
-         * Sets the item's name.
-         * @param val the name to set
-         * @ if the parameter is null
-         */
-        public void setItemName(char[] val)
-        {
-            if (val == null)
-            {
-                throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                        "Item name cannot be null");
-            }
-            this.itemName = val;
-        }
-        /**
-         * Sets the item's name.
-         * @param val the name to set
-         * @ if the parameter is null
-         */
-        public void setItemName(String val)
-        {
-            if (val == null)
-            {
-                throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                        "Item name cannot be null");
-            }
-            this.itemName = val;
-        }
-        /**
-         * Sets the value of the lightValue.
-         * @param lightValue the new value to set
-         */
-        public void setLightValue(int lightValue)
-        {
-            this.lightValue = lightValue;
-        }
-        /**
-         * Sets the maximum number of the item the player can own.
-         * @param val the new value
-         */
-        public void setMaxOwned(int val)
-        {
-            this.MaxOwned = val;
-        }
-        /**
-         * Sets the item's price.
-         * @param val the price to set
-         */
-        public void setPrice(float val)
-        {
-            price = val;
-        }
-        /**
-         * Sets the type of ring the item is.
-         * @param val the new value to set
-         */
-        public void setRingType(int val)
-        {
-            this.ringType = val;
-        }
-        /**
-         * Sets the amount of the item that can be stacked in one inventory slot.
-         * @param val the value to set
-         */
-        public void setStackSize(int val)
-        {
-            this.stackSize = val;
-        }
-        /**
-         * Sets the value of the stealvalue.
-         * @param stealvalue the new value to set
-         */
-        public void setStealvalue(char stealvalue)
-        {
-            this.stealvalue = stealvalue;
-        }
-        /**
-         * Sets the item's weight.
-         * @param f the weight to set
-         */
-        public void setWeight(float f)
-        {
-            weight = f;
-        }
         private void UnequipItemInSlot(IOCharacter player, int slot)
-
         {
-            if (player.getEquippedItem(slot) >= 0)
+            if (player.GetEquippedItem(slot) >= 0)
             {
-                int slotioid = player.getEquippedItem(slot);
+                int slotioid = player.GetEquippedItem(slot);
                 if (Interactive.GetInstance().hasIO(slotioid))
                 {
                     BaseInteractiveObject equipIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(slotioid);
                     if (equipIO.HasIOFlag(IoGlobals.IO_02_ITEM)
                             && equipIO.ItemData != null)
                     {
-                        equipIO.ItemData.ARX_EQUIPMENT_UnEquip(
-                                player.getIo(), false);
+                        equipIO.ItemData.UnEquip(player.Io, false);
                     }
                     equipIO = null;
                 }
             }
-        }
-        public String getTitle()
-        {
-            return new String(title);
-        }
-        public void setTitle(String val)
-        {
-            title = val;
         }
     }
 }

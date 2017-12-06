@@ -213,9 +213,9 @@ namespace RPGBase.Singletons
             return num;
         }
         /**
-         * Gets a {@link BaseInteractiveObject} by its reference id.
+         * Gets a <see cref="BaseInteractiveObject"/> by its reference id.
          * @param id the reference id
-         * @return {@link BaseInteractiveObject}
+         * @return <see cref="BaseInteractiveObject"/>
          * @ if the object does not exist
          */
         public BaseInteractiveObject getIO(int id)
@@ -244,17 +244,17 @@ namespace RPGBase.Singletons
         }
         /**
          * Gets the internal list of IOs.
-         * @return {@link BaseInteractiveObject}[]
+         * @return <see cref="BaseInteractiveObject"/>[]
          */
         protected abstract BaseInteractiveObject[] getIOs();
         /**
          * Gets the largest reference Id in use.
          * @return {@link int}
          */
-        public abstract int getMaxIORefId();
+        public abstract int GetMaxIORefId();
         /**
          * Gets a new interactive object.
-         * @return {@link BaseInteractiveObject}
+         * @return <see cref="BaseInteractiveObject"/>
          */
         protected abstract BaseInteractiveObject getNewIO();
         /**

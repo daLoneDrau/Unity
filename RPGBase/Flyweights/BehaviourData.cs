@@ -10,7 +10,7 @@ namespace RPGBase.Flyweights
         /** the parameter applied to a behavior. */
         public float BehaviorParam { get; set; }
         /** the behavior flag that has been set. */
-        public int Behaviour { get; set; }
+        public long Behaviour { get; set; }
         /** flag indicating whether the behavior exists. */
         public bool Exists { get; set; }
         /** the movement mode. */
