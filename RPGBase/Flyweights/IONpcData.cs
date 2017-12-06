@@ -258,7 +258,7 @@ namespace RPGBase.Flyweights
             }
         }
         protected abstract void AwardXpForNpcDeath(int xp, BaseInteractiveObject killerIO);
-        public void ChangeBehavior(int newBehavior, long p)
+        public void ChangeBehavior(long newBehavior, long p)
         {
             if (HasBehavior(Behaviour.BEHAVIOUR_FIGHT)
                     && (newBehavior & Behaviour.BEHAVIOUR_FIGHT.GetFlag()) == Behaviour.BEHAVIOUR_FIGHT.GetFlag())

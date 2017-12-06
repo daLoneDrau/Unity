@@ -9,7 +9,7 @@ namespace RPGBase.Flyweights
 {
     public sealed class ScriptVariable
     {
-        /** the floating-point array value the {@link ScriptVariable} references. */
+        /** the floating-point array value the <see cref="ScriptVariable"/> references. */
         private float[] faval;
         public float[] Faval
         {
@@ -23,7 +23,7 @@ namespace RPGBase.Flyweights
                 return faval;
             }
         }
-        /** the floating-point value the {@link ScriptVariable} references. */
+        /** the floating-point value the <see cref="ScriptVariable"/> references. */
         private float fval;
         public float Fval
         {
@@ -37,7 +37,7 @@ namespace RPGBase.Flyweights
                 return fval;
             }
         }
-        /** the integer array value the {@link ScriptVariable} references. */
+        /** the integer array value the <see cref="ScriptVariable"/> references. */
         private int[] iaval;
         public int[] Iaval
         {
@@ -51,7 +51,7 @@ namespace RPGBase.Flyweights
                 return iaval;
             }
         }
-        /** the integer value the {@link ScriptVariable} references. */
+        /** the integer value the <see cref="ScriptVariable"/> references. */
         private int ival;
         public int Ival
         {
@@ -65,7 +65,7 @@ namespace RPGBase.Flyweights
                 return ival;
             }
         }
-        /** the long array value the {@link ScriptVariable} references. */
+        /** the long array value the <see cref="ScriptVariable"/> references. */
         private long[] laval;
         public long[] Laval
         {
@@ -79,7 +79,7 @@ namespace RPGBase.Flyweights
                 return laval;
             }
         }
-        /** the long value the {@link ScriptVariable} references. */
+        /** the long value the <see cref="ScriptVariable"/> references. */
         private long lval;
         public long Lval
         {
@@ -93,7 +93,7 @@ namespace RPGBase.Flyweights
                 return lval;
             }
         }
-        /** the {@link ScriptVariable}'s name. */
+        /** the <see cref="ScriptVariable"/>'s name. */
         private string name;
         public string Name
         {
@@ -115,10 +115,10 @@ namespace RPGBase.Flyweights
             }
         }
 
-        /** the string value the {@link ScriptVariable} references. */
+        /** the string value the <see cref="ScriptVariable"/> references. */
         private string text;
         /// <summary>
-        /// the string value the {@link ScriptVariable} references.
+        /// the string value the <see cref="ScriptVariable"/> references.
         /// </summary>
         public string Text
         {
@@ -127,14 +127,18 @@ namespace RPGBase.Flyweights
                 if (type != ScriptConsts.TYPE_G_00_TEXT
                         && type != ScriptConsts.TYPE_L_08_TEXT)
                 {
-                    throw new RPGException(
-                            ErrorMessage.INTERNAL_ERROR, "Not a String variable");
+                    throw new RPGException(ErrorMessage.INTERNAL_ERROR, "Not a String variable");
                 }
                 return text;
             }
         }
-        /** the string array value the {@link ScriptVariable} references. */
+        /// <summary>
+        /// the string array value the <see cref="ScriptVariable"/> references.
+        /// </summary>
         private string[] textaval;
+        /// <summary>
+        /// the string array value the <see cref="ScriptVariable"/> references.
+        /// </summary>
         public string[] Textaval
         {
             get
@@ -148,9 +152,9 @@ namespace RPGBase.Flyweights
                 return textaval;
             }
         }
-        /** the {@link ScriptVariable}'s type. */
+        /** the <see cref="ScriptVariable"/>'s type. */
         private int type;
-        /** the {@link ScriptVariable}'s type. */
+        /** the <see cref="ScriptVariable"/>'s type. */
         public int Type
         {
             get
@@ -165,7 +169,7 @@ namespace RPGBase.Flyweights
             }
         }
         /**
-         * Creates a new instance of {@link ScriptVariable}.
+         * Creates a new instance of <see cref="ScriptVariable"/>.
          * @param newName the variable name
          * @param newType the variable type
          * @param value the variable value
@@ -187,7 +191,7 @@ namespace RPGBase.Flyweights
             Set(value);
         }
         /**
-         * Creates a new instance of {@link ScriptVariable}.
+         * Creates a new instance of <see cref="ScriptVariable"/>.
          * @param newName the variable name
          * @param newType the variable type
          * @param value the variable value
@@ -243,7 +247,7 @@ namespace RPGBase.Flyweights
             textaval = null;
         }
         /**
-         * Sets a value in the array the {@link ScriptVariable} references.
+         * Sets a value in the array the <see cref="ScriptVariable"/> references.
          * @param index the array index
          * @param value the value to set
          * @ if the type is invalid
@@ -401,7 +405,7 @@ namespace RPGBase.Flyweights
             }
         }
         /**
-         * Sets the value the {@link ScriptVariable} references.
+         * Sets the value the <see cref="ScriptVariable"/> references.
          * @param value the floating-point array value to set
          * @ if the type is invalid
          */
