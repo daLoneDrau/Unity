@@ -18,7 +18,7 @@ namespace RPGBase.Flyweights
         /// the <see cref="BaseInteractiveObject"/> associated with this <see cref="InventoryData"/>.
         /// </summary>
         public BaseInteractiveObject Io { get; set; }
-        /** the array of local {@link ScriptVariable}s. */
+        /** the array of local <see cref="ScriptVariable"/>s. */
         private ScriptVariable[] lvar;
         /** the master script. */
         /// <summary>
@@ -29,6 +29,10 @@ namespace RPGBase.Flyweights
         /// the list of script timers.
         /// </summary>
         private int[] timers;
+        /// <summary>
+        /// Shorthand method to get the type variable.
+        /// </summary>
+        protected string Type { get { return GetLocalStringVariableValue("type"); } }
         /// <summary>
         /// Creates a new instance of <see cref="Scriptable"/>.
         /// </summary>
@@ -588,10 +592,6 @@ namespace RPGBase.Flyweights
             return timers[index];
         }
         /// <summary>
-        /// Shorthand method to get the type variable.
-        /// </summary>
-        protected string Type { get { return GetLocalStringVariableValue("type"); } }
-        /// <summary>
         /// Determines if the <see cref="Scriptable"/> allows a specific event.
         /// </summary>
         /// <param name="e">the event flag</param>
@@ -828,6 +828,10 @@ namespace RPGBase.Flyweights
         {
             return ScriptConsts.ACCEPT;
         }
+        public int OnMiscReflection()
+        {
+            return ScriptConsts.ACCEPT;
+        }
         /// <summary>
         /// On BaseInteractiveObject traveling on the game map.
         /// </summary>
@@ -841,6 +845,18 @@ namespace RPGBase.Flyweights
         /// </summary>
         /// <returns></returns>
         public int OnOuch()
+        {
+            return ScriptConsts.ACCEPT;
+        }
+        public int OnOtherReflection()
+        {
+            return ScriptConsts.ACCEPT;
+        }
+        public int OnPathfinderFailure()
+        {
+            return ScriptConsts.ACCEPT;
+        }
+        public int OnSpellEnd()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -945,11 +961,11 @@ namespace RPGBase.Flyweights
                 throw ex;
             }
         }
-        /**
-         * Sets a local {@link ScriptVariable}.
-         * @param svar the local {@link ScriptVariable}
-         */
-        public void setLocalVariable(ScriptVariable svar)
+        /// <summary>
+        /// Sets a local <see cref="ScriptVariable"/>.
+        /// </summary>
+        /// <param name="svar">the local <see cref="ScriptVariable"/></param>
+        public void SetLocalVariable(ScriptVariable svar)
         {
             if (svar != null)
             {
@@ -958,7 +974,7 @@ namespace RPGBase.Flyweights
                 {
                     if (lvar[i] != null
                             && lvar[i].Name != null
-                            && lvar[i].Name.equalsIgnoreCase(svar.Name))
+                            && string.Equals(lvar[i].Name, svar.Name, StringComparison.OrdinalIgnoreCase))
                     {
                         lvar[i] = svar;
                         found = true;
@@ -988,14 +1004,12 @@ namespace RPGBase.Flyweights
                 }
             }
         }
-        /**
-         * Sets a global variable.
-         * @param name the name of the global variable
-         * @param value the variable's value
-         * @ if an error occurs
-         */
-        public void setLocalVariable(string name, Object value)
-
+        /// <summary>
+        /// Sets a local variable.
+        /// </summary>
+        /// <param name="name">he name of the global variable</param>
+        /// <param name="value">the variable's value</param>
+        public void SetLocalVariable(string name, Object value)
         {
             bool found = false;
             for (int i = 0, len = lvar.Length; i < len; i++)
@@ -1003,9 +1017,9 @@ namespace RPGBase.Flyweights
                 ScriptVariable svar = lvar[i];
                 if (svar != null
                         && svar.Name != null
-                        && svar.Name.equalsIgnoreCase(name))
+                        && string.Equals(svar.Name, name, StringComparison.OrdinalIgnoreCase))
                 {
-                    svar.set(value);
+                    svar.Set(value);
                     found = true;
                     break;
                 }
@@ -1026,7 +1040,7 @@ namespace RPGBase.Flyweights
                     svar = new ScriptVariable(name,
                             ScriptConsts.TYPE_L_09_TEXT_ARR, value);
                 }
-                else if (value is Float)
+                else if (value is float)
                 {
                     svar = new ScriptVariable(name, ScriptConsts.TYPE_L_10_FLOAT,
                             value);
@@ -1041,7 +1055,7 @@ namespace RPGBase.Flyweights
                     svar = new ScriptVariable(name,
                             ScriptConsts.TYPE_L_11_FLOAT_ARR, value);
                 }
-                else if (value is Integer)
+                else if (value is int)
                 {
                     svar = new ScriptVariable(name, ScriptConsts.TYPE_L_12_INT,
                             value);
@@ -1051,7 +1065,7 @@ namespace RPGBase.Flyweights
                     svar = new ScriptVariable(name,
                             ScriptConsts.TYPE_L_13_INT_ARR, value);
                 }
-                else if (value is Long)
+                else if (value is long)
                 {
                     svar = new ScriptVariable(name, ScriptConsts.TYPE_L_14_LONG,
                             value);
@@ -1063,14 +1077,13 @@ namespace RPGBase.Flyweights
                 }
                 else
                 {
-                    PooledStringBuilder sb =
-                            StringBuilderPool.GetInstance().GetStringBuilder();
+                    PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
                     try
                     {
                         sb.Append("Local variable ");
                         sb.Append(name);
                         sb.Append(" was passed new value of type ");
-                        sb.Append(value.getClass().getCanonicalName());
+                        sb.Append(value.GetType().Name);
                         sb.Append(". Only string, Float, float[], Integer, int[],");
                         sb.Append(" Long, or long[] allowed.");
                     }
@@ -1078,8 +1091,7 @@ namespace RPGBase.Flyweights
                     {
                         throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
                     }
-                    RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM,
-                            sb.ToString());
+                    RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM, sb.ToString());
                     sb.ReturnToPool();
                     sb = null;
                     throw ex;
@@ -1087,41 +1099,37 @@ namespace RPGBase.Flyweights
                 lvar = ArrayUtilities.GetInstance().ExtendArray(svar, lvar);
             }
         }
-        public void SetTarget(TargetParameters params)
-
+        public void SetTarget(TargetParameters p)
         {
-            if (io.HasIOFlag(IoGlobals.IO_03_NPC))
+            if (Io.HasIOFlag(IoGlobals.IO_03_NPC))
             {
-                io.NpcData.getPathfinding()
-                        .RemoveFlag(ScriptConsts.PATHFIND_ALWAYS);
-                io.NpcData.getPathfinding()
-                        .RemoveFlag(ScriptConsts.PATHFIND_ONCE);
-                io.NpcData.getPathfinding()
-                        .RemoveFlag(ScriptConsts.PATHFIND_NO_UPDATE);
-                if (params.HasFlag(ScriptConsts.PATHFIND_ALWAYS)) {
-                    io.NpcData.getPathfinding()
-                            .AddFlag(ScriptConsts.PATHFIND_ALWAYS);
+                /*
+                Io.NpcData.getPathfinding().RemoveFlag(ScriptConsts.PATHFIND_ALWAYS);
+                Io.NpcData.getPathfinding().RemoveFlag(ScriptConsts.PATHFIND_ONCE);
+                Io.NpcData.getPathfinding().RemoveFlag(ScriptConsts.PATHFIND_NO_UPDATE);
+                if (p.HasFlag(ScriptConsts.PATHFIND_ALWAYS))
+                {
+                    Io.NpcData.getPathfinding().AddFlag(ScriptConsts.PATHFIND_ALWAYS);
                 }
-                if (params.HasFlag(ScriptConsts.PATHFIND_ONCE)) {
-                    io.NpcData.getPathfinding()
-                            .AddFlag(ScriptConsts.PATHFIND_ONCE);
+                if (p.HasFlag(ScriptConsts.PATHFIND_ONCE))
+                {
+                    Io.NpcData.getPathfinding().AddFlag(ScriptConsts.PATHFIND_ONCE);
                 }
-                if (params.HasFlag(ScriptConsts.PATHFIND_NO_UPDATE)) {
-                    io.NpcData.getPathfinding()
-                            .AddFlag(ScriptConsts.PATHFIND_NO_UPDATE);
+                if (p.HasFlag(ScriptConsts.PATHFIND_NO_UPDATE))
+                {
+                    Io.NpcData.getPathfinding().AddFlag(ScriptConsts.PATHFIND_NO_UPDATE);
                 }
                 int old_target = -12;
-                if (io.NpcData.hasReachedtarget())
+                if (Io.NpcData.hasReachedtarget())
                 {
-                    old_target = io.Targetinfo;
+                    old_target = Io.Targetinfo;
                 }
-                if (io.NpcData.HasBehavior(Behaviour.BEHAVIOUR_FLEE)
-                        || io.NpcData
-                                .HasBehavior(Behaviour.BEHAVIOUR_WANDER_AROUND))
+                if (Io.NpcData.HasBehavior(Behaviour.BEHAVIOUR_FLEE)
+                        || Io.NpcData.HasBehavior(Behaviour.BEHAVIOUR_WANDER_AROUND))
                 {
                     old_target = -12;
                 }
-                int t = params.getTargetInfo();
+                int t = p.getTargetInfo();
 
                 if (t == -2)
                 {
@@ -1135,55 +1143,39 @@ namespace RPGBase.Flyweights
                 // }
                 if (t == ScriptConsts.TARGET_PATH)
                 {
-                    io.setTargetinfo(t); // TARGET_PATH;
+                    Io.setTargetinfo(t); // TARGET_PATH;
                     getTargetPos(io, 0);
                 }
                 else if (t == ScriptConsts.TARGET_NONE)
                 {
-                    io.setTargetinfo(ScriptConsts.TARGET_NONE);
+                    Io.setTargetinfo(ScriptConsts.TARGET_NONE);
                 }
                 else
                 {
                     if (Interactive.GetInstance().hasIO(t))
                     {
-                        io.setTargetinfo(t); // TARGET_PATH;
+                        Io.setTargetinfo(t); // TARGET_PATH;
                         getTargetPos(io, 0);
                     }
                 }
 
                 if (old_target != t)
                 {
-                    io.NpcData.setReachedtarget(false);
+                    Io.NpcData.setReachedtarget(false);
 
                     // ARX_NPC_LaunchPathfind(io, t);
                 }
+                */
             }
         }
-        /**
-         * Sets the reference id of the {@link ScriptTimer} found at a specific
-         * index.
-         * @param index the index
-         * @param refId the reference id
-         */
+        /// <summary>
+        /// Sets the reference id of the <see cref="ScriptTimer"/> found at a specific index.
+        /// </summary>
+        /// <param name="index">the index</param>
+        /// <param name="refId">the reference id</param>
         public void SetTimer(int index, int refId)
         {
             timers[index] = refId;
-        }
-        public int OnOtherReflection()
-        {
-            return ScriptConsts.ACCEPT;
-        }
-        public int OnMiscReflection()
-        {
-            return ScriptConsts.ACCEPT;
-        }
-        public int OnPathfinderFailure()
-        {
-            return ScriptConsts.ACCEPT;
-        }
-        public int OnSpellEnd()
-        {
-            return ScriptConsts.ACCEPT;
         }
     }
 }

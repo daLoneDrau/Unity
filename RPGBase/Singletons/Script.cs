@@ -102,10 +102,10 @@ namespace RPGBase.Singletons
         protected abstract void clearAdditionalEventStacks();
         protected abstract void clearAdditionalEventStacksForIO(BaseInteractiveObject io);
         /**
-         * Clones all local variables from the source {@link BaseInteractiveObject} to the destination
-         * {@link BaseInteractiveObject}.
-         * @param src the source {@link BaseInteractiveObject}
-         * @param dest the destination {@link BaseInteractiveObject}
+         * Clones all local variables from the source <see cref="BaseInteractiveObject"/> to the destination
+         * <see cref="BaseInteractiveObject"/>.
+         * @param src the source <see cref="BaseInteractiveObject"/>
+         * @param dest the destination <see cref="BaseInteractiveObject"/>
          * @ if an error occurs
          */
         public void cloneLocalVars(BaseInteractiveObject src, BaseInteractiveObject dest)
@@ -367,8 +367,8 @@ public void freeAllGlobalVariables()
     }
 }
 /**
- * Removes all local variables from an {@link BaseInteractiveObject} and frees up the memory.
- * @param io the {@link BaseInteractiveObject}
+ * Removes all local variables from an <see cref="BaseInteractiveObject"/> and frees up the memory.
+ * @param io the <see cref="BaseInteractiveObject"/>
  * @ if an error occurs
  */
 public void freeAllLocalVariables(BaseInteractiveObject io)
@@ -396,7 +396,7 @@ public void freeAllLocalVariables(BaseInteractiveObject io)
 }
 /**
  * Gets the EVENT_SENDER global.
- * @return {@link BaseInteractiveObject}
+ * @return <see cref="BaseInteractiveObject"/>
  */
 public BaseInteractiveObject getEventSender()
 {

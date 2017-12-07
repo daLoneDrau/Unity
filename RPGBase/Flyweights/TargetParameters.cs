@@ -6,7 +6,7 @@ using RPGBase.Constants;
 
 namespace RPGBase.Flyweights
 {
-    class TargetParameters
+    public class TargetParameters
     {
         private long flags;
         private int TargetInfo { get; set; } = -1;
