@@ -67,9 +67,9 @@ namespace RPGBase.Flyweights
                     && itemIO != null
                     && itemIO.HasIOFlag(IoGlobals.IO_02_ITEM)
                     && itemIO.ItemData != null
-                    && itemIO.ItemData.getEquipitem() != null)
+                    && itemIO.ItemData.Equipitem != null)
             {
-                if (playerIO.PcData.CanIdentifyEquipment(itemIO.ItemData.getEquipitem()))
+                if (playerIO.PcData.CanIdentifyEquipment(itemIO.ItemData.Equipitem))
                 {
                     Script.GetInstance().SendIOScriptEvent(itemIO, ScriptConsts.SM_69_IDENTIFY, null, "");
                 }

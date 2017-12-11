@@ -9,17 +9,16 @@ namespace RPGBase.Singletons
         /// the singleton instance.
         /// </summary>
         private static Interactive instance;
-        /// <summary>
-        /// Gets the one and only instance of <see cref="Interactive"/>.
-        /// </summary>
-        /// <returns><see cref="Interactive"/></returns>
-        public static Interactive GetInstance()
+        public static Interactive Instance
         {
-            if (Interactive.instance == null)
+            get
             {
-                Interactive.instance = new Interactive();
+                if (instance == null)
+                {
+                    instance = new Interactive();
+                }
+                return instance;
             }
-            return Interactive.instance;
         }
         private bool FAST_RELEASE;
         /**
@@ -264,7 +263,7 @@ namespace RPGBase.Singletons
          * @return {@link int}
          * @ if an error occurs
          */
-        public int getTargetByNameTarget(String name)
+        public int getTargetByNameTarget(string name)
 
         {
             int ioid = -1;
@@ -288,7 +287,7 @@ namespace RPGBase.Singletons
                         if (io.hasIOFlag(IoGlobals.IO_03_NPC))
                         {
                             if (name.equalsIgnoreCase(
-                                    new String(io.getNPCData().getName())))
+                                    new string(io.getNPCData().getName())))
                             {
                                 ioid = io.getRefId();
                                 break;
@@ -297,7 +296,7 @@ namespace RPGBase.Singletons
                         else if (io.hasIOFlag(IoGlobals.IO_02_ITEM))
                         {
                             if (name.equalsIgnoreCase(
-                                    new String(io.getItemData().getItemName())))
+                                    new string(io.getItemData().getItemName())))
                             {
                                 ioid = io.getRefId();
                                 break;
@@ -382,8 +381,8 @@ namespace RPGBase.Singletons
                             && io0.getOverscript() == null
                             && io1.getOverscript() == null)
                     {
-                        String n0 = new String(io0.getItemData().getItemName());
-                        String n1 = new String(io1.getItemData().getItemName());
+                        string n0 = new string(io0.getItemData().getItemName());
+                        string n1 = new string(io1.getItemData().getItemName());
                         if (n0.equalsIgnoreCase(n1))
                         {
                             same = true;
@@ -399,7 +398,7 @@ namespace RPGBase.Singletons
          * @param temp the temp object
          * @
          */
-        public void prepareSetWeapon(BaseInteractiveObject io, String temp)
+        public void prepareSetWeapon(BaseInteractiveObject io, string temp)
 
         {
             if (io != null

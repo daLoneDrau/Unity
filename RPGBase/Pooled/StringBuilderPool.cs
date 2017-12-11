@@ -9,20 +9,20 @@ namespace RPGBase.Pooled
     public sealed class StringBuilderPool
     {
         /// <summary>
-        /// the one and only instance of the <see cref="StringBuilderPool"/> class.
+        /// the singleton instance.
         /// </summary>
         private static StringBuilderPool instance;
-        /// <summary>
-        /// Gives access to the singleton instance of <see cref="StringBuilderPool"/>.
-        /// </summary>
-        public static StringBuilderPool GetInstance()
+        public static StringBuilderPool Instance
         {
-            const int initialLength = 5;
-            if (StringBuilderPool.instance == null)
+            get
             {
-                StringBuilderPool.instance = new StringBuilderPool(initialLength);
+                const int initialLength = 5;
+                if (instance == null)
+                {
+                    instance = new StringBuilderPool(initialLength);
+                }
+                return instance;
             }
-            return StringBuilderPool.instance;
         }
         /// <summary>
         /// the flags for each pool item indicating whether it is locked or not.

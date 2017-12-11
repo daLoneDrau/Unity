@@ -147,9 +147,9 @@ namespace RPGBase.Flyweights
                     BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.GetInstance().getIO(equippedItems[i]);
                     if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
                             && toequip.ItemData != null
-                            && toequip.ItemData.getEquipitem() != null)
+                            && toequip.ItemData.Equipitem != null)
                     {
-                        EquipmentItemModifier element = toequip.ItemData.getEquipitem().getElement(elementType);
+                        EquipmentItemModifier element = toequip.ItemData.Equipitem.GetElementModifier(elementType);
                         if (!element.Percent)
                         {
                             toadd += element.Value;
@@ -180,9 +180,9 @@ namespace RPGBase.Flyweights
                     BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.GetInstance().getIO(equippedItems[i]);
                     if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
                             && toequip.ItemData != null
-                            && toequip.ItemData.getEquipitem() != null)
+                            && toequip.ItemData.Equipitem != null)
                     {
-                        EquipmentItemModifier element = toequip.ItemData.getEquipitem().getElement(elementType);
+                        EquipmentItemModifier element = toequip.ItemData.Equipitem.GetElementModifier(elementType);
                         if (element.Percent)
                         {
                             toadd += element.Value;

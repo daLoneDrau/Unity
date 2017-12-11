@@ -3,17 +3,9 @@
     public abstract class ProjectConstants
     {
         /// <summary>
-        /// the one and only instance of the <see cref="ProjectConstants"/> class.
+        /// the singleton instance.
         /// </summary>
-        private static ProjectConstants instance;
-        /// <summary>
-        /// Gives access to the singleton instance of <see cref="ProjectConstants"/>.
-        /// </summary>
-        /// <returns><see cref="ProjectConstants"/></returns>
-        public static ProjectConstants GetInstance()
-        {
-            return ProjectConstants.instance;
-        }
+        public static ProjectConstants Instance { get; protected set; }
         /// <summary>
         /// Creates a new instance of <see cref="ProjectConstants"/>.
         /// </summary>
@@ -39,13 +31,5 @@
         /// </summary>
         /// <returns></returns>
         public abstract int GetPlayer();
-        /// <summary>
-        /// Sets the global instance.
-        /// </summary>
-        /// <param name="value">the instance</param>
-        protected void SetInstance(ProjectConstants value)
-        {
-            ProjectConstants.instance = value;
-        }
     }
 }

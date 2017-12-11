@@ -7,13 +7,12 @@ namespace RPGBase.Singletons
     public sealed class Diceroller
     {
         /// <summary>
-        /// the singleton instance.
+        /// the one and only instance of the <see cref="Diceroller"/> class.
         /// </summary>
         private static Diceroller instance;
         /// <summary>
-        /// Gets the one and only instance of <see cref="Diceroller"/>.
+        /// Gives access to the singleton instance of <see cref="Diceroller"/>.
         /// </summary>
-        /// <returns><see cref="Diceroller"/></returns>
         public static Diceroller GetInstance()
         {
             if (Diceroller.instance == null)

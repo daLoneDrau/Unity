@@ -6,19 +6,19 @@ namespace RPGBase.Singletons
     public sealed class ArrayUtilities
     {
         /// <summary>
-        /// the one and only instance of the <see cref="ArrayUtilities"/> class.
+        /// the singleton instance.
         /// </summary>
         private static ArrayUtilities instance;
-        /// <summary>
-        /// Gives access to the singleton instance of <see cref="ArrayUtilities"/>.
-        /// </summary>
-        public static ArrayUtilities GetInstance()
+        public static ArrayUtilities Instance
         {
-            if (ArrayUtilities.instance == null)
+            get
             {
-                ArrayUtilities.instance = new ArrayUtilities();
+                if (instance == null)
+                {
+                    instance = new ArrayUtilities();
+                }
+                return instance;
             }
-            return ArrayUtilities.instance;
         }
         private ArrayUtilities() { }
         /// <summary>
