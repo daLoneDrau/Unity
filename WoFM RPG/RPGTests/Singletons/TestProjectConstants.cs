@@ -11,7 +11,7 @@ namespace RPGTests.Singletons
     {
         public TestProjectConstants()
         {
-            base.SetInstance(this);
+            ProjectConstants.Instance = this;
         }
         public override int GetDamageElementIndex()
         {

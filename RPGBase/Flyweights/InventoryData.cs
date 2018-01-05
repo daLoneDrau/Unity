@@ -13,11 +13,11 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// flag indicating the left ring needs to be replaced.
         /// </summary>
-        private bool LeftRing { get; set; } = false;
+        public bool LeftRing { get; set; } = false;
         /// <summary>
         /// the inventory Slots.
         /// </summary>
-        private InventorySlot[] Slots { get; set; }
+        public InventorySlot[] Slots { get; set; }
         /**
          * Sends messages between an item and its owner that it is now in inventory.
          * @param invOwnerIO the owner
@@ -44,13 +44,13 @@ namespace RPGBase.Flyweights
                 // }
 
                 // send event from item to inventory owner
-                Script.GetInstance().SetEventSender(itemIO);
-                Script.GetInstance().SendIOScriptEvent(invOwnerIO, ScriptConsts.SM_002_INVENTORYIN, new Object[0], null);
+                Script.Instance.EventSender = itemIO;
+                Script.Instance.SendIOScriptEvent(invOwnerIO, ScriptConsts.SM_002_INVENTORYIN, new Object[0], null);
                 // send event from inventory owner to item
-                Script.GetInstance().SetEventSender(invOwnerIO);
-                Script.GetInstance().SendIOScriptEvent(itemIO, ScriptConsts.SM_002_INVENTORYIN, new Object[0], null);
+                Script.Instance.EventSender = invOwnerIO;
+                Script.Instance.SendIOScriptEvent(itemIO, ScriptConsts.SM_002_INVENTORYIN, new Object[0], null);
                 // clear global event sender
-                Script.GetInstance().SetEventSender(null);
+                Script.Instance.EventSender = null;
             }
         }
         /**
@@ -71,7 +71,7 @@ namespace RPGBase.Flyweights
             {
                 if (playerIO.PcData.CanIdentifyEquipment(itemIO.ItemData.Equipitem))
                 {
-                    Script.GetInstance().SendIOScriptEvent(itemIO, ScriptConsts.SM_69_IDENTIFY, null, "");
+                    Script.Instance.SendIOScriptEvent(itemIO, ScriptConsts.SM_069_IDENTIFY, null, "");
                 }
             }
         }
@@ -91,11 +91,11 @@ namespace RPGBase.Flyweights
                 if (itemIO.HasIOFlag(IoGlobals.IO_10_GOLD)
                         && Io.HasIOFlag(IoGlobals.IO_01_PC))
                 {
-                    Io.PcData.AdjustGold(itemIO.ItemData.getPrice());
+                    Io.PcData.AdjustGold(itemIO.ItemData.Price);
                     if (itemIO.ScriptLoaded)
                     {
-                        Interactive.GetInstance().RemoveFromAllInventories(itemIO);
-                        Interactive.GetInstance().releaseIO(itemIO);
+                        Interactive.Instance.RemoveFromAllInventories(itemIO);
+                        Interactive.Instance.ReleaseIO(itemIO);
                     }
                     else
                     {
@@ -111,45 +111,45 @@ namespace RPGBase.Flyweights
                     {
                         BaseInteractiveObject slotIO = (BaseInteractiveObject)Slots[i].Io;
                         if (slotIO != null
-                                && slotIO.ItemData.getStackSize() > 1
-                                && Interactive.GetInstance().isSameObject(itemIO, slotIO))
+                                && slotIO.ItemData.StackSize > 1
+                                && Interactive.Instance.IsSameObject(itemIO, slotIO))
                         {
                             // found a matching item - try to stack
-                            int slotCount = slotIO.ItemData.getCount();
-                            int itemCount = itemIO.ItemData.getCount();
-                            int slotMaxStack = slotIO.ItemData.getStackSize();
+                            int slotCount = slotIO.ItemData.Count;
+                            int itemCount = itemIO.ItemData.Count;
+                            int slotMaxStack = slotIO.ItemData.StackSize;
                             if (slotCount < slotMaxStack)
                             {
                                 // there's room to stack more - stack it
-                                slotIO.ItemData.adjustCount(itemCount);
+                                slotIO.ItemData.AdjustCount(itemCount);
                                 // check to see if too many are stacked
-                                slotCount = slotIO.ItemData.getCount();
+                                slotCount = slotIO.ItemData.Count;
                                 if (slotCount > slotMaxStack)
                                 {
                                     // remove excess from stack
                                     // and put it back into item io
-                                    itemIO.ItemData.setCount(slotCount - slotMaxStack);
-                                    slotIO.ItemData.setCount(slotMaxStack);
+                                    itemIO.ItemData.Count = slotCount - slotMaxStack;
+                                    slotIO.ItemData.Count = slotMaxStack;
                                 }
                                 else
                                 {
                                     // no excess. remove count from item io
-                                    itemIO.ItemData.setCount(0);
+                                    itemIO.ItemData.Count = 0;
                                 }
                                 // was item count set to 0? release the BaseInteractiveObject
-                                if (itemIO.ItemData.getCount() == 0)
+                                if (itemIO.ItemData.Count == 0)
                                 {
                                     if (itemIO.ScriptLoaded)
                                     {
-                                        int inner = Interactive.GetInstance().getMaxIORefId();
+                                        int inner = Interactive.Instance.GetMaxIORefId();
                                         for (; inner >= 0; inner--)
                                         {
-                                            if (Interactive.GetInstance().hasIO(inner))
+                                            if (Interactive.Instance.HasIO(inner))
                                             {
-                                                BaseInteractiveObject innerIO = Interactive.GetInstance().getIO(inner);
+                                                BaseInteractiveObject innerIO = Interactive.Instance.GetIO(inner);
                                                 if (innerIO.Equals(itemIO))
                                                 {
-                                                    Interactive.GetInstance().releaseIO(innerIO);
+                                                    Interactive.Instance.ReleaseIO(innerIO);
                                                     innerIO = null;
                                                 }
                                             }
@@ -217,10 +217,10 @@ namespace RPGBase.Flyweights
                 }
                 if (!handled)
                 {
-                    int i = Interactive.GetInstance().getMaxIORefId();
+                    int i = Interactive.Instance.GetMaxIORefId();
                     for (; i >= 0; i--)
                     {
-                        BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
+                        BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                         if (io != null
                                 && io.Inventory != null)
                         {
@@ -318,18 +318,18 @@ namespace RPGBase.Flyweights
                     && newItemIO != null
                     && !newItemIO.HasIOFlag(IoGlobals.IO_15_MOVABLE))
             {
-                int oldIORefId = Interactive.GetInstance().GetInterNum(oldItemIO);
-                int newIORefId = Interactive.GetInstance().GetInterNum(newItemIO);
-                int i = Interactive.GetInstance().getMaxIORefId();
+                int oldIORefId = Interactive.Instance.GetInterNum(oldItemIO);
+                int newIORefId = Interactive.Instance.GetInterNum(newItemIO);
+                int i = Interactive.Instance.GetMaxIORefId();
                 for (; i >= 0; i--)
                 {
                     if (i == oldIORefId
                             || i == newIORefId
-                            || !Interactive.GetInstance().hasIO(i))
+                            || !Interactive.Instance.HasIO(i))
                     {
                         continue;
                     }
-                    BaseInteractiveObject invOwner = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
+                    BaseInteractiveObject invOwner = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                     if (invOwner.Inventory != null)
                     {
                         InventoryData inv = invOwner.Inventory;
@@ -363,11 +363,10 @@ namespace RPGBase.Flyweights
                             && slotIO.HasGameFlag(IoGlobals.GFLAG_INTERACTIVITY)
                             && slotIO.ItemData != null)
                     {
-                        String ioName =
-                                new String(slotIO.ItemData.getItemName());
+                        String ioName = slotIO.ItemData.ItemName;
                         if (string.Equals(itemName, ioName, StringComparison.OrdinalIgnoreCase))
                         {
-                            Script.GetInstance().SendIOScriptEvent(slotIO, message, null, "");
+                            Script.Instance.SendIOScriptEvent(slotIO, message, null, "");
                             slotIO = null;
                             break;
                         }

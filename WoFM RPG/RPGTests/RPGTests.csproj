@@ -112,6 +112,8 @@
     <Compile Include="Flyweights\EquipmentItemModifierTest.cs" />
     <Compile Include="Flyweights\ScriptVariableTest.cs" />
     <Compile Include="Flyweights\IOEquipItemTest.cs" />
+    <Compile Include="Flyweights\TestBaseInteractiveObject.cs" />
+    <Compile Include="Flyweights\BaseInteractiveObjectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Singletons\DicerollerTest.cs" />
     <Compile Include="Singletons\TestProjectConstants.cs" />

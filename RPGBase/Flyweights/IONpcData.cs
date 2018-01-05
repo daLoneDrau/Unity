@@ -123,7 +123,7 @@ namespace RPGBase.Flyweights
                 weapon = value;
                 if (weapon != null)
                 {
-                    weaponInHand = weapon.GetRefId();
+                    weaponInHand = weapon.RefId;
                 }
                 else
                 {
@@ -141,9 +141,9 @@ namespace RPGBase.Flyweights
             set
             {
                 weaponInHand = value;
-                if (Interactive.GetInstance().hasIO(weaponInHand))
+                if (Interactive.Instance.HasIO(weaponInHand))
                 {
-                    weapon = (BaseInteractiveObject)Interactive.GetInstance().getIO(weaponInHand);
+                    weapon = (BaseInteractiveObject)Interactive.Instance.GetIO(weaponInHand);
                 }
                 else
                 {
@@ -202,18 +202,18 @@ namespace RPGBase.Flyweights
         /// <param name="isSpellDamage">flag indicating whether the damage is from a spell</param>
         private void ApplyPoisonDamage(int srcIoid, bool isSpellDamage)
         {
-            if (Interactive.GetInstance().hasIO(srcIoid))
+            if (Interactive.Instance.HasIO(srcIoid))
             {
                 BaseInteractiveObject poisonWeaponIO = null;
-                BaseInteractiveObject sourceIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(
+                BaseInteractiveObject sourceIO = (BaseInteractiveObject)Interactive.Instance.GetIO(
                         srcIoid);
                 if (sourceIO.HasIOFlag(IoGlobals.IO_01_PC))
                 {
                     IOPcData player = sourceIO.PcData;
                     if (player.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON) > 0
-                            && Interactive.GetInstance().hasIO(player.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON)))
+                            && Interactive.Instance.HasIO(player.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON)))
                     {
-                        poisonWeaponIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(player.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON));
+                        poisonWeaponIO = (BaseInteractiveObject)Interactive.Instance.GetIO(player.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON));
 
                         if (poisonWeaponIO != null
                                 && (poisonWeaponIO.PoisonLevel == 0
@@ -346,7 +346,7 @@ namespace RPGBase.Flyweights
             {
                 if (GetBaseLife() <= 0f)
                 {
-                    damageNonLivingNPC(dmg, srcIoid, isSpellDamage);
+                    DamageNonLivingNPC(dmg, srcIoid, isSpellDamage);
                 }
                 else
                 {
@@ -356,7 +356,7 @@ namespace RPGBase.Flyweights
 
                     if (dmg >= 0f)
                     {
-                        this.applyPoisonDamage(srcIoid, isSpellDamage);
+                        this.ApplyPoisonDamage(srcIoid, isSpellDamage);
                         int accepted = ScriptConsts.ACCEPT;
                         // if BaseInteractiveObject has a script, send HIT event
                         if (io.Script != null)
@@ -398,8 +398,8 @@ namespace RPGBase.Flyweights
                     || (io.Mainevent != null
                             && !string.Equals(io.Mainevent, "DEAD", StringComparison.OrdinalIgnoreCase)))
             {
-                BaseInteractiveObject oldSender = (BaseInteractiveObject)Script.GetInstance().GetEventSender();
-                Script.GetInstance().SetEventSender(killerIO);
+                BaseInteractiveObject oldSender = (BaseInteractiveObject)Script.Instance.EventSender;
+                Script.Instance.EventSender = killerIO;
 
                 // TODO - reset drag BaseInteractiveObject
                 // if (io == DRAGINTER)
@@ -435,16 +435,16 @@ namespace RPGBase.Flyweights
                 // ARX_SPEECH_ReleaseIOSpeech(io);
 
                 // Kill all Timers...
-                Script.GetInstance().TimerClearByIO(io);
+                Script.Instance.TimerClearByIO(io);
 
                 if (io.Mainevent == null
                         || (io.Mainevent != null
                                 && !string.Equals(io.Mainevent, "DEAD", StringComparison.OrdinalIgnoreCase)))
                 {
-                    Script.GetInstance().NotifyIOEvent(io, ScriptConsts.SM_017_DIE, "");
+                    Script.Instance.NotifyIOEvent(io, ScriptConsts.SM_017_DIE, "");
                 }
 
-                if (Interactive.GetInstance().hasIO(io))
+                if (Interactive.Instance.HasIO(io))
                 {
                     io.Mainevent = "DEAD";
 
@@ -459,7 +459,7 @@ namespace RPGBase.Flyweights
 
                     WeaponInHand = -1;
 
-                    Interactive.GetInstance().DestroyDynamicInfo(io);
+                    Interactive.Instance.DestroyDynamicInfo(io);
 
                     // set killer name
                     if (killerIO != null
@@ -472,14 +472,14 @@ namespace RPGBase.Flyweights
                     {
                         killer = killerIO.NpcData.Name;
                     }
-                    int i = Interactive.GetInstance().GetMaxIORefId();
+                    int i = Interactive.Instance.GetMaxIORefId();
                     for (; i >= 0; i--)
                     {
-                        if (!Interactive.GetInstance().hasIO(i))
+                        if (!Interactive.Instance.HasIO(i))
                         {
                             continue;
                         }
-                        BaseInteractiveObject ioo = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
+                        BaseInteractiveObject ioo = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                         if (ioo == null)
                         {
                             continue;
@@ -490,12 +490,12 @@ namespace RPGBase.Flyweights
                         }
                         if (ioo.HasIOFlag(IoGlobals.IO_03_NPC))
                         {
-                            if (Interactive.GetInstance().hasIO(ioo.Targetinfo))
+                            if (Interactive.Instance.HasIO(ioo.Targetinfo))
                             {
-                                if (Interactive.GetInstance().getIO(ioo.Targetinfo).Equals(io))
+                                if (Interactive.Instance.GetIO(ioo.Targetinfo).Equals(io))
                                 {
-                                    Script.GetInstance().SetEventSender(io);
-                                    Script.GetInstance().StackSendIOScriptEvent(ioo,
+                                    Script.Instance.EventSender = io;
+                                    Script.Instance.StackSendIOScriptEvent(ioo,
                                             0,
                                             new Object[] { "killer", killer },
                                             "onTargetDeath");
@@ -529,9 +529,9 @@ namespace RPGBase.Flyweights
                     if (Weapon != null)
                     {
                         BaseInteractiveObject wpnIO = Weapon;
-                        if (Interactive.GetInstance().hasIO(wpnIO))
+                        if (Interactive.Instance.HasIO(wpnIO))
                         {
-                            wpnIO.Show = IoGlobals.SHOW_FLAG_IN_SCENE);
+                            wpnIO.Show = IoGlobals.SHOW_FLAG_IN_SCENE;
                             wpnIO.AddIOFlag(IoGlobals.IO_07_NO_COLLISIONS);
                             // TODO - reset positioning and velocity
                             // ioo->pos.x =
@@ -547,19 +547,9 @@ namespace RPGBase.Flyweights
                         }
                     }
                 }
-                Script.GetInstance().SetEventSender(oldSender);
+                Script.Instance.EventSender = oldSender;
             }
         }
-        /// <summary>
-        /// Gets the IONpcData's base life value from the correct attribute.
-        /// </summary>
-        /// <returns></returns>
-        public abstract float GetBaseLife();
-        /// <summary>
-        /// Gets the IONpcData's base mana value from the correct attribute.
-        /// </summary>
-        /// <returns></returns>
-        public abstract float GetBaseMana();
         /*
         public IOPathfind getPathfinding()
         {
@@ -620,7 +610,7 @@ namespace RPGBase.Flyweights
         public bool IsDeadNPC()
         {
             bool dead = false;
-            if (!hasLifeRemaining())
+            if (!HasLifeRemaining())
             {
                 dead = true;
             }
@@ -644,14 +634,14 @@ namespace RPGBase.Flyweights
             if (GetBaseLife() <= 0f)
             { // IONpcData is dead
               // base life should be 0
-                if (Interactive.GetInstance().hasIO(srcIoid))
+                if (Interactive.Instance.HasIO(srcIoid))
                 {
                     int xp = Xpvalue;
-                    BaseInteractiveObject srcIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(srcIoid);
+                    BaseInteractiveObject srcIO = (BaseInteractiveObject)Interactive.Instance.GetIO(srcIoid);
                     ForceDeath(srcIO);
                     if (srcIO.HasIOFlag(IoGlobals.IO_01_PC))
                     {
-                        awardXpForNpcDeath(xp, srcIO);
+                        AwardXpForNpcDeath(xp, srcIO);
                     }
                 }
                 else
@@ -714,11 +704,11 @@ namespace RPGBase.Flyweights
             // TSecondaryInventory = NULL;
             // }
 
-            Script.GetInstance().SetMainEvent(Io, "MAIN");
+            Script.Instance.SetMainEvent(Io, "MAIN");
 
             Io.RemoveIOFlag(IoGlobals.IO_07_NO_COLLISIONS);
             RestoreLifeToMax();
-            Script.GetInstance().ResetObject(io, true);
+            Script.Instance.ResetObject(io, true);
             RestoreLifeToMax();
 
             if (reposition)
@@ -756,20 +746,20 @@ namespace RPGBase.Flyweights
         /// <returns></returns>
         private int SendHitEvent(float dmg, int srcIoid, bool isSpellDamage)
         {
-            if (Interactive.GetInstance().hasIO(srcIoid))
+            if (Interactive.Instance.HasIO(srcIoid))
             {
-                Script.GetInstance().SetEventSender(Interactive.GetInstance().getIO(srcIoid));
+                Script.Instance.EventSender = Interactive.Instance.GetIO(srcIoid);
             }
             else
             {
-                Script.GetInstance().SetEventSender(null);
+                Script.Instance.EventSender = null;
             }
 
             Object[] p;
-            if (Script.GetInstance().GetEventSender() != null
-                    && Script.GetInstance().GetEventSender().HasIOFlag(IoGlobals.IO_01_PC))
+            if (Script.Instance.EventSender != null
+                    && Script.Instance.EventSender.HasIOFlag(IoGlobals.IO_01_PC))
             {
-                BaseInteractiveObject plrIO = (BaseInteractiveObject)Script.GetInstance().GetEventSender();
+                BaseInteractiveObject plrIO = (BaseInteractiveObject)Script.Instance.EventSender;
                 if (isSpellDamage)
                 {
                     p = new Object[] { "SPELL_DMG", dmg };
@@ -777,7 +767,7 @@ namespace RPGBase.Flyweights
                 else
                 {
                     int wpnId = plrIO.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
-                    BaseInteractiveObject wpnIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
+                    BaseInteractiveObject wpnIO = (BaseInteractiveObject)Interactive.Instance.GetIO(wpnId);
                     int wpnType = EquipmentGlobals.WEAPON_BARE;
                     if (wpnIO != null)
                     {
@@ -814,10 +804,10 @@ namespace RPGBase.Flyweights
             }
             // if player summoned object causing damage,
             // change event sender to player
-            if (SummonerIsPlayer((BaseInteractiveObject)Script.GetInstance().GetEventSender()))
+            if (SummonerIsPlayer((BaseInteractiveObject)Script.Instance.EventSender))
             {
-                BaseInteractiveObject summonerIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(Script.GetInstance().GetEventSender().getSummoner());
-                Script.GetInstance().SetEventSender(summonerIO);
+                BaseInteractiveObject summonerIO = (BaseInteractiveObject)Interactive.Instance.GetIO(Script.Instance.EventSender.Summoner);
+                Script.Instance.EventSender = summonerIO;
                 summonerIO = null;
                 p = new Object[] { "SUMMONED_DMG", dmg };
             }
@@ -827,7 +817,7 @@ namespace RPGBase.Flyweights
                     "SUMMONED_OUCH", 0f,
                     "OUCH", io.DamageSum };
             }
-            return Script.GetInstance().SendIOScriptEvent(io, ScriptConsts.SM_016_HIT, p, null);
+            return Script.Instance.SendIOScriptEvent(io, ScriptConsts.SM_016_HIT, p, null);
         }
         /// <summary>
         /// Sends the IONpcData BaseInteractiveObject an 'Ouch' event.
@@ -839,17 +829,17 @@ namespace RPGBase.Flyweights
         {
             io.DamageSum += dmg;
             // set the event sender
-            if (Interactive.GetInstance().hasIO(srcIoid))
+            if (Interactive.Instance.HasIO(srcIoid))
             {
-                Script.GetInstance().SetEventSender(Interactive.GetInstance().getIO(srcIoid));
+                Script.Instance.EventSender = Interactive.Instance.GetIO(srcIoid);
             }
             else
             {
-                Script.GetInstance().SetEventSender(null);
+                Script.Instance.EventSender = null;
             }
             // check to see if the damage is coming from a summoned object
             Object[] p;
-            if (SummonerIsPlayer((BaseInteractiveObject)Script.GetInstance().GetEventSender()))
+            if (SummonerIsPlayer((BaseInteractiveObject)Script.Instance.EventSender))
             {
                 p = new Object[] {
                     "SUMMONED_OUCH", io.DamageSum,
@@ -861,7 +851,7 @@ namespace RPGBase.Flyweights
                     "SUMMONED_OUCH", 0f,
                     "OUCH", io.DamageSum };
             }
-            Script.GetInstance().SendIOScriptEvent(io, ScriptConsts.SM_045_OUCH, p, null);
+            Script.Instance.SendIOScriptEvent(io, ScriptConsts.SM_045_OUCH, p, null);
             io.DamageSum = 0f;
         }
         public void StackBehavior()
@@ -901,9 +891,9 @@ namespace RPGBase.Flyweights
             if (io != null)
             {
                 int summonerId = io.Summoner;
-                if (Interactive.GetInstance().hasIO(summonerId))
+                if (Interactive.Instance.HasIO(summonerId))
                 {
-                    BaseInteractiveObject summoner = (BaseInteractiveObject)Interactive.GetInstance().getIO(summonerId);
+                    BaseInteractiveObject summoner = (BaseInteractiveObject)Interactive.Instance.GetIO(summonerId);
                     if (summoner.HasIOFlag(IoGlobals.IO_01_PC))
                     {
                         isPlayer = true;

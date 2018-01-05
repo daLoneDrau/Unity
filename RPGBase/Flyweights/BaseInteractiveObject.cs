@@ -1,10 +1,6 @@
 ﻿using System;
-using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using RPGBase.Constants;
-using RPGBase.Pooled;
 
 namespace RPGBase.Flyweights
 {
@@ -20,7 +16,7 @@ namespace RPGBase.Flyweights
         /** any game flags that have been set. */
         private long gameFlags = 0;
         /** the object's init position. */
-        private Vector2 InitPosition { get; set; }
+        //private Vector2 InitPosition { get; set; }
         /// <summary>
         /// the inventory data.
         /// </summary>
@@ -56,11 +52,11 @@ namespace RPGBase.Flyweights
                 itemData = value;
                 if (itemData != null)
                 {
-                    if (itemData.getIo() == null)
+                    if (itemData.Io == null)
                     {
                         itemData.Io = this;
                     }
-                    else if (itemData.getIo().refId != refId)
+                    else if (itemData.Io.RefId != RefId)
                     {
                         itemData.Io = this;
                     }
@@ -81,11 +77,11 @@ namespace RPGBase.Flyweights
                 npcData = value;
                 if (npcData != null)
                 {
-                    if (npcData.getIo() == null)
+                    if (npcData.Io == null)
                     {
                         npcData.Io = this;
                     }
-                    else if (npcData.getIo().refId != refId)
+                    else if (npcData.Io.RefId != RefId)
                     {
                         npcData.Io = this;
                     }
@@ -124,11 +120,11 @@ namespace RPGBase.Flyweights
                 pcData = value;
                 if (pcData != null)
                 {
-                    if (pcData.getIo() == null)
+                    if (pcData.Io == null)
                     {
                         pcData.Io = this;
                     }
-                    else if (pcData.getIo().refId != refId)
+                    else if (pcData.Io.RefId != RefId)
                     {
                         pcData.Io = this;
                     }
@@ -140,11 +136,11 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// the object's position.
         /// </summary>
-        public Vector2 Position { get; set; }
+        //public Vector2 Position { get; set; }
         /// <summary>
         /// the object's reference id.
         /// </summary>
-        private int RefId { get; }
+        public int RefId { get; }
         /// <summary>
         /// primary script associated with the object.
         /// </summary>
@@ -177,7 +173,7 @@ namespace RPGBase.Flyweights
         public int StatCount { get; set; }
         public int StatSent { get; set; }
         public int Summoner { get; set; }
-        public Vector3 Target { get; set; }
+        //public Vector3 Target { get; set; }
         public int Targetinfo { get; set; }
         /// <summary>
         /// any type flags that have been set (is the object a goblin, weapon, etc...).
@@ -187,15 +183,16 @@ namespace RPGBase.Flyweights
         /// the <see cref="BaseInteractiveObject"/>'s weapon material.
         /// </summary>
         public String Weaponmaterial { get; set; }
-        /**
-* Creates a new instance of <see cref="BaseInteractiveObject"/>.
-* @param id the reference id
-*/
+        /// <summary>
+        /// Creates a new instance of <see cref="BaseInteractiveObject"/>.
+        /// </summary>
+        /// <param name="id">the reference id</param>
         protected BaseInteractiveObject(int id)
         {
             RefId = id;
             spellcastData = new IOSpellCastData();
-            Target = new Vector3();
+            // TODO - handle Target
+            //Target = new Vector3();
         }
         /**
          * Adds a behavior flag.
@@ -312,7 +309,7 @@ namespace RPGBase.Flyweights
                         && this.gameFlags == other.gameFlags
                         && this.ioFlags == other.ioFlags
                         && this.numberOfSpellsOn == other.numberOfSpellsOn
-                        && this.refId == other.refId)
+                        && this.RefId == other.RefId)
                 {
                     equals = true;
                 }
@@ -334,7 +331,7 @@ namespace RPGBase.Flyweights
          */
         public int GetNumberOfSpellsOn()
         {
-            return numberOfSpellsOn;
+            return spellsOn.Count;
         }
         /**
          * Gets the number of BaseInteractiveObject groups to which the BaseInteractiveObject belongs.
@@ -343,14 +340,6 @@ namespace RPGBase.Flyweights
         public int GetNumIOGroups()
         {
             return this.ioGroups.Count;
-        }
-        /**
-         * Gets the <see cref="BaseInteractiveObject"/>'s reference id.
-         * @return int
-         */
-        public int GetRefId()
-        {
-            return refId;
         }
         /**
          * Gets the spellcast_data

@@ -385,7 +385,7 @@ namespace RPGBase.Flyweights
             if (throwException)
             {
                 PooledStringBuilder sb =
-                        StringBuilderPool.GetInstance().GetStringBuilder();
+                        StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Invalid array ScriptVariable type - ");
@@ -659,7 +659,7 @@ namespace RPGBase.Flyweights
             if (throwException)
             {
                 PooledStringBuilder sb =
-                        StringBuilderPool.GetInstance().GetStringBuilder();
+                        StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Invalid value ");
@@ -687,7 +687,7 @@ namespace RPGBase.Flyweights
                     || type > ScriptConsts.TYPE_L_15_LONG_ARR)
             {
                 PooledStringBuilder sb =
-                        StringBuilderPool.GetInstance().GetStringBuilder();
+                        StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Invalid ScriptVariable type - ");

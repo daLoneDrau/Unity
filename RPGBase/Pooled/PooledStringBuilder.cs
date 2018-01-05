@@ -41,7 +41,7 @@ namespace RPGBase.Pooled
         /// </summary>
         public void Append(char c)
         {
-            if (StringBuilderPool.GetInstance().IsItemLocked(this))
+            if (StringBuilderPool.Instance.IsItemLocked(this))
             {
                 stringBuilder.Append(c);
             }
@@ -66,7 +66,7 @@ namespace RPGBase.Pooled
         /// </summary>
         public void Append(char[] str)
         {
-            if (StringBuilderPool.GetInstance().IsItemLocked(this))
+            if (StringBuilderPool.Instance.IsItemLocked(this))
             {
                 stringBuilder.Append(new String(str));
             }
@@ -91,7 +91,7 @@ namespace RPGBase.Pooled
         /// </summary>
         public void Append(float f)
         {
-            if (StringBuilderPool.GetInstance().IsItemLocked(this))
+            if (StringBuilderPool.Instance.IsItemLocked(this))
             {
                 stringBuilder.Append(f);
             }
@@ -116,7 +116,7 @@ namespace RPGBase.Pooled
         /// </summary>
         public void Append(int i)
         {
-            if (StringBuilderPool.GetInstance().IsItemLocked(this))
+            if (StringBuilderPool.Instance.IsItemLocked(this))
             {
                 stringBuilder.Append(i);
             }
@@ -141,7 +141,7 @@ namespace RPGBase.Pooled
         /// </summary>
         public void Append(object o)
         {
-            if (StringBuilderPool.GetInstance().IsItemLocked(this))
+            if (StringBuilderPool.Instance.IsItemLocked(this))
             {
                 stringBuilder.Append(o);
             }
@@ -166,7 +166,7 @@ namespace RPGBase.Pooled
         /// </summary>
         public void Append(string str)
         {
-            if (StringBuilderPool.GetInstance().IsItemLocked(this))
+            if (StringBuilderPool.Instance.IsItemLocked(this))
             {
                 stringBuilder.Append(str);
             }
@@ -200,9 +200,9 @@ namespace RPGBase.Pooled
         public void ReturnToPool()
         {
             stringBuilder.Length = 0;
-            if (StringBuilderPool.GetInstance().IsItemLocked(this))
+            if (StringBuilderPool.Instance.IsItemLocked(this))
             {
-                StringBuilderPool.GetInstance().UnlockItem(this);
+                StringBuilderPool.Instance.UnlockItem(this);
             }
         }
         /// <summary>

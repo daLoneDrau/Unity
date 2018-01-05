@@ -163,15 +163,15 @@ namespace RPGBase.Flyweights
         /// </summary>
         public void BecomesDead()
         {
-            int i = ProjectConstants.GetInstance().GetMaxSpells() - 1;
+            int i = ProjectConstants.Instance.GetMaxSpells() - 1;
             for (; i >= 0; i--)
             {
-                Spell spell = SpellController.GetInstance().getSpell(i);
-                if (spell.exists()
-                        && spell.getCaster() == io.GetRefId())
+                Spell spell = SpellController.Instance.GetSpell(i);
+                if (spell.Exists
+                        && spell.Caster == io.RefId)
                 {
-                    spell.setTimeToLive(0);
-                    spell.setTurnsToLive(0);
+                    spell.TimeToLive = 0;
+                    spell.TurnsToLive = 0;
                 }
             }
         }
@@ -212,34 +212,34 @@ namespace RPGBase.Flyweights
 
                 // TODO - add timer for ouch
                 // if (ARXTime > inter.iobj[0]->ouch_time + 500) {
-                BaseInteractiveObject oes = (BaseInteractiveObject)Script.GetInstance().GetEventSender();
+                BaseInteractiveObject oes = (BaseInteractiveObject)Script.Instance.EventSender;
 
-                if (Interactive.GetInstance().hasIO(source))
+                if (Interactive.Instance.HasIO(source))
                 {
-                    Script.GetInstance().SetEventSender(Interactive.GetInstance().getIO(source));
+                    Script.Instance.EventSender = Interactive.Instance.GetIO(source);
                 }
                 else
                 {
-                    Script.GetInstance().SetEventSender(null);
+                    Script.Instance.EventSender = null;
                 }
-                Script.GetInstance().SendIOScriptEvent(io,
+                Script.Instance.SendIOScriptEvent(io,
                         ScriptConsts.SM_045_OUCH,
                         new Object[] { "OUCH", io.DamageSum, "SUMMONED_OUCH", 0f },
                         null);
-                Script.GetInstance().SetEventSender(oes);
+                Script.Instance.EventSender = oes;
                 io.DamageSum = 0;
                 // }
 
                 if (dmg > 0f)
                 {
-                    if (Interactive.GetInstance().hasIO(source))
+                    if (Interactive.Instance.HasIO(source))
                     {
                         BaseInteractiveObject poisonWeaponIO = null;
-                        BaseInteractiveObject sourceIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(source);
+                        BaseInteractiveObject sourceIO = (BaseInteractiveObject)Interactive.Instance.GetIO(source);
 
                         if (sourceIO.HasIOFlag(IoGlobals.IO_03_NPC))
                         {
-                            poisonWeaponIO = (BaseInteractiveObject)sourceIO.NpcData.getWeapon();
+                            poisonWeaponIO = (BaseInteractiveObject)sourceIO.NpcData.Weapon;
                             if (poisonWeaponIO != null
                                     && (poisonWeaponIO.PoisonLevel == 0
                                             || poisonWeaponIO.PoisonCharges == 0))
@@ -292,26 +292,26 @@ namespace RPGBase.Flyweights
                             // ARX_SOUND_PlayInterface(SND_PLAYER_DEATH_BY_FIRE);
                             // }
 
-                            Script.GetInstance().SendIOScriptEvent(io, ScriptConsts.SM_017_DIE, null, null);
+                            Script.Instance.SendIOScriptEvent(io, ScriptConsts.SM_017_DIE, null, null);
 
-                            int i = Interactive.GetInstance().getMaxIORefId();
+                            int i = Interactive.Instance.GetMaxIORefId();
                             for (; i >= 0; i--)
                             {
-                                if (!Interactive.GetInstance().hasIO(i))
+                                if (!Interactive.Instance.HasIO(i))
                                 {
                                     continue;
                                 }
-                                BaseInteractiveObject ioo = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
+                                BaseInteractiveObject ioo = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                                 // tell all IOs not to target player anymore
                                 if (ioo != null
                                         && ioo.HasIOFlag(IoGlobals.IO_03_NPC))
                                 {
-                                    if (ioo.Targetinfo == io.GetRefId()
+                                    if (ioo.Targetinfo == io.RefId
                                             || ioo.Targetinfo == IoGlobals.TARGET_PLAYER)
                                     {
-                                        Script.GetInstance().SetEventSender(io);
+                                        Script.Instance.EventSender = io;
                                         String killer = "";
-                                        if (source == io.GetRefId())
+                                        if (source == io.RefId)
                                         {
                                             killer = "PLAYER";
                                         }
@@ -319,16 +319,15 @@ namespace RPGBase.Flyweights
                                         {
                                             killer = "NONE";
                                         }
-                                        else if (Interactive.GetInstance().hasIO(source))
+                                        else if (Interactive.Instance.HasIO(source))
                                         {
-                                            BaseInteractiveObject sourceIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(source);
+                                            BaseInteractiveObject sourceIO = (BaseInteractiveObject)Interactive.Instance.GetIO(source);
                                             if (sourceIO.HasIOFlag(IoGlobals.IO_03_NPC))
                                             {
-                                                killer = new String(
-                                                        sourceIO.NpcData.getName());
+                                                killer = sourceIO.NpcData.Name;
                                             }
                                         }
-                                        Script.GetInstance().SendIOScriptEvent(ioo,
+                                        Script.Instance.SendIOScriptEvent(ioo,
                                                 0,
                                                 new Object[] { "tmp_int1", source },
                                                 "TargetDeath");
@@ -363,7 +362,7 @@ namespace RPGBase.Flyweights
          * Gets the BaseInteractiveObject associated with this {@link IoPcData}.
          * @return <see cref="BaseInteractiveObject"/>
          */
-        protected override BaseInteractiveObject GetIo()
+        public override BaseInteractiveObject GetIo()
         {
             return io;
         }
@@ -413,9 +412,9 @@ namespace RPGBase.Flyweights
             int type = EquipmentGlobals.WEAPON_BARE;
             int wpnId = GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
             if (wpnId >= 0
-                    && Interactive.GetInstance().hasIO(wpnId))
+                    && Interactive.Instance.HasIO(wpnId))
             {
-                BaseInteractiveObject weapon = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
+                BaseInteractiveObject weapon = (BaseInteractiveObject)Interactive.Instance.GetIO(wpnId);
                 if (weapon.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_DAGGER))
                 {
                     type = EquipmentGlobals.WEAPON_DAGGER;
@@ -495,13 +494,13 @@ namespace RPGBase.Flyweights
         public bool IsPlayerEquip(BaseInteractiveObject itemIO)
         {
             bool isEquipped = false;
-            int i = ProjectConstants.GetInstance().GetMaxEquipped() - 1;
+            int i = ProjectConstants.Instance.GetMaxEquipped() - 1;
             for (; i >= 0; i--)
             {
                 if (this.GetEquippedItem(i) >= 0
-                        && Interactive.GetInstance().hasIO(GetEquippedItem(i)))
+                        && Interactive.Instance.HasIO(GetEquippedItem(i)))
                 {
-                    BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.GetInstance().getIO(GetEquippedItem(i));
+                    BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.Instance.GetIO(GetEquippedItem(i));
                     if (toequip.Equals(itemIO))
                     {
                         isEquipped = true;
@@ -538,10 +537,10 @@ namespace RPGBase.Flyweights
         {
             int wpnId = GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
             if (wpnId >= 0
-                    && Interactive.GetInstance().hasIO(wpnId))
+                    && Interactive.Instance.HasIO(wpnId))
             {
-                BaseInteractiveObject weapon = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
-                weapon.ItemData.ARX_EQUIPMENT_UnEquip(io, false);
+                BaseInteractiveObject weapon = (BaseInteractiveObject)Interactive.Instance.GetIO(wpnId);
+                weapon.ItemData.UnEquip(io, false);
             }
             SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON, -1);
         }

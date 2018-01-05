@@ -9,8 +9,9 @@ C:\Users\588648\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.pdb
 C:\Users\Donald\Unity\RPGBase\bin\Debug\netstandard1.4\RPGBase.deps.json
 C:\Users\Donald\Unity\RPGBase\bin\Debug\netstandard1.4\RPGBase.dll
 C:\Users\Donald\Unity\RPGBase\bin\Debug\netstandard1.4\RPGBase.pdb
-C:\Users\Donald\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.csprojResolveAssemblyReference.cache
 C:\Users\Donald\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.csproj.CoreCompileInputs.cache
 C:\Users\Donald\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.AssemblyInfo.cs
 C:\Users\Donald\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.dll
 C:\Users\Donald\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.pdb
+C:\Users\Donald\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.AssemblyInfoInputs.cache
+C:\Users\Donald\Unity\RPGBase\obj\Debug\netstandard1.4\RPGBase.csprojResolveAssemblyReference.cache

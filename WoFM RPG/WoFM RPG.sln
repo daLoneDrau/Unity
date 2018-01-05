@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoFM RPG.Plugins", "WoFM RPG.Plugins.csproj", "{476A26FD-4CBE-C4DF-DC38-F3A6D2025C98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoFM RPG", "WoFM RPG.csproj", "{C908FFD3-2091-6035-CBE1-42F1FC5381A1}"
@@ -12,11 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGBase", "..\RPGBase\RPGBase.csproj", "{C75EB5F0-BF65-47F8-B559-119880FAE685}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPGTests", "RPGTests\RPGTests.csproj", "{FA917F68-8869-49E0-AE5C-E8130F7722CC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{23F13EDE-48F4-4247-AD1D-44E118595E07}"
-	ProjectSection(SolutionItems) = preProject
-		OpenCover-MSTest.bat = OpenCover-MSTest.bat
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,8 +40,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5DC64D1F-D036-45AF-A1E2-CF46C924A9E6}
 	EndGlobalSection
 EndGlobal

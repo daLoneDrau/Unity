@@ -71,9 +71,9 @@ namespace RPGBase.Singletons
                         ppos = 0;
                         break;
                     }
-                    if (Interactive.Instance.hasIO(i))
+                    if (Interactive.Instance.HasIO(i))
                     {
-                        BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                        BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                         if (io.HasGameFlag(IoGlobals.GFLAG_ISINTREATZONE))
                         {
                             if (io.Mainevent != null)
@@ -259,13 +259,13 @@ namespace RPGBase.Singletons
                 StackedEvent e = GetStackedEvent(i);
                 if (e.Exists)
                 {
-                    int ioid = e.Io.GetRefId();
-                    if (Interactive.Instance.hasIO(ioid))
+                    int ioid = e.Io.RefId;
+                    if (Interactive.Instance.HasIO(ioid))
                     {
                         if (e.Sender != null)
                         {
-                            int senderid = e.Sender.GetRefId();
-                            if (Interactive.Instance.hasIO(senderid))
+                            int senderid = e.Sender.RefId;
+                            if (Interactive.Instance.HasIO(senderid))
                             {
                                 EventSender = e.Sender;
                             }
@@ -317,7 +317,7 @@ namespace RPGBase.Singletons
             }
             else
             {
-                tioid = Interactive.Instance.getTargetByNameTarget(target);
+                tioid = Interactive.Instance.GetTargetByNameTarget(target);
                 if (tioid == -2)
                 {
                     tioid = Interactive.Instance.GetInterNum(io);
@@ -325,7 +325,7 @@ namespace RPGBase.Singletons
             }
             if (tioid >= 0)
             {
-                BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.Instance.getIO(tioid);
+                BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.Instance.GetIO(tioid);
                 if (tio.HasIOFlag(IoGlobals.IO_03_NPC))
                 {
                     tio.NpcData.ForceDeath(io);
@@ -742,9 +742,9 @@ namespace RPGBase.Singletons
             int i = Interactive.Instance.GetMaxIORefId();
             for (; i >= 0; i--)
             {
-                if (Interactive.Instance.hasIO(i))
+                if (Interactive.Instance.HasIO(i))
                 {
-                    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                     if (hio.StatCount > max)
                     {
                         ionum = i;
@@ -756,7 +756,7 @@ namespace RPGBase.Singletons
             if (max > 0
                     && ionum > -1)
             {
-                io = (BaseInteractiveObject)Interactive.Instance.getIO(ionum);
+                io = (BaseInteractiveObject)Interactive.Instance.GetIO(ionum);
             }
             return io;
         }
@@ -768,9 +768,9 @@ namespace RPGBase.Singletons
             int i = Interactive.Instance.GetMaxIORefId();
             for (; i >= 0; i--)
             {
-                if (Interactive.Instance.hasIO(i))
+                if (Interactive.Instance.HasIO(i))
                 {
-                    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                     if (hio.StatSent > max)
                     {
                         ionum = i;
@@ -781,7 +781,7 @@ namespace RPGBase.Singletons
             if (max > 0
                     && ionum > -1)
             {
-                io = (BaseInteractiveObject)Interactive.Instance.getIO(ionum);
+                io = (BaseInteractiveObject)Interactive.Instance.GetIO(ionum);
             }
             return io;
         }
@@ -852,9 +852,9 @@ namespace RPGBase.Singletons
             int i = Interactive.Instance.GetMaxIORefId();
             for (; i >= 0; i--)
             {
-                if (Interactive.Instance.hasIO(i))
+                if (Interactive.Instance.HasIO(i))
                 {
-                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                     io.StatCount = 0;
                     io.StatSent = 0;
                 }
@@ -929,7 +929,7 @@ namespace RPGBase.Singletons
                 switch (msg)
                 {
                     case ScriptConsts.SM_017_DIE:
-                        if (io != null && Interactive.Instance.hasIO(io))
+                        if (io != null && Interactive.Instance.HasIO(io))
                         {
                             // TODO - Set death color
                             // io->infracolor.b = 1.f;
@@ -953,14 +953,14 @@ namespace RPGBase.Singletons
         /// <param name="hideOn">if true, the hidden flags are Set; otherwise all hidden flags are removed</param>
         public void ObjectHide(BaseInteractiveObject io, bool megahide, string targetName, bool hideOn)
         {
-            int targetId = Interactive.Instance.getTargetByNameTarget(targetName);
+            int targetId = Interactive.Instance.GetTargetByNameTarget(targetName);
             if (targetId == -2)
             {
-                targetId = io.GetRefId();
+                targetId = io.RefId;
             }
-            if (Interactive.Instance.hasIO(targetId))
+            if (Interactive.Instance.HasIO(targetId))
             {
-                BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.Instance.getIO(targetId);
+                BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.Instance.GetIO(targetId);
                 tio.RemoveGameFlag(IoGlobals.GFLAG_MEGAHIDE);
                 if (hideOn)
                 {
@@ -1075,9 +1075,9 @@ namespace RPGBase.Singletons
             int i = Interactive.Instance.GetMaxIORefId();
             for (; i >= 0; i--)
             {
-                if (Interactive.Instance.hasIO(i))
+                if (Interactive.Instance.HasIO(i))
                 {
-                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                     if (!io.ScriptLoaded)
                     {
                         ResetObject(io, initialize);
@@ -1094,9 +1094,9 @@ namespace RPGBase.Singletons
         {
             // Now go for Script INIT/RESET depending on Mode
             int num = Interactive.Instance.GetInterNum(io);
-            if (Interactive.Instance.hasIO(num))
+            if (Interactive.Instance.HasIO(num))
             {
-                BaseInteractiveObject objIO = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                BaseInteractiveObject objIO = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                 if (objIO != null
                         && objIO.Script != null)
                 {
@@ -1110,7 +1110,7 @@ namespace RPGBase.Singletons
                                 objIO,
                                 null);
                     }
-                    objIO = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                    objIO = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                     if (objIO != null)
                     {
                         SetMainEvent(objIO, "MAIN");
@@ -1118,7 +1118,7 @@ namespace RPGBase.Singletons
                 }
 
                 // Do the same for Local Script
-                objIO = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                objIO = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                 if (objIO != null
                         && objIO.Overscript != null)
                 {
@@ -1137,7 +1137,7 @@ namespace RPGBase.Singletons
                 // Sends InitEnd Event
                 if (initialize)
                 {
-                    objIO = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                    objIO = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                     if (objIO != null
                             && objIO.Script != null)
                     {
@@ -1147,7 +1147,7 @@ namespace RPGBase.Singletons
                                 objIO,
                                 null);
                     }
-                    objIO = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                    objIO = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                     if (objIO != null
                             && objIO.Overscript != null)
                     {
@@ -1159,7 +1159,7 @@ namespace RPGBase.Singletons
                     }
                 }
 
-                objIO = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                objIO = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                 if (objIO != null)
                 {
                     objIO.RemoveGameFlag(IoGlobals.GFLAG_NEEDINIT);
@@ -1275,9 +1275,9 @@ namespace RPGBase.Singletons
                 int i = Interactive.Instance.GetMaxIORefId();
                 for (; i >= 0; i--)
                 {
-                    if (Interactive.Instance.hasIO(i))
+                    if (Interactive.Instance.HasIO(i))
                     {
-                        BaseInteractiveObject iio = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                        BaseInteractiveObject iio = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                         // skip cameras and markers
                         // if (iio.HasIOFlag(IoGlobals.io_camera)
                         // || iio.HasIOFlag(IoGlobals.io_marker)) {
@@ -1328,9 +1328,9 @@ namespace RPGBase.Singletons
                 int i = Interactive.Instance.GetMaxIORefId();
                 for (; i >= 0; i--)
                 {
-                    if (Interactive.Instance.hasIO(i))
+                    if (Interactive.Instance.HasIO(i))
                     {
-                        BaseInteractiveObject iio = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                        BaseInteractiveObject iio = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                         // skip cameras and markers
                         // if (iio.HasIOFlag(IoGlobals.io_camera)
                         // || iio.HasIOFlag(IoGlobals.io_marker)) {
@@ -1379,9 +1379,9 @@ namespace RPGBase.Singletons
                 int i = Interactive.Instance.GetMaxIORefId();
                 for (; i >= 0; i--)
                 {
-                    if (Interactive.Instance.hasIO(i))
+                    if (Interactive.Instance.HasIO(i))
                     {
-                        BaseInteractiveObject iio = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                        BaseInteractiveObject iio = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                         // skip IOs not in required group
                         if (!this.IsIOInGroup(iio, parameters.GroupName))
                         {
@@ -1399,17 +1399,17 @@ namespace RPGBase.Singletons
             else
             {
                 // SINGLE OBJECT EVENT
-                int tioid = Interactive.Instance.getTargetByNameTarget(parameters.TargetName);
+                int tioid = Interactive.Instance.GetTargetByNameTarget(parameters.TargetName);
 
                 if (tioid == -2)
                 {
                     tioid = Interactive.Instance.GetInterNum(io);
                 }
-                if (Interactive.Instance.hasIO(tioid))
+                if (Interactive.Instance.HasIO(tioid))
                 {
                     io.StatSent++;
                     StackSendIOScriptEvent(
-                            (BaseInteractiveObject)Interactive.Instance.getIO(tioid),
+                            (BaseInteractiveObject)Interactive.Instance.GetIO(tioid),
                             0,
                             parameters.EventParameters,
                             parameters.EventName);
@@ -1428,15 +1428,15 @@ namespace RPGBase.Singletons
             {
                 return -1;
             }
-            int num = io.GetRefId();
-            if (!Interactive.Instance.hasIO(num))
+            int num = io.RefId;
+            if (!Interactive.Instance.HasIO(num))
             {
                 return -1;
             }
             BaseInteractiveObject oldEventSender = EventSender;
             EventSender = null;
             // send script the init message
-            BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+            BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
             if (hio.Script != null)
             {
                 GLOB = 0;
@@ -1448,9 +1448,9 @@ namespace RPGBase.Singletons
             }
             hio = null;
             // send overscript the init message
-            if (Interactive.Instance.getIO(num) != null)
+            if (Interactive.Instance.GetIO(num) != null)
             {
-                hio = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                 if (hio.Overscript != null)
                 {
                     GLOB = 0;
@@ -1463,9 +1463,9 @@ namespace RPGBase.Singletons
                 hio = null;
             }
             // send script the init end message
-            if (Interactive.Instance.getIO(num) != null)
+            if (Interactive.Instance.GetIO(num) != null)
             {
-                hio = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                 if (hio.Script != null)
                 {
                     GLOB = 0;
@@ -1478,9 +1478,9 @@ namespace RPGBase.Singletons
                 hio = null;
             }
             // send overscript the init end message
-            if (Interactive.Instance.getIO(num) != null)
+            if (Interactive.Instance.GetIO(num) != null)
             {
-                hio = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                 if (hio.Overscript != null)
                 {
                     GLOB = 0;
@@ -1510,24 +1510,24 @@ namespace RPGBase.Singletons
             {
                 return -1;
             }
-            int num = target.GetRefId();
+            int num = target.RefId;
 
-            if (Interactive.Instance.hasIO(num))
+            if (Interactive.Instance.HasIO(num))
             {
                 BaseInteractiveObject originalEventSender = EventSender;
                 if (msg == ScriptConsts.SM_001_INIT
                         || msg == ScriptConsts.SM_033_INITEND)
                 {
-                    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                     SendIOScriptEventReverse(hio, msg, parameters, eventname);
                     EventSender = originalEventSender;
                     hio = null;
                 }
 
-                if (Interactive.Instance.hasIO(num))
+                if (Interactive.Instance.HasIO(num))
                 {
                     // if this BaseInteractiveObject only has a Local script, send event to it
-                    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                     if (hio.Overscript == null)
                     {
                         GLOB = 0;
@@ -1554,9 +1554,9 @@ namespace RPGBase.Singletons
                         EventSender = originalEventSender;
                         GLOB = 0;
 
-                        if (Interactive.Instance.hasIO(num))
+                        if (Interactive.Instance.HasIO(num))
                         {
-                            hio = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                            hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                             int ret = SendScriptEvent(
                                     (Scriptable)hio.Script,
                                     msg,
@@ -1592,10 +1592,10 @@ namespace RPGBase.Singletons
             {
                 return -1;
             }
-            int num = io.GetRefId();
-            if (Interactive.Instance.hasIO(num))
+            int num = io.RefId;
+            if (Interactive.Instance.HasIO(num))
             {
-                BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                 // if this BaseInteractiveObject only has a Local script, send event to it
                 if (hio.Overscript == null
                         && hio.Script != null)
@@ -1611,9 +1611,9 @@ namespace RPGBase.Singletons
 
                 // If this BaseInteractiveObject has a Global script send to Local (if exists)
                 // then to global if no overriden by Local
-                if (Interactive.Instance.hasIO(num))
+                if (Interactive.Instance.HasIO(num))
                 {
-                    hio = (BaseInteractiveObject)Interactive.Instance.getIO(num);
+                    hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                     int s = SendScriptEvent(
                             (Scriptable)hio.Script,
                             msg,
@@ -1623,7 +1623,7 @@ namespace RPGBase.Singletons
                     if (s != ScriptConsts.REFUSE)
                     {
                         GLOB = 0;
-                        if (Interactive.Instance.hasIO(io.GetRefId()))
+                        if (Interactive.Instance.HasIO(io.RefId))
                         {
                             return SendScriptEvent(
                                     (Scriptable)io.Overscript,
@@ -1656,9 +1656,9 @@ namespace RPGBase.Singletons
             int i = Interactive.Instance.GetMaxIORefId();
             for (; i >= 0; i--)
             {
-                if (Interactive.Instance.hasIO(i))
+                if (Interactive.Instance.HasIO(i))
                 {
-                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                     if (SendIOScriptEvent(io, msg, dat, null) == ScriptConsts.REFUSE)
                     {
                         ret = ScriptConsts.REFUSE;
@@ -2249,9 +2249,9 @@ namespace RPGBase.Singletons
             int i = Interactive.Instance.GetMaxIORefId();
             for (; i >= 0; i--)
             {
-                if (Interactive.Instance.hasIO(i))
+                if (Interactive.Instance.HasIO(i))
                 {
-                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                     if (IsIOInGroup(io, group))
                     {
                         StackSendIOScriptEvent(io, msg, parameters, eventname);
@@ -2311,9 +2311,9 @@ namespace RPGBase.Singletons
             int i = Interactive.Instance.GetMaxIORefId();
             for (; i >= 0; i--)
             {
-                if (Interactive.Instance.hasIO(i))
+                if (Interactive.Instance.HasIO(i))
                 {
-                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.getIO(i);
+                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
                     if (io.HasIOFlag(IoGlobals.IO_03_NPC))
                     {
                         StackSendIOScriptEvent(io, msg, dat, null);
@@ -2327,7 +2327,7 @@ namespace RPGBase.Singletons
         /// <param name="parameters">the parameters</param>
         public void StartTimer(ScriptTimerInitializationParameters parameters)
         {
-            int timerNum = timerGetFree();
+            int timerNum = TimerGetFree();
             ScriptTimer timer = getScriptTimer(timerNum);
             timer.Script = parameters.Script;
             timer.Exists = true;
@@ -2352,26 +2352,18 @@ namespace RPGBase.Singletons
             timer.ClearFlags();
             timer.AddFlag(parameters.FlagValues);
         }
-        /**
-         * Teleports an BaseInteractiveObject to a target location.
-         * @param io the io calling for the teleport event
-         * @param behind flag indicating the target teleports behind
-         * @param isPlayer flag indicating object being teleported is the player
-         * @param initPosition flag indicating the object being teleported goes to
-         *            its initial position
-         * @param target the name of teleport destination
-         * @ if an error occurs
-         */
         /// <summary>
-        /// 
+        /// Teleports an BaseInteractiveObject to a target location.
         /// </summary>
-        /// <param name="io"></param>
-        /// <param name="behind"></param>
-        /// <param name="isPlayer"></param>
-        /// <param name="initPosition"></param>
-        /// <param name="target"></param>
-        public void teleport(BaseInteractiveObject io, bool behind, bool isPlayer, bool initPosition, string target)
+        /// <param name="io">the io calling for the teleport event</param>
+        /// <param name="behind">flag indicating the target teleports behind</param>
+        /// <param name="isPlayer">flag indicating object being teleported is the player</param>
+        /// <param name="initPosition">flag indicating the object being teleported goes to its initial position</param>
+        /// <param name="target">the name of teleport destination</param>
+        public void Teleport(BaseInteractiveObject io, bool behind, bool isPlayer, bool initPosition, string target)
         {
+            // TODO - fix this
+            /*
             if (behind)
             {
                 Interactive.Instance.ARX_INTERACTIVE_TeleportBehindTarget(io);
@@ -2381,7 +2373,7 @@ namespace RPGBase.Singletons
                 if (!initPosition)
                 {
                     int ioid =
-                            Interactive.Instance.getTargetByNameTarget(target);
+                            Interactive.Instance.GetTargetByNameTarget(target);
 
                     if (ioid == -2)
                     {
@@ -2400,7 +2392,7 @@ namespace RPGBase.Singletons
                             {
                                 io.Show = IoGlobals.SHOW_FLAG_IN_SCENE);
                             }
-                            BaseInteractiveObject pio = (BaseInteractiveObject)Interactive.Instance.getIO(
+                            BaseInteractiveObject pio = (BaseInteractiveObject)Interactive.Instance.GetIO(
                                     ProjectConstants.Instance.getPlayer());
                             Interactive.Instance.ARX_INTERACTIVE_Teleport(
                                     io, pio.getPosition());
@@ -2408,9 +2400,9 @@ namespace RPGBase.Singletons
                         }
                         else
                         {
-                            if (Interactive.Instance.hasIO(ioid))
+                            if (Interactive.Instance.HasIO(ioid))
                             {
-                                BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.Instance.getIO(ioid);
+                                BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.Instance.GetIO(ioid);
                                 Vector2 pos = new Vector2();
 
                                 if (Interactive.Instance
@@ -2419,7 +2411,7 @@ namespace RPGBase.Singletons
                                     if (isPlayer)
                                     {
                                         BaseInteractiveObject pio = (BaseInteractiveObject)Interactive.Instance
-                                                .getIO(
+                                                .GetIO(
                                                         ProjectConstants
                                                                 .Instance
                                                                 .getPlayer());
@@ -2464,7 +2456,7 @@ namespace RPGBase.Singletons
                             if (Interactive.Instance.GetItemWorldPosition(io,
                                     pos))
                             {
-                                BaseInteractiveObject pio = (BaseInteractiveObject)Interactive.Instance.getIO(
+                                BaseInteractiveObject pio = (BaseInteractiveObject)Interactive.Instance.GetIO(
                                         ProjectConstants.Instance.getPlayer());
                                 Interactive.Instance.ARX_INTERACTIVE_Teleport(
                                         pio, pos);
@@ -2493,14 +2485,17 @@ namespace RPGBase.Singletons
                     }
                 }
             }
+            */
         }
-        public void timerCheck()
+        public void TimerCheck()
         {
-            if (countTimers() > 0)
+            // TODO - fix this with Time
+            /*
+            if (CountTimers() > 0)
             {
-                for (int i = 0, len = this.maxTimerScript; i < len; i++)
+                for (int i = 0, len = this.MaxTimerScript; i < len; i++)
                 {
-                    ScriptTimer timer = getScriptTimers()[i];
+                    ScriptTimer timer = GetScriptTimers()[i];
                     if (timer.Exists)
                     {
                         long currentTime = Time.Instance.getGameTime();
@@ -2550,7 +2545,7 @@ namespace RPGBase.Singletons
                                         + timer.getCycleLength());
                             }
                             if (script != null
-                                    && Interactive.Instance.hasIO(io))
+                                    && Interactive.Instance.HasIO(io))
                             {
                                 timer.GetAction().process();
                             }
@@ -2561,96 +2556,95 @@ namespace RPGBase.Singletons
                     timer = null;
                 }
             }
+            */
         }
-        /** Clears all timers in play. */
-        public void timerClearAll()
+        /// <summary>
+        /// Clears all timers in play.
+        /// </summary>
+        public void TimerClearAll()
         {
-            for (int i = 0; i < maxTimerScript; i++)
+            for (int i = 0; i < MaxTimerScript; i++)
             {
-                timerClearByNum(i);
+                TimerClearByNum(i);
             }
         }
-        public void timerClearAllLocalsForIO(BaseInteractiveObject io)
+        public void TimerClearAllLocalsForIO(BaseInteractiveObject io)
         {
-            ScriptTimer[] scriptTimers = getScriptTimers();
-            for (int i = 0; i < maxTimerScript; i++)
+            ScriptTimer[] scriptTimers = GetScriptTimers();
+            for (int i = 0; i < MaxTimerScript; i++)
             {
                 if (scriptTimers[i].Exists)
                 {
                     if (scriptTimers[i].Io.Equals(io)
-                            && scriptTimers[i].Script
-                                    .Equals(io.Overscript))
+                            && scriptTimers[i].Script.Equals(io.Overscript))
                     {
-                        timerClearByNum(i);
+                        TimerClearByNum(i);
                     }
                 }
             }
         }
-        /**
-         * Clears a timer by the BaseInteractiveObject assigned to it.
-         * @param io the BaseInteractiveObject
-         */
-        public void timerClearByIO(BaseInteractiveObject io)
+        /// <summary>
+        /// Clears a timer by the BaseInteractiveObject assigned to it.
+        /// </summary>
+        /// <param name="io">the BaseInteractiveObject</param>
+        public void TimerClearByIO(BaseInteractiveObject io)
         {
             if (io != null)
             {
-                ScriptTimer[] scriptTimers = getScriptTimers();
-                for (int i = 0; i < maxTimerScript; i++)
+                ScriptTimer[] scriptTimers = GetScriptTimers();
+                for (int i = 0; i < MaxTimerScript; i++)
                 {
-                    if (scriptTimers[i] != null
-                            && scriptTimers[i].Exists)
+                    if (scriptTimers[i].Exists)
                     {
-                        if (scriptTimers[i].Io.GetRefId() == io.GetRefId())
+                        if (scriptTimers[i].Io.RefId == io.RefId)
                         {
-                            timerClearByNum(i);
+                            TimerClearByNum(i);
                         }
                     }
                 }
             }
         }
-        public void timerClearByNameAndIO(string timername,
-                 BaseInteractiveObject io)
+        public void TimerClearByNameAndIO(string timername, BaseInteractiveObject io)
         {
             if (io != null)
             {
-                ScriptTimer[] scriptTimers = getScriptTimers();
-                for (int i = 0; i < maxTimerScript; i++)
+                ScriptTimer[] scriptTimers = GetScriptTimers();
+                for (int i = 0; i < MaxTimerScript; i++)
                 {
-                    if (scriptTimers[i] != null
-                            && scriptTimers[i].Exists)
+                    if (scriptTimers[i].Exists)
                     {
-                        if (scriptTimers[i].Io.GetRefId() == io.GetRefId()
+                        if (scriptTimers[i].Io.RefId == io.RefId
                                 && string.Equals(timername, scriptTimers[i].Name, StringComparison.OrdinalIgnoreCase))
                         {
-                            timerClearByNum(i);
+                            TimerClearByNum(i);
                         }
                     }
                 }
             }
         }
-        /**
-         * Clears a timer by its index on the timers list.
-         * @param timeridx the index
-         */
-        public void timerClearByNum(int timeridx)
+        /// <summary>
+        /// Clears a timer by its index on the timers list.
+        /// </summary>
+        /// <param name="timeridx">the index</param>
+        public void TimerClearByNum(int timeridx)
         {
-            ScriptTimer[] scriptTimers = getScriptTimers();
+            ScriptTimer[] scriptTimers = GetScriptTimers();
             if (scriptTimers[timeridx].Exists)
             {
-                scriptTimers[timeridx].setName(null);
-                scriptTimers[timeridx].setExists(false);
+                scriptTimers[timeridx].Name = null;
+                scriptTimers[timeridx].Exists = false;
             }
         }
-        /**
-         * Determines whether a specific named timer exists.
-         * @param texx the timer's name
-         * @return the timer's index if it exists, otherwise returns -1
-         */
-        private int timerExist(string texx)
+        /// <summary>
+        /// Determines whether a specific named timer exists.
+        /// </summary>
+        /// <param name="texx">the timer's name</param>
+        /// <returns>the timer's index if it exists, otherwise returns -1</returns>
+        private int TimerExist(string texx)
         {
             int index = -1;
-            ScriptTimer[] scriptTimers = getScriptTimers();
-            for (int i = 0; i < maxTimerScript; i++)
+            ScriptTimer[] scriptTimers = GetScriptTimers();
+            for (int i = 0; i < MaxTimerScript; i++)
             {
                 if (scriptTimers[i].Exists)
                 {
@@ -2664,36 +2658,35 @@ namespace RPGBase.Singletons
             }
             return index;
         }
-        /**
-         * Initializes all game timers.
-         * @param number the maximum number of timers used. Must be at least 100.
-         */
+        /// <summary>
+        /// Initializes all game timers.
+        /// </summary>
+        /// <param name="number">the maximum number of timers used. Must be at least 100.</param>
         public void timerFirstInit(int number)
         {
             if (number < 100)
             {
-                setMaxTimerScript(100);
+                MaxTimerScript = 100;
             }
             else
             {
-                setMaxTimerScript(number);
+                MaxTimerScript = number;
             }
-            destroyScriptTimers();
-            initScriptTimers();
+            DestroyScriptTimers();
+            InitScriptTimers();
         }
-        /**
-         * Generates a random name for an unnamed timer.
-         * @return {@link string}
-         */
-        private string timerGetDefaultName()
+        /// <summary>
+        ///  Generates a random name for an unnamed timer.
+        /// </summary>
+        /// <returns></returns>
+        private string TimerGetDefaultName()
         {
             int i = 1;
             string texx;
 
             while (true)
             {
-                PooledStringBuilder sb =
-                        StringBuilderPool.Instance.GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("TIMER_");
@@ -2702,11 +2695,10 @@ namespace RPGBase.Singletons
                 catch (PooledException e)
                 {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
                 }
                 i++;
 
-                if (timerExist(sb.ToString()) == -1)
+                if (TimerExist(sb.ToString()) == -1)
                 {
                     texx = sb.ToString();
                     sb.ReturnToPool();
@@ -2718,15 +2710,15 @@ namespace RPGBase.Singletons
             }
             return texx;
         }
-        /**
-         * Gets the index of a free script timer.
-         * @return <code>int</code>
-         */
-        public int timerGetFree()
+        /// <summary>
+        /// Gets the index of a free script timer.
+        /// </summary>
+        /// <returns></returns>
+        public int TimerGetFree()
         {
             int index = -1;
-            ScriptTimer[] scriptTimers = getScriptTimers();
-            for (int i = 0; i < maxTimerScript; i++)
+            ScriptTimer[] scriptTimers = GetScriptTimers();
+            for (int i = 0; i < MaxTimerScript; i++)
             {
                 if (!scriptTimers[i].Exists)
                 {
@@ -2736,12 +2728,12 @@ namespace RPGBase.Singletons
             }
             return index;
         }
-        /**
-         * Determines if an BaseInteractiveObject is speaking.
-         * @param io the BaseInteractiveObject
-         * @return <tt>true</tt> if the BaseInteractiveObject is speaking; <tt>false</tt> otherwise
-         */
-        public bool amISpeaking(BaseInteractiveObject io)
+        /// <summary>
+        /// Determines if an BaseInteractiveObject is speaking.
+        /// </summary>
+        /// <param name="io">the BaseInteractiveObject</param>
+        /// <returns><tt>true</tt> if the BaseInteractiveObject is speaking; <tt>false</tt> otherwise</returns>
+        public bool AmISpeaking(BaseInteractiveObject io)
         {
             // TODO Auto-generated method stub
             // GO THROUGH ALL SPEECH INSTANCES.  IF THE BaseInteractiveObject IS SPEAKING
@@ -2756,9 +2748,11 @@ namespace RPGBase.Singletons
             //}
             return false;
         }
-        public long getGameSeconds()
+        /*
+        public long GetGameSeconds()
         {
             return Time.Instance.getGameTime(false);
         }
+        */
     }
 }

@@ -54,7 +54,7 @@ namespace RPGBase.Flyweights
         {
             watchers = new Watcher[0];
             DefineAttributes();
-            InitEquippedItems(ProjectConstants.GetInstance().GetMaxEquipped());
+            InitEquippedItems(ProjectConstants.Instance.GetMaxEquipped());
         }
         /**
          * {@inheritDoc}
@@ -78,7 +78,7 @@ namespace RPGBase.Flyweights
                 }
                 else
                 {
-                    watchers = ArrayUtilities.GetInstance().ExtendArray(watcher, watchers);
+                    watchers = ArrayUtilities.Instance.ExtendArray(watcher, watchers);
                 }
             }
         }
@@ -106,7 +106,7 @@ namespace RPGBase.Flyweights
         protected void AdjustLife(float dmg)
         {
             String ls = GetLifeAttribute();
-            PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
             sb.Append("M");
             sb.Append(ls);
             String mls = sb.ToString();
@@ -139,12 +139,12 @@ namespace RPGBase.Flyweights
         public float ApplyEquipmentModifiers(int elementType)
         {
             float toadd = 0;
-            for (int i = ProjectConstants.GetInstance().GetMaxEquipped() - 1; i >= 0; i--)
+            for (int i = ProjectConstants.Instance.GetMaxEquipped() - 1; i >= 0; i--)
             {
                 if (equippedItems[i] >= 0
-                        && Interactive.GetInstance().hasIO(equippedItems[i]))
+                        && Interactive.Instance.HasIO(equippedItems[i]))
                 {
-                    BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.GetInstance().getIO(equippedItems[i]);
+                    BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.Instance.GetIO(equippedItems[i]);
                     if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
                             && toequip.ItemData != null
                             && toequip.ItemData.Equipitem != null)
@@ -171,13 +171,13 @@ namespace RPGBase.Flyweights
         public float ApplyEquipmentPercentModifiers(int elementType, float trueval)
         {
             float toadd = 0;
-            int i = ProjectConstants.GetInstance().GetMaxEquipped() - 1;
+            int i = ProjectConstants.Instance.GetMaxEquipped() - 1;
             for (; i >= 0; i--)
             {
                 if (equippedItems[i] >= 0
-                        && Interactive.GetInstance().hasIO(equippedItems[i]))
+                        && Interactive.Instance.HasIO(equippedItems[i]))
                 {
-                    BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.GetInstance().getIO(equippedItems[i]);
+                    BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.Instance.GetIO(equippedItems[i]);
                     if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
                             && toequip.ItemData != null
                             && toequip.ItemData.Equipitem != null)
@@ -312,7 +312,7 @@ namespace RPGBase.Flyweights
         /// Gets the <see cref="IOCharacter"/>'s base life value from the correct attribute.
         /// </summary>
         /// <returns></returns>
-        protected abstract float GetBaseLife();
+        public abstract float GetBaseLife();
         /// <summary>
         /// Gets the <see cref="IOCharacter"/>'s base mana value from the correct attribute.
         /// </summary>
@@ -329,7 +329,7 @@ namespace RPGBase.Flyweights
             if (slot < 0
                     || slot >= equippedItems.Length)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Error - equipment slot ");
@@ -347,7 +347,7 @@ namespace RPGBase.Flyweights
             id = equippedItems[slot];
             return id;
         }
-        protected abstract BaseInteractiveObject GetIo();
+        public abstract BaseInteractiveObject GetIo();
         /// <summary>
         /// Gets the full attribute score for a specific attribute.
         /// </summary>
@@ -403,7 +403,7 @@ namespace RPGBase.Flyweights
         /// <param name="id">the <see cref="BaseInteractiveObject"/>'s reference id</param>
         public void ReleaseEquipment(int id)
         {
-            for (int i = ProjectConstants.GetInstance().GetMaxEquipped() - 1; i >= 0; i--)
+            for (int i = ProjectConstants.Instance.GetMaxEquipped() - 1; i >= 0; i--)
             {
                 if (equippedItems[i] == id)
                 {
@@ -427,7 +427,7 @@ namespace RPGBase.Flyweights
             }
             if (index > -1)
             {
-                watchers = ArrayUtilities.GetInstance().RemoveIndex(index, watchers);
+                watchers = ArrayUtilities.Instance.RemoveIndex(index, watchers);
             }
         }
         /// <summary>
@@ -449,7 +449,7 @@ namespace RPGBase.Flyweights
             if (slot < 0
                     || slot >= equippedItems.Length)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Error - equipment slot ");
@@ -470,7 +470,7 @@ namespace RPGBase.Flyweights
             }
             else
             {
-                equippedItems[slot] = item.GetRefId();
+                equippedItems[slot] = item.RefId;
             }
         }
         /// <summary>
@@ -483,7 +483,7 @@ namespace RPGBase.Flyweights
             if (slot < 0
                     || slot >= equippedItems.Length)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Error - equipment slot ");
@@ -505,16 +505,16 @@ namespace RPGBase.Flyweights
         /// </summary>
         public void UnEquipAll()
         {
-            int i = ProjectConstants.GetInstance().GetMaxEquipped() - 1;
+            int i = ProjectConstants.Instance.GetMaxEquipped() - 1;
             for (; i >= 0; i--)
             {
                 if (equippedItems[i] >= 0)
                 {
-                    if (!Interactive.GetInstance().hasIO(equippedItems[i]))
+                    if (!Interactive.Instance.HasIO(equippedItems[i]))
                     {
                         throw new RPGException(ErrorMessage.INVALID_DATA_TYPE, "Equipped unregistered item in slot " + i);
                     }
-                    BaseInteractiveObject itemIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(equippedItems[i]);
+                    BaseInteractiveObject itemIO = (BaseInteractiveObject)Interactive.Instance.GetIO(equippedItems[i]);
                     if (!itemIO.HasIOFlag(IoGlobals.IO_02_ITEM))
                     {
                         throw new RPGException(ErrorMessage.INVALID_DATA_TYPE, "Equipped item without IO_02_ITEM in slot " + i);

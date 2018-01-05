@@ -8,23 +8,23 @@ namespace RPGBase.Flyweights
     public class Spell
     {
         /** the caster's reference id. */
-        private int Caster { get; set; }
+        public int Caster { get; set; }
         /** the caster's level. */
-        private float CasterLevel { get; set; }
-        private bool Exists { get; set; }
+        public float CasterLevel { get; set; }
+        public bool Exists { get; set; }
         /** any flags that have been set. */
         private long flags = 0;
-        private int LastTurnUpdated { get; set; }
-        private long LastUpdated { get; set; }
-        private int Longinfo { get; set; }
-        private int Longinfo2 { get; set; }
-        private object Misc { get; set; }
-        private int Target { get; set; }
-        private long TimeCreated { get; set; }
-        private long TimeToLive { get; set; }
-        private int TurnCreated { get; set; }
-        private int TurnsToLive { get; set; }
-        private int Type { get; set; }
+        public int LastTurnUpdated { get; set; }
+        public long LastUpdated { get; set; }
+        public int Longinfo { get; set; }
+        public int Longinfo2 { get; set; }
+        public object Misc { get; set; }
+        public int Target { get; set; }
+        public long TimeCreated { get; set; }
+        public long TimeToLive { get; set; }
+        public int TurnCreated { get; set; }
+        public int TurnsToLive { get; set; }
+        public int Type { get; set; }
         /**
          * Adds a flag.
          * @param flag the flag

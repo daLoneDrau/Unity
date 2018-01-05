@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RPGBase.Constants;
+using RPGBase.Singletons;
 
 namespace RPGBase.Flyweights
 {
@@ -41,7 +42,7 @@ namespace RPGBase.Flyweights
                 }
                 if (String.Equals(split[i], "PLAYER", StringComparison.OrdinalIgnoreCase))
                 {
-                    TargetInfo = Interactive.GetInstance().getTargetByNameTarget("PLAYER");
+                    TargetInfo = Interactive.Instance.GetTargetByNameTarget("PLAYER");
                 }
                 if (String.Equals(split[i], "NONE", StringComparison.OrdinalIgnoreCase))
                 {
@@ -49,16 +50,16 @@ namespace RPGBase.Flyweights
                 }
                 if (split[i].StartsWith("NODE_"))
                 {
-                    TargetInfo = Interactive.GetInstance().getTargetByNameTarget(split[i].Replace("NODE_", ""));
+                    TargetInfo = Interactive.Instance.GetTargetByNameTarget(split[i].Replace("NODE_", ""));
                 }
                 if (split[i].StartsWith("OBJECT_"))
                 {
-                    TargetInfo = Interactive.GetInstance().getTargetByNameTarget(split[i].Replace("OBJECT_", ""));
+                    TargetInfo = Interactive.Instance.GetTargetByNameTarget(split[i].Replace("OBJECT_", ""));
                 }
                 if (split[i].StartsWith("ID_"))
                 {
                     int id = int.Parse(split[i].Replace("ID_", ""));
-                    if (Interactive.GetInstance().hasIO(id))
+                    if (Interactive.Instance.HasIO(id))
                     {
                         TargetInfo = id;
                     }

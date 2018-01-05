@@ -116,8 +116,8 @@ namespace RPGBase.Flyweights
         {
             float damages = 0;
             // send event to target. someone attacked you!
-            Script.GetInstance().SetEventSender(io_source);
-            Script.GetInstance().SendIOScriptEvent(io_target, ScriptConsts.SM_057_AGGRESSION, null, null);
+            Script.Instance.EventSender = io_source;
+            Script.Instance.SendIOScriptEvent(io_target, ScriptConsts.SM_057_AGGRESSION, null, null);
             if (io_source != null
                     && io_target != null)
             {
@@ -156,9 +156,9 @@ namespace RPGBase.Flyweights
                     if (io_source.HasIOFlag(IoGlobals.IO_01_PC))
                     {
                         int wpnId = io_source.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
-                        if (Interactive.GetInstance().hasIO(wpnId))
+                        if (Interactive.Instance.HasIO(wpnId))
                         {
-                            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
+                            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(wpnId);
                             if (io.Weaponmaterial != null
                                     && io.Weaponmaterial.Length > 0)
                             {
@@ -168,13 +168,13 @@ namespace RPGBase.Flyweights
                         }
                         attack = io_source.PcData.GetFullDamage();
                         if (io_source.PcData.CalculateCriticalHit()
-                                && Script.GetInstance().SendIOScriptEvent(io_source, ScriptConsts.SM_054_CRITICAL, null, null) != ScriptConsts.REFUSE)
+                                && Script.Instance.SendIOScriptEvent(io_source, ScriptConsts.SM_054_CRITICAL, null, null) != ScriptConsts.REFUSE)
                         {
                             critical = true;
                         }
                         damages = attack * dmgModifier;
                         if (io_source.PcData.CalculateBackstab()
-                                && Script.GetInstance().SendIOScriptEvent(io_source, ScriptConsts.SM_056_BACKSTAB, null, null) != ScriptConsts.REFUSE)
+                                && Script.Instance.SendIOScriptEvent(io_source, ScriptConsts.SM_056_BACKSTAB, null, null) != ScriptConsts.REFUSE)
                         {
                             backstab = this.GetBackstabModifier();
                         }
@@ -184,9 +184,9 @@ namespace RPGBase.Flyweights
                         if (io_source.HasIOFlag(IoGlobals.IO_03_NPC))
                         {
                             int wpnId = io_source.NpcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
-                            if (Interactive.GetInstance().hasIO(wpnId))
+                            if (Interactive.Instance.HasIO(wpnId))
                             {
-                                BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnId);
+                                BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(wpnId);
                                 if (io.Weaponmaterial != null
                                         && io.Weaponmaterial.Length > 0)
                                 {
@@ -204,13 +204,13 @@ namespace RPGBase.Flyweights
                             }
                             attack = io_source.NpcData.GetFullDamage();
                             if (io_source.NpcData.CalculateCriticalHit()
-                                    && Script.GetInstance().SendIOScriptEvent(io_source, ScriptConsts.SM_054_CRITICAL, null, null) != ScriptConsts.REFUSE)
+                                    && Script.Instance.SendIOScriptEvent(io_source, ScriptConsts.SM_054_CRITICAL, null, null) != ScriptConsts.REFUSE)
                             {
                                 critical = true;
                             }
                             damages = attack * dmgModifier;
                             if (io_source.NpcData.CalculateBackstab()
-                                    && Script.GetInstance().SendIOScriptEvent(io_source, ScriptConsts.SM_056_BACKSTAB, null, null) != ScriptConsts.REFUSE)
+                                    && Script.Instance.SendIOScriptEvent(io_source, ScriptConsts.SM_056_BACKSTAB, null, null) != ScriptConsts.REFUSE)
                             {
                                 backstab = this.GetBackstabModifier();
                             }
@@ -254,9 +254,9 @@ namespace RPGBase.Flyweights
                         {
                             armrId = io_target.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_TORSO);
                         }
-                        if (Interactive.GetInstance().hasIO(armrId))
+                        if (Interactive.Instance.HasIO(armrId))
                         {
-                            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.GetInstance().getIO(armrId);
+                            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(armrId);
                             if (io.Armormaterial != null
                                     && io.Armormaterial.Length > 0)
                             {
@@ -281,13 +281,13 @@ namespace RPGBase.Flyweights
                         {
                             // TODO - push player when hit
                             // ARX_DAMAGES_SCREEN_SPLATS_Add(&ppos, dmgs);
-                            io_target.PcData.DamagePlayer(damages, 0, io_source.GetRefId());
+                            io_target.PcData.DamagePlayer(damages, 0, io_source.RefId);
                             // ARX_DAMAGES_DamagePlayerEquipment(dmgs);
                         }
                         else
                         {
                             // TODO - push IONpcData when hit
-                            io_target.NpcData.damageNPC(damages, io_source.GetRefId(), false);
+                            io_target.NpcData.DamageNPC(damages, io_source.RefId, false);
                         }
                     }
                 }
@@ -322,12 +322,12 @@ namespace RPGBase.Flyweights
                         charData = target.NpcData;
                     }
                     int validid = -1;
-                    int i = Interactive.GetInstance().getMaxIORefId();
+                    int i = Interactive.Instance.GetMaxIORefId();
                     for (; i >= 0; i--)
                     {
-                        if (Interactive.GetInstance().hasIO(i)
-                                && Interactive.GetInstance().getIO(i) != null
-                                && io.Equals(Interactive.GetInstance().getIO(i)))
+                        if (Interactive.Instance.HasIO(i)
+                                && Interactive.Instance.GetIO(i) != null
+                                && io.Equals(Interactive.Instance.GetIO(i)))
                         {
                             validid = i;
                             break;
@@ -335,7 +335,7 @@ namespace RPGBase.Flyweights
                     }
                     if (validid >= 0)
                     {
-                        Interactive.GetInstance().RemoveFromAllInventories(io);
+                        Interactive.Instance.RemoveFromAllInventories(io);
                         io.Show = IoGlobals.SHOW_FLAG_ON_PLAYER; // on player
                                                                  // handle drag
                                                                  // if (toequip == DRAGINTER)
@@ -428,14 +428,14 @@ namespace RPGBase.Flyweights
             {
                 if (target.HasIOFlag(IoGlobals.IO_01_PC))
                 {
-                    int i = ProjectConstants.GetInstance().GetMaxEquipped() - 1;
+                    int i = ProjectConstants.Instance.GetMaxEquipped() - 1;
                     for (; i >= 0; i--)
                     {
                         IOPcData player = target.PcData;
                         int itemRefId = player.GetEquippedItem(i);
                         if (itemRefId >= 0
-                                && Interactive.GetInstance().hasIO(itemRefId)
-                                && Interactive.GetInstance().getIO(
+                                && Interactive.Instance.HasIO(itemRefId)
+                                && Interactive.Instance.GetIO(
                                         itemRefId).Equals(io))
                         {
                             // EERIE_LINKEDOBJ_UnLinkObjectFromObject(
@@ -456,11 +456,11 @@ namespace RPGBase.Flyweights
                                 }
                             }
                             // send event from this item to target to unequip
-                            Script.GetInstance().SetEventSender(io);
-                            Script.GetInstance().SendIOScriptEvent(target, ScriptConsts.SM_007_EQUIPOUT, null, null);
+                            Script.Instance.EventSender = io;
+                            Script.Instance.SendIOScriptEvent(target, ScriptConsts.SM_007_EQUIPOUT, null, null);
                             // send event from target to this item to unequip
-                            Script.GetInstance().SetEventSender(target);
-                            Script.GetInstance().SendIOScriptEvent(io, ScriptConsts.SM_007_EQUIPOUT, null, null);
+                            Script.Instance.EventSender = target;
+                            Script.Instance.SendIOScriptEvent(io, ScriptConsts.SM_007_EQUIPOUT, null, null);
                         }
                     }
                     if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_HELMET)
@@ -485,9 +485,9 @@ namespace RPGBase.Flyweights
             // to see if it can be equipped
             bool canEquip = true;
             int ioid = charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
-            if (Interactive.GetInstance().hasIO(ioid))
+            if (Interactive.Instance.HasIO(ioid))
             {
-                BaseInteractiveObject oldRing = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
+                BaseInteractiveObject oldRing = (BaseInteractiveObject)Interactive.Instance.GetIO(ioid);
                 if (oldRing.ItemData.RingType == RingType)
                 {
                     // already wearing that type
@@ -499,9 +499,9 @@ namespace RPGBase.Flyweights
             if (canEquip)
             {
                 ioid = charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_RING_RIGHT);
-                if (Interactive.GetInstance().hasIO(ioid))
+                if (Interactive.Instance.HasIO(ioid))
                 {
-                    BaseInteractiveObject oldRing = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
+                    BaseInteractiveObject oldRing = (BaseInteractiveObject)Interactive.Instance.GetIO(ioid);
                     if (oldRing.ItemData.RingType == RingType)
                     {
                         // already wearing that type
@@ -526,12 +526,12 @@ namespace RPGBase.Flyweights
                 }
                 if (equipSlot == -1)
                 {
-                    if (!charData.getIo().Inventory.isLeftRing())
+                    if (!charData.GetIo().Inventory.LeftRing)
                     {
                         ioid = charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_RING_RIGHT);
-                        if (Interactive.GetInstance().hasIO(ioid))
+                        if (Interactive.Instance.HasIO(ioid))
                         {
-                            BaseInteractiveObject oldIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
+                            BaseInteractiveObject oldIO = (BaseInteractiveObject)Interactive.Instance.GetIO(ioid);
                             if (oldIO.HasIOFlag(IoGlobals.IO_02_ITEM))
                             {
                                 UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_RING_RIGHT);
@@ -543,9 +543,9 @@ namespace RPGBase.Flyweights
                     else
                     {
                         ioid = charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
-                        if (Interactive.GetInstance().hasIO(ioid))
+                        if (Interactive.Instance.HasIO(ioid))
                         {
-                            BaseInteractiveObject oldIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(ioid);
+                            BaseInteractiveObject oldIO = (BaseInteractiveObject)Interactive.Instance.GetIO(ioid);
                             if (oldIO.HasIOFlag(IoGlobals.IO_02_ITEM))
                             {
                                 UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_RING_LEFT);
@@ -554,9 +554,9 @@ namespace RPGBase.Flyweights
                         }
                         equipSlot = EquipmentGlobals.EQUIP_SLOT_RING_LEFT;
                     }
-                    charData.getIo().Inventory.setLeftRing(!charData.getIo().Inventory.isLeftRing());
+                    charData.GetIo().Inventory.LeftRing = !charData.GetIo().Inventory.LeftRing;
                 }
-                charData.SetEquippedItem(equipSlot, io.GetRefId());
+                charData.SetEquippedItem(equipSlot, io.RefId);
             }
         }
         /**
@@ -569,7 +569,7 @@ namespace RPGBase.Flyweights
             // unequip old shield
             UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_SHIELD);
             // equip new shield
-            charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_SHIELD, io.GetRefId());
+            charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_SHIELD, io.RefId);
             // TODO - attach new shield to mesh
             // EERIE_LINKEDOBJ_LinkObjectToObject(target->obj,
             // io->obj, "SHIELD_ATTACH", "SHIELD_ATTACH", io);
@@ -577,9 +577,9 @@ namespace RPGBase.Flyweights
                     charData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
             if (wpnID >= 0)
             {
-                if (Interactive.GetInstance().hasIO(wpnID))
+                if (Interactive.Instance.HasIO(wpnID))
                 {
-                    BaseInteractiveObject wpn = (BaseInteractiveObject)Interactive.GetInstance().getIO(wpnID);
+                    BaseInteractiveObject wpn = (BaseInteractiveObject)Interactive.Instance.GetIO(wpnID);
                     if (wpn.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_2H)
                             || wpn.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_BOW))
                     {
@@ -599,7 +599,7 @@ namespace RPGBase.Flyweights
             // unequip old weapon
             UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_WEAPON);
             // equip new weapon
-            charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON, io.GetRefId());
+            charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON, io.RefId);
             // attach it to player mesh
             if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_BOW))
             {
@@ -652,13 +652,13 @@ namespace RPGBase.Flyweights
             if (player.GetEquippedItem(slot) >= 0)
             {
                 int slotioid = player.GetEquippedItem(slot);
-                if (Interactive.GetInstance().hasIO(slotioid))
+                if (Interactive.Instance.HasIO(slotioid))
                 {
-                    BaseInteractiveObject equipIO = (BaseInteractiveObject)Interactive.GetInstance().getIO(slotioid);
+                    BaseInteractiveObject equipIO = (BaseInteractiveObject)Interactive.Instance.GetIO(slotioid);
                     if (equipIO.HasIOFlag(IoGlobals.IO_02_ITEM)
                             && equipIO.ItemData != null)
                     {
-                        equipIO.ItemData.UnEquip(player.Io, false);
+                        equipIO.ItemData.UnEquip(player.GetIo(), false);
                     }
                     equipIO = null;
                 }

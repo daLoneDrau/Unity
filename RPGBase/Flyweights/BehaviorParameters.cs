@@ -18,6 +18,11 @@ namespace RPGBase.Flyweights
          * such as STACK, L, FRIENDLY, etc...
          * @param bParam the parameter applied to the behavior
          */
+        /// <summary>
+        /// Creates a new instance of {@link BehaviorParameters}.
+        /// </summary>
+        /// <param name="initParams"></param>
+        /// <param name="bParam"></param>
         public BehaviorParameters(string initParams, float bParam)
         {
             BehaviorParam = bParam;

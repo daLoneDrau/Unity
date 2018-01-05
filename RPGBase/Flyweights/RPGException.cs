@@ -16,7 +16,7 @@ namespace RPGBase.Flyweights
         /// <returns></returns>
         private static String GetMessageString(ErrorMessage message, string devMsg)
         {
-            PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
             try
             {
                 sb.Append("ErrorMessage [");

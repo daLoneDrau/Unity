@@ -14,18 +14,18 @@ namespace RPGTests.Singletons
             char[] ca = new char[] { 't', 'e', 's', 't' };
             for (int i = 255; i >= 0; i--)
             {
-                char c = Diceroller.GetInstance().GetRandomIndex(ca);
+                char c = Diceroller.Instance.GetRandomIndex(ca);
                 Assert.IsTrue(c == ca[0] || c == ca[1] || c == ca[2] || c == ca[3]);
             }
             int[] ia = new int[] { 1, 2, 3, 4 };
             for (int i = 255; i >= 0; i--)
             {
-                int c = Diceroller.GetInstance().GetRandomIndex(ia);
+                int c = Diceroller.Instance.GetRandomIndex(ia);
                 Assert.IsTrue(c == ia[0] || c == ia[1] || c == ia[2] || c == ia[3]);
             }
             for (int i = 255; i >= 0; i--)
             {
-                long l = Diceroller.GetInstance().GetRandomLong();
+                long l = Diceroller.Instance.GetRandomLong();
                 Assert.IsFalse(string.Equals("", l.ToString(), StringComparison.OrdinalIgnoreCase));
             }
             List<object> ol = new List<object>
@@ -36,7 +36,7 @@ namespace RPGTests.Singletons
             };
             for (int i = 255; i >= 0; i--)
             {
-                Object o = Diceroller.GetInstance().GetRandomObject(ol);
+                Object o = Diceroller.Instance.GetRandomObject(ol);
                 Assert.IsTrue(ol.Contains(o));
             }
             Dictionary<object, object> om = new Dictionary<Object, Object>
@@ -47,44 +47,44 @@ namespace RPGTests.Singletons
             };
             for (int i = 255; i >= 0; i--)
             {
-                Object o = Diceroller.GetInstance().GetRandomObject(om);
+                Object o = Diceroller.Instance.GetRandomObject(om);
                 Assert.IsTrue(om.ContainsValue(o));
             }
             Object[] oa = new Object[] { new Object(), new Object(), new Object() };
             for (int i = 255; i >= 0; i--)
             {
-                Object o = Diceroller.GetInstance().GetRandomObject(oa);
+                Object o = Diceroller.Instance.GetRandomObject(oa);
             }
             for (int i = ol.Count; i > 0; i--)
             {
-                Object o = Diceroller.GetInstance().RemoveRandomObject(ol);
+                Object o = Diceroller.Instance.RemoveRandomObject(ol);
                 Assert.IsFalse(ol.Contains(o));
             }
             Assert.AreEqual(0, ol.Count);
             for (int i = om.Count; i > 0; i--)
             {
-                Object o = Diceroller.GetInstance().RemoveRandomObject(om);
+                Object o = Diceroller.Instance.RemoveRandomObject(om);
                 Assert.IsFalse(om.ContainsValue(o));
             }
             Assert.AreEqual(0, om.Count);
             for (int i = 255; i >= 0; i--)
             {
-                float p = Diceroller.GetInstance().RollPercent();
+                float p = Diceroller.Instance.RollPercent();
                 Assert.IsTrue(p >= 0.0f && p <= 1.0f);
             }
             for (int i = 255; i >= 0; i--)
             {
-                int d = Diceroller.GetInstance().RolldX(6);
+                int d = Diceroller.Instance.RolldX(6);
                 Assert.IsTrue(d >= 1 && d <= 6);
             }
             for (int i = 255; i >= 0; i--)
             {
-                int d = Diceroller.GetInstance().RollXdY(3, 6);
+                int d = Diceroller.Instance.RollXdY(3, 6);
                 Assert.IsTrue(d >= 3 && d <= 18);
             }
             for (int i = 255; i >= 0; i--)
             {
-                int d = Diceroller.GetInstance().RolldXPlusY(4, 1);
+                int d = Diceroller.Instance.RolldXPlusY(4, 1);
                 Assert.IsTrue(d >= 2 && d <= 5);
             }
         }

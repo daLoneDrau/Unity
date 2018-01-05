@@ -9,7 +9,7 @@ namespace RPGBase.Constants
         {
             int sixteen = 16, shift = 0xffff;
             int num = (int)dice >> sixteen, faces = (int)dice & shift;
-            return Diceroller.GetInstance().RollXdY(num, faces);
+            return Diceroller.Instance.RollXdY(num, faces);
         }
     }
     public enum Dice

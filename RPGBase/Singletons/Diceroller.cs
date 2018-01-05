@@ -13,13 +13,15 @@ namespace RPGBase.Singletons
         /// <summary>
         /// Gives access to the singleton instance of <see cref="Diceroller"/>.
         /// </summary>
-        public static Diceroller GetInstance()
-        {
-            if (Diceroller.instance == null)
+        public static Diceroller Instance
+        { get
             {
-                Diceroller.instance = new Diceroller();
+                if (Diceroller.instance == null)
+                {
+                    Diceroller.instance = new Diceroller();
+                }
+                return Diceroller.instance;
             }
-            return Diceroller.instance;
         }
         /// <summary>
         /// the seed value.

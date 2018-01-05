@@ -66,7 +66,7 @@ namespace RPGBase.Flyweights
             }
             if (index == -1)
             {
-                lvar = ArrayUtilities.GetInstance().ExtendArray(svar, lvar);
+                lvar = ArrayUtilities.Instance.ExtendArray(svar, lvar);
             }
         }
         /// <summary>
@@ -83,7 +83,7 @@ namespace RPGBase.Flyweights
             if (action != null)
             {
                 action.SetScript(this);
-                eventActions.Add(eventID, ArrayUtilities.GetInstance().ExtendArray(action, eventActions[eventID]));
+                eventActions.Add(eventID, ArrayUtilities.Instance.ExtendArray(action, eventActions[eventID]));
             }
         }
         /// <summary>
@@ -200,7 +200,7 @@ namespace RPGBase.Flyweights
             if (svar == null
                     || svar.Type != ScriptConsts.TYPE_L_11_FLOAT_ARR)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 sb.Append("Local floating-point array type variable ");
                 sb.Append(name);
                 sb.Append(" was never set.");
@@ -221,7 +221,7 @@ namespace RPGBase.Flyweights
             if (svar == null
                     || svar.Type != ScriptConsts.TYPE_L_10_FLOAT)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Local floating-point variable ");
@@ -250,7 +250,7 @@ namespace RPGBase.Flyweights
             if (svar == null
                     || svar.Type != ScriptConsts.TYPE_L_13_INT_ARR)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 sb.Append("Local floating-point variable ");
                 sb.Append(name);
                 sb.Append(" was never set.");
@@ -271,7 +271,7 @@ namespace RPGBase.Flyweights
             if (svar == null
                     || svar.Type != ScriptConsts.TYPE_L_12_INT)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Local integer variable ");
@@ -298,7 +298,7 @@ namespace RPGBase.Flyweights
             if (svar == null
                     || svar.Type != ScriptConsts.TYPE_L_15_LONG_ARR)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 sb.Append("Local floating-point variable ");
                 sb.Append(name);
                 sb.Append(" was never set.");
@@ -319,7 +319,7 @@ namespace RPGBase.Flyweights
             if (svar == null
                     || svar.Type != ScriptConsts.TYPE_L_14_LONG)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Local long integer variable ");
@@ -347,7 +347,7 @@ namespace RPGBase.Flyweights
                     || svar.Type != ScriptConsts.TYPE_L_09_TEXT_ARR)
             {
                 PooledStringBuilder sb =
-                        StringBuilderPool.GetInstance().GetStringBuilder();
+                        StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Local string array variable ");
@@ -375,7 +375,7 @@ namespace RPGBase.Flyweights
             if (svar == null
                     || svar.Type != ScriptConsts.TYPE_L_08_TEXT)
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Local string variable ");
@@ -488,10 +488,10 @@ namespace RPGBase.Flyweights
                         // io.Target.setY(ACTIVEBKG->anchors[pos].pos.y;
                         // io.Target.setZ(ACTIVEBKG->anchors[pos].pos.z;
                     }
-                    else if (Interactive.GetInstance().hasIO(
+                    else if (Interactive.Instance.HasIO(
                           io.NpcData.getPathfinding().getTruetarget()))
                     {
-                        BaseInteractiveObject ioo = (BaseInteractiveObject)Interactive.GetInstance().getIO(
+                        BaseInteractiveObject ioo = (BaseInteractiveObject)Interactive.Instance.GetIO(
                                 io.NpcData.getPathfinding()
                                         .getTruetarget());
                         io.Target.setX(ioo.getPosition().getX());
@@ -547,7 +547,7 @@ namespace RPGBase.Flyweights
                     || io.Targetinfo == -1)
             {
                 /*
-                BaseInteractiveObject player = (BaseInteractiveObject)Interactive.GetInstance().getIO(ProjectConstants.GetInstance().GetPlayer());
+                BaseInteractiveObject player = (BaseInteractiveObject)Interactive.Instance.GetIO(ProjectConstants.Instance.GetPlayer());
                 io.Target.setX(player.getPosition().getX());
                 io.Target.setY(player.getPosition().getY());
                 io.Target.setZ(0);
@@ -557,12 +557,12 @@ namespace RPGBase.Flyweights
             }
             else
             {
-                if (Interactive.GetInstance().hasIO(io.Targetinfo))
+                if (Interactive.Instance.HasIO(io.Targetinfo))
                 {
                     /*
-                    BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.GetInstance().getIO(io.Targetinfo);
+                    BaseInteractiveObject tio = (BaseInteractiveObject)Interactive.Instance.GetIO(io.Targetinfo);
                     Vector2 pos = new Vector2();
-                    if (Interactive.GetInstance().GetItemWorldPosition(tio, pos))
+                    if (Interactive.Instance.GetItemWorldPosition(tio, pos))
                     {
                         io.Target.setX(pos.getX());
                         io.Target.setY(pos.getY());
@@ -933,7 +933,7 @@ namespace RPGBase.Flyweights
                 // if the local variables array needs to be extended, do so
                 if (index >= lvar.Length)
                 {
-                    lvar = ArrayUtilities.GetInstance().ExtendArray(svar, lvar);
+                    lvar = ArrayUtilities.Instance.ExtendArray(svar, lvar);
                 }
                 else
                 {
@@ -942,7 +942,7 @@ namespace RPGBase.Flyweights
             }
             else
             {
-                PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                 try
                 {
                     sb.Append("Invalid array index ");
@@ -999,7 +999,7 @@ namespace RPGBase.Flyweights
                     }
                     else
                     {
-                        lvar = ArrayUtilities.GetInstance().ExtendArray(svar, lvar);
+                        lvar = ArrayUtilities.Instance.ExtendArray(svar, lvar);
                     }
                 }
             }
@@ -1077,7 +1077,7 @@ namespace RPGBase.Flyweights
                 }
                 else
                 {
-                    PooledStringBuilder sb = StringBuilderPool.GetInstance().GetStringBuilder();
+                    PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                     try
                     {
                         sb.Append("Local variable ");
@@ -1096,7 +1096,7 @@ namespace RPGBase.Flyweights
                     sb = null;
                     throw ex;
                 }
-                lvar = ArrayUtilities.GetInstance().ExtendArray(svar, lvar);
+                lvar = ArrayUtilities.Instance.ExtendArray(svar, lvar);
             }
         }
         public void SetTarget(TargetParameters p)
@@ -1133,7 +1133,7 @@ namespace RPGBase.Flyweights
 
                 if (t == -2)
                 {
-                    t = Interactive.GetInstance().GetInterNum(io);
+                    t = Interactive.Instance.GetInterNum(io);
                 }
                 // if (io.HasIOFlag(ioglobals.io_camera)) {
                 // EERIE_CAMERA * cam = (EERIE_CAMERA *)io->_camdata;
@@ -1152,7 +1152,7 @@ namespace RPGBase.Flyweights
                 }
                 else
                 {
-                    if (Interactive.GetInstance().hasIO(t))
+                    if (Interactive.Instance.HasIO(t))
                     {
                         Io.setTargetinfo(t); // TARGET_PATH;
                         getTargetPos(io, 0);

@@ -20,7 +20,7 @@ namespace RPGBase.Flyweights
         /// </summary>
         public IOEquipItem()
         {
-            int numElements = ProjectConstants.GetInstance().GetNumberEquipmentElements();
+            int numElements = ProjectConstants.Instance.GetNumberEquipmentElements();
             elements = new EquipmentItemModifier[numElements];
             for (int i = elements.Length - 1; i >= 0 ; i--)
             {

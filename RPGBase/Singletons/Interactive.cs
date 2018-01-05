@@ -1,42 +1,33 @@
 ﻿using RPGBase.Constants;
 using RPGBase.Flyweights;
+using System;
 
 namespace RPGBase.Singletons
 {
-    public class Interactive
+    public abstract class Interactive
     {
         /// <summary>
         /// the singleton instance.
         /// </summary>
-        private static Interactive instance;
-        public static Interactive Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new Interactive();
-                }
-                return instance;
-            }
-        }
+        public static Interactive Instance { get; protected set; }
         private bool FAST_RELEASE;
-        /**
-         * Adds an interactive object to the scene.
-         * @param item
-         * @param flags
-         * @return
-         * @
-         */
+        /// <summary>
+        /// Adds an interactive object to the scene.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="flags"></param>
+        /// <returns></returns>
         public BaseInteractiveObject AddItem(string item, long flags)
         {
-            BaseInteractiveObject io = WebServiceClient.GetInstance().GetItemByName(item);
+            BaseInteractiveObject io = null;
+            // TODO - fix this
+            // BaseInteractiveObject io = WebServiceClient.Instance.GetItemByName(item);
             if (io != null)
             {
                 // add additional flags, such as GOLD or MOVABLE
                 if ((flags & IoGlobals.NO_ON_LOAD) != IoGlobals.NO_ON_LOAD)
                 {
-                    Script.GetInstance().SendIOScriptEvent(io, ScriptConsts.SM_41_LOAD, null, "");
+                    Script.Instance.SendIOScriptEvent(io, ScriptConsts.SM_041_LOAD, null, "");
                 }
                 // TODO - remove spellcasting data
                 // io->spellcast_data.castingspell = -1;
@@ -44,19 +35,17 @@ namespace RPGBase.Singletons
             }
             return io;
         }
-        /**
-         * Destroys dynamic info for an interactive object.
-         * @param io the BaseInteractiveObject
-         * @throws PooledException if an error occurs
-         * @ if an error occurs
-         */
+        /// <summary>
+        /// Destroys dynamic info for an interactive object.
+        /// </summary>
+        /// <param name="io">the BaseInteractiveObject</param>
         public void DestroyDynamicInfo(BaseInteractiveObject io)
         {
             if (io != null)
             {
                 int n = GetInterNum(io);
                 ForceIOLeaveZone(io, 0);
-                BaseInteractiveObject[] objs = getIOs();
+                BaseInteractiveObject[] objs = GetIOs();
                 for (int i = objs.Length - 1; i >= 0; i--)
                 {
                     BaseInteractiveObject pio = objs[i];
@@ -66,15 +55,15 @@ namespace RPGBase.Singletons
                         bool found = false;
                         IOPcData player = pio.PcData;
                         // check to see if player was equipped with the item
-                        int j = ProjectConstants.GetInstance().GetMaxEquipped() - 1;
+                        int j = ProjectConstants.Instance.GetMaxEquipped() - 1;
                         for (; j >= 0; j--)
                         {
-                            if (player.getEquippedItem(j) == n
-                                    && Interactive.GetInstance().hasIO(n))
+                            if (player.GetEquippedItem(j) == n
+                                    && Interactive.Instance.HasIO(n))
                             {
                                 // have player unequip
-                                io.getItemData().ARX_EQUIPMENT_UnEquip(pio, true);
-                                player.setEquippedItem(j, -1);
+                                io.ItemData.UnEquip(pio, true);
+                                player.SetEquippedItem(j, -1);
                                 found = true;
                                 break;
                             }
@@ -87,34 +76,34 @@ namespace RPGBase.Singletons
                     }
                 }
 
-                Script.GetInstance().eventStackClearForIo(io);
+                Script.Instance.EventStackClearForIo(io);
 
-                if (Interactive.GetInstance().hasIO(n))
+                if (Interactive.Instance.HasIO(n))
                 {
-                    int i = ProjectConstants.GetInstance().getMaxSpells();
+                    int i = ProjectConstants.Instance.GetMaxSpells();
                     for (; i >= 0; i--)
                     {
-                        Spell spell = SpellController.GetInstance().getSpell(i);
+                        Spell spell = SpellController.Instance.GetSpell(i);
                         if (spell != null)
                         {
-                            if (spell.exists()
-                                    && spell.getCaster() == n)
+                            if (spell.Exists
+                                    && spell.Caster == n)
                             {
-                                spell.setTimeToLive(0);
-                                spell.setTurnsToLive(0);
+                                spell.TimeToLive = 0;
+                                spell.TurnsToLive = 0;
                             }
                         }
                     }
                 }
             }
         }
-        public void ARX_INTERACTIVE_DestroyIO(BaseInteractiveObject io)
+        public void DestroyIO(BaseInteractiveObject io)
 
         {
             if (io != null
-                    && io.getShow() != IoGlobals.SHOW_FLAG_DESTROYED)
+                    && io.Show != IoGlobals.SHOW_FLAG_DESTROYED)
             {
-                ARX_INTERACTIVE_ForceIOLeaveZone(io, 0);
+                ForceIOLeaveZone(io, 0);
                 // if interactive object was being dragged
                 // if (DRAGINTER == ioo) {
                 // set drag object to null
@@ -132,26 +121,26 @@ namespace RPGBase.Singletons
                 // set combined object to null
                 // COMBINE = NULL;
                 // }
-                if (io.hasIOFlag(IoGlobals.IO_02_ITEM)
-                        && io.getItemData().getCount() > 1)
+                if (io.HasIOFlag(IoGlobals.IO_02_ITEM)
+                        && io.ItemData.Count > 1)
                 {
-                    io.getItemData().adjustCount(-1);
+                    io.ItemData.AdjustCount(-1);
                 }
                 else
                 {
                     // Kill all spells
                     int numm = GetInterNum(io);
 
-                    if (hasIO(numm))
+                    if (HasIO(numm))
                     {
                         // kill all spells from caster
                         // ARX_SPELLS_FizzleAllSpellsFromCaster(numm);
                     }
 
                     // Need To Kill timers
-                    Script.GetInstance().timerClearByIO(io);
-                    io.setShow(IoGlobals.SHOW_FLAG_DESTROYED);
-                    io.removeGameFlag(IoGlobals.GFLAG_ISINTREATZONE);
+                    Script.Instance.TimerClearByIO(io);
+                    io.Show = IoGlobals.SHOW_FLAG_DESTROYED;
+                    io.RemoveGameFlag(IoGlobals.GFLAG_ISINTREATZONE);
 
                     if (!FAST_RELEASE)
                     {
@@ -176,32 +165,31 @@ namespace RPGBase.Singletons
                     // }
                     // }
 
-                    ARX_INTERACTIVE_DestroyDynamicInfo(io);
+                    DestroyDynamicInfo(io);
 
-                    if (io.isScriptLoaded())
+                    if (io.ScriptLoaded)
                     {
                         int num = GetInterNum(io);
-                        releaseIO(io);
+                        ReleaseIO(io);
 
-                        if (hasIO(num))
+                        if (HasIO(num))
                         {
-                            getIOs()[num] = null;
+                            GetIOs()[num] = null;
                         }
                     }
                 }
             }
         }
-        public abstract void ARX_INTERACTIVE_ForceIOLeaveZone(BaseInteractiveObject io,
-                long flags);
+        public abstract void ForceIOLeaveZone(BaseInteractiveObject io, long flags);
         public int GetInterNum(BaseInteractiveObject io)
         {
             int num = -1;
             if (io != null)
             {
-                BaseInteractiveObject[] objs = getIOs();
-                for (int i = objs.length - 1; i >= 0; i--)
+                BaseInteractiveObject[] objs = GetIOs();
+                for (int i = objs.Length - 1; i >= 0; i--)
                 {
-                    if (objs[i].equals(io))
+                    if (objs[i].Equals(io))
                     {
                         num = i;
                         break;
@@ -217,16 +205,16 @@ namespace RPGBase.Singletons
          * @return <see cref="BaseInteractiveObject"/>
          * @ if the object does not exist
          */
-        public BaseInteractiveObject getIO(int id)
+        public BaseInteractiveObject GetIO(int id)
         {
             BaseInteractiveObject io = null;
-            if (hasIO(id))
+            if (HasIO(id))
             {
-                BaseInteractiveObject[] objs = getIOs();
-                for (int i = objs.length - 1; i >= 0; i--)
+                BaseInteractiveObject[] objs = GetIOs();
+                for (int i = objs.Length - 1; i >= 0; i--)
                 {
                     if (objs[i] != null
-                            && objs[i].getRefId() == id)
+                            && objs[i].RefId == id)
                     {
                         io = objs[i];
                         break;
@@ -236,8 +224,7 @@ namespace RPGBase.Singletons
             }
             else
             {
-                throw new RPGException(
-                        ErrorMessage.INTERNAL_BAD_ARGUMENT, "BaseInteractiveObject does not exist");
+                throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "BaseInteractiveObject does not exist");
             }
             return io;
         }
@@ -245,7 +232,7 @@ namespace RPGBase.Singletons
          * Gets the internal list of IOs.
          * @return <see cref="BaseInteractiveObject"/>[]
          */
-        protected abstract BaseInteractiveObject[] getIOs();
+        protected abstract BaseInteractiveObject[] GetIOs();
         /**
          * Gets the largest reference Id in use.
          * @return {@link int}
@@ -255,7 +242,7 @@ namespace RPGBase.Singletons
          * Gets a new interactive object.
          * @return <see cref="BaseInteractiveObject"/>
          */
-        protected abstract BaseInteractiveObject getNewIO();
+        protected abstract BaseInteractiveObject GetNewIO();
         /**
          * Gets an BaseInteractiveObject's reference id by name.  If the target is "none" or does not
          * exist, -1 is returned.  If the target is "self" or "me", -2; 
@@ -263,42 +250,39 @@ namespace RPGBase.Singletons
          * @return {@link int}
          * @ if an error occurs
          */
-        public int getTargetByNameTarget(string name)
-
+        public int GetTargetByNameTarget(string name)
         {
             int ioid = -1;
             if (name != null)
             {
-                if (name.equalsIgnoreCase("self")
-                        || name.equalsIgnoreCase("me"))
+                if (string.Equals(name, "self", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(name, "me", StringComparison.OrdinalIgnoreCase))
                 {
                     ioid = -2;
                 }
-                else if (name.equalsIgnoreCase("player"))
+                else if (string.Equals(name, "player", StringComparison.OrdinalIgnoreCase))
                 {
-                    ioid = ProjectConstants.GetInstance().getPlayer();
+                    ioid = ProjectConstants.Instance.GetPlayer();
                 }
                 else
                 {
-                    BaseInteractiveObject[] ios = this.getIOs();
-                    for (int i = ios.length - 1; i >= 0; i--)
+                    BaseInteractiveObject[] ios = this.GetIOs();
+                    for (int i = ios.Length - 1; i >= 0; i--)
                     {
                         BaseInteractiveObject io = ios[i];
-                        if (io.hasIOFlag(IoGlobals.IO_03_NPC))
+                        if (io.HasIOFlag(IoGlobals.IO_03_NPC))
                         {
-                            if (name.equalsIgnoreCase(
-                                    new string(io.getNPCData().getName())))
+                            if (string.Equals(name, io.NpcData.Name, StringComparison.OrdinalIgnoreCase))
                             {
-                                ioid = io.getRefId();
+                                ioid = io.RefId;
                                 break;
                             }
                         }
-                        else if (io.hasIOFlag(IoGlobals.IO_02_ITEM))
+                        else if (io.HasIOFlag(IoGlobals.IO_02_ITEM))
                         {
-                            if (name.equalsIgnoreCase(
-                                    new string(io.getItemData().getItemName())))
+                            if (string.Equals(name, io.ItemData.ItemName, StringComparison.OrdinalIgnoreCase))
                             {
-                                ioid = io.getRefId();
+                                ioid = io.RefId;
                                 break;
                             }
                         }
@@ -316,14 +300,14 @@ namespace RPGBase.Singletons
          * @return true if an interactive object by that id has been stored already;
          *         false otherwise
          */
-        public bool hasIO(int id)
+        public bool HasIO(int id)
         {
             bool has = false;
-            BaseInteractiveObject[] objs = getIOs();
-            for (int i = objs.length - 1; i >= 0; i--)
+            BaseInteractiveObject[] objs = GetIOs();
+            for (int i = objs.Length - 1; i >= 0; i--)
             {
                 if (objs[i] != null
-                        && id == objs[i].getRefId())
+                        && id == objs[i].RefId)
                 {
                     has = true;
                     break;
@@ -338,17 +322,17 @@ namespace RPGBase.Singletons
          * @return true if that interactive object has been stored already; false
          *         otherwise
          */
-        public bool hasIO(BaseInteractiveObject io)
+        public bool HasIO(BaseInteractiveObject io)
         {
             bool has = false;
             if (io != null)
             {
-                BaseInteractiveObject[] objs = getIOs();
-                for (int i = objs.length - 1; i >= 0; i--)
+                BaseInteractiveObject[] objs = GetIOs();
+                for (int i = objs.Length - 1; i >= 0; i--)
                 {
                     if (objs[i] != null
-                            && io.getRefId() == objs[i].getRefId()
-                            && io.equals(objs[i]))
+                            && io.RefId == objs[i].RefId
+                            && io.Equals(objs[i]))
                     {
                         has = true;
                         break;
@@ -367,26 +351,22 @@ namespace RPGBase.Singletons
          * @return <tt>true</tt> if the IOs represent the same object;
          *         <tt>false</tt> otherwise
          */
-        public bool isSameObject(BaseInteractiveObject io0, BaseInteractiveObject io1)
+        public bool IsSameObject(BaseInteractiveObject io0, BaseInteractiveObject io1)
         {
             bool same = false;
             if (io0 != null
                     && io1 != null)
             {
-                if (!io0.hasIOFlag(IoGlobals.IO_13_UNIQUE)
-                        && !io1.hasIOFlag(IoGlobals.IO_13_UNIQUE))
+                if (!io0.HasIOFlag(IoGlobals.IO_13_UNIQUE)
+                        && !io1.HasIOFlag(IoGlobals.IO_13_UNIQUE))
                 {
-                    if (io0.hasIOFlag(IoGlobals.IO_02_ITEM)
-                            && io1.hasIOFlag(IoGlobals.IO_02_ITEM)
-                            && io0.getOverscript() == null
-                            && io1.getOverscript() == null)
+                    if (io0.HasIOFlag(IoGlobals.IO_02_ITEM)
+                            && io1.HasIOFlag(IoGlobals.IO_02_ITEM)
+                            && io0.Overscript == null
+                            && io1.Overscript == null
+                            && string.Equals(io0.ItemData.ItemName, io1.ItemData.ItemName, StringComparison.OrdinalIgnoreCase))
                     {
-                        string n0 = new string(io0.getItemData().getItemName());
-                        string n1 = new string(io1.getItemData().getItemName());
-                        if (n0.equalsIgnoreCase(n1))
-                        {
-                            same = true;
-                        }
+                        same = true;
                     }
                 }
             }
@@ -398,28 +378,28 @@ namespace RPGBase.Singletons
          * @param temp the temp object
          * @
          */
-        public void prepareSetWeapon(BaseInteractiveObject io, string temp)
+        public void PrepareSetWeapon(BaseInteractiveObject io, string temp)
 
         {
             if (io != null
-                    && io.hasIOFlag(IoGlobals.IO_03_NPC))
+                    && io.HasIOFlag(IoGlobals.IO_03_NPC))
             {
-                if (io.getNPCData().getWeapon() != null)
+                if (io.NpcData.Weapon != null)
                 {
-                    BaseInteractiveObject oldWpnIO = (BaseInteractiveObject)io.getNPCData().getWeapon();
+                    BaseInteractiveObject oldWpnIO = (BaseInteractiveObject)io.NpcData.Weapon;
                     // unlink the weapon from the NPC BaseInteractiveObject
                     // EERIE_LINKEDOBJ_UnLinkObjectFromObject(io->obj, ioo->obj);
-                    io.getNPCData().setWeapon(null);
-                    releaseIO(oldWpnIO);
+                    io.NpcData.Weapon = null;
+                    ReleaseIO(oldWpnIO);
                     oldWpnIO = null;
                 }
                 // load BaseInteractiveObject from DB
                 BaseInteractiveObject wpnIO = AddItem(temp, IoGlobals.IO_IMMEDIATELOAD);
                 if (wpnIO != null)
                 {
-                    io.getNPCData().setWeapon(wpnIO);
-                    io.setShow(IoGlobals.SHOW_FLAG_LINKED);
-                    wpnIO.setScriptLoaded(true);
+                    io.NpcData.Weapon = wpnIO;
+                    io.Show = IoGlobals.SHOW_FLAG_LINKED;
+                    wpnIO.ScriptLoaded = true;
                     // TODO - link item to io
                     // SetWeapon_Back(io);
                 }
@@ -430,34 +410,33 @@ namespace RPGBase.Singletons
          * @param ioid the BaseInteractiveObject's id
          * @ if an error occurs
          */
-        public void releaseIO(int ioid)
+        public void ReleaseIO(int ioid)
         {
-            if (!hasIO(ioid))
+            if (!HasIO(ioid))
             {
-                throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                        "Invalid BaseInteractiveObject id " + ioid);
+                throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Invalid BaseInteractiveObject id " + ioid);
             }
-            releaseIO(getIO(ioid));
+            ReleaseIO(GetIO(ioid));
         }
         /**
          * Releases the BaseInteractiveObject and all resources.
          * @param io the BaseInteractiveObject
          */
-        public void releaseIO(BaseInteractiveObject io)
+        public void ReleaseIO(BaseInteractiveObject io)
         {
             if (io != null)
             {
-                if (io.getInventory() != null)
+                if (io.Inventory != null)
                 {
-                    InventoryData inventory = io.getInventory();
+                    InventoryData inventory = io.Inventory;
                     if (inventory != null)
                     {
-                        for (int j = 0; j < inventory.getNumInventorySlots(); j++)
+                        for (int j = 0; j < inventory.GetNumInventorySlots(); j++)
                         {
-                            if (io.equals(inventory.getSlot(j).getIo()))
+                            if (io.Equals(inventory.Slots[j].Io))
                             {
-                                inventory.getSlot(j).setIo(null);
-                                inventory.getSlot(j).setShow(true);
+                                inventory.Slots[j].Io = null;
+                                inventory.Slots[j].Show = true;
                             }
                         }
                     }
@@ -465,18 +444,18 @@ namespace RPGBase.Singletons
                 // release script timers and spells
                 // release from groups
                 //
-                Script.GetInstance().timerClearByIO(io);
-                // MagicRealmSpells.GetInstance().removeAllSpellsOn(io);
-                Script.GetInstance().releaseScript(io.getScript());
-                Script.GetInstance().releaseScript(io.getOverscript());
-                Script.GetInstance().releaseAllGroups(io);
-                int id = io.getRefId();
+                Script.Instance.TimerClearByIO(io);
+                // MagicRealmSpells.Instance.removeAllSpellsOn(io);
+                Script.Instance.ReleaseScript(io.Script);
+                Script.Instance.ReleaseScript(io.Overscript);
+                Script.Instance.ReleaseAllGroups(io);
+                int id = io.RefId;
                 int index = -1;
-                BaseInteractiveObject[] objs = getIOs();
-                for (int i = 0; i < objs.length; i++)
+                BaseInteractiveObject[] objs = GetIOs();
+                for (int i = 0; i < objs.Length; i++)
                 {
                     if (objs[i] != null
-                            && id == objs[i].getRefId())
+                            && id == objs[i].RefId)
                     {
                         index = i;
                         break;
@@ -487,7 +466,7 @@ namespace RPGBase.Singletons
                     objs[index] = null;
                 }
                 objs = null;
-                objs = getIOs();
+                objs = GetIOs();
             }
         }
         /**
@@ -496,31 +475,27 @@ namespace RPGBase.Singletons
          * @ if an error occurs
          */
         public void RemoveFromAllInventories(BaseInteractiveObject itemIO)
-
         {
             if (itemIO != null)
             {
-                int i = Interactive.GetInstance().getMaxIORefId();
+                int i = Interactive.Instance.GetMaxIORefId();
                 for (; i >= 0; i--)
                 {
-                    if (Interactive.GetInstance().hasIO(i))
+                    if (Interactive.Instance.HasIO(i))
                     {
-                        BaseInteractiveObject invIo = (BaseInteractiveObject)Interactive.GetInstance().getIO(i);
-                        InventoryData<BaseInteractiveObject, InventorySlot<BaseInteractiveObject>> inventoryData;
-                        if (invIo.getInventory() != null)
+                        BaseInteractiveObject invIo = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
+                        InventoryData inventoryData;
+                        if (invIo.Inventory != null)
                         {
-                            inventoryData = invIo.getInventory();
-                            for (int j =
-                                    inventoryData.getNumInventorySlots()
-                                            - 1;
-                                    j >= 0; j--)
+                            inventoryData = invIo.Inventory;
+                            for (int j = inventoryData.GetNumInventorySlots() - 1; j >= 0; j--)
                             {
-                                InventorySlot<BaseInteractiveObject> slot = inventoryData.getSlot(j);
-                                if (slot.getIo() != null
-                                        && slot.getIo().equals(itemIO))
+                                InventorySlot slot = inventoryData.Slots[j];
+                                if (slot.Io != null
+                                        && slot.Io.Equals(itemIO))
                                 {
-                                    slot.setIo(null);
-                                    slot.setShow(true);
+                                    slot.Io = null;
+                                    slot.Show = true;
                                 }
                             }
                         }
@@ -530,16 +505,19 @@ namespace RPGBase.Singletons
                 }
             }
         }
-        public void ARX_INTERACTIVE_TeleportBehindTarget(BaseInteractiveObject io)
+        public void TeleportBehindTarget(BaseInteractiveObject io)
         {
             // TODO Auto-generated method stub
 
         }
-        public void ARX_INTERACTIVE_Teleport(BaseInteractiveObject io, SimpleVector2 position)
+        // TODO Auto-generated method stub
+        /*
+        public void Teleport(BaseInteractiveObject io, SimpleVector2 position)
         {
             // TODO Auto-generated method stub
 
         }
+        */
         /**
          * Determines an BaseInteractiveObject's world position and sets the location to a
          *  {@link SimpleVector2} parameter.
@@ -548,30 +526,29 @@ namespace RPGBase.Singletons
          * @return <tt>true</tt> if the item has a position; <tt>false</tt>
          * otherwise
          * @ if an error occurs
-         */
+         *//*
         public bool GetItemWorldPosition(BaseInteractiveObject io, SimpleVector2 pos)
-
         {
             bool hasPosition = false;
             if (io != null)
             {
-                if (io.getShow() != IoGlobals.SHOW_FLAG_IN_SCENE)
+                if (io.Show != IoGlobals.SHOW_FLAG_IN_SCENE)
                 {
                     // TODO if item is being cursor dragged, set its location to
                     // player's
 
-                    BaseInteractiveObject[] ios = this.getIOs();
+                    BaseInteractiveObject[] ios = this.GetIOs();
                     bool found = false;
-                    for (int i = ios.length - 1; i >= 0; i--)
+                    for (int i = ios.Length - 1; i >= 0; i--)
                     {
                         BaseInteractiveObject iio = ios[i];
                         if (iio == null)
                         {
                             continue;
                         }
-                        if (iio.hasIOFlag(IoGlobals.IO_03_NPC))
+                        if (iio.HasIOFlag(IoGlobals.IO_03_NPC))
                         {
-                            if (iio.equals(io))
+                            if (iio.Equals(io))
                             {
                                 // teleporting to NPC io
                                 pos.set(iio.getPosition());
@@ -580,7 +557,7 @@ namespace RPGBase.Singletons
                                 break;
                             }
                             // check to see if NPC has BaseInteractiveObject in inventory
-                            if (iio.getInventory().IsInPlayerInventory(io))
+                            if (iio.Inventory.IsInPlayerInventory(io))
                             {
                                 // teleporting to NPC io
                                 pos.set(iio.getPosition());
@@ -589,9 +566,9 @@ namespace RPGBase.Singletons
                                 break;
                             }
                         }
-                        else if (iio.hasIOFlag(IoGlobals.IO_01_PC))
+                        else if (iio.HasIOFlag(IoGlobals.IO_01_PC))
                         {
-                            if (iio.equals(io))
+                            if (iio.Equals(io))
                             {
                                 // teleporting to PC io
                                 pos.set(iio.getPosition());
@@ -600,7 +577,7 @@ namespace RPGBase.Singletons
                                 break;
                             }
                             // check to see if PC has BaseInteractiveObject in inventory
-                            if (iio.getInventory().IsInPlayerInventory(io))
+                            if (iio.Inventory.IsInPlayerInventory(io))
                             {
                                 // teleporting to PC io
                                 pos.set(iio.getPosition());
@@ -613,10 +590,10 @@ namespace RPGBase.Singletons
                     if (!found)
                     {
                         // not found as NPC, PC, or item in inventory
-                        for (int i = ios.length - 1; i >= 0; i--)
+                        for (int i = ios.Length - 1; i >= 0; i--)
                         {
                             BaseInteractiveObject iio = ios[i];
-                            if (iio.equals(io))
+                            if (iio.Equals(io))
                             {
                                 pos.set(iio.getPosition());
                                 hasPosition = true;
@@ -628,5 +605,6 @@ namespace RPGBase.Singletons
             }
             return hasPosition;
         }
+        */
     }
 }
