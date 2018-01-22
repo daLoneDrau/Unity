@@ -64,6 +64,7 @@ public class Example : MonoBehaviour
     }
     void Awake()
     {
+        /*
         RectTransform me = GetComponent<RectTransform>();
         print("Awake");
         print("parent::" + me.rect.size);
@@ -84,5 +85,12 @@ public class Example : MonoBehaviour
                 ResizeAndPositionNonStretchy(me, m_RectTransform, new Vector2(50, 50), new Vector2(50, 50));
             }
         }
+        */
+    }
+    [SerializeField]
+    GameObject obj;
+    public void Toggle()
+    {
+        obj.SetActive(!obj.activeSelf);
     }
 }

@@ -8,30 +8,84 @@ using UnityEngine.UI;
 
 namespace Assets
 {
+    /// <summary>
+    /// Custom layout handler that positions children vertically.
+    /// </summary>
     [RequireComponent(typeof(RectTransform))]
     public class VerticalLayoutHandler : UIBehaviour, IRPGLayoutHandler
     {
-        private float lastUpdate = 0;
-        private float height;
-        private float width;
+        /// <summary>
+        /// Horizontal alignment settings.
+        /// </summary>
         public enum HorizontalAlignment
         {
+            /// <summary>
+            /// child elements are aligned to the left side of the layout
+            /// </summary>
             Left,
+            /// <summary>
+            /// child elements are aligned to the center of the layout
+            /// </summary>
             Center,
+            /// <summary>
+            /// child elements are aligned to the right side of the layout
+            /// </summary>
             Right
         }
-        [SerializeField] int spacing;
+        /// <summary>
+        /// The padding settings.
+        /// </summary>
         [Serializable]
         public class Padding
         {
+            /// <summary>
+            /// the left-side padding.
+            /// </summary>
             public int Left;
+            /// <summary>
+            /// the top-side padding.
+            /// </summary>
             public int Top;
+            /// <summary>
+            /// the bottom-side padding.
+            /// </summary>
             public int Bottom;
+            /// <summary>
+            /// the right-side padding.
+            /// </summary>
             public int Right;
         }
-        [SerializeField] Padding padding;
-        [SerializeField] HorizontalAlignment HorizontalAlign = HorizontalAlignment.Left;
+        /// <summary>
+        /// the stored sizes of all child elements.
+        /// </summary>
         private List<Vector2> childSizes = new List<Vector2>();
+        /// <summary>
+        /// the layout's height.
+        /// </summary>
+        private float height;
+        /// <summary>
+        /// the layout's horizontal alignment.
+        /// </summary>
+        [SerializeField]
+        private HorizontalAlignment HorizontalAlign = HorizontalAlignment.Left;
+        /// <summary>
+        /// the last time the layout was updated.
+        /// </summary>
+        private float lastUpdate = 0;
+        /// <summary>
+        /// the layout's padding.
+        /// </summary>
+        [SerializeField]
+        private Padding padding;
+        /// <summary>
+        /// the spacing between child elements
+        /// </summary>
+        [SerializeField]
+        private int spacing;
+        /// <summary>
+        /// the layout's width.
+        /// </summary>
+        private float width;
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -53,6 +107,38 @@ namespace Assets
             }
         }
 #endif
+        public void Configure()
+        {
+            if ((transform.parent.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
+            {
+                print("parent " + transform.parent.name + " has layout manager. will wait for parent to request processing.");
+            }
+            else
+            {
+                print("++++++++++++++++++++++++++++++++configuring " + gameObject.name + "++++++++++++++++++++++++++++++++");
+                // 1. get all my children's sizes
+                Vector2 size = GetPreferredSize();
+                print("size::" + gameObject.name + "::" + size);
+                // 2. resize myself
+                Resize();
+                // 3. resize all my layout children's sizes
+                for (int i = 0, length = transform.childCount; i < length; i++)
+                {
+                    Transform child = transform.GetChild(i);
+                    if ((child.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
+                    {
+                        IRPGLayoutHandler childLayout = child.gameObject.GetComponent<IRPGLayoutHandler>();
+                        print("********************************resizing child " + child.name);
+                        childLayout.Resize();
+                        // 3a. place all my layout children's children
+                        childLayout.PlaceChildren();
+                    }
+                }
+                // 4. place all my children
+                PlaceChildren();
+                print("++++++++++++++++++++++++++++++++done " + gameObject.name + "++++++++++++++++++++++++++++++++");
+            }
+        }
         public Vector2 GetPreferredSize()
         {
             height = 0;
@@ -72,10 +158,16 @@ namespace Assets
                 if ((child.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
                 {
                     print("child " + child.name + " has layout manager");
-                    continue;
+                    IRPGLayoutHandler childLayout = child.gameObject.GetComponent<IRPGLayoutHandler>();
+
+                    print("********************************getting size for " + child.name);
+                    Vector2 childSize = childLayout.GetPreferredSize();
+                    print("*************************child is " + childSize);
+                    height += childSize.y;
+                    width = Mathf.Max(width, childSize.x);
+                    childSizes.Add(childSize);
                 }
-                // handle layout handler children specially
-                if (child.gameObject.GetComponent<LayoutElement>() != null)
+                else if (child.gameObject.GetComponent<LayoutElement>() != null)
                 {
                     print("child " + child.name + " has layout element");
                     LayoutElement le = child.gameObject.GetComponent<LayoutElement>();
@@ -83,58 +175,44 @@ namespace Assets
                     print("*************************child is " + le.minWidth + "," + le.minHeight);
                     float h = Mathf.Max(le.minHeight, le.preferredHeight);
                     float w = Mathf.Max(le.minWidth, le.preferredWidth);
-                    width = Mathf.Max(width, w);
                     height += h;
-                    if (i + 1 < length)
-                    {
-                        height += spacing;
-                    }
+                    width = Mathf.Max(width, w);
                     childSizes.Add(new Vector2(w, h));
                 }
                 else
                 {
                     RectTransform rect = (RectTransform)child;
                     print("*************************child is " + rect.rect);
-                    width = Mathf.Max(width, rect.rect.width);
                     height += rect.rect.height;
-                    if (i + 1 < length)
-                    {
-                        height += spacing;
-                    }
+                    width = Mathf.Max(width, rect.rect.width);
                     childSizes.Add(new Vector2(rect.rect.width, rect.rect.height));
                 }
+                if (i + 1 < length
+                    && transform.GetChild(i + 1).gameObject.activeSelf)
+                {
+                    width += spacing;
+                }
             }
-            width += padding.Left + padding.Right;
             height += padding.Top + padding.Bottom;
+            width += padding.Left + padding.Right;
             return new Vector2(width, height);
         }
-        public void Resize()
+        /// <summary>
+        /// Determines if a Rect Transform has any stretching behavior.  Stretching behavior happens when the anchorMin and anchorMax properties are not identical.
+        /// </summary>
+        /// <param name="transform">the Rect Transform</param>
+        /// <returns>true if the Rect Transform has stretching behavior; false otherwise</returns>
+        bool IsStretching(RectTransform transform)
         {
-            RectTransform me = GetComponent<RectTransform>();
-            print(me.rect);
-            if (IsStretching(me))
-            {
-                Vector2 parentSize = ((RectTransform)me.parent).rect.size;
-
-                // try changing anchor positions to move element.
-                // anchor min x stays the same.
-                // anchor max y stays the same.
-                // anchor max x changes to (parentsize width - ((min x * parentsize width) + new width)) / parentsize width;
-                // anchor min y moves up to (parentsize height - ((max y * parentsize height) + new height) / parentsize height;
-                float minX = me.anchorMin.x;
-                float maxY = me.anchorMax.y;
-                float maxX = ((minX * parentSize.x) + width) / parentSize.x;
-                float minY = ((maxY * parentSize.y) - height) / parentSize.y;
-                me.anchorMin = new Vector2(minX, minY);
-                me.anchorMax = new Vector2(maxX, maxY);
-            }
-            else
-            {
-                //ResizeAndPositionNonStretchy(me, child, child.rect.size, new Vector2(x, y));
-            }
+            return transform.anchorMin != transform.anchorMax;
+        }
+        public bool NotNanOrInfinity(float val)
+        {
+            return !Double.IsNaN(val) && !Double.IsInfinity(val);
         }
         public void PlaceChildren()
         {
+            print("-------------------------PlaceChildren " + gameObject.name);
             RectTransform me = GetComponent<RectTransform>();
             // children get placed starting at position 0,height and then proceed left
             float y = height;
@@ -143,6 +221,18 @@ namespace Assets
             {
                 float x = 0;
                 RectTransform child = transform.GetChild(i) as RectTransform;
+                // ignore hidden children
+                if (!child.gameObject.activeSelf)
+                {
+                    print("child " + child.name + " is hidden");
+                    // add spacing if next child is not hidden
+                    if (i + 1 < length
+                        && transform.GetChild(i + 1).gameObject.activeSelf)
+                    {
+                        y -= spacing;
+                    }
+                    continue;
+                }
                 Vector2 childSize = childSizes[i];
                 y -= childSize.y;
                 switch (HorizontalAlign)
@@ -161,21 +251,66 @@ namespace Assets
                         x -= childSize.x;
                         break;
                 }
-                if (IsStretching(child))
+                if (IsStretching(child)
+                    || (child.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
                 {
+                    // treat custom layout handlers as stretchy regardless of anchor positions
                     ResizeAndPositionStretchy(me, child, childSizes[i], new Vector2(x, y));
                 }
                 else
                 {
                     ResizeAndPositionNonStretchy(me, child, childSizes[i], new Vector2(x, y));
                 }
-                if (i + 1 < length)
+                // add spacing if next child is not hidden
+                if (i + 1 < length
+                    && transform.GetChild(i + 1).gameObject.activeSelf)
                 {
                     y -= spacing;
                 }
             }
+            print("-------------------------PlaceChildren DONE" + gameObject.name);
         }
-        void ResizeAndPositionNonStretchy(RectTransform parent, RectTransform child, Vector2 size, Vector2 lowerLeft)
+        public void Resize()
+        {
+            print("*************************Resize " + gameObject.name);
+            RectTransform me = GetComponent<RectTransform>();
+            if (IsStretching(me))
+            {
+                print(gameObject.name + " is stretchy");
+                Vector2 parentSize = ((RectTransform)me.parent).rect.size;
+                // try changing anchor positions to move element.
+                // anchor min x stays the same.
+                // anchor max y stays the same.
+                // anchor max x changes to (parentsize width - ((min x * parentsize width) + new width)) / parentsize width;
+                // anchor min y moves up to (parentsize height - ((max y * parentsize height) + new height) / parentsize height;
+                float minX = NotNanOrInfinity(me.anchorMin.x) ? me.anchorMin.x : 0;
+                minX = Mathf.Max(0, minX);
+                minX = Mathf.Min(1, minX);
+                float maxY = NotNanOrInfinity(me.anchorMax.y) ? me.anchorMax.y : 1;
+                maxY = Mathf.Max(0, maxY);
+                maxY = Mathf.Min(1, maxY);
+                float maxX = ((minX * parentSize.x) + width) / parentSize.x;
+                float minY = ((maxY * parentSize.y) - height) / parentSize.y;
+                me.anchorMin = new Vector2(minX, minY);
+                me.anchorMax = new Vector2(maxX, maxY);
+                // remove any offsets
+                me.offsetMin = new Vector2(0, 0);
+                me.offsetMax = new Vector2(0, 0);
+            }
+            else
+            {
+                //ResizeAndPositionNonStretchy(me, child, child.rect.size, new Vector2(x, y));
+            }
+            print("*************************Resize DONE -" + gameObject.name + "::" + me.rect);
+        }
+        /// <summary>
+        /// Resizes and positions a "non-stretching" UI element
+        /// </summary>
+        /// <param name="parent">the parent <see cref="RectTransform"/></param>
+        /// <param name="child">the child <see cref="RectTransform"/></param>
+        /// <param name="size">the element's new size</param>
+        /// <param name="lowerLeft">the position of the element's lower-left corner</param>
+        private void ResizeAndPositionNonStretchy(RectTransform parent, RectTransform child, Vector2 size, Vector2 lowerLeft)
         {
             print("ResizeAndPositionNonStretchy(" + size + "," + lowerLeft);
             Vector2 parentSize = parent.rect.size;
@@ -203,15 +338,6 @@ namespace Assets
         {
             print("ResizeAndPositionStretchy(" + size + "," + lowerLeft);
             Vector2 parentSize = parent.rect.size;
-            /*
-            float minX = lowerLeft.x;
-            float maxX = -(parentSize.x - size.x);
-            float minY = lowerLeft.y;
-            float maxY = -(parentSize.y - size.y);
-            child.offsetMin = new Vector2(minX, minY);
-            child.offsetMax = new Vector2(minX + maxX, minY + maxY);
-            */
-
 
             // try changing anchor positions to move element.
             // anchor min x is left position / parent width.
@@ -224,15 +350,7 @@ namespace Assets
             child.anchorMax = new Vector2(maxX, maxY);
             child.offsetMin = new Vector2(0, 0);
             child.offsetMax = new Vector2(0, 0);
-        }
-        /// <summary>
-        /// Determines if a Rect Transform has any stretching behavior.  Stretching behavior happens when the anchorMin and anchorMax properties are not identical.
-        /// </summary>
-        /// <param name="transform">the Rect Transform</param>
-        /// <returns>true if the Rect Transform has stretching behavior; false otherwise</returns>
-        bool IsStretching(RectTransform transform)
-        {
-            return transform.anchorMin != transform.anchorMax;
+            print("stretchy child placed at " + child.anchorMin + "x" + child.anchorMax);
         }
         public void SetLayoutHorizontal()
         {
@@ -241,21 +359,6 @@ namespace Assets
         public void SetLayoutVertical()
         {
             //throw new NotImplementedException();
-        }
-        public void Configure()
-        {
-            if ((transform.parent.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
-            {
-                print("parent " + transform.parent.name + " has layout manager. will wait for parent to request processing.");
-            }
-            else
-            {
-                print("********************************configuring " + gameObject.name);
-                Vector2 size = GetPreferredSize();
-                print("size::" + size);
-                Resize();
-                PlaceChildren();
-            }
         }
     }
 }
