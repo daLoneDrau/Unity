@@ -86,10 +86,6 @@ namespace Assets
         /// the layout's width.
         /// </summary>
         private float width;
-        void OnEnable()
-        {
-            Debug.Log("PrintOnEnable: script was enabled");
-        }
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -111,6 +107,91 @@ namespace Assets
             }
         }
 #endif
+        private IRPGLayoutHandler GetFarthestParent()
+        {
+            bool last = false;
+            IRPGLayoutHandler farthest = null;
+            Transform t = transform;
+            do
+            {
+                if ((t.parent.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
+                {
+                    farthest = t.parent.gameObject.GetComponent<IRPGLayoutHandler>();
+                    t = t.parent;
+                }
+                else
+                {
+                    last = true;
+                }
+            } while (!last);
+            return farthest;
+        }
+        protected override void OnDisable()
+        {
+            float now = Time.realtimeSinceStartup;
+            print("OnDisable::" + gameObject.name + "::" + now);
+            // if disabled and parent is enabled, tell parent to update
+        }
+        protected override void OnEnable()
+        {
+            // if enabled and parent is enabled, tell parent to update
+            float now = Time.realtimeSinceStartup;
+            if (lastUpdate < 0)
+            {
+                lastUpdate = now;
+                print("OnEnable::" + gameObject.name + "::" + now);
+                print("TODO - notify parent");
+                Configure();
+            }
+            else if (now - lastUpdate > 1f)
+            {
+                lastUpdate = now;
+                print("OnEnable::" + gameObject.name + "::" + now);
+                Configure();
+            }
+        }
+        protected override void OnRectTransformDimensionsChange()
+        {
+            if (gameObject.activeSelf)
+            {
+                float now = Time.realtimeSinceStartup;
+                if (lastUpdate < 0)
+                {
+                    lastUpdate = now;
+                    print("OnRectTransformDimensionsChange::" + gameObject.name + "::" + now);
+                    Configure();
+                }
+                else if (now - lastUpdate > 1f)
+                {
+                    lastUpdate = now;
+                    print("OnRectTransformDimensionsChange::" + gameObject.name + "::" + now);
+                    Configure();
+                }
+            }
+        }
+        public void SetLayoutHorizontal()
+        {
+            if (gameObject.activeSelf)
+            {
+                float now = Time.realtimeSinceStartup;
+                if (lastUpdate < 0)
+                {
+                    lastUpdate = now;
+                    print("SetLayoutHorizontal::" + gameObject.name + "::" + now);
+                    Configure();
+                }
+                else if (now - lastUpdate > 1f)
+                {
+                    lastUpdate = now;
+                    print("SetLayoutHorizontal::" + gameObject.name + "::" + now);
+                    Configure();
+                }
+            }
+        }
+        public void SetLayoutVertical()
+        {
+            //throw new NotImplementedException();
+        }
         public void Configure()
         {
             if ((transform.parent.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
@@ -359,14 +440,6 @@ namespace Assets
             child.offsetMin = new Vector2(0, 0);
             child.offsetMax = new Vector2(0, 0);
             print("stretchy child placed at " + child.anchorMin + "x" + child.anchorMax);
-        }
-        public void SetLayoutHorizontal()
-        {
-            //throw new NotImplementedException();
-        }
-        public void SetLayoutVertical()
-        {
-            //throw new NotImplementedException();
         }
     }
 }
