@@ -190,7 +190,8 @@ namespace Assets.Scripts.UI
         }
         public void Configure()
         {
-            if ((transform.parent.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
+            if (transform.parent != null
+                && (transform.parent.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
             {
                 print("parent " + transform.parent.name + " has layout manager. will wait for parent to request processing.");
             }
@@ -243,7 +244,7 @@ namespace Assets.Scripts.UI
 
                     print("********************************getting size for " + child.name);
                     Vector2 childSize = childLayout.GetPreferredSize();
-                    print("*************************child is " + childSize);
+                    print("*************************child " + child.name + " is " + childSize);
                     height += childSize.y;
                     width = Mathf.Max(width, childSize.x);
                     childSizes.Add(childSize);
@@ -253,7 +254,7 @@ namespace Assets.Scripts.UI
                     print("child " + child.name + " has layout element");
                     LayoutElement le = child.gameObject.GetComponent<LayoutElement>();
                     RectTransform rect = (RectTransform)child;
-                    print("*************************child is " + le.minWidth + "," + le.minHeight);
+                    print("*************************child " + child.name + " is " + le.minWidth + "," + le.minHeight);
                     float h = Mathf.Max(le.minHeight, le.preferredHeight);
                     float w = Mathf.Max(le.minWidth, le.preferredWidth);
                     height += h;
@@ -263,7 +264,7 @@ namespace Assets.Scripts.UI
                 else
                 {
                     RectTransform rect = (RectTransform)child;
-                    print("*************************child is " + rect.rect);
+                    print("*************************child " + child.name + " is " + rect.rect);
                     height += rect.rect.height;
                     width = Mathf.Max(width, rect.rect.width);
                     childSizes.Add(new Vector2(rect.rect.width, rect.rect.height));
@@ -367,9 +368,11 @@ namespace Assets.Scripts.UI
                 float minX = NotNanOrInfinity(me.anchorMin.x) ? me.anchorMin.x : 0;
                 minX = Mathf.Max(0, minX);
                 minX = Mathf.Min(1, minX);
+                print("minX::" + minX);
                 float maxY = NotNanOrInfinity(me.anchorMax.y) ? me.anchorMax.y : 1;
                 maxY = Mathf.Max(0, maxY);
                 maxY = Mathf.Min(1, maxY);
+                print("maxY::" + maxY);
                 float maxX = ((minX * parentSize.x) + width) / parentSize.x;
                 float minY = ((maxY * parentSize.y) - height) / parentSize.y;
                 me.anchorMin = new Vector2(minX, minY);

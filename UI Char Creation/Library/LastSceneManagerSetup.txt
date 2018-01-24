@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Main Menu.unity
+- path: Assets/Scenes/Char Wizard.unity
   isLoaded: 1
   isActive: 1

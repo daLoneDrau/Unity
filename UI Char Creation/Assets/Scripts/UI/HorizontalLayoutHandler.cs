@@ -191,7 +191,8 @@ namespace Assets.Scripts.UI
         }
         public void Configure()
         {
-            if ((transform.parent.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
+            if (transform.parent != null
+                && (transform.parent.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
             {
                 print("parent " + transform.parent.name + " has layout manager. will wait for parent to request processing.");
             }
@@ -244,7 +245,7 @@ namespace Assets.Scripts.UI
 
                     print("********************************getting size for " + child.name);
                     Vector2 childSize = childLayout.GetPreferredSize();
-                    print("*************************child is " + childSize);
+                    print("*************************child "+ child.name+" is " + childSize);
                     height = Mathf.Max(height, childSize.y);
                     width += childSize.x;
                     childSizes.Add(childSize);
@@ -254,7 +255,7 @@ namespace Assets.Scripts.UI
                     print("child " + child.name + " has layout element");
                     LayoutElement le = child.gameObject.GetComponent<LayoutElement>();
                     RectTransform rect = (RectTransform)child;
-                    print("*************************child is " + le.minWidth + "," + le.minHeight);
+                    print("*************************child " + child.name + " is " + le.minWidth + "," + le.minHeight);
                     float h = Mathf.Max(le.minHeight, le.preferredHeight);
                     float w = Mathf.Max(le.minWidth, le.preferredWidth);
                     height = Mathf.Max(height, h);
@@ -264,7 +265,7 @@ namespace Assets.Scripts.UI
                 else
                 {
                     RectTransform rect = (RectTransform)child;
-                    print("*************************child is " + rect.rect);
+                    print("*************************child " + child.name + " is " + rect.rect);
                     height = Mathf.Max(height, rect.rect.height);
                     width += rect.rect.width;
                     childSizes.Add(new Vector2(rect.rect.width, rect.rect.height));
@@ -324,12 +325,12 @@ namespace Assets.Scripts.UI
                 switch (VerticalAlign)
                 {
                     case VerticalAlignment.Upper:
-                        y = me.rect.size.y;
+                        y = height;
                         y -= padding.Top;
                         y -= childSize.y;
                         break;
                     case VerticalAlignment.Middle:
-                        y = me.rect.size.y / 2;
+                        y = height / 2;
                         y -= childSize.y / 2;
                         break;
                     case VerticalAlignment.Lower:
@@ -339,11 +340,13 @@ namespace Assets.Scripts.UI
                 if (IsStretching(child)
                     || (child.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
                 {
+                    print("child " + child.name + " is stretchy "+ childSizes[i]+"::"+ new Vector2(x, y));
                     // treat custom layout handlers as stretchy regardless of anchor positions
                     ResizeAndPositionStretchy(me, child, childSizes[i], new Vector2(x, y));
                 }
                 else
                 {
+                    print("child " + child.name + " is NOT stretchy " + childSizes[i] + "::" + new Vector2(x, y));
                     ResizeAndPositionNonStretchy(me, child, childSizes[i], new Vector2(x, y));
                 }
                 x += childSize.x;
@@ -372,6 +375,7 @@ namespace Assets.Scripts.UI
                 float minX = NotNanOrInfinity(me.anchorMin.x) ? me.anchorMin.x : 0;
                 minX = Mathf.Max(0, minX);
                 minX = Mathf.Min(1, minX);
+                print(gameObject.name + "minX::"+ minX);
                 float maxY = NotNanOrInfinity(me.anchorMax.y) ? me.anchorMax.y : 1;
                 maxY = Mathf.Max(0, maxY);
                 maxY = Mathf.Min(1, maxY);
@@ -398,7 +402,7 @@ namespace Assets.Scripts.UI
         /// <param name="lowerLeft">the position of the element's lower-left corner</param>
         private void ResizeAndPositionNonStretchy(RectTransform parent, RectTransform child, Vector2 size, Vector2 lowerLeft)
         {
-            print("ResizeAndPositionNonStretchy(" + size + "," + lowerLeft);
+            print("ResizeAndPositionNonStretchy("+child.name+"::" + size + "," + lowerLeft);
             Vector2 parentSize = parent.rect.size;
             // size delta is the difference in size between an element's actual size and the size
             // of the rectangle made up by its anchors.  if an element is 500x300, while its anchors cover an area
@@ -414,6 +418,7 @@ namespace Assets.Scripts.UI
             float y = -parentSize.y / 2f;
             y += lowerLeft.y + (child.sizeDelta.y * child.pivot.y);
             child.anchoredPosition = new Vector2(x, y);
+            print("new anchored position::" + child.anchoredPosition);
         }
         /// <summary>
         /// Resizes and positions a "stretching" UI element
@@ -424,7 +429,7 @@ namespace Assets.Scripts.UI
         /// <param name="lowerLeft">the position of the element's lower-left corner</param>
         void ResizeAndPositionStretchy(RectTransform parent, RectTransform child, Vector2 size, Vector2 lowerLeft)
         {
-            print("ResizeAndPositionStretchy(" + size + "," + lowerLeft);
+            print("ResizeAndPositionStretchy("+child.name+"::" + size + "," + lowerLeft);
             Vector2 parentSize = parent.rect.size;
 
             // try changing anchor positions to move element.

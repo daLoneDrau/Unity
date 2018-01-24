@@ -10,24 +10,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UiController : MonoBehaviour
+public class CharWizardUiController : MonoBehaviour
 {
+    /// <summary>
+    /// When the wizard first starts, only display the menu panel.
+    /// </summary>
     private const int STATE_AWAKE = 0;
     private const int STATE_CHAR_CREATION_GENDER = 1;
     private const int STATE_CHAR_CREATION_ROLL = 2;
     private const int STATE_CHAR_CREATION_CLASS = 3;
     private int state;
     private int State { get { return state; } set { state = value; ChangeState(); } }
+    /// <summary>
+    /// the menu displaying basic options when creating characters.
+    /// </summary>
     [SerializeField]
     private GameObject pnlCreateCharacter;
+    /// <summary>
+    /// the menu displaying options for generating life events. 
+    /// </summary>
     [SerializeField]
     private GameObject pnlLifeEventsMenu;
+    /// <summary>
+    /// the menu displaying options for choosing the character's gender. 
+    /// </summary>
+    [SerializeField]
+    private GameObject pnlStepGender;
+    /// <summary>
+    /// the panel displaying the character's stats. 
+    /// </summary>
+    [SerializeField]
+    private GameObject pnlStats;
+    /// <summary>
+    /// the list of buttons tied to the UI.
+    /// </summary>
+    [SerializeField]
+    private Button[] buttons;
+    /*
     [SerializeField]
     private GameObject pnlMainCharMenu;
     [SerializeField]
     private GameObject pnlMenu;
-    [SerializeField]
-    private GameObject pnlStepGender;
     [SerializeField]
     private GameObject pnlStepRoll;
     [SerializeField]
@@ -39,41 +62,96 @@ public class UiController : MonoBehaviour
     [SerializeField]
     private Text[] fields;
     [SerializeField]
-    private Button[] buttons;
-    [SerializeField]
     private Sprite[] genderSprites;
+    */
     private CryptInteractiveObject heroIo;
     private ButtonWatcher buttonWatcher;
     private StatWatcher statWatcher;
+    /// <summary>
+    /// constant for the gender button.
+    /// </summary>
+    private const int BTN_GENDER = 0;
+    /// <summary>
+    /// constant for the roll stats button.
+    /// </summary>
+    private const int BTN_ROLL_STATS = 1;
+    /// <summary>
+    /// constant for the choose class button.
+    /// </summary>
+    private const int BTN_CHOOSE_CLASS = 2;
+    /// <summary>
+    /// constant for the life events button.
+    /// </summary>
+    private const int BTN_LIFE_EVENTS = 3;
+    /// <summary>
+    /// constant for the cancel button.
+    /// </summary>
+    private const int BTN_CANCEL = 4;
+    private void OnAwake()
+    {
+        HideAllPanels();
+        DisableAllCharacterMenuButtons();
+        EnableButton(buttons[BTN_GENDER]);
+        // show main menu
+        pnlCreateCharacter.SetActive(true);
+    }
+    private void OnGender()
+    {
+        HideAllPanels();
+        DisableAllCharacterMenuButtons();
+        // show main menu
+        pnlCreateCharacter.SetActive(true);
+        // show gender panel
+        pnlStepGender.SetActive(true);
+    }
+    /// <summary>
+    /// Disables all character menu buttons.
+    /// </summary>
+    private void DisableAllCharacterMenuButtons()
+    {
+        for (int i = 4; i >= 0; i--)
+        {
+            DisableButton(buttons[i]);
+        }
+    }
+    /// <summary>
+    /// Sets the character menu buttons based on the character's state.
+    /// </summary>
+    private void SetCharacterMenuButtons()
+    {
+        DisableAllCharacterMenuButtons();
+        EnableButton(buttons[BTN_GENDER]);
+        EnableButton(buttons[BTN_ROLL_STATS]);
+        EnableButton(buttons[BTN_CHOOSE_CLASS]);
+        if (((CryptCharacter)heroIo.PcData).Profession > 0)
+        {
+            EnableButton(buttons[BTN_LIFE_EVENTS]);
+        }
+        EnableButton(buttons[BTN_CANCEL]);
+    }
+    private void OnRoll()
+    {
+        HideAllPanels();
+        SetCharacterMenuButtons();
+        // show main menu
+        pnlCreateCharacter.SetActive(true);
+        // show stats panel
+        pnlStats.SetActive(true);
+    }
     private void ChangeState()
     {
         print("ChangeState");
-        HideAllPanels();
         switch (State)
         {
             case STATE_AWAKE:
-                print(STATE_AWAKE);
-                // show main menu
-                pnlMenu.SetActive(true);
+                OnAwake();
                 break;
             case STATE_CHAR_CREATION_GENDER:
-                print(STATE_CHAR_CREATION_GENDER);
-                // disable menu buttons
-                DisableAllCharMenuButtons();
-                // show main character menu
-                pnlMainCharMenu.SetActive(true);
-                // show gender panel
-                pnlStepGender.SetActive(true);
-                //show character creation panel
-                pnlCreateCharacter.SetActive(true);
-                if (heroIo.PcData.Gender == -1)
-                {
-                    // disable roll and life event buttons
-                    DisableButton(buttonWatcher.BtnRoll);
-                    DisableButton(buttonWatcher.BtnLifeEvents);
-                }
+                OnGender();
                 break;
             case STATE_CHAR_CREATION_ROLL:
+                OnRoll();
+                /*
                 print(STATE_CHAR_CREATION_ROLL);
                 //show character creation panel
                 pnlCreateCharacter.SetActive(true);
@@ -81,20 +159,13 @@ public class UiController : MonoBehaviour
                 pnlMainCharMenu.SetActive(true);
                 // show roll stats content
                 pnlStepRoll.SetActive(true);
+                */
                 break;
         }
     }
     public void ChooseGender(int gender)
     {
         heroIo.PcData.Gender = gender;
-        EnableButton(buttonWatcher.BtnGender);
-        EnableButton(buttonWatcher.BtnRoll);
-        EnableButton(buttonWatcher.BtnClass);
-        if (((CryptCharacter)heroIo.PcData).Profession > 0)
-        {
-            EnableButton(buttonWatcher.BtnLifeEvents);
-        }
-        EnableButton(buttonWatcher.BtnCharMenuCancel);
         State = STATE_CHAR_CREATION_ROLL;
     }
     public void ChooseClass()
@@ -133,12 +204,15 @@ public class UiController : MonoBehaviour
     {
         pnlCreateCharacter.SetActive(false);
         pnlLifeEventsMenu.SetActive(false);
+        pnlStepGender.SetActive(false);
+        pnlStats.SetActive(false);
+        /*
         pnlMainCharMenu.SetActive(false);
         pnlMenu.SetActive(false);
         pnlStepRoll.SetActive(false);
         pnlStepTwo.SetActive(false);
         pnlStepThree.SetActive(false);
-        pnlStepGender.SetActive(false);
+        */
     }
     public void SetClass(int val)
     {
@@ -160,8 +234,10 @@ public class UiController : MonoBehaviour
         heroIo.PcData.SetBaseAttributeScore("MHP", hp);
         heroIo.PcData.ComputeFullStats();
         heroIo.PcData.HealPlayer(9999, true);
+        /*
         pnlStepRoll.SetActive(true);
         pnlStepTwo.SetActive(false);
+        */
     }
     public void ShowGenderPanel()
     {
@@ -176,8 +252,10 @@ public class UiController : MonoBehaviour
     }
     private void Awake()
     {
+        print("CharWizardUiController.Awake");
         buttonWatcher = new ButtonWatcher
         {
+            /*
             BtnBarbarian = buttons[0],
             BtnFighter = buttons[1],
             BtnSorcerer = buttons[2],
@@ -187,9 +265,11 @@ public class UiController : MonoBehaviour
             BtnClass = buttons[6],
             BtnLifeEvents = buttons[7],
             BtnCharMenuCancel = buttons[8]
+            */
         };
         statWatcher = new StatWatcher
         {
+            /*
             LblStr = fields[0],
             LblDex = fields[1],
             LblCon = fields[2],
@@ -215,22 +295,17 @@ public class UiController : MonoBehaviour
             PnlGender = pnlGender,
             Female = genderSprites[0],
             Male = genderSprites[1]
+            */
         };
         new CryptInteractive();
         new CryptProject();
+        heroIo = ((CryptInteractive)CryptInteractive.Instance).NewHero();
         State = STATE_AWAKE;
     }
     // Use this for initialization
-    void Start()
-    {
-
-    }
-
+    void Start() { }
     // Update is called once per frame
-    void Update()
-    {
-    }
-
+    void Update() { }
     public void ReRoll()
     {
         ((CryptCharacter)heroIo.PcData).NewHeroStepOne();

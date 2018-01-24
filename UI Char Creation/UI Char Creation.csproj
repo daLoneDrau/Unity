@@ -140,10 +140,11 @@
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Script.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Speech.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\SpellController.cs" />
-    <Compile Include="Assets\Scripts\UI\IRPGLayoutHandler.cs" />
     <Compile Include="Assets\Scripts\UI\HorizontalLayoutHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\IRPGLayoutHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenuUIController.cs" />
     <Compile Include="Assets\Scripts\UI\VerticalLayoutHandler.cs" />
-    <Compile Include="Assets\Scripts\UiController.cs" />
+    <Compile Include="Assets\Scripts\UI\CharWizardUiController.cs" />
     <Compile Include="Assets\TestButton.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
