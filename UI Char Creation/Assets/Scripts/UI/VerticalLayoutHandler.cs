@@ -57,6 +57,11 @@ namespace Assets.Scripts.UI
         /// </summary>
         private List<Vector2> childSizes = new List<Vector2>();
         /// <summary>
+        /// flag indicating whether debug output is turned on.
+        /// </summary>
+        [SerializeField]
+        private bool debug = false;
+        /// <summary>
         /// the layout's height.
         /// </summary>
         private float height;
@@ -92,13 +97,19 @@ namespace Assets.Scripts.UI
                 if (lastUpdate < 0)
                 {
                     lastUpdate = now;
-                    print("OnValidate::" + gameObject.name + "::" + now);
+                    if (debug)
+                    {
+                        print("OnValidate::" + gameObject.name + "::" + now);
+                    }
                     Configure();
                 }
                 else if (now - lastUpdate > 1f)
                 {
                     lastUpdate = now;
-                    print("OnValidate::" + gameObject.name + "::" + now);
+                    if (debug)
+                    {
+                        print("OnValidate::" + gameObject.name + "::" + now);
+                    }
                     Configure();
                 }
             }
@@ -126,7 +137,10 @@ namespace Assets.Scripts.UI
         protected override void OnDisable()
         {
             float now = Time.realtimeSinceStartup;
-            print("OnDisable::" + gameObject.name + "::" + now);
+            if (debug)
+            {
+                print("OnDisable::" + gameObject.name + "::" + now);
+            }
             // if disabled and parent is enabled, tell parent to update
         }
         protected override void OnEnable()
@@ -136,14 +150,20 @@ namespace Assets.Scripts.UI
             if (lastUpdate < 0)
             {
                 lastUpdate = now;
-                print("OnEnable::" + gameObject.name + "::" + now);
-                print("TODO - notify parent");
+                if (debug)
+                {
+                    print("OnEnable::" + gameObject.name + "::" + now);
+                    print("TODO - notify parent");
+                }
                 Configure();
             }
             else if (now - lastUpdate > 1f)
             {
                 lastUpdate = now;
-                print("OnEnable::" + gameObject.name + "::" + now);
+                if (debug)
+                {
+                    print("OnEnable::" + gameObject.name + "::" + now);
+                }
                 Configure();
             }
         }
@@ -155,13 +175,19 @@ namespace Assets.Scripts.UI
                 if (lastUpdate < 0)
                 {
                     lastUpdate = now;
-                    print("OnRectTransformDimensionsChange::" + gameObject.name + "::" + now);
+                    if (debug)
+                    {
+                        print("OnRectTransformDimensionsChange::" + gameObject.name + "::" + now);
+                    }
                     Configure();
                 }
                 else if (now - lastUpdate > 1f)
                 {
                     lastUpdate = now;
-                    print("OnRectTransformDimensionsChange::" + gameObject.name + "::" + now);
+                    if (debug)
+                    {
+                        print("OnRectTransformDimensionsChange::" + gameObject.name + "::" + now);
+                    }
                     Configure();
                 }
             }
@@ -177,13 +203,19 @@ namespace Assets.Scripts.UI
                 if (lastUpdate < 0)
                 {
                     lastUpdate = now;
-                    print("SetLayoutVertical::" + gameObject.name + "::" + now);
+                    if (debug)
+                    {
+                        print("SetLayoutVertical::" + gameObject.name + "::" + now);
+                    }
                     Configure();
                 }
                 else if (now - lastUpdate > 1f)
                 {
                     lastUpdate = now;
-                    print("SetLayoutVertical::" + gameObject.name + "::" + now);
+                    if (debug)
+                    {
+                        print("SetLayoutVertical::" + gameObject.name + "::" + now);
+                    }
                     Configure();
                 }
             }
@@ -193,14 +225,23 @@ namespace Assets.Scripts.UI
             if (transform.parent != null
                 && (transform.parent.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
             {
-                print("parent " + transform.parent.name + " has layout manager. will wait for parent to request processing.");
+                if (debug)
+                {
+                    print("parent " + transform.parent.name + " has layout manager. will wait for parent to request processing.");
+                }
             }
             else
             {
-                print("++++++++++++++++++++++++++++++++configuring " + gameObject.name + "++++++++++++++++++++++++++++++++");
+                if (debug)
+                {
+                    print("++++++++++++++++++++++++++++++++configuring " + gameObject.name + "++++++++++++++++++++++++++++++++");
+                }
                 // 1. get all my children's sizes
                 Vector2 size = GetPreferredSize();
-                print("size::" + gameObject.name + "::" + size);
+                if (debug)
+                {
+                    print("size::" + gameObject.name + "::" + size);
+                }
                 // 2. resize myself
                 Resize();
                 // 3. resize all my layout children's sizes
@@ -210,7 +251,10 @@ namespace Assets.Scripts.UI
                     if ((child.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
                     {
                         IRPGLayoutHandler childLayout = child.gameObject.GetComponent<IRPGLayoutHandler>();
-                        print("********************************resizing child " + child.name);
+                        if (debug)
+                        {
+                            print("********************************resizing child " + child.name);
+                        }
                         childLayout.Resize();
                         // 3a. place all my layout children's children
                         childLayout.PlaceChildren();
@@ -218,7 +262,10 @@ namespace Assets.Scripts.UI
                 }
                 // 4. place all my children
                 PlaceChildren();
-                print("++++++++++++++++++++++++++++++++done " + gameObject.name + "++++++++++++++++++++++++++++++++");
+                if (debug)
+                {
+                    print("++++++++++++++++++++++++++++++++done " + gameObject.name + "++++++++++++++++++++++++++++++++");
+                }
             }
         }
         public Vector2 GetPreferredSize()
@@ -232,29 +279,47 @@ namespace Assets.Scripts.UI
                 // ignore hidden children
                 if (!child.gameObject.activeSelf)
                 {
-                    print("child " + child.name + " is hidden");
+                    if (debug)
+                    {
+                        print("child " + child.name + " is hidden");
+                    }
                     childSizes.Add(new Vector2(0, 0));
                     continue;
                 }
                 // handle layout handler children specially
                 if ((child.gameObject.GetComponent("IRPGLayoutHandler") as IRPGLayoutHandler) != null)
                 {
-                    print("child " + child.name + " has layout manager");
+                    if (debug)
+                    {
+                        print("child " + child.name + " has layout manager");
+                    }
                     IRPGLayoutHandler childLayout = child.gameObject.GetComponent<IRPGLayoutHandler>();
 
-                    print("********************************getting size for " + child.name);
+                    if (debug)
+                    {
+                        print("********************************getting size for " + child.name);
+                    }
                     Vector2 childSize = childLayout.GetPreferredSize();
-                    print("*************************child " + child.name + " is " + childSize);
+                    if (debug)
+                    {
+                        print("*************************child " + child.name + " is " + childSize);
+                    }
                     height += childSize.y;
                     width = Mathf.Max(width, childSize.x);
                     childSizes.Add(childSize);
                 }
                 else if (child.gameObject.GetComponent<LayoutElement>() != null)
                 {
-                    print("child " + child.name + " has layout element");
+                    if (debug)
+                    {
+                        print("child " + child.name + " has layout element");
+                    }
                     LayoutElement le = child.gameObject.GetComponent<LayoutElement>();
                     RectTransform rect = (RectTransform)child;
-                    print("*************************child " + child.name + " is " + le.minWidth + "," + le.minHeight);
+                    if (debug)
+                    {
+                        print("*************************child " + child.name + " is " + le.minWidth + "," + le.minHeight);
+                    }
                     float h = Mathf.Max(le.minHeight, le.preferredHeight);
                     float w = Mathf.Max(le.minWidth, le.preferredWidth);
                     height += h;
@@ -264,7 +329,10 @@ namespace Assets.Scripts.UI
                 else
                 {
                     RectTransform rect = (RectTransform)child;
-                    print("*************************child " + child.name + " is " + rect.rect);
+                    if (debug)
+                    {
+                        print("*************************child " + child.name + " is " + rect.rect);
+                    }
                     height += rect.rect.height;
                     width = Mathf.Max(width, rect.rect.width);
                     childSizes.Add(new Vector2(rect.rect.width, rect.rect.height));
@@ -294,7 +362,10 @@ namespace Assets.Scripts.UI
         }
         public void PlaceChildren()
         {
-            print("-------------------------PlaceChildren " + gameObject.name);
+            if (debug)
+            {
+                print("-------------------------PlaceChildren " + gameObject.name);
+            }
             RectTransform me = GetComponent<RectTransform>();
             // children get placed starting at position 0,height and then proceed left
             float y = height;
@@ -306,7 +377,10 @@ namespace Assets.Scripts.UI
                 // ignore hidden children
                 if (!child.gameObject.activeSelf)
                 {
-                    print("child " + child.name + " is hidden");
+                    if (debug)
+                    {
+                        print("child " + child.name + " is hidden");
+                    }
                     // add spacing if next child is not hidden
                     if (i + 1 < length
                         && transform.GetChild(i + 1).gameObject.activeSelf)
@@ -350,15 +424,24 @@ namespace Assets.Scripts.UI
                     y -= spacing;
                 }
             }
-            print("-------------------------PlaceChildren DONE" + gameObject.name);
+            if (debug)
+            {
+                print("-------------------------PlaceChildren DONE" + gameObject.name);
+            }
         }
         public void Resize()
         {
-            print("*************************Resize " + gameObject.name);
+            if (debug)
+            {
+                print("*************************Resize " + gameObject.name);
+            }
             RectTransform me = GetComponent<RectTransform>();
             if (IsStretching(me))
             {
-                print(gameObject.name + " is stretchy");
+                if (debug)
+                {
+                    print(gameObject.name + " is stretchy");
+                }
                 Vector2 parentSize = ((RectTransform)me.parent).rect.size;
                 // try changing anchor positions to move element.
                 // anchor min x stays the same.
@@ -368,11 +451,17 @@ namespace Assets.Scripts.UI
                 float minX = NotNanOrInfinity(me.anchorMin.x) ? me.anchorMin.x : 0;
                 minX = Mathf.Max(0, minX);
                 minX = Mathf.Min(1, minX);
-                print("minX::" + minX);
+                if (debug)
+                {
+                    print("minX::" + minX);
+                }
                 float maxY = NotNanOrInfinity(me.anchorMax.y) ? me.anchorMax.y : 1;
                 maxY = Mathf.Max(0, maxY);
                 maxY = Mathf.Min(1, maxY);
-                print("maxY::" + maxY);
+                if (debug)
+                {
+                    print("maxY::" + maxY);
+                }
                 float maxX = ((minX * parentSize.x) + width) / parentSize.x;
                 float minY = ((maxY * parentSize.y) - height) / parentSize.y;
                 me.anchorMin = new Vector2(minX, minY);
@@ -385,7 +474,10 @@ namespace Assets.Scripts.UI
             {
                 //ResizeAndPositionNonStretchy(me, child, child.rect.size, new Vector2(x, y));
             }
-            print("*************************Resize DONE -" + gameObject.name + "::" + me.rect);
+            if (debug)
+            {
+                print("*************************Resize DONE -" + gameObject.name + "::" + me.rect);
+            }
         }
         /// <summary>
         /// Resizes and positions a "non-stretching" UI element
@@ -396,7 +488,10 @@ namespace Assets.Scripts.UI
         /// <param name="lowerLeft">the position of the element's lower-left corner</param>
         private void ResizeAndPositionNonStretchy(RectTransform parent, RectTransform child, Vector2 size, Vector2 lowerLeft)
         {
-            print("ResizeAndPositionNonStretchy(" + size + "," + lowerLeft);
+            if (debug)
+            {
+                print("ResizeAndPositionNonStretchy(" + size + "," + lowerLeft);
+            }
             Vector2 parentSize = parent.rect.size;
             // size delta is the difference in size between an element's actual size and the size
             // of the rectangle made up by its anchors.  if an element is 500x300, while its anchors cover an area
@@ -422,7 +517,10 @@ namespace Assets.Scripts.UI
         /// <param name="lowerLeft"></param>
         void ResizeAndPositionStretchy(RectTransform parent, RectTransform child, Vector2 size, Vector2 lowerLeft)
         {
-            print("ResizeAndPositionStretchy(" + size + "," + lowerLeft);
+            if (debug)
+            {
+                print("ResizeAndPositionStretchy(" + size + "," + lowerLeft);
+            }
             Vector2 parentSize = parent.rect.size;
 
             // try changing anchor positions to move element.
@@ -436,7 +534,10 @@ namespace Assets.Scripts.UI
             child.anchorMax = new Vector2(maxX, maxY);
             child.offsetMin = new Vector2(0, 0);
             child.offsetMax = new Vector2(0, 0);
-            print("stretchy child placed at " + child.anchorMin + "x" + child.anchorMax);
+            if (debug)
+            {
+                print("stretchy child placed at " + child.anchorMin + "x" + child.anchorMax);
+            }
         }
     }
 }

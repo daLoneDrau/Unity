@@ -12,30 +12,29 @@ namespace Assets.Scripts.Crypts.Flyweights
     {
         /** the list of attributes and their matching names and modifiers. */
         private static object[][] attributeMap = new object[][] {
-            new object[] { "STR", "Strength", CryptEquipGlobals.EQUIP_ELEMENT_STRENGTH },
-            new object[] { "DEX", "Dexterity", CryptEquipGlobals.EQUIP_ELEMENT_DEXTERITY },
-            new object[] { "CON", "Constitution", CryptEquipGlobals.EQUIP_ELEMENT_CONSTITUTION },
-            new object[] { "INT", "Intelligence", CryptEquipGlobals.EQUIP_ELEMENT_INTELLIGENCE },
-            new object[] { "WIS", "Wisdom", CryptEquipGlobals.EQUIP_ELEMENT_WISDOM },
-            new object[] { "CHA", "Charisma", CryptEquipGlobals.EQUIP_ELEMENT_CHARISMA },
             new object[] { "AC", "Armour Class", CryptEquipGlobals.EQUIP_ELEMENT_AC },
-            new object[] { "MHP", "Max Hit Points", CryptEquipGlobals.EQUIP_ELEMENT_MHP },
-            new object[] { "LUK", "Luck", CryptEquipGlobals.EQUIP_ELEMENT_LUCK },
-            new object[] { "CRP", "Corruption", CryptEquipGlobals.EQUIP_ELEMENT_CORRUPTION },
-            new object[] { "SAN", "Sanity", CryptEquipGlobals.EQUIP_ELEMENT_SANITY },
-            new object[] { "SKL", "Skill", CryptEquipGlobals.EQUIP_ELEMENT_SKILL },
-            new object[] { "HIT", "To Hit", CryptEquipGlobals.EQUIP_ELEMENT_TO_HIT },
-            new object[] { "DMG", "Damage Bonus", CryptEquipGlobals.EQUIP_ELEMENT_DMG_BONUS },
-            new object[] { "MSS", "Missile Bonus", CryptEquipGlobals.EQUIP_ELEMENT_MISSILE_BONUS },
             new object[] { "ACM", "AC Modifier", CryptEquipGlobals.EQUIP_ELEMENT_AC_MODIFIER },
-            new object[] { "HPB", "Hit Point Bonus", CryptEquipGlobals.EQUIP_ELEMENT_HP_BONUS },
-            new object[] { "LAN", "Understand Language %", CryptEquipGlobals.EQUIP_ELEMENT_LANGUAGE },
+            new object[] { "BRW", "Brawn", CryptEquipGlobals.EQUIP_ELEMENT_STRENGTH },
+            new object[] { "COM", "Common Sense", CryptEquipGlobals.EQUIP_ELEMENT_WISDOM },
+            new object[] { "COR", "Coordinaton", CryptEquipGlobals.EQUIP_ELEMENT_DEXTERITY },
             new object[] { "CRM", "Charm", CryptEquipGlobals.EQUIP_ELEMENT_CHARM },
-            new object[] { "HIR", "Max Hirelings", CryptEquipGlobals.EQUIP_ELEMENT_MAX_HIRELINGS }
+            new object[] { "CRP", "Corruption", CryptEquipGlobals.EQUIP_ELEMENT_CORRUPTION },
+            new object[] { "DB", "Damage Bonus", CryptEquipGlobals.EQUIP_ELEMENT_DMG_BONUS },
+            new object[] { "EDU", "Education", CryptEquipGlobals.EQUIP_ELEMENT_INTELLIGENCE },
+            new object[] { "HIR", "Max Hirelings", CryptEquipGlobals.EQUIP_ELEMENT_MAX_HIRELINGS },
+            new object[] { "HRD", "Hardiness", CryptEquipGlobals.EQUIP_ELEMENT_CONSTITUTION },
+            new object[] { "LAB", "Melee Bonus", CryptEquipGlobals.EQUIP_ELEMENT_TO_HIT },
+            new object[] { "LAN", "Understand Language %", CryptEquipGlobals.EQUIP_ELEMENT_LANGUAGE },
+            new object[] { "LEA", "Leadership", CryptEquipGlobals.EQUIP_ELEMENT_CHARISMA },
+            new object[] { "LUK", "Luck", CryptEquipGlobals.EQUIP_ELEMENT_LUCK },
+            new object[] { "MHP", "Max Hit Points", CryptEquipGlobals.EQUIP_ELEMENT_MHP },
+            new object[] { "MAB", "Missile Bonus", CryptEquipGlobals.EQUIP_ELEMENT_MISSILE_BONUS },
+            new object[] { "SAN", "Sanity", CryptEquipGlobals.EQUIP_ELEMENT_SANITY },
+            new object[] { "SKL", "Skill", CryptEquipGlobals.EQUIP_ELEMENT_SKILL }
         };
         public int Profession { get; set; }
         public Homeland Homeland { get; set; }
-        public CharacterOrigin Origin { get; set; }
+        public CharacterOrigin Background { get; set; }
         public override bool CalculateBackstab()
         {
             throw new NotImplementedException();

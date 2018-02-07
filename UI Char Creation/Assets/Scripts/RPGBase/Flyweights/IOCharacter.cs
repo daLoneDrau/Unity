@@ -126,6 +126,7 @@ namespace RPGBase.Flyweights
             }
             ls = null;
             mls = null;
+            NotifyWatchers();
         }
         /// <summary>
         /// Adjusts the <see cref="IOCharacter"/>'s mana by a specific amount.
@@ -369,6 +370,7 @@ namespace RPGBase.Flyweights
                     AdjustMana(dmg);
                 }
             }
+            NotifyWatchers();
         }
         /// <summary>
         /// Initializes the items the <see cref="IOCharacter"/> has equipped.

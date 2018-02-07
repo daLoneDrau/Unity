@@ -78,7 +78,7 @@ namespace RPGBase.Singletons
             }
             return map[GetRandomObject(list)];
         }
-        public Object GetRandomObject(Object[] array)
+        public object GetRandomObject(object[] array)
         {
             Check();
             return array[Math.Abs(random.Next() % array.Length)];
