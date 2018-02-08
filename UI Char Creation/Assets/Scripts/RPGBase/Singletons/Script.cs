@@ -798,7 +798,7 @@ namespace RPGBase.Singletons
         /// </summary>
         /// <param name="id">the timer's id</param>
         /// <returns></returns>
-        public abstract ScriptTimer getScriptTimer(int id);
+        public abstract ScriptTimer GetScriptTimer(int id);
         /// <summary>
         /// Gets the script timers.
         /// </summary>
@@ -2243,7 +2243,7 @@ namespace RPGBase.Singletons
         /// <param name="msg">the script message</param>
         /// <param name="parameters">the parameters assigned to the script</param>
         /// <param name="eventname">the event name</param>
-        public void stackSendGroupScriptEvent(string group, int msg, Object[] parameters, string eventname)
+        public void StackSendGroupScriptEvent(string group, int msg, Object[] parameters, string eventname)
 
         {
             int i = Interactive.Instance.GetMaxIORefId();
@@ -2328,7 +2328,7 @@ namespace RPGBase.Singletons
         public void StartTimer(ScriptTimerInitializationParameters parameters)
         {
             int timerNum = TimerGetFree();
-            ScriptTimer timer = getScriptTimer(timerNum);
+            ScriptTimer timer = GetScriptTimer(timerNum);
             timer.Script = parameters.Script;
             timer.Exists = true;
             timer.Io = parameters.Io;

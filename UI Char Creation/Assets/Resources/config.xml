@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<endpoints>
+  <bp_endpoint>http://localhost:8080/BPService/bp/</bp_endpoint>
+</endpoints>

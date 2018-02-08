@@ -3,10 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.Avalon.Constants
+namespace Assets.Scripts.BarbarianPrince.Constants
 {
     public sealed class BPGlobals
     {
+        //****************************
+        // EQUIPMENT SLOTS
+        //****************************
+        /// <summary>
+        /// left ring slot.
+        /// </summary>
+        public const int EQUIP_SLOT_WEAPON = 0;
+        /// <summary>
+        /// The # of equipment slots.
+        /// </summary>
+        public const int MAX_EQUIPPED = 1;
         //****************************
         // ELEMENTS
         //****************************
@@ -39,13 +50,6 @@ namespace Assets.Scripts.Avalon.Constants
         /// </summary>
         public const int NUM_ELEMENTS = 6;
         //****************************
-        // EQUIPMENT SLOTS
-        //****************************
-        /// <summary>
-        /// weapon slot.
-        /// </summary>
-        public const int EQUIP_SLOT_WEAPON = 0;
-        //****************************
         // OBJECT TYPES
         //****************************
         /// <summary>
@@ -57,8 +61,12 @@ namespace Assets.Scripts.Avalon.Constants
         /// </summary>
         public const int OBJECT_TYPE_FOOD = 1 << 1;
         /// <summary>
+        /// 1-handed weapon objects.
+        /// </summary>
+        public const int OBJECT_TYPE_1H = 1 << 2;
+        /// <summary>
         /// gold objects.
         /// </summary>
-        public const int OBJECT_TYPE_GOLD = 1 << 2;
+        public const int OBJECT_TYPE_GOLD = 1 << 3;
     }
 }

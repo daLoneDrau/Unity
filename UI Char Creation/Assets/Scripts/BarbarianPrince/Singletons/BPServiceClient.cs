@@ -1,6 +1,8 @@
-﻿using Assets.Scripts.Crypts.Flyweights;
+﻿using Assets.Scripts.BarbarianPrince.Flyweights;
 using Assets.Scripts.UI.SimpleJSON;
 using RPGBase.Flyweights;
+using RPGBase.Pooled;
+using RPGBase.Singletons;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.BarbarianPrince.Singletons
 {
-    public class BPServiceClient:MonoBehaviour
+    public class BPServiceClient : MonoBehaviour
     {
         private static BPServiceClient instance;
         /// <summary>
@@ -30,16 +32,17 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             }
             protected set { }
         }
-        private BPServiceClient() {
-            TextAsset textAsset = (TextAsset)Resources.Load("App.config");
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.LoadXml(textAsset.text);
-            xmldoc.SelectSingleNode();
-        }
+        private BPServiceClient() { print("setting instance"); instance = this; }
+        public string Endpoint { get; set; }
         public IEnumerator GetEquipmentElementByCode(string elem, System.Action<int> result)
         {
-            using (UnityWebRequest www = UnityWebRequest.Get("http://localhost:8080/SW-CTService/sw_ct/equipment_element_types/code/" + elem))
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append(Endpoint);
+            sb.Append("equipment_element_types/code/");
+            sb.Append(elem);
+            using (UnityWebRequest www = UnityWebRequest.Get(sb.ToString()))
             {
+                sb.ReturnToPool();
                 yield return www.Send();
 
                 if (www.isError)
@@ -70,8 +73,13 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
         /// <returns></returns>
         public IEnumerator GetElementModifierByCode(string code, System.Action<EquipmentItemModifier> result)
         {
-            using (UnityWebRequest www = UnityWebRequest.Get("http://localhost:8080/SW-CTService/sw_ct/equipment_item_modifiers/code/" + code))
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append(Endpoint);
+            sb.Append("equipment_item_modifiers/code/");
+            sb.Append(code);
+            using (UnityWebRequest www = UnityWebRequest.Get(sb.ToString()))
             {
+                sb.ReturnToPool();
                 yield return www.Send();
 
                 if (www.isError)
@@ -99,13 +107,18 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
                 }
             }
         }
-        public IEnumerator LoadHomelands(Action callback)
+        public IEnumerator GetItemByName(string name, System.Action<BPInteractiveObject> result)
         {
-            Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++LoadHomelands");
-            UnityWebRequest www = new UnityWebRequest("http://localhost:8080/SW-CTService/sw_ct/homelands")
+            print("++++++++++++++++++++++++++++++++++++++++++++++++++++++GetItemByName");
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append(Endpoint);
+            sb.Append("io_item_data/name/");
+            sb.Append(name.Replace(" ", "%20"));
+            UnityWebRequest www = new UnityWebRequest(sb.ToString())
             {
                 downloadHandler = new DownloadHandlerBuffer()
             };
+            sb.ReturnToPool();
             yield return www.Send();
             if (www.isError)
             {
@@ -113,38 +126,62 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             }
             else
             {
+                BPInteractiveObject io =
+                        ((BPInteractive)Interactive.Instance).NewItem();
+                BPItemData data = (BPItemData)io.ItemData;
                 var str = System.Text.Encoding.Default.GetString(www.downloadHandler.data);
                 var n = JSON.Parse(str);
                 if (n.IsArray)
                 {
                     for (int i = 0, li = n.Count; i < li; i++)
                     {
-                        Homeland homeland = new Homeland(n[i]["name"], n[i]["description"]);
-                        if (n[i]["modifiers"] != null)
+                        JSONNode node = n[i];
+                        data.StackSize = node["stack_size"].AsInt;
+                        data.Price = node["price"].AsFloat;
+                        data.ItemName = node["name"].Value.ToString();
+                        data.MaxOwned = node["max_owned"].AsInt;
+                        data.Description = node["description"];
+                        if (node["types"].IsArray)
                         {
-                            JSONObject o = n[i]["modifiers"].AsObject;
-                            Console.WriteLine(o.ToString());
-                            foreach (JSONNode node in o.Keys)
+                            for (int j = node["types"].Count - 1; j >= 0; j--)
                             {
-                                string elem = node;
-                                string mod = o[elem].ToString();
-                                int e = 0;
-                                Console.WriteLine(elem);
-                                Console.WriteLine(mod);
-                                yield return StartCoroutine(GetEquipmentElementByCode(elem, value => e = value));
-                                EquipmentItemModifier eim = null;
-                                yield return StartCoroutine(GetElementModifierByCode(mod, value => eim = value));
-                                homeland.SetModifier(e, eim);
+                                JSONNode type = node["types"][j];
+                                io.AddTypeFlag(type["flag"].AsInt);
                             }
                         }
-                        else
+                        if (node["modifiers"] != null)
                         {
-                            Console.WriteLine("nomodifiers");
+                            JSONNode modifier = node["modifiers"];
+                            foreach (JSONNode nodeMod in modifier.Keys)
+                            {
+                                string elem = nodeMod;
+                                string mod = modifier[elem].Value.ToString();
+                                int e = 0;
+                                yield return StartCoroutine(GetEquipmentElementByCode(elem, value => e = value));
+                                print("code::" + e);
+                                EquipmentItemModifier eim = null;
+                                yield return StartCoroutine(GetElementModifierByCode(mod, value => eim = value));
+                                data.Equipitem.GetElementModifier(e).Set(eim);
+                            }
                         }
+                        // script
+                        string script = node["internal_script"].Value.ToString();
+                        print(script);
+                        sb = StringBuilderPool.Instance.GetStringBuilder();
+                        sb.Append("Assets.Scripts.BarbarianPrince.Scriptables.Items.");
+                        sb.Append(script);
+                        Type blob = Type.GetType(sb.ToString());
+                        sb.ReturnToPool();
+                        print(blob);
+                        object o = Activator.CreateInstance(blob);
+                        print(o);
+                        io.Script = (Scriptable)o;
+                        print("seinding init");
+                        Script.Instance.SendInitScriptEvent(io);
                     }
                 }
                 print("finished processing");
-                callback();
+                result(io);
             }
         }
     }
