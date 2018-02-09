@@ -15,28 +15,23 @@ namespace Assets.Scripts.BarbarianPrince.UI
 {
     public class InvUiController : MonoBehaviour
     {
+        private BPInteractiveObject io = null;
         private void Awake()
         {
-            print("awake");
             UnitySystemConsoleRedirector.Redirect();
             new BPProject();
             new BPInteractive();
             new BPScript();
-            LoadResources();
-            BPInteractiveObject io = null;
+            LoadResources();            
             StartCoroutine(BPServiceClient.Instance.GetItemByName("Bonebiter", value => io = value));
-            print("after co");
         }
         private void LoadResources()
         {
-            print("LoadResources");
             TextAsset textAsset = (TextAsset)Resources.Load("config");
             XmlDocument xmldoc = new XmlDocument();
-            print(textAsset);
             xmldoc.LoadXml(textAsset.text);
             XmlNode root = xmldoc.SelectSingleNode("endpoints");
             BPServiceClient.Instance.Endpoint = root.SelectSingleNode("bp_endpoint").InnerText;
-            print(BPServiceClient.Instance.Endpoint);
         }
         private void ItemLoaded()
         {
@@ -53,6 +48,7 @@ namespace Assets.Scripts.BarbarianPrince.UI
             button.interactable = true;
             button.GetComponentInChildren<Text>().color = Color.white;
         }
+        bool doonce = false;
         // Use this for initialization
         void Start() { }
         // Update is called once per frame
@@ -61,6 +57,14 @@ namespace Assets.Scripts.BarbarianPrince.UI
             Script.Instance.TimerCheck();
             // if no menus means game is being played
             Script.Instance.EventStackExecute();
+            if (io != null
+                && !doonce)
+            {
+                doonce = true;
+                slot.Io = io;
+            }
         }
+        [SerializeField]
+        InventorySlotController slot;
     }
 }

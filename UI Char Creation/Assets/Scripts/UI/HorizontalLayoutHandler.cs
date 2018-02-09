@@ -460,6 +460,10 @@ namespace Assets.Scripts.UI
                 {
                     print(gameObject.name + " HAS NO PARENT");
                 }
+                else if (((RectTransform)me.parent).rect == null)
+                {
+                    print(gameObject.name + " HAS NO PARENT WITH RECTTRANSFORM");
+                }
                 Vector2 parentSize = ((RectTransform)me.parent).rect.size;
                 // try changing anchor positions to move element.
                 // anchor min x stays the same.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RPGBase.Constants;
+using UnityEngine;
 
 namespace RPGBase.Flyweights
 {
@@ -170,6 +171,7 @@ namespace RPGBase.Flyweights
         /// the list of spells currently active on the object.
         /// </summary>
         private List<int> spellsOn = new List<int>();
+        public Sprite Sprite { get; set; }
         public int StatCount { get; set; }
         public int StatSent { get; set; }
         public int Summoner { get; set; }

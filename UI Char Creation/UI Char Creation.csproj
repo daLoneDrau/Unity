@@ -90,6 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ChildScript.cs" />
+    <Compile Include="Assets\DragAndDropHandler.cs" />
+    <Compile Include="Assets\InventoryController.cs" />
+    <Compile Include="Assets\InventorySlotController.cs" />
     <Compile Include="Assets\MenuButtonLayout.cs" />
     <Compile Include="Assets\Scripts\Avalon\Constants\AvalonGlobals.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Constants\BPGlobals.cs" />
@@ -164,11 +167,13 @@
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Script.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Speech.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\SpellController.cs" />
+    <Compile Include="Assets\Scripts\UI\DropAccessible.cs" />
     <Compile Include="Assets\Scripts\UI\HorizontalLayoutHandler.cs" />
     <Compile Include="Assets\Scripts\UI\IRPGLayoutHandler.cs" />
     <Compile Include="Assets\Scripts\UI\MainMenuUIController.cs" />
     <Compile Include="Assets\Scripts\UI\MenuButton.cs" />
     <Compile Include="Assets\Scripts\UI\SimpleJSON.cs" />
+    <Compile Include="Assets\Scripts\UI\SpriteMap.cs" />
     <Compile Include="Assets\Scripts\UI\StatWatcher.cs" />
     <Compile Include="Assets\Scripts\UI\UnitySystemConsoleRedirector.cs" />
     <Compile Include="Assets\Scripts\UI\VerticalLayoutHandler.cs" />
@@ -177,7 +182,6 @@
   <ItemGroup>
     <None Include="Assets\Resources\config.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
 </Project>

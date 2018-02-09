@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.BarbarianPrince.Flyweights;
+using Assets.Scripts.UI;
 using Assets.Scripts.UI.SimpleJSON;
 using RPGBase.Flyweights;
 using RPGBase.Pooled;
@@ -34,6 +35,11 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
         }
         private BPServiceClient() { print("setting instance"); instance = this; }
         public string Endpoint { get; set; }
+        /// <summary>
+        /// the sprite map for setting item icons.
+        /// </summary>
+        [SerializeField]
+        private SpriteMap SpriteMap;
         public IEnumerator GetEquipmentElementByCode(string elem, System.Action<int> result)
         {
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
@@ -109,7 +115,6 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
         }
         public IEnumerator GetItemByName(string name, System.Action<BPInteractiveObject> result)
         {
-            print("++++++++++++++++++++++++++++++++++++++++++++++++++++++GetItemByName");
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
             sb.Append(Endpoint);
             sb.Append("io_item_data/name/");
@@ -158,29 +163,32 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
                                 string mod = modifier[elem].Value.ToString();
                                 int e = 0;
                                 yield return StartCoroutine(GetEquipmentElementByCode(elem, value => e = value));
-                                print("code::" + e);
                                 EquipmentItemModifier eim = null;
                                 yield return StartCoroutine(GetElementModifierByCode(mod, value => eim = value));
                                 data.Equipitem.GetElementModifier(e).Set(eim);
                             }
                         }
+                        // sprite
+                        if (node["sprite"] != null)
+                        {
+                            io.Sprite = SpriteMap.GetSprite(node["sprite"].Value.ToString());
+                        }
+                        else
+                        {
+                            io.Sprite = SpriteMap.GetSprite(data.ItemName);
+                        }
                         // script
                         string script = node["internal_script"].Value.ToString();
-                        print(script);
                         sb = StringBuilderPool.Instance.GetStringBuilder();
                         sb.Append("Assets.Scripts.BarbarianPrince.Scriptables.Items.");
                         sb.Append(script);
                         Type blob = Type.GetType(sb.ToString());
                         sb.ReturnToPool();
-                        print(blob);
                         object o = Activator.CreateInstance(blob);
-                        print(o);
                         io.Script = (Scriptable)o;
-                        print("seinding init");
                         Script.Instance.SendInitScriptEvent(io);
                     }
                 }
-                print("finished processing");
                 result(io);
             }
         }

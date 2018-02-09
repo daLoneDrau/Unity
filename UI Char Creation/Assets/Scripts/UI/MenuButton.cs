@@ -8,6 +8,9 @@ public class MenuButton : MonoBehaviour
 {
     [SerializeField]
     private GameObject decoration;
+    /// <summary>
+    /// If true, the menu button shows the current state of the view, and the decoration needs to show at all times; otherwise the decoration shows only when hovered.
+    /// </summary>
     private bool currentState = false;
     public bool CurrentState
     {
