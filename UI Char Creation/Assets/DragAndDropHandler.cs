@@ -12,27 +12,47 @@ public class DragAndDropHandler : MonoBehaviour
     /// <summary>
     /// flag indicating a drag has started.
     /// </summary>
-    private bool dragging;
+    public bool Dragging { get; private set; }
     IDropAccessible dragSource;
+    IDropAccessible dragTarget;
+    public void EnterDraggable(IDropAccessible dragArea)
+    {
+        if (Dragging)
+        {
+            dragTarget = dragArea;
+            print("entered " + dragArea.GetGameObject().name);
+        }
+    }
+    public void ExitDraggable(IDropAccessible dragArea)
+    {
+        if (Dragging && dragTarget != null)
+        {
+            if (GameObject.ReferenceEquals(dragTarget.GetGameObject(), dragArea.GetGameObject()))
+            {
+                dragTarget = null;
+                print("exited " + dragArea.GetGameObject().name);
+            }
+        }
+    }
     public void DragStart(IDropAccessible vessel)
     {
-        if (!dragging)
+        if (!Dragging)
         {
-            print("starting to drag from vessel");
+            print("starting to drag from "+vessel.GetGameObject().name);
             Type t = typeof(InventorySlotController);
             if (t == vessel.GetType())
             {
                 print("dragging from slot");
             }
-            dragging = true;
+            Dragging = true;
             dragSource = vessel;
         }
     }
-    public void DragEnd(IDropAccessible dragTarget)
+    public void DragEnd()
     {
-        if (dragging)
+        if (Dragging && dragTarget != null)
         {
-            print("ending drag");
+            print("ending drag  - last over "+dragTarget.GetGameObject().name);
             Type t = typeof(InventorySlotController);
             if (t == dragTarget.GetType()
                 && t == dragSource.GetType())
@@ -62,7 +82,9 @@ public class DragAndDropHandler : MonoBehaviour
                 }
             }
         }
-        dragging = false;
+        Dragging = false;
+        // go back to default cursor
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
     // Use this for initialization
     void Start()

@@ -72,6 +72,7 @@ public class InventorySlotController : MonoBehaviour, IDropAccessible
         // set drag and drop controller
         DragAndDropHandler = transform.parent.parent.GetComponent<DragAndDropHandler>();
 
+        // DRAG START
         eventtype = new EventTrigger.Entry
         {
             eventID = EventTriggerType.BeginDrag
@@ -81,7 +82,7 @@ public class InventorySlotController : MonoBehaviour, IDropAccessible
         gameObject.AddComponent<EventTrigger>();
         gameObject.GetComponent<EventTrigger>().triggers.Add(eventtype);
 
-
+        // DRAGGING
         eventtype = new EventTrigger.Entry
         {
             eventID = EventTriggerType.Drag
@@ -90,7 +91,8 @@ public class InventorySlotController : MonoBehaviour, IDropAccessible
 
         gameObject.AddComponent<EventTrigger>();
         gameObject.GetComponent<EventTrigger>().triggers.Add(eventtype);
-        
+
+        // DRAG END
         eventtype = new EventTrigger.Entry
         {
             eventID = EventTriggerType.EndDrag
@@ -107,6 +109,7 @@ public class InventorySlotController : MonoBehaviour, IDropAccessible
         {
             Inventory.EnterIo(io);
         }
+        DragAndDropHandler.EnterDraggable(this);
     }
     void OnMouseExit()
     {
@@ -114,6 +117,7 @@ public class InventorySlotController : MonoBehaviour, IDropAccessible
         if (io != null)
         {
             Inventory.ExitIo(io);
+            DragAndDropHandler.ExitDraggable(this);
         }
     }
     // Use this for initialization
@@ -131,22 +135,44 @@ public class InventorySlotController : MonoBehaviour, IDropAccessible
     {
         if (io != null)
         {
-            print("start drag from "+gameObject.name);
             DragAndDropHandler.DragStart(this);
         }
     }
+    private bool cursorSet = false;
     void OnDrag()
     {
         //print("dragging...............................................");
+        // change the cursor to my object
+        if (io != null
+            && !cursorSet)
+        {
+            Image img = transform.GetChild(0).GetChild(0).GetComponent<Image>();
+            print(img);
+            // assume "sprite" is your Sprite object
+            var croppedTexture = new Texture2D((int)img.sprite.rect.width, (int)img.sprite.rect.height);
+            var pixels = img.sprite.texture.GetPixels((int)img.sprite.textureRect.x,
+                                                    (int)img.sprite.textureRect.y,
+                                                    (int)img.sprite.textureRect.width,
+                                                    (int)img.sprite.textureRect.height);
+            croppedTexture.SetPixels(pixels);
+            croppedTexture.Apply();
+            Cursor.SetCursor(croppedTexture, Vector2.zero, CursorMode.Auto);
+            //Sprite.Create(texture, rect, pivot);
+            cursorSet = true;
+        }
     }
     void OnEndDrag()
     {
-        Debug.Log("Current detected event: " + Event.current);
-        print("pointer up at "+gameObject.name);
-        DragAndDropHandler.DragEnd(this);
+        cursorSet = false;
+        DragAndDropHandler.DragEnd();
     }
     public void HandleDrop()
     {
         throw new System.NotImplementedException();
+    }
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
     }
 }
