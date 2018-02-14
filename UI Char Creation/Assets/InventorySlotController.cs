@@ -198,7 +198,6 @@ public class InventorySlotController : MonoBehaviour, IDropAccessible
                 if (Mathf.Abs(x1 - x2) > Mathf.Abs(y1 - y2))
                 {
                     // horizontal line
-                    print("horizontal");
                     int minY = (int)yPix - (lineWidth / 2);
                     if (minY + lineWidth - 1 >= a_Texture.height)
                     {
@@ -208,17 +207,14 @@ public class InventorySlotController : MonoBehaviour, IDropAccessible
                     {
                         minY = 0;
                     }
-                    print("minY::" + minY);
                     for (int j = minY; j < minY + lineWidth; j++)
                     {
-                        print((int)xPix + "," + j);
                         a_Texture.SetPixel((int)xPix, j, a_Color);
                     }
                 }
                 else
                 {
                     // vertical line
-                    print("vertical");
                     int minX = (int)xPix - (lineWidth / 2);
                     if (minX + lineWidth - 1 >= a_Texture.width)
                     {
@@ -228,10 +224,8 @@ public class InventorySlotController : MonoBehaviour, IDropAccessible
                     {
                         minX = 0;
                     }
-                    print("minX::" + minX);
                     for (int j = minX; j < minX + lineWidth; j++)
                     {
-                        print(j + "," + (int)yPix);
                         a_Texture.SetPixel(j, (int)yPix, a_Color);
                     }
                 }
