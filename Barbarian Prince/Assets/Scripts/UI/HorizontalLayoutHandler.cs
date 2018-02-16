@@ -347,30 +347,6 @@ namespace Assets.Scripts.UI
             }
             height += padding.Top + padding.Bottom;
             width += padding.Left + padding.Right;
-            // if my rect has Infinity or NaN, fix it
-            RectTransform me = GetComponent<RectTransform>();
-            if (!NotNanOrInfinity(me.offsetMin.x)
-                || !NotNanOrInfinity(me.offsetMin.y)
-                || !NotNanOrInfinity(me.offsetMax.x)
-                || !NotNanOrInfinity(me.offsetMax.y)
-                || !NotNanOrInfinity(me.anchorMin.x)
-                || !NotNanOrInfinity(me.anchorMin.y)
-                || !NotNanOrInfinity(me.anchorMin.x)
-                || !NotNanOrInfinity(me.anchorMin.y))
-            {
-                me.offsetMin = new Vector2(0, 0);
-                me.offsetMax = new Vector2(0, 0);
-                me.anchorMin = new Vector2(0, 0);
-                me.anchorMax = new Vector2(1, 1);
-                if (debug)
-                {
-                    print("fixing offset for " + gameObject.name);
-                    print("me.offsetMin::" + me.offsetMin);
-                    print("me.offsetMax::" + me.offsetMax);
-                    print("me.anchorMin::" + me.anchorMin);
-                    print("me.anchorMax::" + me.anchorMax);
-                }
-            }
             return new Vector2(width, height);
         }
         /// <summary>
