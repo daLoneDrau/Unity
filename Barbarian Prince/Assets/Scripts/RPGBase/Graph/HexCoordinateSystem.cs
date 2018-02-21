@@ -1,4 +1,5 @@
 ﻿using RPGBase.Flyweights;
+using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,11 @@ using UnityEngine;
 namespace Assets.Scripts.RPGBase.Graph
 {
     public class HexCoordinateSystem
-    {/** pre-calculated changes to find a hex's neighbor coordinates. */
-        private static Vector3[] COMPOUND_NEIGHBORS =
-                                                                        new Vector3[] {
-                                                                                new Vector3(
+    {
+        /// <summary>
+        /// pre-calculated changes to find a hex's neighbor coordinates.
+        /// </summary>
+        private static Vector3[] COMPOUND_NEIGHBORS = new Vector3[] {new Vector3(
                                                                                         4,
                                                                                         5,
                                                                                         -9),			// side
@@ -43,18 +45,20 @@ namespace Assets.Scripts.RPGBase.Graph
                                                                                         -4),			// side
 																										// 5
 																		};
-        /** direction N. */
-        public static int DIRECTION_N = 0;
+        /// <summary>
+        /// direction N.
+        /// </summary>
+        public const int DIRECTION_N = 0;
         /** direction NNE. */
-        public static int DIRECTION_NNE = 1;
+        public const int DIRECTION_NNE = 1;
         /** direction NNW. */
-        public static int DIRECTION_NNW = 5;
+        public const int DIRECTION_NNW = 5;
         /** direction S. */
-        public static int DIRECTION_S = 3;
+        public const int DIRECTION_S = 3;
         /** direction SSE. */
-        public static int DIRECTION_SSE = 2;
+        public const int DIRECTION_SSE = 2;
         /** direction SSW. */
-        public static int DIRECTION_SSW = 4;
+        public const int DIRECTION_SSW = 4;
         /**
          * <p>
          * layout for flat-topped hexagons where hex columns are aligned with even-numbered columns sticking
@@ -211,11 +215,11 @@ namespace Assets.Scripts.RPGBase.Graph
 
 
         {
-            Hexagon hex = getHexagon(x, z);
+            Hexagon hex = GetHexagon(x, z);
             if (hex == null)
             {
                 hex = new Hexagon(nextId++);
-                hex.setCoordinates(this.GetCubeCoordinates(x, z));
+                hex.setCoordinates(GetCubeCoordinates(x, z));
                 hexes = ArrayUtilities.Instance.ExtendArray(hex, hexes);
             }
             return hex;
@@ -228,10 +232,7 @@ namespace Assets.Scripts.RPGBase.Graph
          */
         public int Distance(Hexagon hex0, Hexagon hex1)
         {
-            return (Math.Abs(hex0.getX() - hex1.getX())
-                    + Math.Abs(hex0.getY() - hex1.getY()) + Math.abs(hex0.getZ()
-                            - hex1.getZ()))
-                    / 2;
+            return (Math.Abs(hex0.X - hex1.X) + Math.Abs(hex0.Y - hex1.Y) + Math.Abs(hex0.Z - hex1.Z)) / 2;
         }
         /**
          * Gets the distance between two hexes in a cube coordinate system.
@@ -239,13 +240,9 @@ namespace Assets.Scripts.RPGBase.Graph
          * @param v1 the second hex
          * @return <code>int</code>
          */
-        public int CubeDistance(Vector3 v0,
-                 Vector3 v1)
+        public int CubeDistance(Vector3 v0, Vector3 v1)
         {
-            return (int)((Math.abs(v0.getX() - v1.getX())
-                    + Math.abs(v0.getY() - v1.getY()) + Math.abs(v0.getZ()
-                            - v1.getZ()))
-                    / 2);
+            return (int)((Math.Abs(v0.x - v1.x) + Math.Abs(v0.y - v1.y) + Math.Abs(v0.z - v1.z)) / 2);
         }
         /**
          * Gets the distance between two hexes in an axial coordinate system.
@@ -254,12 +251,11 @@ namespace Assets.Scripts.RPGBase.Graph
          * @return <code>int</code>
          * @ if an error occurs
          */
-        public int axialDistance(SimplePoint p0,
-                 SimplePoint p1)
+        public int AxialDistance(Vector2 p0, Vector2 p1)
         {
-            Vector3 ac = getCubeCoordinates((int)p0.getX(), (int)p0.getY());
-            Vector3 bc = getCubeCoordinates((int)p1.getX(), (int)p1.getY());
-            return cubeDistance(ac, bc);
+            Vector3 ac = GetCubeCoordinates((int)p0.x, (int)p0.y);
+            Vector3 bc = GetCubeCoordinates((int)p1.x, (int)p1.y);
+            return CubeDistance(ac, bc);
         }
         /**
          * Gets the distance between two hexes.
@@ -268,71 +264,62 @@ namespace Assets.Scripts.RPGBase.Graph
          * @return <code>int</code>
          * @ if an error occurs
          */
-        public int distance(Vector3 v0, Vector3 v1)
-
-
+        public int Distance(Vector3 v0, Vector3 v1)
         {
-            SimplePoint p0 = getAxialCoordinates(v0);
-            SimplePoint p1 = getAxialCoordinates(v1);
-            return axialDistance(p0, p1);
+            Vector2 p0 = getAxialCoordinates(v0);
+            Vector2 p1 = getAxialCoordinates(v1);
+            return AxialDistance(p0, p1);
         }
         /**
          * Gets the {@link Hexagon}'s axial coordinates.
          * @param hexagon the {@link Hexagon}
-         * @return {@link SimplePoint}
+         * @return {@link Vector2}
          * @ if the configuration is invalid
          */
-        public SimplePoint getAxialCoordinates(Hexagon hexagon)
-
-
+        public Vector2 GetAxialCoordinates(Hexagon hexagon)
         {
-            return getAxialCoordinates(hexagon.getVector());
+            return getAxialCoordinates(hexagon.GetVector());
         }
         /**
          * Gets the {@link Vector3}'s axial coordinates.
          * @param v3 the {@link Vector3}
-         * @return {@link SimplePoint}
+         * @return {@link Vector2}
          * @ if the configuration is invalid
          */
-        public SimplePoint getAxialCoordinates(Vector3 v3)
-
-
+        public Vector2 getAxialCoordinates(Vector3 v3)
         {
             int q, r;
             switch (offsetConfiguration)
             {
                 case EVEN_Q:
-                    q = (int)v3.getX();
-                    r = (int)v3.getZ() + ((int)v3.getX() + ((int)v3.getX() & 1)) / 2;
+                    q = (int)v3.x;
+                    r = (int)v3.z + ((int)v3.x + ((int)v3.x & 1)) / 2;
                     break;
                 case ODD_Q:
-                    q = (int)v3.getX();
-                    r = (int)v3.getZ() + ((int)v3.getX() - ((int)v3.getX() & 1)) / 2;
+                    q = (int)v3.x;
+                    r = (int)v3.z + ((int)v3.x - ((int)v3.x & 1)) / 2;
                     break;
                 case EVEN_R:
-                    q = (int)v3.getX() + ((int)v3.getZ() + ((int)v3.getZ() & 1)) / 2;
-                    r = (int)v3.getZ();
+                    q = (int)v3.x + ((int)v3.z + ((int)v3.z & 1)) / 2;
+                    r = (int)v3.z;
                     break;
                 case ODD_R:
-                    q = (int)v3.getX() + ((int)v3.getZ() - ((int)v3.getZ() & 1)) / 2;
-                    r = (int)v3.getZ();
+                    q = (int)v3.x + ((int)v3.z - ((int)v3.z & 1)) / 2;
+                    r = (int)v3.z;
                     break;
                 default:
-                    throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                            "Invalid offset configuration "
-                            + offsetConfiguration);
+                    throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Invalid offset configuration " + offsetConfiguration);
             }
-            return new SimplePoint(q, r);
+            return new Vector2(q, r);
         }
         /**
          * Gets the {@link Hexagon}'s cube coordinates.
          * @param hexagon the {@link Hexagon}
          * @return {@link Vector3}
          */
-        public Vector3 getCubeCoordinates(Hexagon hexagon)
+        public Vector3 GetCubeCoordinates(Hexagon hexagon)
         {
-            return new Vector3(
-                    hexagon.getX(), hexagon.getY(), hexagon.getZ());
+            return new Vector3(hexagon.X, hexagon.Y, hexagon.Z);
         }
         /**
          * Gets the cube coordinates for a specific column and row.
@@ -341,9 +328,7 @@ namespace Assets.Scripts.RPGBase.Graph
          * @return {@link Vector3}
          * @ if the system's offset configuration is invalid
          */
-        public Vector3 getCubeCoordinates(int q, int r)
-
-
+        public Vector3 GetCubeCoordinates(int q, int r)
         {
             Vector3 v3 = new Vector3();
             int x1, y1, z1;
@@ -370,11 +355,9 @@ namespace Assets.Scripts.RPGBase.Graph
                     y1 = -x1 - z1;
                     break;
                 default:
-                    throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                            "Invalid offset configuration "
-                            + offsetConfiguration);
+                    throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Invalid offset configuration " + offsetConfiguration);
             }
-            v3.set(x1, y1, z1);
+            v3.Set(x1, y1, z1);
             return v3;
         }
         /**
@@ -382,7 +365,7 @@ namespace Assets.Scripts.RPGBase.Graph
          * @param index the index
          * @return {@link Hexagon}
          */
-        protected Hexagon getHexagon(int index)
+        protected Hexagon GetHexagon(int index)
         {
             return hexes[index];
         }
@@ -393,13 +376,11 @@ namespace Assets.Scripts.RPGBase.Graph
          * @return {@link Hexagon}
          * @ if an error occurs
          */
-        public Hexagon getHexagon(int x, int z)
-
-
+        public Hexagon GetHexagon(int x, int z)
         {
             Hexagon hex = null;
-            Vector3 v = getCubeCoordinates(x, z);
-            for (int i = hexes.length - 1; i >= 0; i--)
+            Vector3 v = GetCubeCoordinates(x, z);
+            for (int i = hexes.Length - 1; i >= 0; i--)
             {
                 if (hexes[i].Equals(v))
                 {
@@ -416,10 +397,10 @@ namespace Assets.Scripts.RPGBase.Graph
          * @param z the z-coordinate
          * @return {@link Hexagon}
          */
-        public Hexagon getHexagon(int x, int y, int z)
+        public Hexagon GetHexagon(int x, int y, int z)
         {
             Hexagon hex = null;
-            for (int i = hexes.length - 1; i >= 0; i--)
+            for (int i = hexes.Length - 1; i >= 0; i--)
             {
                 if (hexes[i].Equals(x, y, z))
                 {
@@ -434,9 +415,9 @@ namespace Assets.Scripts.RPGBase.Graph
          * @param v3 the set of coordinates
          * @return {@link Hexagon}
          */
-        public Hexagon getHexagon(Vector3 v3)
+        public Hexagon GetHexagon(Vector3 v3)
         {
-            return getHexagon((int)v3.getX(), (int)v3.getY(), (int)v3.getZ());
+            return GetHexagon((int)v3.x, (int)v3.y, (int)v3.z);
         }
         /**
          * Gets the coordinates for a neighboring {@link Hexagon}.
@@ -445,14 +426,10 @@ namespace Assets.Scripts.RPGBase.Graph
          * @return {@link Vector3}
          * @ if the direction was invalid
          */
-        public Vector3 getNeighborCoordinates(Hexagon hexagon,
-                 int direction)
+        public Vector3 GetNeighborCoordinates(Hexagon hexagon, int direction)
         {
-            Vector3 neighbor =
-
-                        new Vector3(hexagon.getX(), hexagon.getY(), hexagon
-                                .getZ());
-            return getNeighborCoordinates(neighbor, direction);
+            Vector3 neighbor = new Vector3(hexagon.X, hexagon.Y, hexagon.Z);
+            return GetNeighborCoordinates(neighbor, direction);
         }
         /**
          * Gets the coordinates for a neighboring {@link Hexagon}.
@@ -461,20 +438,17 @@ namespace Assets.Scripts.RPGBase.Graph
          * @return {@link Vector3}
          * @ if the direction was invalid
          */
-        public Vector3 getNeighborCoordinates(
-                 Vector3 coords, int direction)
-
-
+        public Vector3 GetNeighborCoordinates(Vector3 coords, int direction)
         {
             // copy current coordinates
-            Vector3 neighbor = new Vector3(coords);
-            Vector3 v = null;
+            Vector3 neighbor = new Vector3(coords.x, coords.y, coords.z);
+            Vector3 v;
             // convert coords to axial
-            SimplePoint pt = this.getAxialCoordinates(coords);
+            Vector2 pt = this.getAxialCoordinates(coords);
             switch (offsetConfiguration)
             {
                 case ODD_R:
-                    if (((int)pt.getY() & 1) == 0)
+                    if (((int)pt.y & 1) == 0)
                     {
                         switch (direction)
                         {
@@ -507,21 +481,21 @@ namespace Assets.Scripts.RPGBase.Graph
                                 break;
                         }
                     }
+                    break;
             }
             // check for row even or odd
-            if (((int)pt.getY() & 1) == 0)
+            if (((int)pt.y & 1) == 0)
             {
 
             }
-            neighbor.increment(HexCoordinateSystem
-                    .NEIGHBORS[offsetConfiguration][direction]);
+            neighbor += HexCoordinateSystem.NEIGHBORS[offsetConfiguration][direction];
             return neighbor;
         }
         /**
          * Gets the next available reference id.
          * @return <code>int</code>
          */
-        public int getNextId()
+        public int GetNextId()
         {
             return nextId++;
         }
@@ -529,85 +503,66 @@ namespace Assets.Scripts.RPGBase.Graph
          * Gets the value of the offsetConfiguration.
          * @return {@link int}
          */
-        public int getOffsetConfiguration()
+        public int GetOffsetConfiguration()
         {
             return offsetConfiguration;
         }
         /**
          * Gets a {@link Hexagon}'s offset coordinates.
          * @param hexagon the {@link Hexagon}
-         * @return {@link SimplePoint}
+         * @return {@link Vector2}
          * @ if the offset configuration was set to an invalid
          * value
          */
-        public SimplePoint getOffsetCoordinates(Hexagon hexagon)
-
-
+        public Vector2 GetOffsetCoordinates(Hexagon hexagon)
         {
             int col, row;
             switch (offsetConfiguration)
             {
                 case EVEN_Q:
-                    col = hexagon.getX();
-                    row =
-                            hexagon.getZ()
-                                    + (hexagon.getX() + (hexagon.getX() & 1)) / 2;
+                    col = hexagon.X;
+                    row = hexagon.Z + (hexagon.X + (hexagon.X & 1)) / 2;
                     break;
                 case ODD_Q:
-                    col = hexagon.getX();
-                    row =
-                            hexagon.getZ()
-                                    + (hexagon.getX() - (hexagon.getX() & 1)) / 2;
+                    col = hexagon.X;
+                    row = hexagon.Z + (hexagon.X - (hexagon.X & 1)) / 2;
                     break;
                 case EVEN_R:
-                    col =
-                            hexagon.getX()
-                                    + (hexagon.getZ() + (hexagon.getZ() & 1)) / 2;
-                    row = hexagon.getZ();
+                    col = hexagon.X + (hexagon.Z + (hexagon.Z & 1)) / 2;
+                    row = hexagon.Z;
                     break;
                 case ODD_R:
-                    col =
-                            hexagon.getX()
-                                    + (hexagon.getZ() - (hexagon.getZ() & 1)) / 2;
-                    row = hexagon.getZ();
+                    col = hexagon.X + (hexagon.Z - (hexagon.Z & 1)) / 2;
+                    row = hexagon.Z;
                     break;
                 default:
-                    throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                            "Invalid offset configuration " + offsetConfiguration);
+                    throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Invalid offset configuration " + offsetConfiguration);
             }
-            return new SimplePoint(col, row);
+            return new Vector2(col, row);
         }
-        public int getSharedEdge(Hexagon hex0, Hexagon hex1)
-
-
+        public int GetSharedEdge(Hexagon hex0, Hexagon hex1)
         {
-            return getSharedEdge(hex0.getVector(), hex1.getVector());
+            return GetSharedEdge(hex0.GetVector(), hex1.GetVector());
         }
-        public int getSharedEdge(Vector3 hex0,
-                 Vector3 hex1)
+        public int GetSharedEdge(Vector3 hex0, Vector3 hex1)
         {
-            int i = HexCoordinateSystem.NEIGHBORS[offsetConfiguration].length - 1;
-            if (distance(hex0, hex1) == 1)
+            int i = HexCoordinateSystem.NEIGHBORS[offsetConfiguration].Length - 1;
+            if (Distance(hex0, hex1) == 1)
             {
                 for (; i >= 0; i--)
                 {
-                    Vector3 v0 = new Vector3(hex1);
-                    v0.decrement(hex0);
-                    Vector3 neighbor =
-                            HexCoordinateSystem.NEIGHBORS[offsetConfiguration][i];
+                    Vector3 v0 = new Vector3(hex1.x, hex1.y, hex1.z);
+                    v0 -= hex0;
+                    Vector3 neighbor = HexCoordinateSystem.NEIGHBORS[offsetConfiguration][i];
                     if (v0.Equals(neighbor))
                     {
-                        neighbor = null;
                         break;
                     }
-                    neighbor = null;
                 }
             }
             else
             {
-                throw new RPGException(ErrorMessage.BAD_PARAMETERS,
-                        "The hexes are not neighbors - " + hex0 + ", "
-                        + hex1);
+                throw new RPGException(ErrorMessage.BAD_PARAMETERS, "The hexes are not neighbors - " + hex0 + ", " + hex1);
             }
             return i;
         }
@@ -615,351 +570,463 @@ namespace Assets.Scripts.RPGBase.Graph
          * Gets the number of hexes in the system.
          * @return <code>int</code>
          */
-        protected int length()
+        protected int Length()
         {
-            return hexes.length;
+            return hexes.Length;
         }
-        public void moveCompoundHexagonToSide(CompoundHexagon compoundHexagon,
+        public void MoveCompoundHexagonToSide(CompoundHexagon compoundHexagon,
                  Vector3 v3, int side)
         {
             // find current location
-            CompoundHexagon current = (CompoundHexagon)this.getHexagon(v3);
-            System.out.println("found hex " + current.toString() + " at " + v3);
-            for (int i = current.getNumberOfHexes() - 1; i >= 0; i--)
+            CompoundHexagon current = (CompoundHexagon)this.GetHexagon(v3);
+            Console.WriteLine("found hex " + current.ToString() + " at " + v3);
+            for (int i = current.GetNumberOfHexes() - 1; i >= 0; i--)
             {
-                Vector3 v =
-                        new Vector3(current.getHexagon(i).getVector());
-                v.increment(HexCoordinateSystem.COMPOUND_NEIGHBORS[side]);
-                compoundHexagon.getHexagon(i).setCoordinates(v);
+                Vector3 v = new Vector3(current.GetHexagon(i).GetVector().x, current.GetHexagon(i).GetVector().y, current.GetHexagon(i).GetVector().z);
+                v += HexCoordinateSystem.COMPOUND_NEIGHBORS[side];
+                compoundHexagon.GetHexagon(i).setCoordinates(v);
             }
         }
-        public String printGrid(Hexagon center) , PooledException {
-		// get Northern coordinates
-		Vector3 nv =
-                getNeighborCoordinates(center, HexCoordinateSystem.DIRECTION_N);
-        nv = getNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
-        nv = getNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
-        nv = getNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
-        // get Southern coordinates
-        Vector3 sv =
-                getNeighborCoordinates(center, HexCoordinateSystem.DIRECTION_S);
-        sv = getNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
-        sv = getNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
-        sv = getNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
-        // all hexes saved in coordinates
-        // need to print 7 * height lines
-        // print hexes
-        int sD = distance(nv, sv) + 1;
-        // need to print
-        int numLines = sD * center.getCubeCoordinatesArtHeight();
-        PooledStringBuilder line =
-                StringBuilderPool.Instance.getStringBuilder();
-        // switch to offset coords
-        int q = (int)(getOffsetCoordinates(center).getX() - 4);
-        int maxQ = (int)(getOffsetCoordinates(center).getX() + 4);
-        int r = (int)(getOffsetCoordinates(center).getY() - 4);
-		for (int i = 0; i<numLines; i++) {
-			if (i % 4 == 0 && i > 0) {
-				r++;
-			}
-    PooledStringBuilder sb =
-            StringBuilderPool.Instance.getStringBuilder();
-    boolean centerisOdd = getOffsetCoordinates(center).getX() % 2 == 1;
-    int col = q;
-			while (col <= maxQ) {
-				boolean columnIsEven = col % 2 == 0;
-    int row = r;
-				if (centerisOdd) {
-					if (columnIsEven) {
-						if (i % 4 < 2) {
-							row--;
-						}
-					}
-				} else {
-					if (!columnIsEven) {
-						if (i % 4 > 1) {
-							row++;
-						}
-					}
-				}
-				Vector3 v3 = getCubeCoordinates(col, row);
-Hexagon hex = getHexagon(v3);
-				if (hex != null) {
-					String[] split = hex.getCubeCoordinatesArt().split("\n");
-					// how do i know if i am printing top or bottom?
-					if (centerisOdd) {
-						if (columnIsEven) {
-							if (i % 4 < 2) {
-								// printing bottom
-								if ((i % 4 == 1 || i % 4 == 2)
-										&& sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append(split[i % 4 + 2]);
-							} else {
-								// printing top
-								if ((i % 4 == 1 || i % 4 == 2)
-										&& sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append(split[i % 4 - 2]);
-							}
-						} else {
-							if ((i % 4 == 0 || i % 4 == 3)
-									&& sb.length() == 0) {
-								sb.append(' ');
-							}
-							sb.append(split[i % 4]);
-						}
-					} else {
-						// center is not odd
-						if (columnIsEven) {
-							if ((i % 4 == 0 || i % 4 == 3)
-									&& sb.length() == 0) {
-								sb.append(' ');
-							}
-							sb.append(split[i % 4]);
-						} else {
-							if (i % 4 < 2) {
-								// printing bottom
-								if ((i % 4 == 1 || i % 4 == 2)
-										&& sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append(split[i % 4 + 2]);
-							} else {
-								// printing top
-								if ((i % 4 == 1 || i % 4 == 2)
-										&& sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append(split[i % 4 - 2]);
-							}
-						}
-					}
-				} else {
-					if (centerisOdd) {
-						if (columnIsEven) {
-							if (i % 4 == 1 || i % 4 == 2) {
-								if (sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append("|*****|");
-							} else {
-								sb.append("|*******|");
-							}
-						} else {
-							if (i % 4 == 0 || i % 4 == 3) {
-								if (sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append("|*****|");
-							} else {
-								sb.append("|*******|");
-							}
-						}
-					} else {
-						if (columnIsEven) {
-							if (i % 4 == 0 || i % 4 == 3) {
-								if (sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append("|*****|");
-							} else {
-								sb.append("|*******|");
-							}
-						} else {
-							if (i % 4 == 1 || i % 4 == 2) {
-								if (sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append("|*****|");
-							} else {
-								sb.append("|*******|");
-							}
-						}
-					}
-				}
-				col++;
-			}
-			line.append(sb.toString());
-			line.append('\n');
-			sb.returnToPool();
-			sb = null;
-		}
-		String s = line.toString();
-line.returnToPool();
-		line = null;
-		return s;
-	}
-	/**
-	 * Prints the hex map with all hexes as cube coordinates, with the supplied
-	 * hex as the center point.
-	 * @param center the center point
-	 * @return {@link String}
-	 * @throws PooledException should not happen
-	 * @ if there is an error getting any cell's coordinates
-	 */
-	public String printCubeCoordinatesView(Hexagon center)
-
-            throws PooledException, RPGException {
-		// get Northern coordinates
-		Vector3 nv =
-                getNeighborCoordinates(center, HexCoordinateSystem.DIRECTION_N);
-nv = getNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
-nv = getNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
-nv = getNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
-// get Southern coordinates
-Vector3 sv =
-        getNeighborCoordinates(center, HexCoordinateSystem.DIRECTION_S);
-sv = getNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
-sv = getNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
-sv = getNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
-// all hexes saved in coordinates
-// need to print 7 * height lines
-// print hexes
-int sD = distance(nv, sv) + 1;
-// need to print
-int numLines = sD * center.getCubeCoordinatesArtHeight();
-PooledStringBuilder line =
-        StringBuilderPool.Instance.getStringBuilder();
-// switch to offset coords
-int q = (int)(getOffsetCoordinates(center).getX() - 4);
-int maxQ = (int)(getOffsetCoordinates(center).getX() + 4);
-int r = (int)(getOffsetCoordinates(center).getY() - 4);
-		for (int i = 0; i<numLines; i++) {
-			if (i % 4 == 0 && i > 0) {
-				r++;
-			}
-			PooledStringBuilder sb =
-                    StringBuilderPool.Instance.getStringBuilder();
-boolean centerisOdd = getOffsetCoordinates(center).getX() % 2 == 1;
-int col = q;
-			while (col <= maxQ) {
-				boolean columnIsEven = col % 2 == 0;
-int row = r;
-				if (centerisOdd) {
-					if (columnIsEven) {
-						if (i % 4 < 2) {
-							row--;
-						}
-					}
-				} else {
-					if (!columnIsEven) {
-						if (i % 4 > 1) {
-							row++;
-						}
-					}
-				}
-				Vector3 v3 = getCubeCoordinates(col, row);
-Hexagon hex = getHexagon(v3);
-				if (hex != null) {
-					String[] split = hex.getCubeCoordinatesArt().split("\n");
-					// how do i know if i am printing top or bottom?
-					if (centerisOdd) {
-						if (columnIsEven) {
-							if (i % 4 < 2) {
-								// printing bottom
-								if ((i % 4 == 1 || i % 4 == 2)
-										&& sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append(split[i % 4 + 2]);
-							} else {
-								// printing top
-								if ((i % 4 == 1 || i % 4 == 2)
-										&& sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append(split[i % 4 - 2]);
-							}
-						} else {
-							if ((i % 4 == 0 || i % 4 == 3)
-									&& sb.length() == 0) {
-								sb.append(' ');
-							}
-							sb.append(split[i % 4]);
-						}
-					} else {
-						// center is not odd
-						if (columnIsEven) {
-							if ((i % 4 == 0 || i % 4 == 3)
-									&& sb.length() == 0) {
-								sb.append(' ');
-							}
-							sb.append(split[i % 4]);
-						} else {
-							if (i % 4 < 2) {
-								// printing bottom
-								if ((i % 4 == 1 || i % 4 == 2)
-										&& sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append(split[i % 4 + 2]);
-							} else {
-								// printing top
-								if ((i % 4 == 1 || i % 4 == 2)
-										&& sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append(split[i % 4 - 2]);
-							}
-						}
-					}
-				} else {
-					if (centerisOdd) {
-						if (columnIsEven) {
-							if (i % 4 == 1 || i % 4 == 2) {
-								if (sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append("|*****|");
-							} else {
-								sb.append("|*******|");
-							}
-						} else {
-							if (i % 4 == 0 || i % 4 == 3) {
-								if (sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append("|*****|");
-							} else {
-								sb.append("|*******|");
-							}
-						}
-					} else {
-						if (columnIsEven) {
-							if (i % 4 == 0 || i % 4 == 3) {
-								if (sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append("|*****|");
-							} else {
-								sb.append("|*******|");
-							}
-						} else {
-							if (i % 4 == 1 || i % 4 == 2) {
-								if (sb.length() == 0) {
-									sb.append(' ');
-								}
-								sb.append("|*****|");
-							} else {
-								sb.append("|*******|");
-							}
-						}
-					}
-				}
-				col++;
-			}
-			line.append(sb.toString());
-			line.append('\n');
-			sb.returnToPool();
-			sb = null;
-		}
-		String s = line.toString();
-line.returnToPool();
-		line = null;
-		return s;
-	}
+        public String PrintGrid(Hexagon center)
+        {
+            // get Northern coordinates
+            Vector3 nv = GetNeighborCoordinates(center, HexCoordinateSystem.DIRECTION_N);
+            nv = GetNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
+            nv = GetNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
+            nv = GetNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
+            // get Southern coordinates
+            Vector3 sv =
+                    GetNeighborCoordinates(center, HexCoordinateSystem.DIRECTION_S);
+            sv = GetNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
+            sv = GetNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
+            sv = GetNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
+            // all hexes saved in coordinates
+            // need to print 7 * height lines
+            // print hexes
+            int sD = Distance(nv, sv) + 1;
+            // need to print
+            int numLines = sD * center.GetCubeCoordinatesArtHeight();
+            PooledStringBuilder line = StringBuilderPool.Instance.GetStringBuilder();
+            // switch to offset coords
+            int q = (int)(GetOffsetCoordinates(center).x - 4);
+            int maxQ = (int)(GetOffsetCoordinates(center).x + 4);
+            int r = (int)(GetOffsetCoordinates(center).y - 4);
+            for (int i = 0; i < numLines; i++)
+            {
+                if (i % 4 == 0 && i > 0)
+                {
+                    r++;
+                }
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+                bool centerisOdd = GetOffsetCoordinates(center).x % 2 == 1;
+                int col = q;
+                while (col <= maxQ)
+                {
+                    bool columnIsEven = col % 2 == 0;
+                    int row = r;
+                    if (centerisOdd)
+                    {
+                        if (columnIsEven)
+                        {
+                            if (i % 4 < 2)
+                            {
+                                row--;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!columnIsEven)
+                        {
+                            if (i % 4 > 1)
+                            {
+                                row++;
+                            }
+                        }
+                    }
+                    Vector3 v3 = GetCubeCoordinates(col, row);
+                    Hexagon hex = GetHexagon(v3);
+                    if (hex != null)
+                    {
+                        String[] split = hex.GetCubeCoordinatesArt().Split('\n');
+                        // how do i know if i am printing top or bottom?
+                        if (centerisOdd)
+                        {
+                            if (columnIsEven)
+                            {
+                                if (i % 4 < 2)
+                                {
+                                    // printing bottom
+                                    if ((i % 4 == 1 || i % 4 == 2)
+                                            && sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append(split[i % 4 + 2]);
+                                }
+                                else
+                                {
+                                    // printing top
+                                    if ((i % 4 == 1 || i % 4 == 2)
+                                            && sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append(split[i % 4 - 2]);
+                                }
+                            }
+                            else
+                            {
+                                if ((i % 4 == 0 || i % 4 == 3)
+                                        && sb.Length() == 0)
+                                {
+                                    sb.Append(' ');
+                                }
+                                sb.Append(split[i % 4]);
+                            }
+                        }
+                        else
+                        {
+                            // center is not odd
+                            if (columnIsEven)
+                            {
+                                if ((i % 4 == 0 || i % 4 == 3)
+                                        && sb.Length() == 0)
+                                {
+                                    sb.Append(' ');
+                                }
+                                sb.Append(split[i % 4]);
+                            }
+                            else
+                            {
+                                if (i % 4 < 2)
+                                {
+                                    // printing bottom
+                                    if ((i % 4 == 1 || i % 4 == 2)
+                                            && sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append(split[i % 4 + 2]);
+                                }
+                                else
+                                {
+                                    // printing top
+                                    if ((i % 4 == 1 || i % 4 == 2)
+                                            && sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append(split[i % 4 - 2]);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (centerisOdd)
+                        {
+                            if (columnIsEven)
+                            {
+                                if (i % 4 == 1 || i % 4 == 2)
+                                {
+                                    if (sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append("|*****|");
+                                }
+                                else
+                                {
+                                    sb.Append("|*******|");
+                                }
+                            }
+                            else
+                            {
+                                if (i % 4 == 0 || i % 4 == 3)
+                                {
+                                    if (sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append("|*****|");
+                                }
+                                else
+                                {
+                                    sb.Append("|*******|");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (columnIsEven)
+                            {
+                                if (i % 4 == 0 || i % 4 == 3)
+                                {
+                                    if (sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append("|*****|");
+                                }
+                                else
+                                {
+                                    sb.Append("|*******|");
+                                }
+                            }
+                            else
+                            {
+                                if (i % 4 == 1 || i % 4 == 2)
+                                {
+                                    if (sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append("|*****|");
+                                }
+                                else
+                                {
+                                    sb.Append("|*******|");
+                                }
+                            }
+                        }
+                    }
+                    col++;
+                }
+                line.Append(sb.ToString());
+                line.Append('\n');
+                sb.ReturnToPool();
+                sb = null;
+            }
+            String s = line.ToString();
+            line.ReturnToPool();
+            line = null;
+            return s;
+        }
+        /**
+         * Prints the hex map with all hexes as cube coordinates, with the supplied
+         * hex as the center point.
+         * @param center the center point
+         * @return {@link String}
+         * @throws PooledException should not happen
+         * @ if there is an error getting any cell's coordinates
+         */
+        public String PrintCubeCoordinatesView(Hexagon center)
+        {
+            // get Northern coordinates
+            Vector3 nv =
+                    GetNeighborCoordinates(center, HexCoordinateSystem.DIRECTION_N);
+            nv = GetNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
+            nv = GetNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
+            nv = GetNeighborCoordinates(nv, HexCoordinateSystem.DIRECTION_N);
+            // get Southern coordinates
+            Vector3 sv =
+                    GetNeighborCoordinates(center, HexCoordinateSystem.DIRECTION_S);
+            sv = GetNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
+            sv = GetNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
+            sv = GetNeighborCoordinates(sv, HexCoordinateSystem.DIRECTION_S);
+            // all hexes saved in coordinates
+            // need to print 7 * height lines
+            // print hexes
+            int sD = Distance(nv, sv) + 1;
+            // need to print
+            int numLines = sD * center.GetCubeCoordinatesArtHeight();
+            PooledStringBuilder line = StringBuilderPool.Instance.GetStringBuilder();
+            // switch to offset coords
+            int q = (int)(GetOffsetCoordinates(center).x - 4);
+            int maxQ = (int)(GetOffsetCoordinates(center).x + 4);
+            int r = (int)(GetOffsetCoordinates(center).y - 4);
+            for (int i = 0; i < numLines; i++)
+            {
+                if (i % 4 == 0 && i > 0)
+                {
+                    r++;
+                }
+                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+                bool centerisOdd = GetOffsetCoordinates(center).x % 2 == 1;
+                int col = q;
+                while (col <= maxQ)
+                {
+                    bool columnIsEven = col % 2 == 0;
+                    int row = r;
+                    if (centerisOdd)
+                    {
+                        if (columnIsEven)
+                        {
+                            if (i % 4 < 2)
+                            {
+                                row--;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!columnIsEven)
+                        {
+                            if (i % 4 > 1)
+                            {
+                                row++;
+                            }
+                        }
+                    }
+                    Vector3 v3 = GetCubeCoordinates(col, row);
+                    Hexagon hex = GetHexagon(v3);
+                    if (hex != null)
+                    {
+                        String[] split = hex.GetCubeCoordinatesArt().Split('\n');
+                        // how do i know if i am printing top or bottom?
+                        if (centerisOdd)
+                        {
+                            if (columnIsEven)
+                            {
+                                if (i % 4 < 2)
+                                {
+                                    // printing bottom
+                                    if ((i % 4 == 1 || i % 4 == 2)
+                                            && sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append(split[i % 4 + 2]);
+                                }
+                                else
+                                {
+                                    // printing top
+                                    if ((i % 4 == 1 || i % 4 == 2)
+                                            && sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append(split[i % 4 - 2]);
+                                }
+                            }
+                            else
+                            {
+                                if ((i % 4 == 0 || i % 4 == 3)
+                                        && sb.Length() == 0)
+                                {
+                                    sb.Append(' ');
+                                }
+                                sb.Append(split[i % 4]);
+                            }
+                        }
+                        else
+                        {
+                            // center is not odd
+                            if (columnIsEven)
+                            {
+                                if ((i % 4 == 0 || i % 4 == 3)
+                                        && sb.Length() == 0)
+                                {
+                                    sb.Append(' ');
+                                }
+                                sb.Append(split[i % 4]);
+                            }
+                            else
+                            {
+                                if (i % 4 < 2)
+                                {
+                                    // printing bottom
+                                    if ((i % 4 == 1 || i % 4 == 2)
+                                            && sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append(split[i % 4 + 2]);
+                                }
+                                else
+                                {
+                                    // printing top
+                                    if ((i % 4 == 1 || i % 4 == 2)
+                                            && sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append(split[i % 4 - 2]);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (centerisOdd)
+                        {
+                            if (columnIsEven)
+                            {
+                                if (i % 4 == 1 || i % 4 == 2)
+                                {
+                                    if (sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append("|*****|");
+                                }
+                                else
+                                {
+                                    sb.Append("|*******|");
+                                }
+                            }
+                            else
+                            {
+                                if (i % 4 == 0 || i % 4 == 3)
+                                {
+                                    if (sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append("|*****|");
+                                }
+                                else
+                                {
+                                    sb.Append("|*******|");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (columnIsEven)
+                            {
+                                if (i % 4 == 0 || i % 4 == 3)
+                                {
+                                    if (sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append("|*****|");
+                                }
+                                else
+                                {
+                                    sb.Append("|*******|");
+                                }
+                            }
+                            else
+                            {
+                                if (i % 4 == 1 || i % 4 == 2)
+                                {
+                                    if (sb.Length() == 0)
+                                    {
+                                        sb.Append(' ');
+                                    }
+                                    sb.Append("|*****|");
+                                }
+                                else
+                                {
+                                    sb.Append("|*******|");
+                                }
+                            }
+                        }
+                    }
+                    col++;
+                }
+                line.Append(sb.ToString());
+                line.Append('\n');
+                sb.ReturnToPool();
+                sb = null;
+            }
+            String s = line.ToString();
+            line.ReturnToPool();
+            line = null;
+            return s;
+        }
     }
 }

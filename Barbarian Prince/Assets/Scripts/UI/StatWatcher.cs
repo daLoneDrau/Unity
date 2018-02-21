@@ -1,6 +1,4 @@
-﻿using Assets.Scripts.Crypts.Constants;
-using Assets.Scripts.Crypts.Flyweights;
-using RPGBase.Constants;
+﻿using RPGBase.Constants;
 using RPGBase.Flyweights;
 using RPGBase.Pooled;
 using System;
@@ -116,6 +114,7 @@ namespace Assets.Scripts.UI
         public Sprite SpriteMale { get; set; }
         public override void WatchUpdated(Watchable data)
         {
+            /*
             CryptCharacter hero = (CryptCharacter)data;
             hero.ComputeFullStats();
             SetLabel(LblStr, (int)hero.GetFullAttributeScore("STR"));
@@ -187,6 +186,7 @@ namespace Assets.Scripts.UI
                     LblClass.text = "Thief     ";
                 }
             }
+            */
         }
         /// <summary>
         /// Sets the label's text.

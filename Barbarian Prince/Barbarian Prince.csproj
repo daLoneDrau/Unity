@@ -78,6 +78,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\MouseListener.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Constants\BPGlobals.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPCharacter.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPInteractiveObject.cs" />
@@ -90,8 +91,12 @@
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BPScript.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BPServiceClient.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BpProject.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\UI\BoardManager.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\UI\Controllers\WorldController.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\UI\GameManager.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\InvUiController.cs" />
-    <Compile Include="Assets\Scripts\BoardManager.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\UI\Model\Tile.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\UI\Model\World.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Behaviour.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Dice.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Die.cs" />
@@ -143,9 +148,12 @@
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Script.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Speech.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\SpellController.cs" />
+    <Compile Include="Assets\Scripts\UI\DragAndDropHandler.cs" />
     <Compile Include="Assets\Scripts\UI\DropAccessible.cs" />
     <Compile Include="Assets\Scripts\UI\HorizontalLayoutHandler.cs" />
     <Compile Include="Assets\Scripts\UI\IRPGLayoutHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\InventoryController.cs" />
+    <Compile Include="Assets\Scripts\UI\InventorySlotController.cs" />
     <Compile Include="Assets\Scripts\UI\MainMenuUIController.cs" />
     <Compile Include="Assets\Scripts\UI\MenuButton.cs" />
     <Compile Include="Assets\Scripts\UI\SimpleJSON.cs" />

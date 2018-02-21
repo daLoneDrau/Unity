@@ -231,7 +231,7 @@ namespace Assets.Scripts.RPGBase.Graph
         }
         public String GetOffsetCoordinatesArt(HexCoordinateSystem grid)
         {
-            Vector2 pt = grid.getOffsetCoordinates(this);
+            Vector2 pt = grid.GetOffsetCoordinates(this);
             int x1 = (int)pt.x;
             int y1 = (int)pt.y;
             PooledStringBuilder sb =

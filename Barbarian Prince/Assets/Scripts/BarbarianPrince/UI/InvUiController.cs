@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.BarbarianPrince.Flyweights;
 using Assets.Scripts.BarbarianPrince.Singletons;
+using Assets.Scripts.UI;
 using RPGBase.Constants;
 using RPGBase.Flyweights;
 using RPGBase.Pooled;
@@ -15,14 +16,19 @@ namespace Assets.Scripts.BarbarianPrince.UI
 {
     public class InvUiController : MonoBehaviour
     {
+        /// <summary>
+        /// the 
+        /// </summary>
         private BPInteractiveObject io = null;
+        [SerializeField]
+        private InventorySlotController slot;
         private void Awake()
         {
             UnitySystemConsoleRedirector.Redirect();
             new BPProject();
             new BPInteractive();
             new BPScript();
-            LoadResources();            
+            LoadResources();
             StartCoroutine(BPServiceClient.Instance.GetItemByName("Bonebiter", value => io = value));
         }
         private void LoadResources()
@@ -52,7 +58,8 @@ namespace Assets.Scripts.BarbarianPrince.UI
         // Use this for initialization
         void Start() { }
         // Update is called once per frame
-        void Update() {
+        void Update()
+        {
             // check script timers
             Script.Instance.TimerCheck();
             // if no menus means game is being played
@@ -64,7 +71,5 @@ namespace Assets.Scripts.BarbarianPrince.UI
                 slot.Io = io;
             }
         }
-        [SerializeField]
-        InventorySlotController slot;
     }
 }
