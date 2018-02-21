@@ -323,8 +323,7 @@ namespace Assets.Scripts.RPGBase.Graph
          * @param newY the Y-coordinate
          * @param newZ the Z-coordinate
          */
-        public void setCoordinates(int newX, int newY,
-                 int newZ)
+        public void SetCoordinates(int newX, int newY, int newZ)
         {
             X = newX;
             Y = newY;
@@ -334,7 +333,7 @@ namespace Assets.Scripts.RPGBase.Graph
          * Sets the {@link Hexagon}'s cube coordinates.
          * @param v3 the new coordinates
          */
-        public void setCoordinates(Vector3 v3)
+        public void SetCoordinates(Vector3 v3)
         {
             X = (int)v3.x;
             Y = (int)v3.y;

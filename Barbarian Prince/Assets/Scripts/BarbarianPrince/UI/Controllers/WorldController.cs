@@ -1,11 +1,11 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.BarbarianPrince.Flyweights;
+using Assets.Scripts.UI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldController : MonoBehaviour {
     private World world;
-    [SerializeField]
-    private Sprite floorSPrite;
     /// <summary>
     /// Transform to hold all our game objects, so they don't clog up the hierarchy.
     /// </summary>
@@ -28,16 +28,21 @@ public class WorldController : MonoBehaviour {
                 tileObject.AddComponent<SpriteRenderer>();
                 tileObject.transform.SetParent(tileHolder); // set new tile as child of tile holder
                 tileData.AddTypeListener((tile) => { OnTileChanged(tile, tileObject); });
+                BPHexagon hex = world.GetHexForTileCoordinates(x, y);
+                if (hex != null
+                        && hex.Type == BPHexagon.HexType.Country)
+                {
+                    tileData.Type = Tile.TerrainType.Grass;
+                }
             }
         }
-        world.RandomizeTiles();
     }
     public bool RequiresMarker(Vector3 pos)
     {
         bool does = false;
         Tile tileData = world.GetTileAtWorldCoordinates(pos);
         if (tileData != null
-            && tileData.Type != Tile.TerrainType.Empty)
+            && tileData.Type != Tile.TerrainType.Void)
         {
             does = true;
         }
@@ -53,13 +58,14 @@ public class WorldController : MonoBehaviour {
     }
     private void OnTileChanged(Tile tile, GameObject obj)
     {
-        if (tile.Type == Tile.TerrainType.Floor)
+        SpriteMap sm = gameObject.GetComponent<SpriteMap>();
+        if (tile.Type == Tile.TerrainType.Grass)
         {
-            obj.GetComponent<SpriteRenderer>().sprite = floorSPrite;
+            obj.GetComponent<SpriteRenderer>().sprite = sm.GetSprite("grass");
         }
-        else if (tile.Type == Tile.TerrainType.Empty)
+        else if (tile.Type == Tile.TerrainType.Void)
         {
-            obj.GetComponent<SpriteRenderer>().sprite = null;
+            obj.GetComponent<SpriteRenderer>().sprite = sm.GetSprite("void");
         }
         else
         {

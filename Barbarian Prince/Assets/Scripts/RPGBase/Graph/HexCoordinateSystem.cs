@@ -49,26 +49,41 @@ namespace Assets.Scripts.RPGBase.Graph
         /// direction N.
         /// </summary>
         public const int DIRECTION_N = 0;
-        /** direction NNE. */
+        /// <summary>
+        /// direction NNE.
+        /// </summary>
         public const int DIRECTION_NNE = 1;
-        /** direction NNW. */
-        public const int DIRECTION_NNW = 5;
-        /** direction S. */
-        public const int DIRECTION_S = 3;
-        /** direction SSE. */
-        public const int DIRECTION_SSE = 2;
-        /** direction SSW. */
-        public const int DIRECTION_SSW = 4;
-        /**
-         * <p>
-         * layout for flat-topped hexagons where hex columns are aligned with even-numbered columns sticking
-         * out at the bottom.
-         * </p>
-         * &nbsp;&nbsp;&nbsp;1,<b>0</b>&nbsp;&nbsp;&nbsp;3,<b>0</b><br>
-         * 0,<b>0</b>&nbsp;&nbsp;&nbsp;2,<b>0</b>&nbsp;&nbsp;&nbsp;4,<b>0</b><br>
-         * &nbsp;&nbsp;&nbsp;1,<b>1</b>&nbsp;&nbsp;&nbsp;3,<b>1</b><br>
-         * 0,<b>1</b>&nbsp;&nbsp;&nbsp;2,<b>1</b>&nbsp;&nbsp;&nbsp;4,<b>1</b><br>
-         */
+        /// <summary>
+        /// direction E.
+        /// </summary>
+        public const int DIRECTION_E = 2;
+        /// <summary>
+        /// direction SSE.
+        /// </summary>
+        public const int DIRECTION_SSE = 3;
+        /// <summary>
+        /// direction S.
+        /// </summary>
+        public const int DIRECTION_S = 4;
+        /// <summary>
+        /// direction SSW.
+        /// </summary>
+        public const int DIRECTION_SSW = 5;
+        /// <summary>
+        /// direction W.
+        /// </summary>
+        public const int DIRECTION_W = 6;
+        /// <summary>
+        /// direction NNW.
+        /// </summary>
+        public const int DIRECTION_NNW = 7;
+        /// <summary>
+        /// <para>layout for flat-topped hexagons where hex columns are aligned with even-numbered columns sticking out at the bottom.</para>
+        /// &nbsp;&nbsp;&nbsp;1,<b>0</b>&nbsp;&nbsp;&nbsp;3,<b>0</b><br>
+        /// 0,<b>0</b>&nbsp;&nbsp;&nbsp;2,<b>0</b>&nbsp;&nbsp;&nbsp;4,<b>0</b><br>
+        /// &nbsp;&nbsp;&nbsp;1,<b>1</b>&nbsp;&nbsp;&nbsp;3,<b>1</b><br>
+        /// 0,<b>1</b>&nbsp;&nbsp;&nbsp;2,<b>1</b>&nbsp;&nbsp;&nbsp;4,<b>1</b><br>
+        /// </summary>
         public const int EVEN_Q = 3;
         /**
          * <p>
@@ -212,14 +227,12 @@ namespace Assets.Scripts.RPGBase.Graph
          * @ 
          */
         public Hexagon AddHexagon(int x, int z)
-
-
         {
             Hexagon hex = GetHexagon(x, z);
             if (hex == null)
             {
                 hex = new Hexagon(nextId++);
-                hex.setCoordinates(GetCubeCoordinates(x, z));
+                hex.SetCoordinates(GetCubeCoordinates(x, z));
                 hexes = ArrayUtilities.Instance.ExtendArray(hex, hexes);
             }
             return hex;
@@ -266,8 +279,8 @@ namespace Assets.Scripts.RPGBase.Graph
          */
         public int Distance(Vector3 v0, Vector3 v1)
         {
-            Vector2 p0 = getAxialCoordinates(v0);
-            Vector2 p1 = getAxialCoordinates(v1);
+            Vector2 p0 = GetAxialCoordinates(v0);
+            Vector2 p1 = GetAxialCoordinates(v1);
             return AxialDistance(p0, p1);
         }
         /**
@@ -278,7 +291,7 @@ namespace Assets.Scripts.RPGBase.Graph
          */
         public Vector2 GetAxialCoordinates(Hexagon hexagon)
         {
-            return getAxialCoordinates(hexagon.GetVector());
+            return GetAxialCoordinates(hexagon.GetVector());
         }
         /**
          * Gets the {@link Vector3}'s axial coordinates.
@@ -286,7 +299,7 @@ namespace Assets.Scripts.RPGBase.Graph
          * @return {@link Vector2}
          * @ if the configuration is invalid
          */
-        public Vector2 getAxialCoordinates(Vector3 v3)
+        public Vector2 GetAxialCoordinates(Vector3 v3)
         {
             int q, r;
             switch (offsetConfiguration)
@@ -419,6 +432,23 @@ namespace Assets.Scripts.RPGBase.Graph
         {
             return GetHexagon((int)v3.x, (int)v3.y, (int)v3.z);
         }
+        /// <summary>
+        /// Gets the range of hex coordinates the map covers, from the top-left to the bottom-right.
+        /// </summary>
+        /// <returns><see cref="Vector2"/>[]</returns>
+        public Vector2[] GetMapRange()
+        {
+            int minx = 9999, maxx = -1, miny = 999, maxy = -1;
+            for (int i = hexes.Length - 1; i >= 0; i--)
+            {
+                Vector2 coords = this.GetAxialCoordinates(hexes[i]);
+                minx = (int)Mathf.Min(minx, coords.x);
+                maxx = (int)Mathf.Max(maxx, coords.x);
+                miny = (int)Mathf.Min(miny, coords.y);
+                maxy = (int)Mathf.Max(maxy, coords.y);
+            }
+            return new Vector2[] { new Vector2(minx, miny), new Vector2(maxx, maxy) };
+        }
         /**
          * Gets the coordinates for a neighboring {@link Hexagon}.
          * @param hexagon the original {@link Hexagon}
@@ -440,56 +470,122 @@ namespace Assets.Scripts.RPGBase.Graph
          */
         public Vector3 GetNeighborCoordinates(Vector3 coords, int direction)
         {
-            // copy current coordinates
-            Vector3 neighbor = new Vector3(coords.x, coords.y, coords.z);
-            Vector3 v;
-            // convert coords to axial
-            Vector2 pt = this.getAxialCoordinates(coords);
+            Vector2[][] dir = new Vector2[][] { };
             switch (offsetConfiguration)
             {
                 case ODD_R:
-                    if (((int)pt.y & 1) == 0)
-                    {
-                        switch (direction)
+                    dir = new Vector2[][] {
+                        new Vector2[] // EVEN ROWS
                         {
-                            case DIRECTION_N:
-                                v = new Vector3(1, 0, -1);
-                                break;
-                            case DIRECTION_NNE:
-                                v = new Vector3(1, -1, 0);
-                                break;
-                            case DIRECTION_SSE:
-                                v = new Vector3(0, -1, 1);
-                                break;
-                            case DIRECTION_S:
-                                v = new Vector3(-1, 0, 1);
-                                break;
-                            case DIRECTION_SSW:
-                                v = new Vector3(-1, 1, 0);
-                                break;
-                            case DIRECTION_NNW:
-                                v = new Vector3(0, 1, -1);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (direction)
+                            new Vector2(), // NORTH IS NOT VALID
+                            new Vector2(0,-1), // NNE
+                            new Vector2(1,0), // E
+                            new Vector2(0,1), // SSE
+                            new Vector2(), // SOUTH IS NOT VALID
+                            new Vector2(-1,1), // SSW
+                            new Vector2(-1,0), // W
+                            new Vector2(-1,-1) // NNW
+                        },
+                        new Vector2[] // ODD ROWS
                         {
-                            case DIRECTION_N:
-                                v = new Vector3(1, 0, -1);
-                                break;
+                            new Vector2(), // NORTH IS NOT VALID
+                            new Vector2(1,-1), // NNE
+                            new Vector2(1,0), // E
+                            new Vector2(1,1), // SSE
+                            new Vector2(), // SOUTH IS NOT VALID
+                            new Vector2(0,1), // SSW
+                            new Vector2(-1,0), // W
+                            new Vector2(0,-1) // NNW
                         }
-                    }
+                    };
+                    break;
+                case EVEN_R:
+                    dir = new Vector2[][] {
+                        new Vector2[] // EVEN ROWS
+                        {
+                            new Vector2(), // NORTH IS NOT VALID
+                            new Vector2(1,-1), // NNE
+                            new Vector2(1,0), // E
+                            new Vector2(1,1), // SSE
+                            new Vector2(), // SOUTH IS NOT VALID
+                            new Vector2(0,1), // SSW
+                            new Vector2(-1,0), // W
+                            new Vector2(0,-1) // NNW
+                        },
+                        new Vector2[] // ODD ROWS
+                        {
+                            new Vector2(), // NORTH IS NOT VALID
+                            new Vector2(0,-1), // NNE
+                            new Vector2(1,0), // E
+                            new Vector2(0,1), // SSE
+                            new Vector2(), // SOUTH IS NOT VALID
+                            new Vector2(-1,1), // SSW
+                            new Vector2(-1,0), // W
+                            new Vector2(-1,-1) // NNW
+                        }
+                    };
+                    break;
+                case ODD_Q:
+                    dir = new Vector2[][] {
+                        new Vector2[] // EVEN COLS
+                        {
+                            new Vector2(0,-1), // N
+                            new Vector2(1,-1), // NNE
+                            new Vector2(), // EAST IS NOT VALID
+                            new Vector2(1,0), // SSE
+                            new Vector2(0,1), // S
+                            new Vector2(-1,0), // SSW
+                            new Vector2(), // WEST IS NOT VALID
+                            new Vector2(-1,-1) // NNW
+                        },
+                        new Vector2[] // ODD ROWS
+                        {
+                            new Vector2(0,-1), // N
+                            new Vector2(1,0), // NNE
+                            new Vector2(), // EAST IS NOT VALID
+                            new Vector2(1,1), // SSE
+                            new Vector2(0,1), // S
+                            new Vector2(-1,1), // SSW
+                            new Vector2(), // WEST IS NOT VALID
+                            new Vector2(-1,0) // NNW
+                        }
+                    };
+                    break;
+                case EVEN_Q:
+                    dir = new Vector2[][] {
+                        new Vector2[] // EVEN COLS
+                        {
+                            new Vector2(0,-1), // N
+                            new Vector2(1,0), // NNE
+                            new Vector2(), // EAST IS NOT VALID
+                            new Vector2(1,1), // SSE
+                            new Vector2(0,1), // S
+                            new Vector2(-1,1), // SSW
+                            new Vector2(), // WEST IS NOT VALID
+                            new Vector2(-1,0) // NNW
+                        },
+                        new Vector2[] // ODD ROWS
+                        {
+                            new Vector2(0,-1), // N
+                            new Vector2(1,-1), // NNE
+                            new Vector2(), // EAST IS NOT VALID
+                            new Vector2(1,0), // SSE
+                            new Vector2(0,1), // S
+                            new Vector2(-1,0), // SSW
+                            new Vector2(), // WEST IS NOT VALID
+                            new Vector2(-1,-1) // NNW
+                        }
+                    };
                     break;
             }
+            // convert coords to axial
+            Vector2 pt = this.GetAxialCoordinates(coords);
+            Debug.Log("ori cood::" + pt);
+            Debug.Log("confi::" + offsetConfiguration);
             // check for row even or odd
-            if (((int)pt.y & 1) == 0)
-            {
-
-            }
-            neighbor += HexCoordinateSystem.NEIGHBORS[offsetConfiguration][direction];
-            return neighbor;
+            pt += dir[(int)pt.y & 1][direction];
+            Debug.Log("offs coord::" + pt);
+            return this.GetCubeCoordinates((int)pt.x, (int)pt.y);
         }
         /**
          * Gets the next available reference id.
@@ -584,7 +680,7 @@ namespace Assets.Scripts.RPGBase.Graph
             {
                 Vector3 v = new Vector3(current.GetHexagon(i).GetVector().x, current.GetHexagon(i).GetVector().y, current.GetHexagon(i).GetVector().z);
                 v += HexCoordinateSystem.COMPOUND_NEIGHBORS[side];
-                compoundHexagon.GetHexagon(i).setCoordinates(v);
+                compoundHexagon.GetHexagon(i).SetCoordinates(v);
             }
         }
         public String PrintGrid(Hexagon center)

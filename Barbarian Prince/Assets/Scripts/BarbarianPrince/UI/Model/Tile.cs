@@ -6,7 +6,7 @@ using UnityEngine;
 public class Tile
 {
     private Action<Tile> typeListener;
-    public enum TerrainType { Empty, Floor };
+    public enum TerrainType { Void, Grass };
     private TerrainType type;
     public TerrainType Type
     {
@@ -27,7 +27,7 @@ public class Tile
     public Tile(World w)
     {
         world = w;
-        Type = TerrainType.Empty;
+        Type = TerrainType.Void;
     }
     public void AddTypeListener(Action<Tile> callback)
     {
