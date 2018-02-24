@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using Assets.Scripts.RPGBase.Graph;
 using Assets.Scripts.BarbarianPrince.Flyweights;
+using System.Xml;
 
 public class World
 {
@@ -27,14 +28,12 @@ public class World
         Height = maxy - miny + 1;
         Height *= 4;
         Height += 2;
-        Debug.Log(Width + "," + Height);
         tiles = new Tile[Width, Height];
         for (int x = Width - 1; x >= 0; x--)
         {
             for (int y = Height - 1; y >= 0; y--)
             {
                 tiles[x, y] = new Tile(this);
-                GetHexForTileCoordinates(x, y);
             }
         }
     }
@@ -79,32 +78,53 @@ public class World
             row--;
             row = (int)hexMap.GetMapRange()[1].y - row;
         }
-        Debug.Log("tile_" + x + "_" + y + " is in hex " + col + "," + row);
-        return (BPHexagon)hexMap.GetHexagon(x, y);
+        return (BPHexagon)hexMap.GetHexagon(col, row);
     }
+    /// <summary>
+    /// Gets the list of <see cref="Hexagon"/>s in the coordinate system.
+    /// </summary>
+    /// <returns><see cref="Hexagon"/>[]</returns>
+    public Hexagon[] GetHexes()
+    {
+        return (Hexagon[])hexMap.Hexes;
+    }
+    public Vector3 GetNeighborCoordinates(Hexagon hex, int direction)
+    {
+        return hexMap.GetNeighborCoordinates(hex, direction);
+    }
+    public Hexagon GetHex(Vector3 coordinates)
+    {
+        return hexMap.GetHexagon(coordinates);
+    }
+    /// <summary>
+    /// Loads all hex tiles for the game map.
+    /// </summary>
     private void LoadHexTiles()
     {
         Debug.Log("LoadHexTiles");
-        // create 1,1
-        BPHexagon hex = new BPHexagon(BPHexagon.HexType.Country);
-        hex.SetCoordinates(hexMap.GetCubeCoordinates(1, 1));
-        hexMap.AddHexagon(hex);
-        // create 1,2
-        BPHexagon hex2 = new BPHexagon(BPHexagon.HexType.Country);
-        hex2.SetCoordinates(hexMap.GetCubeCoordinates(1, 2));
-        hexMap.AddHexagon(hex2);
-        // create 2,1
-        BPHexagon hex3 = new BPHexagon(BPHexagon.HexType.Country);
-        hex3.SetCoordinates(hexMap.GetCubeCoordinates(2, 1));
-        hexMap.AddHexagon(hex3);
-        // create 2,2
-        BPHexagon hex4 = new BPHexagon(BPHexagon.HexType.Country);
-        hex4.SetCoordinates(hexMap.GetCubeCoordinates(2, 2));
-        hexMap.AddHexagon(hex4);
-        Debug.Log(hexMap.GetMapRange()[0]);
-        Debug.Log(hexMap.GetMapRange()[1]);
-        //
-
+        TextAsset textAsset = (TextAsset)Resources.Load("config");
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.LoadXml(textAsset.text);
+        XmlNode root = xmldoc.SelectSingleNode("data");
+        XmlNode map = root.SelectSingleNode("map");
+        XmlNodeList hexes = map.SelectNodes("hex");
+        for (int i = hexes.Count - 1; i >= 0; i--)
+        {
+            XmlNode hexData = hexes.Item(i);
+            BPHexagon.HexType ht = (BPHexagon.HexType)Enum.Parse(typeof(BPHexagon.HexType), hexData.SelectSingleNode("type").InnerText, true);
+            BPHexagon hex = new BPHexagon(ht);
+            if (hexData.SelectSingleNode("feature") != null)
+            {
+                XmlNode featureData = hexData.SelectSingleNode("feature");
+                hex.Feature = (BPHexagon.FeatureType)Enum.Parse(typeof(BPHexagon.FeatureType), featureData.SelectSingleNode("type").InnerText, true);
+                if (featureData.SelectSingleNode("name") != null)
+                {
+                    hex.Name = featureData.SelectSingleNode("name").InnerText;
+                }
+            }
+            hex.SetCoordinates(hexMap.GetCubeCoordinates(Int32.Parse(hexData.SelectSingleNode("x").InnerText), Int32.Parse(hexData.SelectSingleNode("y").InnerText)));
+            hexMap.AddHexagon(hex);
+        }
     }
     public Tile GetTileAtWorldCoordinates(Vector3 pos)
     {

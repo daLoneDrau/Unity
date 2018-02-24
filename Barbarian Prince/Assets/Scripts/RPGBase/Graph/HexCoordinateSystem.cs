@@ -158,8 +158,10 @@ namespace Assets.Scripts.RPGBase.Graph
          * &nbsp;2,<b>3</b> - row 3<br>
          */
         public const int ODD_R = 0;
-        /** the list of {@link Hexagon}s in the coordinate system. */
-        private Hexagon[] hexes;
+        /// <summary>
+        /// the list of <see cref="Hexagon"></see>s in the coordinate system.
+        /// </summary>
+        public Hexagon[] Hexes { get; private set; }
         /** the next available reference id. */
         private int nextId;
         /** the system's offset configuration. */
@@ -170,7 +172,7 @@ namespace Assets.Scripts.RPGBase.Graph
          */
         public HexCoordinateSystem(int config)
         {
-            hexes = new Hexagon[0];
+            Hexes = new Hexagon[0];
             offsetConfiguration = config;
         }
         /**
@@ -198,21 +200,21 @@ namespace Assets.Scripts.RPGBase.Graph
                 default:
                     throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "Invalid offset coordinates " + offsetConfiguration);
             }
-            int index = hexes.Length - 1;
+            int index = Hexes.Length - 1;
             for (; index >= 0; index--)
             {
-                if (hexes[index] != null && hexes[index].Equals(hex))
+                if (Hexes[index] != null && Hexes[index].Equals(hex))
                 {
                     break;
                 }
             }
             if (index >= 0)
             {
-                hexes[index] = hex;
+                Hexes[index] = hex;
             }
             else
             {
-                hexes = ArrayUtilities.Instance.ExtendArray(hex, hexes);
+                Hexes = ArrayUtilities.Instance.ExtendArray(hex, Hexes);
             }
             if (nextId <= hex.GetId())
             {
@@ -233,7 +235,7 @@ namespace Assets.Scripts.RPGBase.Graph
             {
                 hex = new Hexagon(nextId++);
                 hex.SetCoordinates(GetCubeCoordinates(x, z));
-                hexes = ArrayUtilities.Instance.ExtendArray(hex, hexes);
+                Hexes = ArrayUtilities.Instance.ExtendArray(hex, Hexes);
             }
             return hex;
         }
@@ -380,7 +382,7 @@ namespace Assets.Scripts.RPGBase.Graph
          */
         protected Hexagon GetHexagon(int index)
         {
-            return hexes[index];
+            return Hexes[index];
         }
         /**
          * Gets a hexagon at a specific set of coordinates.
@@ -393,11 +395,11 @@ namespace Assets.Scripts.RPGBase.Graph
         {
             Hexagon hex = null;
             Vector3 v = GetCubeCoordinates(x, z);
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                if (hexes[i].Equals(v))
+                if (Hexes[i].Equals(v))
                 {
-                    hex = hexes[i];
+                    hex = Hexes[i];
                     break;
                 }
             }
@@ -413,11 +415,11 @@ namespace Assets.Scripts.RPGBase.Graph
         public Hexagon GetHexagon(int x, int y, int z)
         {
             Hexagon hex = null;
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                if (hexes[i].Equals(x, y, z))
+                if (Hexes[i].Equals(x, y, z))
                 {
-                    hex = hexes[i];
+                    hex = Hexes[i];
                     break;
                 }
             }
@@ -439,9 +441,9 @@ namespace Assets.Scripts.RPGBase.Graph
         public Vector2[] GetMapRange()
         {
             int minx = 9999, maxx = -1, miny = 999, maxy = -1;
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                Vector2 coords = this.GetAxialCoordinates(hexes[i]);
+                Vector2 coords = this.GetAxialCoordinates(Hexes[i]);
                 minx = (int)Mathf.Min(minx, coords.x);
                 maxx = (int)Mathf.Max(maxx, coords.x);
                 miny = (int)Mathf.Min(miny, coords.y);
@@ -580,11 +582,18 @@ namespace Assets.Scripts.RPGBase.Graph
             }
             // convert coords to axial
             Vector2 pt = this.GetAxialCoordinates(coords);
-            Debug.Log("ori cood::" + pt);
-            Debug.Log("confi::" + offsetConfiguration);
             // check for row even or odd
-            pt += dir[(int)pt.y & 1][direction];
-            Debug.Log("offs coord::" + pt);
+            switch (offsetConfiguration)
+            {
+                case ODD_R:
+                case EVEN_R:
+                    pt += dir[(int)pt.y & 1][direction];
+                    break;
+                case ODD_Q:
+                case EVEN_Q:
+                    pt += dir[(int)pt.x & 1][direction];
+                    break;
+            }
             return this.GetCubeCoordinates((int)pt.x, (int)pt.y);
         }
         /**
@@ -668,7 +677,7 @@ namespace Assets.Scripts.RPGBase.Graph
          */
         protected int Length()
         {
-            return hexes.Length;
+            return Hexes.Length;
         }
         public void MoveCompoundHexagonToSide(CompoundHexagon compoundHexagon,
                  Vector3 v3, int side)
