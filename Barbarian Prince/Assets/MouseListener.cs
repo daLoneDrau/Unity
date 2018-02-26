@@ -30,7 +30,16 @@ public class MouseListener : MonoBehaviour
         {
             marker.SetActive(false);
         }
-
+        // handle left-mouse clicks
+        if (Input.GetMouseButtonDown(0))
+        {
+            // possible start of a drag
+        }
+        // handle left-mouse clicks
+        if (Input.GetMouseButtonUp(0))
+        {
+            // possible end of a drag or just a click
+        }
         // handle screen dragging
         if (Input.GetMouseButton(2) || Input.GetMouseButton(1))
         {

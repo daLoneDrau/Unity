@@ -78,70 +78,61 @@ public class WorldController : MonoBehaviour
         }
         // TO DO - check for river crossing
         // SSE
-        nc = world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_SSE);
-        other = (BPHexagon)world.GetHex(nc);
+        other = (BPHexagon)world.GetHex(world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_SSE));
         if (other == null)
         {
             // SSE side is void
-            Tile tileData = world.GetTileAt(maxx - 1, miny);
+            tileData = world.GetTileAt(maxx - 1, miny);
             tileData.Type = Tile.TerrainType.Grass_void_6;
             tileData = world.GetTileAt(maxx, miny + 1);
             tileData.Type = Tile.TerrainType.Grass_void_6;
         }
-        else if (other.Type == BPHexagon.HexType.Countryside)
+        else
         {
-            Tile tileData = world.GetTileAt(maxx - 1, miny);
+            tileData = world.GetTileAt(maxx - 1, miny);
             tileData.Type = Tile.TerrainType.Grass_0;
             tileData = world.GetTileAt(maxx, miny + 1);
             tileData.Type = Tile.TerrainType.Grass_0;
         }
         // TO DO - check for river crossing
         // S
-        nc = world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_S);
-        other = (BPHexagon)world.GetHex(nc);
-        if (other == null
-                || other.Type == BPHexagon.HexType.Countryside)
-        {
-            // north side is void/country
-            Tile tileData = world.GetTileAt(minx + 2, miny);
-            tileData.Type = Tile.TerrainType.Grass_0;
-            tileData = world.GetTileAt(minx + 3, miny);
-            tileData.Type = Tile.TerrainType.Grass_0;
-        }
+        // north side is void/country
+        tileData = world.GetTileAt(minx + 2, miny);
+        tileData.Type = Tile.TerrainType.Grass_0;
+        tileData = world.GetTileAt(minx + 3, miny);
+        tileData.Type = Tile.TerrainType.Grass_0;
         // TO DO - check for river crossing
         // SSW
-        nc = world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_SSW);
-        other = (BPHexagon)world.GetHex(nc);
+        other = (BPHexagon)world.GetHex(world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_SSW));
         if (other == null)
         {
             // SSW side is void
-            Tile tileData = world.GetTileAt(minx + 1, miny);
+            tileData = world.GetTileAt(minx + 1, miny);
             tileData.Type = Tile.TerrainType.Grass_void_12;
             tileData = world.GetTileAt(minx, miny + 1);
             tileData.Type = Tile.TerrainType.Grass_void_12;
         }
-        else if (other.Type == BPHexagon.HexType.Countryside)
+        else
         {
-            Tile tileData = world.GetTileAt(minx + 1, miny);
+            tileData = world.GetTileAt(minx + 1, miny);
             tileData.Type = Tile.TerrainType.Grass_0;
             tileData = world.GetTileAt(minx, miny + 1);
             tileData.Type = Tile.TerrainType.Grass_0;
         }
         // TO DO - check for river crossing
         // NNW
-        nc = world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_NNW);
-        other = (BPHexagon)world.GetHex(nc);
+        other = (BPHexagon)world.GetHex(world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_NNW));
         if (other == null)
         {
             // NNW side is void
-            Tile tileData = world.GetTileAt(minx, maxy - 1);
+            tileData = world.GetTileAt(minx, maxy - 1);
             tileData.Type = Tile.TerrainType.Grass_void_9;
             tileData = world.GetTileAt(minx + 1, maxy);
             tileData.Type = Tile.TerrainType.Grass_void_9;
         }
-        else if (other.Type == BPHexagon.HexType.Countryside)
+        else
         {
-            Tile tileData = world.GetTileAt(minx, maxy - 1);
+            tileData = world.GetTileAt(minx, maxy - 1);
             tileData.Type = Tile.TerrainType.Grass_0;
             tileData = world.GetTileAt(minx + 1, maxy);
             tileData.Type = Tile.TerrainType.Grass_0;
@@ -161,7 +152,7 @@ public class WorldController : MonoBehaviour
                 }
                 break;
             case BPHexagon.FeatureType.Town:
-                Tile tileData = world.GetTileAt(minx + 1, miny + 1);
+                tileData = world.GetTileAt(minx + 1, miny + 1);
                 tileData.Type = Tile.TerrainType.Grass_0;
                 tileData = world.GetTileAt(minx + 1, miny + 2);
                 tileData.Type = Tile.TerrainType.Grass_0;
@@ -189,7 +180,7 @@ public class WorldController : MonoBehaviour
     private const int NNW_EDGE = 32;
     private void SetMountainTiles(BPHexagon hex, int minx, int miny, int maxx, int maxy)
     {
-        int mtnedge = 0, dsrtedge = 0, grassedge = 0;
+        int mtnedge = 0, dsrtedge = 0, voidedge = 0;
         // COUNT EDGES FIRST
         BPHexagon other = (BPHexagon)world.GetHex(world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_N));
         if (other != null)
@@ -202,10 +193,10 @@ public class WorldController : MonoBehaviour
             {
                 dsrtedge += N_EDGE;
             }
-            else
-            {
-                grassedge += N_EDGE;
-            }
+        }
+        else
+        {
+            voidedge += N_EDGE;
         }
         other = (BPHexagon)world.GetHex(world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_NNE));
         if (other != null)
@@ -218,10 +209,10 @@ public class WorldController : MonoBehaviour
             {
                 dsrtedge += NNE_EDGE;
             }
-            else
-            {
-                grassedge += NNE_EDGE;
-            }
+        }
+        else
+        {
+            voidedge += NNE_EDGE;
         }
         other = (BPHexagon)world.GetHex(world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_SSE));
         if (other != null)
@@ -234,10 +225,10 @@ public class WorldController : MonoBehaviour
             {
                 dsrtedge += SSE_EDGE;
             }
-            else
-            {
-                grassedge += SSE_EDGE;
-            }
+        }
+        else
+        {
+            voidedge += SSE_EDGE;
         }
         other = (BPHexagon)world.GetHex(world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_S));
         if (other != null)
@@ -250,10 +241,10 @@ public class WorldController : MonoBehaviour
             {
                 dsrtedge += S_EDGE;
             }
-            else
-            {
-                grassedge += S_EDGE;
-            }
+        }
+        else
+        {
+            voidedge += S_EDGE;
         }
         other = (BPHexagon)world.GetHex(world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_SSW));
         if (other != null)
@@ -266,10 +257,10 @@ public class WorldController : MonoBehaviour
             {
                 dsrtedge += SSW_EDGE;
             }
-            else
-            {
-                grassedge += SSW_EDGE;
-            }
+        }
+        else
+        {
+            voidedge += SSW_EDGE;
         }
         other = (BPHexagon)world.GetHex(world.GetNeighborCoordinates(hex, HexCoordinateSystem.DIRECTION_NNW));
         if (other != null)
@@ -282,56 +273,79 @@ public class WorldController : MonoBehaviour
             {
                 dsrtedge += NNW_EDGE;
             }
-            else
-            {
-                grassedge += NNW_EDGE;
-            }
+        }
+        else
+        {
+            voidedge += NNW_EDGE;
         }
         //************************
         // TOP ROW
         //************************
         if ((mtnedge & N_EDGE) == N_EDGE)
         {
+            // NORTH SIDE IS MOUNTAIN
             if ((mtnedge & NNE_EDGE) == NNE_EDGE)
             {
+                // NORTH-NORTHEAST NEIGHBOR IS MOUNTAIN
                 if ((mtnedge & NNW_EDGE) == NNW_EDGE)
                 {
-                    //  ALL NORTH NEIGHBORS ARE MOUNTAIN
+                    // NORTH-NORTHWEST NEIGHBOR IS MOUNTAIN
+                    // ALL NORTH NEIGHBORS ARE MOUNTAIN - TESTED
                     for (int i = minx + 1; i < maxx; i++)
                     {
                         Tile tileData = world.GetTileAt(i, maxy);
                         tileData.Type = Tile.TerrainType.Mountain_0;
                     }
                 }
+                else
+                {
+                    //  NORTH, NORTH-NORTHEAST NEIGHBOR IS MOUNTAIN, NORTH-NORTHWEST IS NOT - TESTED
+                    Tile tileData = world.GetTileAt(minx + 4, maxy);
+                    tileData.Type = Tile.TerrainType.Mountain_0;
+                    tileData = world.GetTileAt(minx + 3, maxy);
+                    tileData.Type = Tile.TerrainType.Mountain_0;
+                    tileData = world.GetTileAt(minx + 2, maxy);
+                    tileData.Type = Tile.TerrainType.Mountain_8;
+                    tileData = world.GetTileAt(minx + 1, maxy);
+                    if ((voidedge & NNW_EDGE) == NNW_EDGE)
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_void_9;
+                    }
+                    else
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_0;
+                    }
+                }
             }
             else
             {
-                //  NORTH-NORTHEAST NEIGHBOR IS NOT MOUNTAIN
-                Tile tileData = world.GetTileAt(maxx - 1, maxy);
-                if ((dsrtedge & NNE_EDGE) == NNE_EDGE)
-                {
-                }
-                else
-                {
-                    tileData.Type = Tile.TerrainType.Grass_0;
-                }
+                // NORTH-NORTHEAST NEIGHBOR IS NOT MOUNTAIN
                 if ((mtnedge & NNW_EDGE) == NNW_EDGE)
                 {
-                    //  NORTH, NORTH-NORTHWEST NEIGHBORS ARE MOUNTAIN
-                    for (int i = minx + 1; i < maxx - 2; i++)
-                    {
-                        tileData = world.GetTileAt(i, maxy);
-                        tileData.Type = Tile.TerrainType.Mountain_0;
-                    }
-                    tileData = world.GetTileAt(maxx - 2, maxy);
+                    //  NORTH, NORTH-NORTHWEST NEIGHBOR IS MOUNTAIN, NORTH-NORTHEAST IS NOT - TESTED
+                    Tile tileData = world.GetTileAt(minx + 1, maxy);
+                    tileData.Type = Tile.TerrainType.Mountain_0;
+                    tileData = world.GetTileAt(minx + 2, maxy);
+                    tileData.Type = Tile.TerrainType.Mountain_0;
+                    tileData = world.GetTileAt(minx +3, maxy);
                     tileData.Type = Tile.TerrainType.Mountain_2;
+                    tileData = world.GetTileAt(minx + 4, maxy);
+                    if ((voidedge & NNE_EDGE) == NNE_EDGE)
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_void_3;
+                    }
+                    else
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_0;
+                    }
                 }
                 else
                 {
-                    // ONLY NORTH SIDE IS MOUNTAIN
-                    tileData = world.GetTileAt(minx + 1, maxy);
-                    if ((dsrtedge & NNW_EDGE) == NNW_EDGE)
+                    // NORTH IS MOUNTAIN, NORTH-NORTHEAST, NORTH-NORTHWEST IS NOT - TESTED
+                    Tile tileData = world.GetTileAt(minx + 1, maxy);
+                    if ((voidedge & NNW_EDGE) == NNW_EDGE)
                     {
+                        tileData.Type = Tile.TerrainType.Grass_void_9;
                     }
                     else
                     {
@@ -341,52 +355,107 @@ public class WorldController : MonoBehaviour
                     tileData.Type = Tile.TerrainType.Mountain_8;
                     tileData = world.GetTileAt(minx + 3, maxy);
                     tileData.Type = Tile.TerrainType.Mountain_2;
+                    tileData = world.GetTileAt(minx + 4, maxy);
+                    if ((voidedge & NNE_EDGE) == NNE_EDGE)
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_void_3;
+                    }
+                    else
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_0;
+                    }
                 }
             }
         }
         else
         {
             // NORTH NEIGHBOR IS NOT MOUNTAIN
-            if ((dsrtedge & N_EDGE) == N_EDGE)
-            {
-            }
-            else
-            {
-                Tile tileData = world.GetTileAt(minx + 2, maxy);
-                tileData.Type = Tile.TerrainType.Grass_0;
-                tileData = world.GetTileAt(minx + 3, maxy);
-                tileData.Type = Tile.TerrainType.Grass_0;
-            }
             if ((mtnedge & NNE_EDGE) == NNE_EDGE)
             {
-                Tile tileData = world.GetTileAt(maxx - 1, maxy);
-                tileData.Type = Tile.TerrainType.Mountain_9;
-            }
-            else
-            {
-                if ((dsrtedge & NNE_EDGE) == NNE_EDGE)
+                // NORTH-NORTHEAST NEIGHBOR IS MOUNTAIN
+                if ((mtnedge & NNW_EDGE) == NNW_EDGE)
                 {
+                    // NORTH-NORTHWEST NEIGHBOR IS MOUNTAIN
+                    // NORTH-NORTHEAST, NORTH-NORTHWEST IS MOUNTAIN, NORTH IS NOT - TESTED
+                    Tile tileData = world.GetTileAt(minx + 1, maxy);
+                    tileData.Type = Tile.TerrainType.Mountain_3;
+                    tileData = world.GetTileAt(minx + 2, maxy);
+                    tileData.Type = Tile.TerrainType.Grass_0;
+                    tileData = world.GetTileAt(minx + 3, maxy);
+                    tileData.Type = Tile.TerrainType.Grass_0;
+                    tileData = world.GetTileAt(minx + 4, maxy);
+                    tileData.Type = Tile.TerrainType.Mountain_9;
                 }
                 else
                 {
+                    // NORTH-NORTHWEST NEIGHBOR IS NOT MOUNTAIN
+                    // NORTH-NORTHEAST IS MOUNTAIN, NORTH, NORTH-NORTHWEST IS NOT - TESTED
                     Tile tileData = world.GetTileAt(minx + 1, maxy);
+                    if ((voidedge & NNW_EDGE) == NNW_EDGE)
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_void_9;
+                    }
+                    else
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_0;
+                    }
+                    tileData = world.GetTileAt(minx + 2, maxy);
                     tileData.Type = Tile.TerrainType.Grass_0;
+                    tileData = world.GetTileAt(minx + 3, maxy);
+                    tileData.Type = Tile.TerrainType.Grass_0;
+                    tileData = world.GetTileAt(minx + 4, maxy);
+                    tileData.Type = Tile.TerrainType.Mountain_9;
                 }
-            }
-            if ((mtnedge & NNW_EDGE) == NNW_EDGE)
-            {
-                Tile tileData = world.GetTileAt(minx + 1, maxy);
-                tileData.Type = Tile.TerrainType.Mountain_2;
             }
             else
             {
-                if ((dsrtedge & NNW_EDGE) == NNW_EDGE)
+                // NORTH-NORTHEAST NEIGHBOR IS NOT MOUNTAIN
+                if ((mtnedge & NNW_EDGE) == NNW_EDGE)
                 {
+                    // NORTH-NORTHWEST NEIGHBOR IS MOUNTAIN
+                    // NORTH-NORTHWEST IS MOUNTAIN, NORTH, NORTH-NORTHEAST IS NOT - TESTED
+                    Tile tileData = world.GetTileAt(minx + 1, maxy);
+                    tileData.Type = Tile.TerrainType.Mountain_3;
+                    tileData = world.GetTileAt(minx + 2, maxy);
+                    tileData.Type = Tile.TerrainType.Grass_0;
+                    tileData = world.GetTileAt(minx + 3, maxy);
+                    tileData.Type = Tile.TerrainType.Grass_0;
+                    tileData = world.GetTileAt(minx + 4, maxy);
+                    if ((voidedge & NNE_EDGE) == NNE_EDGE)
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_void_3;
+                    }
+                    else
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_0;
+                    }
                 }
                 else
                 {
+                    // NORTH-NORTHWEST NEIGHBOR IS NOT MOUNTAIN
+                    // NO NEIGHBORS ARE MOUNTAIN - TESTED
                     Tile tileData = world.GetTileAt(minx + 1, maxy);
+                    if ((voidedge & NNW_EDGE) == NNW_EDGE)
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_void_9;
+                    }
+                    else
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_0;
+                    }
+                    tileData = world.GetTileAt(minx + 2, maxy);
                     tileData.Type = Tile.TerrainType.Grass_0;
+                    tileData = world.GetTileAt(minx + 3, maxy);
+                    tileData.Type = Tile.TerrainType.Grass_0;
+                    tileData = world.GetTileAt(minx + 4, maxy);
+                    if ((voidedge & NNE_EDGE) == NNE_EDGE)
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_void_3;
+                    }
+                    else
+                    {
+                        tileData.Type = Tile.TerrainType.Grass_0;
+                    }
                 }
             }
         }
