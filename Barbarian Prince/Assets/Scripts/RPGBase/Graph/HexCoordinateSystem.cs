@@ -216,9 +216,9 @@ namespace Assets.Scripts.RPGBase.Graph
             {
                 Hexes = ArrayUtilities.Instance.ExtendArray(hex, Hexes);
             }
-            if (nextId <= hex.GetId())
+            if (nextId <= hex.Id)
             {
-                nextId = hex.GetId() + 1;
+                nextId = hex.Id + 1;
             }
         }
         /**
@@ -433,23 +433,6 @@ namespace Assets.Scripts.RPGBase.Graph
         public Hexagon GetHexagon(Vector3 v3)
         {
             return GetHexagon((int)v3.x, (int)v3.y, (int)v3.z);
-        }
-        /// <summary>
-        /// Gets the range of hex coordinates the map covers, from the top-left to the bottom-right.
-        /// </summary>
-        /// <returns><see cref="Vector2"/>[]</returns>
-        public Vector2[] GetMapRange()
-        {
-            int minx = 9999, maxx = -1, miny = 999, maxy = -1;
-            for (int i = Hexes.Length - 1; i >= 0; i--)
-            {
-                Vector2 coords = this.GetAxialCoordinates(Hexes[i]);
-                minx = (int)Mathf.Min(minx, coords.x);
-                maxx = (int)Mathf.Max(maxx, coords.x);
-                miny = (int)Mathf.Min(miny, coords.y);
-                maxy = (int)Mathf.Max(maxy, coords.y);
-            }
-            return new Vector2[] { new Vector2(minx, miny), new Vector2(maxx, maxy) };
         }
         /**
          * Gets the coordinates for a neighboring {@link Hexagon}.
@@ -763,7 +746,7 @@ namespace Assets.Scripts.RPGBase.Graph
                                 {
                                     // printing bottom
                                     if ((i % 4 == 1 || i % 4 == 2)
-                                            && sb.Length() == 0)
+                                            && sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -773,7 +756,7 @@ namespace Assets.Scripts.RPGBase.Graph
                                 {
                                     // printing top
                                     if ((i % 4 == 1 || i % 4 == 2)
-                                            && sb.Length() == 0)
+                                            && sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -783,7 +766,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             else
                             {
                                 if ((i % 4 == 0 || i % 4 == 3)
-                                        && sb.Length() == 0)
+                                        && sb.Length == 0)
                                 {
                                     sb.Append(' ');
                                 }
@@ -796,7 +779,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             if (columnIsEven)
                             {
                                 if ((i % 4 == 0 || i % 4 == 3)
-                                        && sb.Length() == 0)
+                                        && sb.Length == 0)
                                 {
                                     sb.Append(' ');
                                 }
@@ -808,7 +791,7 @@ namespace Assets.Scripts.RPGBase.Graph
                                 {
                                     // printing bottom
                                     if ((i % 4 == 1 || i % 4 == 2)
-                                            && sb.Length() == 0)
+                                            && sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -818,7 +801,7 @@ namespace Assets.Scripts.RPGBase.Graph
                                 {
                                     // printing top
                                     if ((i % 4 == 1 || i % 4 == 2)
-                                            && sb.Length() == 0)
+                                            && sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -835,7 +818,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             {
                                 if (i % 4 == 1 || i % 4 == 2)
                                 {
-                                    if (sb.Length() == 0)
+                                    if (sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -850,7 +833,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             {
                                 if (i % 4 == 0 || i % 4 == 3)
                                 {
-                                    if (sb.Length() == 0)
+                                    if (sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -868,7 +851,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             {
                                 if (i % 4 == 0 || i % 4 == 3)
                                 {
-                                    if (sb.Length() == 0)
+                                    if (sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -883,7 +866,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             {
                                 if (i % 4 == 1 || i % 4 == 2)
                                 {
-                                    if (sb.Length() == 0)
+                                    if (sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -988,7 +971,7 @@ namespace Assets.Scripts.RPGBase.Graph
                                 {
                                     // printing bottom
                                     if ((i % 4 == 1 || i % 4 == 2)
-                                            && sb.Length() == 0)
+                                            && sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -998,7 +981,7 @@ namespace Assets.Scripts.RPGBase.Graph
                                 {
                                     // printing top
                                     if ((i % 4 == 1 || i % 4 == 2)
-                                            && sb.Length() == 0)
+                                            && sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -1008,7 +991,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             else
                             {
                                 if ((i % 4 == 0 || i % 4 == 3)
-                                        && sb.Length() == 0)
+                                        && sb.Length == 0)
                                 {
                                     sb.Append(' ');
                                 }
@@ -1021,7 +1004,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             if (columnIsEven)
                             {
                                 if ((i % 4 == 0 || i % 4 == 3)
-                                        && sb.Length() == 0)
+                                        && sb.Length == 0)
                                 {
                                     sb.Append(' ');
                                 }
@@ -1033,7 +1016,7 @@ namespace Assets.Scripts.RPGBase.Graph
                                 {
                                     // printing bottom
                                     if ((i % 4 == 1 || i % 4 == 2)
-                                            && sb.Length() == 0)
+                                            && sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -1043,7 +1026,7 @@ namespace Assets.Scripts.RPGBase.Graph
                                 {
                                     // printing top
                                     if ((i % 4 == 1 || i % 4 == 2)
-                                            && sb.Length() == 0)
+                                            && sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -1060,7 +1043,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             {
                                 if (i % 4 == 1 || i % 4 == 2)
                                 {
-                                    if (sb.Length() == 0)
+                                    if (sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -1075,7 +1058,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             {
                                 if (i % 4 == 0 || i % 4 == 3)
                                 {
-                                    if (sb.Length() == 0)
+                                    if (sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -1093,7 +1076,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             {
                                 if (i % 4 == 0 || i % 4 == 3)
                                 {
-                                    if (sb.Length() == 0)
+                                    if (sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }
@@ -1108,7 +1091,7 @@ namespace Assets.Scripts.RPGBase.Graph
                             {
                                 if (i % 4 == 1 || i % 4 == 2)
                                 {
-                                    if (sb.Length() == 0)
+                                    if (sb.Length == 0)
                                     {
                                         sb.Append(' ');
                                     }

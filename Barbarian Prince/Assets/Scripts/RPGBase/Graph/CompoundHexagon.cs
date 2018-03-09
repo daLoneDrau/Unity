@@ -41,7 +41,7 @@ namespace Assets.Scripts.RPGBase.Graph
             for (int i = 0, len = hexes.Length; i < len; i++)
             {
                 Hexagon h = new Hexagon(
-                        hex.hexes[i].IsFlat(), hex.hexes[i].GetId(),
+                        hex.hexes[i].IsFlat(), hex.hexes[i].Id,
                         hex.hexes[i].GetSize());
                 h.CopyOf(hex.hexes[i]);
                 hexes[i] = h;

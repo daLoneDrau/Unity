@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.6.5f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -90,11 +92,17 @@
     <Compile Include="Assets\MouseListener.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Constants\BPGlobals.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPCharacter.cs" />
-    <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPHexagon.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Graph\Hex.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPInteractiveObject.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPInventoryData.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPItemData.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPScriptable.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Graph\HexFeature.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Graph\HexMap.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Graph\HexType.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Graph\RiverCrossing.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Graph\RiverDijkstraSearch.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Graph\RiverGraphNode.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Scriptables\Items\Bonebiter.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Scriptables\Items\WeaponBase.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BPInteractive.cs" />
@@ -145,8 +153,17 @@
     <Compile Include="Assets\Scripts\RPGBase\Flyweights\Watchable.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Flyweights\Watcher.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Graph\CompoundHexagon.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Graph\DijkstraDirectedSearch.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Graph\DijkstraUndirectedSearch.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Graph\EdgeWeightedDirectedGraph.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Graph\EdgeWeightedUndirectedGraph.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Graph\GraphEdge.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Graph\GraphNode.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Graph\HexCoordinateSystem.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Graph\Hexagon.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Graph\IndexMinPQ.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Graph\PhysicalGraphNode.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Graph\WeightedGraphEdge.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Pooled\PoolableObject.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Pooled\PooledException.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Pooled\PooledStringBuilder.cs" />
@@ -173,8 +190,11 @@
     <Compile Include="Assets\Scripts\UI\VerticalLayoutHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Resources\config.xml" />
+    <None Include="Assets\Resources\config.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
 </Project>

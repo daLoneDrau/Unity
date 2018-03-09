@@ -12,7 +12,7 @@
       <y>1</y>
     </hex>
     <hex>
-      <type>Countryside</type>
+      <type>Mountain</type>
       <x>1</x>
       <y>2</y>
     </hex>
@@ -37,7 +37,7 @@
       <y>2</y>
     </hex>
     <hex>
-      <type>Mountain</type>
+      <type>Countryside</type>
       <x>2</x>
       <y>3</y>
     </hex>

@@ -5,22 +5,21 @@ using UnityEngine;
 using Assets.Scripts.RPGBase.Graph;
 using Assets.Scripts.BarbarianPrince.Flyweights;
 using System.Xml;
+using Assets.Scripts.BarbarianPrince.Graph;
 
 public class World
 {
-    /// <summary>
-    /// the hex coordinate system for the game map.
-    /// </summary>
-    private HexCoordinateSystem hexMap;
     Tile[,] tiles;
     public int Width { get; private set; }
     public int Height { get; private set; }
     public World(int w = 100, int h = 100)
     {
-        hexMap = new HexCoordinateSystem(HexCoordinateSystem.EVEN_Q);
-        LoadHexTiles();
-        int minx = (int)hexMap.GetMapRange()[0].x, miny = (int)hexMap.GetMapRange()[0].y;
-        int maxx = (int)hexMap.GetMapRange()[1].x, maxy = (int)hexMap.GetMapRange()[1].y;
+        HexMap.Instance.ToString();
+        //LoadHexTiles();
+        Vector2[] range = HexMap.Instance.GetMapRange();
+        int minx = (int)range[0].x, miny = (int)range[0].y;
+        int maxx = (int)range[1].x, maxy = (int)range[1].y;
+        Debug.Log("range:" + minx + "," + miny + "-" + maxx + "," + maxy);
         Width = maxx - minx + 1;
         Width *= 5;
         Width++;
@@ -37,10 +36,10 @@ public class World
             }
         }
     }
-    public BPHexagon GetHexForTileCoordinates(int x, int y)
+    public Hex GetHexForTileCoordinates(int x, int y)
     {
         // minimum column range
-        int col = (int)hexMap.GetMapRange()[0].x;
+        int col = (int)HexMap.Instance.GetMapRange()[0].x;
         int row = 0;
         // col 1 covers 0-5, col 2 covers 5-10, col 3 covers 11-15, etc...
         col += x / 5;
@@ -69,21 +68,22 @@ public class World
             // row is found by dividing y-coordinate by 4
             row = y / 4;
             // then offsetting by the map height, since map y-axis is descending
-            row = (int)hexMap.GetMapRange()[1].y - row;
+            row = (int)HexMap.Instance.GetMapRange()[1].y - row;
         }
         else
         {
             // odd column
             row = (y + 2) / 4;
             row--;
-            row = (int)hexMap.GetMapRange()[1].y - row;
+            row = (int)HexMap.Instance.GetMapRange()[1].y - row;
         }
-        return (BPHexagon)hexMap.GetHexagon(col, row);
+        return (Hex)HexMap.Instance.GetHex(col, row);
     }
     /// <summary>
     /// Gets the list of <see cref="Hexagon"/>s in the coordinate system.
     /// </summary>
     /// <returns><see cref="Hexagon"/>[]</returns>
+    /*
     public Hexagon[] GetHexes()
     {
         return (Hexagon[])hexMap.Hexes;
@@ -96,12 +96,14 @@ public class World
     {
         return hexMap.GetHexagon(coordinates);
     }
+    */
     /// <summary>
     /// Loads all hex tiles for the game map.
     /// </summary>
     private void LoadHexTiles()
     {
         Debug.Log("LoadHexTiles");
+        /*
         TextAsset textAsset = (TextAsset)Resources.Load("config");
         XmlDocument xmldoc = new XmlDocument();
         xmldoc.LoadXml(textAsset.text);
@@ -125,6 +127,7 @@ public class World
             hex.SetCoordinates(hexMap.GetCubeCoordinates(Int32.Parse(hexData.SelectSingleNode("x").InnerText), Int32.Parse(hexData.SelectSingleNode("y").InnerText)));
             hexMap.AddHexagon(hex);
         }
+        */
     }
     public Tile GetTileAtWorldCoordinates(Vector3 pos)
     {

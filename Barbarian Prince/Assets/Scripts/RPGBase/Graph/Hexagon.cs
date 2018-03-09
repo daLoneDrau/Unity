@@ -21,7 +21,7 @@ namespace Assets.Scripts.RPGBase.Graph
         /** the horizontal distance between adjacent hexes. */
         private float horizontalDistance;
         /** each hexagon has a unique id. */
-        private int id;
+        public int Id { get; private set; }
         /** constants. */
         private int sixty = 60, oneEighty = 180;
         /** the distance between a hexagon's center point and a corner. */
@@ -53,7 +53,7 @@ namespace Assets.Scripts.RPGBase.Graph
          */
         public Hexagon(bool isFlat, int refId, float newSize)
         {
-            id = refId;
+            Id = refId;
             edges = new int[] { -1, -1, -1, -1, -1, -1 };
             corners =
                     new int[][] { new int[]{ -1, -1 }, new int[]{ -1, -1 }, new int[]{ -1, -1 }, new int[]{ -1, -1 },
@@ -224,10 +224,6 @@ namespace Assets.Scripts.RPGBase.Graph
         public float GetHorizontalDistance()
         {
             return horizontalDistance;
-        }
-        public int GetId()
-        {
-            return id;
         }
         public String GetOffsetCoordinatesArt(HexCoordinateSystem grid)
         {

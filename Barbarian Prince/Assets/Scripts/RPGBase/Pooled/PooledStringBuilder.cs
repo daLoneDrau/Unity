@@ -189,13 +189,10 @@ namespace RPGBase.Pooled
         {
             // TODO Auto-generated method stub
         }
-        /// <summary>
-        /// Returns the length (character count).
-        /// <returns>the length of the sequence of characters currently represented by this object</returns> 
-        /// </summary>
-        public int Length()
+        public int Length
         {
-            return stringBuilder.Length;
+            get { return stringBuilder.Length; }
+            set { stringBuilder.Length = value; }
         }
         public void ReturnToPool()
         {
@@ -204,31 +201,6 @@ namespace RPGBase.Pooled
             {
                 StringBuilderPool.Instance.UnlockItem(this);
             }
-        }
-        /// <summary>
-        /// Sets the length of the character sequence. The sequence is changed to a
-        /// new character sequence whose length is specified by the argument. For
-        /// every nonnegative index <i>k</i> less than {@code newLength}, the
-        /// character at index <i>k</i> in the new character sequence is the same as
-        /// the character at index <i>k</i> in the old sequence if <i>k</i> is less
-        /// than the length of the old character sequence; otherwise, it is the null
-        /// character {@code '\u005Cu0000'}. In other words, if the {@code newLength}
-        /// argument is less than the current length, the length is changed to the
-        /// specified length.
-        /// <p>
-        /// If the {@code newLength} argument is greater than or equal to the current
-        /// length, sufficient null characters ({@code '\u005Cu0000'}) are appended
-        /// so that length becomes the {@code newLength} argument.
-        /// <p>
-        /// The {@code newLength} argument must be greater than or equal to {@code 0}.
-        /// @param newLength the new length
-        /// @throws IndexOutOfBoundsException if the {@code newLength} argument is
-        ///             negative.
-
-        /// </summary>
-        public void SetLength(int newLength)
-        {
-            stringBuilder.Length = newLength;
         }
         /// <summary>
         /// 

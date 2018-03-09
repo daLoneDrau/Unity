@@ -68,5 +68,53 @@ namespace Assets.Scripts.BarbarianPrince.Constants
         /// gold objects.
         /// </summary>
         public const int OBJECT_TYPE_GOLD = 1 << 3;
+        //****************************
+        // TURN ACTIONS
+        //****************************
+        /// <summary>
+        /// airborne travel.
+        /// </summary>
+        public const int ACTION_AIR_TRAVEL = 8;
+        /// <summary>
+        /// seek audience with local lord in town, castle or temple.
+        /// </summary>
+        public const int ACTION_AUDIENCE = 128;
+        /// <summary>
+        /// seek to hire followers in town or castle.
+        /// </summary>
+        public const int ACTION_HIRE = 64;
+        /// <summary>
+        /// travel overland.
+        /// </summary>
+        public const int ACTION_LAND_TRAVEL = 2;
+        /// <summary>
+        /// seek news & information in town, castle, or temple.
+        /// </summary>
+        public const int ACTION_NEWS = 32;
+        /// <summary>
+        /// submit offering at temple.
+        /// </summary>
+        public const int ACTION_OFFERING = 256;
+        //***************** Daily actions
+        /// <summary>
+        /// rest in current hex, to heal wounds and improve hunting.
+        /// </summary>
+        public const int ACTION_REST = 1;
+        /// <summary>
+        /// waterborne travel.
+        /// </summary>
+        public const int ACTION_RIVER_TRAVEL = 4;
+        /// <summary>
+        /// search for a previously placed cache.
+        /// </summary>
+        public const int ACTION_SEARCH_CACHE = 16;
+        /// <summary>
+        /// search in a ruins.
+        /// </summary>
+        public const int ACTION_SEARCH_RUINS = 512;
+        /// <summary>
+        /// leaves items or gold in a "hidden cache".
+        /// </summary>
+        public const int ACTION_MAKE_CACHE = 1024;
     }
 }
