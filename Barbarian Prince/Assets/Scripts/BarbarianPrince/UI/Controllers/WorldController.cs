@@ -13,6 +13,12 @@ using UnityEngine;
 
 public class WorldController : MonoBehaviour
 {
+    private const int N_EDGE = 1;
+    private const int NNE_EDGE = 2;
+    private const int SSE_EDGE = 4;
+    private const int S_EDGE = 8;
+    private const int SSW_EDGE = 16;
+    private const int NNW_EDGE = 32;
     private World world;
     /// <summary>
     /// Transform to hold all our game objects, so they don't clog up the hierarchy.
@@ -28,17 +34,21 @@ public class WorldController : MonoBehaviour
     private Vector2 viewportDimensions;
     void Awake()
     {
+        // init singletons
         MouseListener ml = MouseListener.Instance;
         ViewportController vc = ViewportController.Instance;
+        // load resources
         LoadResources();
         // load hex tiles
         StartCoroutine(BPServiceClient.Instance.GetAllHexes(value => hexList = value));
         // reposition camera to 0,0
         ViewportController.Instance.PositionViewport(new Vector2(0, 0));
     }
+    /// <summary>
+    /// Initializes the board.
+    /// </summary>
     private void InitMap()
     {
-        print("hexes loaded " + hexList.Length);
         doonce = true;
         HexMap.Instance.Hexes = hexList;
         HexMap.Instance.Load();
@@ -51,7 +61,6 @@ public class WorldController : MonoBehaviour
         // create map to hold references to all game tiles
         tileObjects = new Dictionary<string, GameObject>();
         viewportDimensions = ViewportController.Instance.RequiredTileDimensions;
-        print("need tiles for " + viewportDimensions);
         // create game tiles
         for (int x = (int)viewportDimensions.x - 1; x >= 0; x--)
         {
@@ -72,22 +81,31 @@ public class WorldController : MonoBehaviour
                 tileObject.transform.SetParent(tileHolder);
             }
         }
-        print("About to set tiles");
+        print("hexes loaded " + hexList.Length);
+        print("world tiles dimensions - " + world.Width + "x" + world.Height);
+        print("viewport dimensions - " + viewportDimensions.x + "x" + viewportDimensions.y);
         SetTileTypes();
     }
+    /// <summary>
+    /// Displays the game board.
+    /// </summary>
     private void DisplayMap()
     {
-        // need to go through tiles and display correct ones.
-
         // get the viewport's range.
         Vector2 v = ViewportController.Instance.ViewportPosition;
         int minx = Mathf.FloorToInt(v.x);
         int miny = Mathf.FloorToInt(v.y);
         PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
         SpriteMap sm = gameObject.GetComponent<SpriteMap>();
+        // iterate through tiles in viewport's range to set the onscreen sprites
+        float dx = v.x - (float)Math.Truncate(v.x);
+        float dy = v.y - (float)Math.Truncate(v.y);
+        dx *= -1;
+        dy *= -1;
+        print(miny+"::"+miny + (int)viewportDimensions.y);
         for (int x = minx, lx = minx + (int)viewportDimensions.x; x < lx; x++)
         {
-            for (int y = minx, ly = miny + (int)viewportDimensions.y; y < ly; y++)
+            for (int y = miny, ly = miny + (int)viewportDimensions.y; y < ly; y++)
             {
                 Tile tile = world.GetTileAt(x, y);
                 if (tile != null)
@@ -96,16 +114,24 @@ public class WorldController : MonoBehaviour
                     sb.Append(x - minx);
                     sb.Append("_");
                     sb.Append(y - miny);
-                    GameObject go = tileObjects[sb.ToString()];
+                    GameObject tileObject = tileObjects[sb.ToString()];
+                    // adjust tile position based on viewport
+                    tileObject.transform.position = new Vector3(x - minx + dx, y - miny + dy, 0);
+                    // set the tile sprite based on underlying data
+                    tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite(tile.Type.ToString().ToLower());
+                    if (x - minx == 1 && y - miny == 24)
+                    {
+                        print("1,24 moved to " + tileObject.transform.position);
+                    }
                     sb.Length = 0;
-
-                    go.GetComponent<SpriteRenderer>().sprite = sm.GetSprite(tile.Type.ToString().ToLower());
                 }
             }
         }
         sb.ReturnToPool();
     }
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame.
+    /// </summary>
     void Update()
     {
         if (hexList != null
@@ -115,9 +141,12 @@ public class WorldController : MonoBehaviour
         }
         else
         {
-            //DisplayMap();
+            DisplayMap();
         }
     }
+    /// <summary>
+    /// Loads XML resources.
+    /// </summary>
     private void LoadResources()
     {
         TextAsset textAsset = (TextAsset)Resources.Load("config");
@@ -254,12 +283,6 @@ public class WorldController : MonoBehaviour
             }
         }
     }
-    private const int N_EDGE = 1;
-    private const int NNE_EDGE = 2;
-    private const int SSE_EDGE = 4;
-    private const int S_EDGE = 8;
-    private const int SSW_EDGE = 16;
-    private const int NNW_EDGE = 32;
     private void SetCountryTile(Hex hex, string terrain, int minx, int miny, int sameEdge, int dsrtedge, int voidedge, int roadEdge, int rvrEdge, bool fourPattern)
     {
         PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
@@ -894,26 +917,6 @@ public class WorldController : MonoBehaviour
                     miny += 2;
                 }
                 int minx = ((int)hex.Location.x - 1) * 5;
-                /*
-                int minx = 9999999, miny = 9999999, maxx = -1, maxy = -1;
-                // find all tiles that belong in the hex
-                for (int x = world.Width - 1; x >= 0; x--)
-                {
-                    for (int y = world.Height - 1; y >= 0; y--)
-                    {
-
-                        Tile tileData = world.GetTileAt(x, y);
-                        Hex other = world.GetHexForTileCoordinates(x, y);
-                        if (other != null && other.Equals(hex))
-                        {
-                            minx = Mathf.Min(x, minx);
-                            miny = Mathf.Min(y, miny);
-                            maxx = Mathf.Max(x, maxx);
-                            maxy = Mathf.Max(y, maxy);
-                        }
-                    }
-                }
-                */
                 SetHexTiles(hex, minx, miny, minx + 5, miny + 3);
             }
         }

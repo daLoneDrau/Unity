@@ -80,9 +80,6 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
                 // middle button
                 Vector3 diff = lastFramePosition - currMousePos; // get space between last position and current
                 ViewportController.Instance.DragMap(diff);
-                Camera.main.transform.Translate(diff); // move camera by difference
-                                                       // camera's 0,0 is now at this position
-                ViewportController.Instance.CheckViewport();
             }
             else if (Input.GetMouseButton(1))
             {

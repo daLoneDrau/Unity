@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,32 +34,32 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
         private ViewportController() { print("new ViewportController"); }
         public void DragMap(Vector3 diff)
         {
+            print("Viewport dragged " + diff);
+            print("Viewport at " + ViewportPosition);
             ViewportPosition += (Vector2)diff;
             // did view go off edge of map?
             if (ViewportPosition.x < 0 || ViewportPosition.y < 0 || (ViewportPosition.x + cameraWidth) > MaxX || (ViewportPosition.y + cameraHeight) > MaxY)
             {
-                print("moving viewport back");
+                print("out of bounds - " + ViewportPosition + " - moving viewport back");
                 // going off edge of map. move back
-                float dx = 0, dy = 0, dz = 0;
                 if (ViewportPosition.x < 0)
                 {
-                    ViewportPosition.Set(0, ViewportPosition.y);
+                    ViewportPosition = new Vector2(0, ViewportPosition.y);
                 }
                 else if (MaxX > 0 && (ViewportPosition.x + cameraWidth) > MaxX)
                 {
-                    ViewportPosition.Set(MaxX- cameraWidth, ViewportPosition.y);
+                    ViewportPosition = new Vector2(MaxX - cameraWidth, ViewportPosition.y);
                 }
                 if (ViewportPosition.y < 0)
                 {
-                    ViewportPosition.Set(ViewportPosition.x,0);
+                    ViewportPosition = new Vector2(ViewportPosition.x, 0);
                 }
                 else if (MaxY > 0 && (ViewportPosition.y + cameraHeight) > MaxY)
                 {
-                    ViewportPosition.Set(ViewportPosition.x, MaxY - cameraHeight);
+                    ViewportPosition = new Vector2(ViewportPosition.x, MaxY - cameraHeight);
                 }
             }
-            print(ViewportPosition);
-
+            print("viewport now at " + ViewportPosition);
         }
         public void PositionViewport(Vector2 v)
         {
@@ -115,6 +116,7 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
         {
             cameraHeight = 2f * Camera.main.orthographicSize;
             cameraWidth = cameraHeight * Camera.main.aspect;
+            print("camera dimensions " + cameraWidth + "x" + cameraHeight);
         }
         // Use this for initialization
         void Start()
