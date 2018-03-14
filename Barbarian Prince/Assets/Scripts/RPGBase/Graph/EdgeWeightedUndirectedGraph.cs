@@ -257,7 +257,7 @@ namespace Assets.Scripts.RPGBase.Graph
         /// <param name="v">vertex v</param>
         /// <param name="w">vertex w</param>
         /// <returns>true if edge v-w exists; false otherwise</returns>
-        private bool HasEdge(int v, int w)
+        public bool HasEdge(int v, int w)
         {
             bool exists = false;
             for (int i = edges.Length - 1; i >= 0; i--)
@@ -280,7 +280,7 @@ namespace Assets.Scripts.RPGBase.Graph
         /// </summary>
         /// <param name="e"><see cref="WeightedGraphEdge"/> v-w</param>
         /// <returns>if edge v-w exists; false otherwise</returns>
-        private bool HasEdge(WeightedGraphEdge e)
+        public bool HasEdge(WeightedGraphEdge e)
         {
             bool exists = false;
             for (int i = edges.Length - 1; i >= 0; i--)

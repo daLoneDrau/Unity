@@ -1,11 +1,14 @@
 ﻿using Assets.Scripts.BarbarianPrince.Flyweights;
 using Assets.Scripts.BarbarianPrince.Graph;
+using Assets.Scripts.BarbarianPrince.Singletons;
+using Assets.Scripts.BarbarianPrince.UI.Controllers;
 using Assets.Scripts.RPGBase.Graph;
 using Assets.Scripts.UI;
 using RPGBase.Pooled;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class WorldController : MonoBehaviour
@@ -17,18 +20,42 @@ public class WorldController : MonoBehaviour
     private Transform tileHolder;
     private Dictionary<string, GameObject> tileObjects;
     // Use this for initialization
+    private Hex[] hexList;
+    private bool doonce = false;
+    /// <summary>
+    /// the dimensions for the number of tiles that can fit in the viewport.
+    /// </summary>
+    private Vector2 viewportDimensions;
     void Awake()
     {
+        MouseListener ml = MouseListener.Instance;
+        ViewportController vc = ViewportController.Instance;
+        LoadResources();
+        // load hex tiles
+        StartCoroutine(BPServiceClient.Instance.GetAllHexes(value => hexList = value));
+        // reposition camera to 0,0
+        ViewportController.Instance.PositionViewport(new Vector2(0, 0));
+    }
+    private void InitMap()
+    {
+        print("hexes loaded " + hexList.Length);
+        doonce = true;
+        HexMap.Instance.Hexes = hexList;
+        HexMap.Instance.Load();
         // create world
         world = new World();
+        ViewportController.Instance.MaxY = world.Height;
+        ViewportController.Instance.MaxX = world.Width;
         // create object to hold game tiles
         tileHolder = new GameObject("Board").transform;
         // create map to hold references to all game tiles
         tileObjects = new Dictionary<string, GameObject>();
+        viewportDimensions = ViewportController.Instance.RequiredTileDimensions;
+        print("need tiles for " + viewportDimensions);
         // create game tiles
-        for (int x = world.Width - 1; x >= 0; x--)
+        for (int x = (int)viewportDimensions.x - 1; x >= 0; x--)
         {
-            for (int y = world.Height - 1; y >= 0; y--)
+            for (int y = (int)viewportDimensions.y - 1; y >= 0; y--)
             {
                 Tile tileData = world.GetTileAt(x, y);
                 GameObject tileObject = new GameObject
@@ -43,11 +70,63 @@ public class WorldController : MonoBehaviour
                 tileObject.GetComponent<SpriteRenderer>().sortingLayerName = "Floor";
                 // set new tile as child of tile holder
                 tileObject.transform.SetParent(tileHolder);
-                tileData.AddTypeListener((tile) => { OnTileChanged(tile, tileObject); });
             }
         }
-        // set the world
+        print("About to set tiles");
         SetTileTypes();
+    }
+    private void DisplayMap()
+    {
+        // need to go through tiles and display correct ones.
+
+        // get the viewport's range.
+        Vector2 v = ViewportController.Instance.ViewportPosition;
+        int minx = Mathf.FloorToInt(v.x);
+        int miny = Mathf.FloorToInt(v.y);
+        PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+        SpriteMap sm = gameObject.GetComponent<SpriteMap>();
+        for (int x = minx, lx = minx + (int)viewportDimensions.x; x < lx; x++)
+        {
+            for (int y = minx, ly = miny + (int)viewportDimensions.y; y < ly; y++)
+            {
+                Tile tile = world.GetTileAt(x, y);
+                if (tile != null)
+                {
+                    sb.Append("Tile_");
+                    sb.Append(x - minx);
+                    sb.Append("_");
+                    sb.Append(y - miny);
+                    GameObject go = tileObjects[sb.ToString()];
+                    sb.Length = 0;
+
+                    go.GetComponent<SpriteRenderer>().sprite = sm.GetSprite(tile.Type.ToString().ToLower());
+                }
+            }
+        }
+        sb.ReturnToPool();
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        if (hexList != null
+                && !doonce)
+        {
+            InitMap();
+        }
+        else
+        {
+            //DisplayMap();
+        }
+    }
+    private void LoadResources()
+    {
+        TextAsset textAsset = (TextAsset)Resources.Load("config");
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.LoadXml(textAsset.text);
+        XmlNode root = xmldoc.SelectSingleNode("endpoints");
+        print(root.SelectSingleNode("bp_endpoint").InnerText);
+        BPServiceClient.Instance.Endpoint = root.SelectSingleNode("bp_endpoint").InnerText;
+        print(BPServiceClient.Instance.Endpoint);
     }
     private void SetCountryTiles(Hex hex, int minx, int miny, int maxx, int maxy)
     {
@@ -591,7 +670,7 @@ public class WorldController : MonoBehaviour
             world.GetTileAt(minx + 4, miny + 1).Type = (Tile.TerrainType)Enum.Parse(typeof(Tile.TerrainType), sb.ToString());
             sb.Length = 0;
         }
-
+        sb.ReturnToPool();
         if (hex.HasFeatures())
         {
             if (hex.HasFeature(HexFeature.TOWN))
@@ -621,7 +700,6 @@ public class WorldController : MonoBehaviour
     }
     private void SetHexTiles(Hex hex, int minx, int miny, int maxx, int maxy)
     {
-        PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
         int sameEdge = 0, dsrtedge = 0, voidedge = 0, roadEdge = 0, rvrEdge = 0;
         // COUNT EDGES FIRST
         Hex other = HexMap.Instance.GetNeighborHex(hex.Index, HexCoordinateSystem.DIRECTION_N);
@@ -637,11 +715,10 @@ public class WorldController : MonoBehaviour
             }
             if (HexMap.Instance.HasRiverCrossingTo(hex, other))
             {
-                Debug.Log("N River crossing between " + hex + " and " + other);
                 rvrEdge += N_EDGE;
                 sameEdge &= ~N_EDGE;
             }
-            if (HexMap.Instance.HasRoadTo(hex, other, 1))
+            if (HexMap.Instance.HasRoadEdge(hex, other))
             {
                 roadEdge += N_EDGE;
             }
@@ -663,11 +740,10 @@ public class WorldController : MonoBehaviour
             }
             if (HexMap.Instance.HasRiverCrossingTo(hex, other))
             {
-                Debug.Log("NNE River crossing between " + hex + " and " + other);
                 rvrEdge += NNE_EDGE;
                 sameEdge &= ~NNE_EDGE;
             }
-            if (HexMap.Instance.HasRoadTo(hex, other, 1))
+            if (HexMap.Instance.HasRoadEdge(hex, other))
             {
                 roadEdge += NNE_EDGE;
             }
@@ -689,11 +765,10 @@ public class WorldController : MonoBehaviour
             }
             if (HexMap.Instance.HasRiverCrossingTo(hex, other))
             {
-                Debug.Log("SSE River crossing between " + hex + " and " + other);
                 rvrEdge += SSE_EDGE;
                 sameEdge &= ~SSE_EDGE;
             }
-            if (HexMap.Instance.HasRoadTo(hex, other, 1))
+            if (HexMap.Instance.HasRoadEdge(hex, other))
             {
                 roadEdge += SSE_EDGE;
             }
@@ -715,11 +790,10 @@ public class WorldController : MonoBehaviour
             }
             if (HexMap.Instance.HasRiverCrossingTo(hex, other))
             {
-                Debug.Log("S River crossing between " + hex + " and " + other);
                 rvrEdge += S_EDGE;
                 sameEdge &= ~S_EDGE;
             }
-            if (HexMap.Instance.HasRoadTo(hex, other, 1))
+            if (HexMap.Instance.HasRoadEdge(hex, other))
             {
                 roadEdge += S_EDGE;
             }
@@ -741,11 +815,10 @@ public class WorldController : MonoBehaviour
             }
             if (HexMap.Instance.HasRiverCrossingTo(hex, other))
             {
-                Debug.Log("SSW River crossing between " + hex + " and " + other);
                 rvrEdge += SSW_EDGE;
                 sameEdge &= ~SSW_EDGE;
             }
-            if (HexMap.Instance.HasRoadTo(hex, other, 1))
+            if (HexMap.Instance.HasRoadEdge(hex, other))
             {
                 roadEdge += SSW_EDGE;
             }
@@ -767,11 +840,10 @@ public class WorldController : MonoBehaviour
             }
             if (HexMap.Instance.HasRiverCrossingTo(hex, other))
             {
-                Debug.Log("NNW River crossing between " + hex + " and " + other);
                 rvrEdge += NNW_EDGE;
                 sameEdge &= ~NNW_EDGE;
             }
-            if (HexMap.Instance.HasRoadTo(hex, other, 1))
+            if (HexMap.Instance.HasRoadEdge(hex, other))
             {
                 roadEdge += NNW_EDGE;
             }
@@ -780,7 +852,6 @@ public class WorldController : MonoBehaviour
         {
             voidedge += NNW_EDGE;
         }
-        Debug.Log("process hex " + hex);
         switch (hex.Type.Type)
         {
             case HexType.COUNTRY_VAL:
@@ -808,17 +879,29 @@ public class WorldController : MonoBehaviour
     }
     private void SetTileTypes()
     {
+        print("SetTileTypes");
         for (int i = HexMap.Instance.MaxHexId; i >= 0; i--)
         {
             Hex hex = HexMap.Instance.GetHexById(i);
             if (hex != null)
             {
+                // find hex's bottom-left corner
+                // hexes are 4 rows high
+                int miny = 23 - (int)hex.Location.y;
+                miny *= 4;
+                if (hex.Location.x % 2 == 1)
+                {
+                    miny += 2;
+                }
+                int minx = ((int)hex.Location.x - 1) * 5;
+                /*
                 int minx = 9999999, miny = 9999999, maxx = -1, maxy = -1;
                 // find all tiles that belong in the hex
                 for (int x = world.Width - 1; x >= 0; x--)
                 {
                     for (int y = world.Height - 1; y >= 0; y--)
                     {
+
                         Tile tileData = world.GetTileAt(x, y);
                         Hex other = world.GetHexForTileCoordinates(x, y);
                         if (other != null && other.Equals(hex))
@@ -830,7 +913,8 @@ public class WorldController : MonoBehaviour
                         }
                     }
                 }
-                SetHexTiles(hex, minx, miny, maxx, maxy);
+                */
+                SetHexTiles(hex, minx, miny, minx + 5, miny + 3);
             }
         }
     }
@@ -860,13 +944,4 @@ public class WorldController : MonoBehaviour
         obj.GetComponent<SpriteRenderer>().sortingLayerName = "Floor";
     }
     private float randomizeTimer = 2f;
-    // Update is called once per frame
-    void Update()
-    {
-        randomizeTimer -= Time.deltaTime;
-        if (randomizeTimer < 0)
-        {
-            randomizeTimer = 2f;
-        }
-    }
 }

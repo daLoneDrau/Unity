@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{26742D2A-A14B-1BAA-3BD3-D8C49C51E661}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp.dll</AssemblyName>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
@@ -81,22 +81,15 @@
     <Reference Include="UnityEditor">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
-      <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Common">
-      <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\MouseListener.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Constants\BPGlobals.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPCharacter.cs" />
-    <Compile Include="Assets\Scripts\BarbarianPrince\Graph\Hex.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPInteractiveObject.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPInventoryData.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPItemData.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPScriptable.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Graph\Hex.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Graph\HexFeature.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Graph\HexMap.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Graph\HexType.cs" />
@@ -110,6 +103,8 @@
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BPServiceClient.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BpProject.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\BoardManager.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\UI\Controllers\MouseListener.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\UI\Controllers\ViewportController.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\Controllers\WorldController.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\GameManager.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\InvUiController.cs" />
@@ -190,11 +185,8 @@
     <Compile Include="Assets\Scripts\UI\VerticalLayoutHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Resources\config.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Assets\Resources\config.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
 </Project>

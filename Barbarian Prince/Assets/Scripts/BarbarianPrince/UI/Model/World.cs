@@ -14,8 +14,6 @@ public class World
     public int Height { get; private set; }
     public World(int w = 100, int h = 100)
     {
-        HexMap.Instance.ToString();
-        //LoadHexTiles();
         Vector2[] range = HexMap.Instance.GetMapRange();
         int minx = (int)range[0].x, miny = (int)range[0].y;
         int maxx = (int)range[1].x, maxy = (int)range[1].y;
@@ -78,56 +76,6 @@ public class World
             row = (int)HexMap.Instance.GetMapRange()[1].y - row;
         }
         return (Hex)HexMap.Instance.GetHex(col, row);
-    }
-    /// <summary>
-    /// Gets the list of <see cref="Hexagon"/>s in the coordinate system.
-    /// </summary>
-    /// <returns><see cref="Hexagon"/>[]</returns>
-    /*
-    public Hexagon[] GetHexes()
-    {
-        return (Hexagon[])hexMap.Hexes;
-    }
-    public Vector3 GetNeighborCoordinates(Hexagon hex, int direction)
-    {
-        return hexMap.GetNeighborCoordinates(hex, direction);
-    }
-    public Hexagon GetHex(Vector3 coordinates)
-    {
-        return hexMap.GetHexagon(coordinates);
-    }
-    */
-    /// <summary>
-    /// Loads all hex tiles for the game map.
-    /// </summary>
-    private void LoadHexTiles()
-    {
-        Debug.Log("LoadHexTiles");
-        /*
-        TextAsset textAsset = (TextAsset)Resources.Load("config");
-        XmlDocument xmldoc = new XmlDocument();
-        xmldoc.LoadXml(textAsset.text);
-        XmlNode root = xmldoc.SelectSingleNode("data");
-        XmlNode map = root.SelectSingleNode("map");
-        XmlNodeList hexes = map.SelectNodes("hex");
-        for (int i = hexes.Count - 1; i >= 0; i--)
-        {
-            XmlNode hexData = hexes.Item(i);
-            BPHexagon.HexType ht = (BPHexagon.HexType)Enum.Parse(typeof(BPHexagon.HexType), hexData.SelectSingleNode("type").InnerText, true);
-            BPHexagon hex = new BPHexagon(ht);
-            if (hexData.SelectSingleNode("feature") != null)
-            {
-                XmlNode featureData = hexData.SelectSingleNode("feature");
-                hex.Feature = (BPHexagon.FeatureType)Enum.Parse(typeof(BPHexagon.FeatureType), featureData.SelectSingleNode("type").InnerText, true);
-                if (featureData.SelectSingleNode("name") != null)
-                {
-                    hex.Name = featureData.SelectSingleNode("name").InnerText;
-                }
-            }
-            hex.SetCoordinates(hexMap.GetCubeCoordinates(Int32.Parse(hexData.SelectSingleNode("x").InnerText), Int32.Parse(hexData.SelectSingleNode("y").InnerText)));
-            hexMap.AddHexagon(hex);
-        }
-        */
     }
     public Tile GetTileAtWorldCoordinates(Vector3 pos)
     {

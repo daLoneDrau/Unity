@@ -42,10 +42,7 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         /// <summary>
         /// Hidden constructor.
         /// </summary>
-        private HexMap()
-        {
-            Load();
-        }
+        private HexMap() { }
         /// <summary>
         /// the hex coordinate system; needed for determining neighbors.
         /// </summary>
@@ -53,7 +50,7 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         /// <summary>
         /// the list of map hexes.
         /// </summary>
-        private Hex[] hexes;
+        public Hex[] Hexes { get; set; }
         /// <summary>
         /// the map graph.
         /// </summary>
@@ -121,12 +118,12 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         {
             Debug.Log("GetHex(" + pt);
             Hex hex = null;
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                Debug.Log("check " + hexes[i]);
-                if (hexes[i].Location.Equals(pt))
+                Debug.Log("check " + Hexes[i]);
+                if (Hexes[i].Location.Equals(pt))
                 {
-                    hex = hexes[i];
+                    hex = Hexes[i];
                     break;
                 }
             }
@@ -140,11 +137,11 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         public Hex GetHex(Vector3 v)
         {
             Hex hex = null;
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                if (hexes[i].Hexagon.Equals(v))
+                if (Hexes[i].Hexagon.Equals(v))
                 {
-                    hex = hexes[i];
+                    hex = Hexes[i];
                     break;
                 }
             }
@@ -159,11 +156,11 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         public Hex GetHex(int x, int y)
         {
             Hex hex = null;
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                if (hexes[i].Location == new Vector2(x, y))
+                if (Hexes[i].Location == new Vector2(x, y))
                 {
-                    hex = hexes[i];
+                    hex = Hexes[i];
                     break;
                 }
             }
@@ -177,11 +174,11 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         public Hex GetHexById(int id)
         {
             Hex hex = null;
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                if (hexes[i].Index == id)
+                if (Hexes[i].Index == id)
                 {
-                    hex = hexes[i];
+                    hex = Hexes[i];
                     break;
                 }
             }
@@ -216,16 +213,16 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         {
             DijkstraUndirectedSearch dijkstra = new DijkstraUndirectedSearch(hexGraph, GetHex(pt).Index);
             Hex[] list = new Hex[0];
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                if (hexes[i].Index == GetHex(pt).Index)
+                if (Hexes[i].Index == GetHex(pt).Index)
                 {
                     continue;
                 }
-                if (dijkstra.HasPathTo(hexes[i].Index)
-                        && dijkstra.DistanceTo(hexes[i].Index) <= distance)
+                if (dijkstra.HasPathTo(Hexes[i].Index)
+                        && dijkstra.DistanceTo(Hexes[i].Index) <= distance)
                 {
-                    list = ArrayUtilities.Instance.ExtendArray(hexes[i], list);
+                    list = ArrayUtilities.Instance.ExtendArray(Hexes[i], list);
                 }
             }
             return list;
@@ -237,9 +234,9 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         public Vector2[] GetMapRange()
         {
             int minx = 9999, maxx = -1, miny = 999, maxy = -1;
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                Vector2 coords = hexes[i].Location;
+                Vector2 coords = Hexes[i].Location;
                 minx = (int)Mathf.Min(minx, coords.x);
                 maxx = (int)Mathf.Max(maxx, coords.x);
                 miny = (int)Mathf.Min(miny, coords.y);
@@ -255,9 +252,9 @@ namespace Assets.Scripts.BarbarianPrince.Graph
             get
             {
                 int max = -1;
-                for (int i = hexes.Length - 1; i >= 0; i--)
+                for (int i = Hexes.Length - 1; i >= 0; i--)
                 {
-                    max = Mathf.Max(max, hexes[i].Index);
+                    max = Mathf.Max(max, Hexes[i].Index);
                 }
                 return max;
             }
@@ -383,8 +380,7 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         /// <returns><see cref="Hex"/>[]</returns>
         public Hex[] GetRiverTravelOptions(Vector2 pt)
         {
-            RiverGraphNode[]
-            nodes = HexMap.Instance.GetRiverNodesForHex(pt);
+            RiverGraphNode[] nodes = HexMap.Instance.GetRiverNodesForHex(pt);
             Hex[]
             paths = new Hex[0];
             Dictionary<Vector2, int> map = new Dictionary<Vector2, int>();
@@ -586,6 +582,8 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         /// <returns><tt>true</tt> if there is a valid path; <tt>false</tt> otherwise</returns>
         public bool HasRiverCrossingTo(Hex from, Hex to)
         {
+            return riverCrossingsGraph.HasEdge(from.Index, to.Index);
+            /*
             bool hasPath = false;
             DijkstraUndirectedSearch dijkstra = new DijkstraUndirectedSearch(riverCrossingsGraph, from.Index);
             if (dijkstra.HasPathTo(to.Index)
@@ -594,6 +592,7 @@ namespace Assets.Scripts.BarbarianPrince.Graph
                 hasPath = true;
             }
             return hasPath;
+            */
         }
         /// <summary>
         /// Determines if a hex location has river nodes on one or more of its sides.
@@ -688,24 +687,28 @@ namespace Assets.Scripts.BarbarianPrince.Graph
             }
             return hasPath;
         }
+        public bool HasRoadEdge(Hex from, Hex to)
+        {
+            return roadGraph.HasEdge(from.Index, to.Index);
+        }
         /// <summary>
         /// Loads the hex map.
         /// </summary>
-        private void Load()
+        public void Load()
         {
-            hexes = BPServiceClient.Instance.LoadHexes();
+            // Hexes = BPServiceClient.Instance.LoadHexes();
             hexGraph = new EdgeWeightedUndirectedGraph(0);
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                hexGraph.AddVertex(hexes[i]);
+                hexGraph.AddVertex(Hexes[i]);
             }
             coordinateSystem = new HexCoordinateSystem(HexCoordinateSystem.EVEN_Q);
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                Hexagon hexagon = new Hexagon(true, hexes[i].Index);
-                hexagon.SetCoordinates(coordinateSystem.GetCubeCoordinates((int)hexes[i].Location.x, (int)hexes[i].Location.y));
-                hexes[i].Hexagon = hexagon;
-                coordinateSystem.AddHexagon(hexes[i].Hexagon);
+                Hexagon hexagon = new Hexagon(true, Hexes[i].Index);
+                hexagon.SetCoordinates(coordinateSystem.GetCubeCoordinates((int)Hexes[i].Location.x, (int)Hexes[i].Location.y));
+                Hexes[i].Hexagon = hexagon;
+                coordinateSystem.AddHexagon(Hexes[i].Hexagon);
             }
 
             // copy hex to road map
@@ -716,23 +719,24 @@ namespace Assets.Scripts.BarbarianPrince.Graph
             //riverGraph = new EdgeWeightedDirectedGraph(hexGraph);
 
             // create edges between all hexes
-            for (int i = hexes.Length - 1; i >= 0; i--)
+            for (int i = Hexes.Length - 1; i >= 0; i--)
             {
-                if (hexes[i].Location.y == 0)
+                if (Hexes[i].Location.y == 0)
                 {
                     continue;
                 }
                 int dir = HexCoordinateSystem.DIRECTION_NNW;
                 for (; dir >= HexCoordinateSystem.DIRECTION_N; dir--)
                 {
-                    Hexagon h = coordinateSystem.GetHexagon(coordinateSystem.GetNeighborCoordinates(hexes[i].Hexagon, dir));
+                    Hexagon h = coordinateSystem.GetHexagon(coordinateSystem.GetNeighborCoordinates(Hexes[i].Hexagon, dir));
                     if (h != null
                             && GetHexById(h.Id).Location.y != 0)
                     {
-                        hexGraph.AddEdge(hexes[i].Index, h.Id);
+                        hexGraph.AddEdge(Hexes[i].Index, h.Id);
                     }
                 }
             }
+            /*
             // create edges for roads
             int[][] edges = BPServiceClient.Instance.LoadRoads();
             for (int i = edges.Length - 1; i >= 0; i--)

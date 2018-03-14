@@ -10,6 +10,39 @@ namespace Assets.Scripts.BarbarianPrince.Graph
     /// </summary>
     public class HexFeature
     {
+        public static HexFeature ValueOf(string name)
+        {
+            HexFeature t = null;
+            if (string.Equals(name, "TEMPLE", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexFeature.TEMPLE;
+            }
+            else if (string.Equals(name, "RUINS", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexFeature.RUINS;
+            }
+            else if (string.Equals(name, "CASTLE", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexFeature.CASTLE;
+            }
+            else if (string.Equals(name, "TOWN", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexFeature.TOWN;
+            }
+            else if (string.Equals(name, "RIVER", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexFeature.RIVER;
+            }
+            else if (string.Equals(name, "OASIS", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexFeature.OASIS;
+            }
+            else if (string.Equals(name, "CACHE", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexFeature.CACHE;
+            }
+            return t;
+        }
         /// <summary>
         /// Temple.
         /// </summary>

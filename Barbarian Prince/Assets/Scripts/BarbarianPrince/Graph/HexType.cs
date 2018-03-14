@@ -10,6 +10,39 @@ namespace Assets.Scripts.BarbarianPrince.Graph
     /// </summary>
     public class HexType
     {
+        public static HexType ValueOf(string name)
+        {
+            HexType t = null;
+            if (string.Equals(name, "COUNTRY", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexType.COUNTRY;
+            }
+            else if (string.Equals(name, "FARM", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexType.FARM;
+            }
+            else if (string.Equals(name, "FOREST", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexType.FOREST;
+            }
+            else if (string.Equals(name, "HILL", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexType.HILL;
+            }
+            else if (string.Equals(name, "MOUNTAIN", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexType.MOUNTAIN;
+            }
+            else if (string.Equals(name, "DESERT", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexType.DESERT;
+            }
+            else if (string.Equals(name, "SWAMP", StringComparison.OrdinalIgnoreCase))
+            {
+                t = HexType.SWAMP;
+            }
+            return t;
+        }
         /// <summary>
         /// Countryside.
         /// </summary>
