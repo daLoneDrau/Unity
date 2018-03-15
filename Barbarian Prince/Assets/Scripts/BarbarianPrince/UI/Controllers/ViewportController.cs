@@ -34,13 +34,10 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
         private ViewportController() { print("new ViewportController"); }
         public void DragMap(Vector3 diff)
         {
-            print("Viewport dragged " + diff);
-            print("Viewport at " + ViewportPosition);
             ViewportPosition += (Vector2)diff;
             // did view go off edge of map?
             if (ViewportPosition.x < 0 || ViewportPosition.y < 0 || (ViewportPosition.x + cameraWidth) > MaxX || (ViewportPosition.y + cameraHeight) > MaxY)
             {
-                print("out of bounds - " + ViewportPosition + " - moving viewport back");
                 // going off edge of map. move back
                 if (ViewportPosition.x < 0)
                 {
@@ -59,7 +56,6 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
                     ViewportPosition = new Vector2(ViewportPosition.x, MaxY - cameraHeight);
                 }
             }
-            print("viewport now at " + ViewportPosition);
         }
         public void PositionViewport(Vector2 v)
         {

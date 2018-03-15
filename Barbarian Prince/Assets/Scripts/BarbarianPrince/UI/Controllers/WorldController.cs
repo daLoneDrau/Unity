@@ -49,7 +49,6 @@ public class WorldController : MonoBehaviour
     /// </summary>
     private void InitMap()
     {
-        doonce = true;
         HexMap.Instance.Hexes = hexList;
         HexMap.Instance.Load();
         // create world
@@ -59,7 +58,7 @@ public class WorldController : MonoBehaviour
         // create object to hold game tiles
         tileHolder = new GameObject("Board").transform;
         // create map to hold references to all game tiles
-        tileObjects = new Dictionary<string, GameObject>();
+        tileObjects = new Dictionary<string, GameObject>(StringComparer.OrdinalIgnoreCase);
         viewportDimensions = ViewportController.Instance.RequiredTileDimensions;
         // create game tiles
         for (int x = (int)viewportDimensions.x - 1; x >= 0; x--)
@@ -85,6 +84,7 @@ public class WorldController : MonoBehaviour
         print("world tiles dimensions - " + world.Width + "x" + world.Height);
         print("viewport dimensions - " + viewportDimensions.x + "x" + viewportDimensions.y);
         SetTileTypes();
+        doonce = true;
     }
     /// <summary>
     /// Displays the game board.
@@ -102,29 +102,32 @@ public class WorldController : MonoBehaviour
         float dy = v.y - (float)Math.Truncate(v.y);
         dx *= -1;
         dy *= -1;
-        print(miny+"::"+miny + (int)viewportDimensions.y);
         for (int x = minx, lx = minx + (int)viewportDimensions.x; x < lx; x++)
         {
             for (int y = miny, ly = miny + (int)viewportDimensions.y; y < ly; y++)
             {
-                Tile tile = world.GetTileAt(x, y);
-                if (tile != null)
+                sb.Append("Tile_");
+                sb.Append(x - minx);
+                sb.Append("_");
+                sb.Append(y - miny);
+                try
                 {
-                    sb.Append("Tile_");
-                    sb.Append(x - minx);
-                    sb.Append("_");
-                    sb.Append(y - miny);
                     GameObject tileObject = tileObjects[sb.ToString()];
                     // adjust tile position based on viewport
                     tileObject.transform.position = new Vector3(x - minx + dx, y - miny + dy, 0);
-                    // set the tile sprite based on underlying data
-                    tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite(tile.Type.ToString().ToLower());
-                    if (x - minx == 1 && y - miny == 24)
+                    Tile tile = world.GetTileAt(x, y);
+                    if (tile != null)
                     {
-                        print("1,24 moved to " + tileObject.transform.position);
+                        // set the tile sprite based on underlying data
+                        tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite(tile.Type.ToString().ToLower());
                     }
-                    sb.Length = 0;
                 }
+                catch (KeyNotFoundException knfe)
+                {
+                    print(knfe.ToString());
+                    print(sb.ToString() + "::" + tileObjects.ContainsKey(sb.ToString()));
+                }
+                sb.Length = 0;
             }
         }
         sb.ReturnToPool();
