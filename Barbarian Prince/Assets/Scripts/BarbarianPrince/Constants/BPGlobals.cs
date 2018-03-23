@@ -116,5 +116,33 @@ namespace Assets.Scripts.BarbarianPrince.Constants
         /// leaves items or gold in a "hidden cache".
         /// </summary>
         public const int ACTION_MAKE_CACHE = 1024;
+        /// <summary>
+        /// master script message - time change.
+        /// </summary>
+        public const int SM_300_TIME_CHANGE = 300;
+        /// <summary>
+        /// combat skill.
+        /// </summary>
+        public const int EQUIP_ELEMENT_CS = 0;
+        /// <summary>
+        /// endurance.
+        /// </summary>
+        public const int EQUIP_ELEMENT_EN = 1;
+        /// <summary>
+        /// wounds.
+        /// </summary>
+        public const int EQUIP_ELEMENT_WO = 2;
+        /// <summary>
+        /// poison wounds.
+        /// </summary>
+        public const int EQUIP_ELEMENT_PW = 3;
+        /// <summary>
+        /// wealth.
+        /// </summary>
+        public const int EQUIP_ELEMENT_WE = 4;
+        /// <summary>
+        /// wit & wiles.
+        /// </summary>
+        public const int EQUIP_ELEMENT_WI = 5;
     }
 }

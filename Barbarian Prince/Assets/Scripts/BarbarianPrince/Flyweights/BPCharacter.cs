@@ -12,27 +12,12 @@ namespace Assets.Scripts.BarbarianPrince.Flyweights
     {
         /** the list of attributes and their matching names and modifiers. */
         private static object[][] attributeMap = new object[][] {
-            /*
-            new object[] { "AC", "Armour Class", CryptEquipGlobals.EQUIP_ELEMENT_AC },
-            new object[] { "ACM", "AC Modifier", CryptEquipGlobals.EQUIP_ELEMENT_AC_MODIFIER },
-            new object[] { "BRW", "Brawn", CryptEquipGlobals.EQUIP_ELEMENT_STRENGTH },
-            new object[] { "COM", "Common Sense", CryptEquipGlobals.EQUIP_ELEMENT_WISDOM },
-            new object[] { "COR", "Coordinaton", CryptEquipGlobals.EQUIP_ELEMENT_DEXTERITY },
-            new object[] { "CRM", "Charm", CryptEquipGlobals.EQUIP_ELEMENT_CHARM },
-            new object[] { "CRP", "Corruption", CryptEquipGlobals.EQUIP_ELEMENT_CORRUPTION },
-            new object[] { "DB", "Damage Bonus", CryptEquipGlobals.EQUIP_ELEMENT_DMG_BONUS },
-            new object[] { "EDU", "Education", CryptEquipGlobals.EQUIP_ELEMENT_INTELLIGENCE },
-            new object[] { "HIR", "Max Hirelings", CryptEquipGlobals.EQUIP_ELEMENT_MAX_HIRELINGS },
-            new object[] { "HRD", "Hardiness", CryptEquipGlobals.EQUIP_ELEMENT_CONSTITUTION },
-            new object[] { "LAB", "Melee Bonus", CryptEquipGlobals.EQUIP_ELEMENT_TO_HIT },
-            new object[] { "LAN", "Understand Language %", CryptEquipGlobals.EQUIP_ELEMENT_LANGUAGE },
-            new object[] { "LEA", "Leadership", CryptEquipGlobals.EQUIP_ELEMENT_CHARISMA },
-            new object[] { "LUK", "Luck", CryptEquipGlobals.EQUIP_ELEMENT_LUCK },
-            new object[] { "MHP", "Max Hit Points", CryptEquipGlobals.EQUIP_ELEMENT_MHP },
-            new object[] { "MAB", "Missile Bonus", CryptEquipGlobals.EQUIP_ELEMENT_MISSILE_BONUS },
-            new object[] { "SAN", "Sanity", CryptEquipGlobals.EQUIP_ELEMENT_SANITY },
-            new object[] { "SKL", "Skill", CryptEquipGlobals.EQUIP_ELEMENT_SKILL }
-            */
+            new object[] { "CS", "Combat Skill", BPGlobals.EQUIP_ELEMENT_CS },
+            new object[] { "EN", "Endurance", BPGlobals.EQUIP_ELEMENT_EN },
+            new object[] { "WO", "Wounds", BPGlobals.EQUIP_ELEMENT_WO },
+            new object[] { "PW", "Poison Wounds", BPGlobals.EQUIP_ELEMENT_PW },
+            new object[] { "WE", "Wealth", BPGlobals.EQUIP_ELEMENT_WE },
+            new object[] { "WI", "Wit & Wiles", BPGlobals.EQUIP_ELEMENT_WI }
         };
         public override bool CalculateBackstab()
         {
@@ -71,6 +56,7 @@ namespace Assets.Scripts.BarbarianPrince.Flyweights
 
         protected override void ApplyRulesModifiers()
         {
+            /*
             int val = (int)GetBaseAttributeScore("STR") + (int)GetAttributeModifier("STR");
             if (val <= 8)
             {
@@ -193,6 +179,7 @@ namespace Assets.Scripts.BarbarianPrince.Flyweights
             }
             AdjustAttributeModifier("MHP", GetAttributeModifier("HPB"));
             AdjustAttributeModifier("AC", GetAttributeModifier("ACM"));
+            */
         }
         protected override void ApplyRulesPercentModifiers()
         {

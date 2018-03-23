@@ -52,6 +52,11 @@ namespace Assets.Scripts.BarbarianPrince.Graph
         /// </summary>
         public Hex[] Hexes { get; set; }
         /// <summary>
+        /// the list of <see cref="RiverCrossing"/>s.
+        /// </summary>
+        public RiverCrossing[] RiverCrossings { get; set; }
+        public int[][] Roads { get; internal set; }
+        /// <summary>
         /// the map graph.
         /// </summary>
         private EdgeWeightedUndirectedGraph hexGraph;
@@ -259,7 +264,7 @@ namespace Assets.Scripts.BarbarianPrince.Graph
                 return max;
             }
         }
-        /// <summary>
+               /// <summary>
         /// Gets the reference id of a hex's neighbor.
         /// </summary>
         /// <param name="hexId"> the hex's id</param>
@@ -736,19 +741,15 @@ namespace Assets.Scripts.BarbarianPrince.Graph
                     }
                 }
             }
-            /*
             // create edges for roads
-            int[][] edges = BPServiceClient.Instance.LoadRoads();
-            for (int i = edges.Length - 1; i >= 0; i--)
+            for (int i = Roads.Length - 1; i >= 0; i--)
             {
-                roadGraph.AddEdge(edges[i][0], edges[i][1]);
+                roadGraph.AddEdge(Roads[i][0], Roads[i][1]);
             }
             // create edges for river crossings
-            RiverCrossing[] riverCrossings = BPServiceClient.Instance.LoadRiverCrossings();
-            for (int i = riverCrossings.Length - 1; i >= 0; i--)
+            for (int i = RiverCrossings.Length - 1; i >= 0; i--)
             {
-                riverCrossingsGraph.AddEdge(riverCrossings[i].From,
-                        riverCrossings[i].To);
+                riverCrossingsGraph.AddEdge(RiverCrossings[i].From, RiverCrossings[i].To);
             }
             /*
             // add all land nodes to the river graph

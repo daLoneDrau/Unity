@@ -67,27 +67,26 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             }
             return io;
         }
-        /**
-         * Gets a new Player IO.
-         * @return {@link FFInteractiveObject}
-         * @throws RPGException
-         */
+        /// <summary>
+        /// Gets a new Player IO.
+        /// </summary>
+        /// <returns><see cref="BPInteractiveObject"/></returns>
         public BPInteractiveObject NewHero()
         {
             BPInteractiveObject io = (BPInteractiveObject)GetNewIO();
             io.AddIOFlag(IoGlobals.IO_01_PC);
             io.PcData = new BPCharacter();
+            io.Script = new Hero();
             //io.PcData.NewHero();
             //((FFController)ProjectConstants.getInstance()).setPlayer(io.getRefId());
             //io.setScript(new Hero(io));
             //Script.getInstance().sendInitScriptEvent(io);
             return io;
         }
-        /**
-         * Gets a new Item IO.
-         * @return {@link FFInteractiveObject}
-         * @throws RPGException
-         */
+        /// <summary>
+        /// Gets a new Item IO.
+        /// </summary>
+        /// <returns><see cref="BPInteractiveObject"/></returns>
         public BPInteractiveObject NewItem()
         {
             BPInteractiveObject io = (BPInteractiveObject)GetNewIO();

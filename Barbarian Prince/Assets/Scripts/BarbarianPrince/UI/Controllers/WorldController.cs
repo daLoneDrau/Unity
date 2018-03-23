@@ -3,6 +3,7 @@ using Assets.Scripts.BarbarianPrince.Graph;
 using Assets.Scripts.BarbarianPrince.Singletons;
 using Assets.Scripts.BarbarianPrince.UI.Controllers;
 using Assets.Scripts.RPGBase.Graph;
+using Assets.Scripts.RPGBase.Singletons;
 using Assets.Scripts.UI;
 using RPGBase.Pooled;
 using System;
@@ -11,7 +12,7 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
-public class WorldController : MonoBehaviour
+public class WorldController : Singleton<WorldController>
 {
     private const int N_EDGE = 1;
     private const int NNE_EDGE = 2;
@@ -27,7 +28,13 @@ public class WorldController : MonoBehaviour
     private Dictionary<string, GameObject> tileObjects;
     // Use this for initialization
     private Hex[] hexList;
+    private RiverCrossing[] crossings;
+    private int[][] roads;
     private bool doonce = false;
+    /// <summary>
+    /// flag indicating the world loading has completed.
+    /// </summary>
+    public bool LoadComplete { get; private set; }
     /// <summary>
     /// the dimensions for the number of tiles that can fit in the viewport.
     /// </summary>
@@ -41,6 +48,10 @@ public class WorldController : MonoBehaviour
         LoadResources();
         // load hex tiles
         StartCoroutine(BPServiceClient.Instance.GetAllHexes(value => hexList = value));
+        // load river crossings
+        StartCoroutine(BPServiceClient.Instance.GetAllRiverCrossings(value => crossings = value));
+        // load roads
+        StartCoroutine(BPServiceClient.Instance.GetAllRoads(value => roads = value));
         // reposition camera to 0,0
         ViewportController.Instance.PositionViewport(new Vector2(0, 0));
     }
@@ -50,6 +61,8 @@ public class WorldController : MonoBehaviour
     private void InitMap()
     {
         HexMap.Instance.Hexes = hexList;
+        HexMap.Instance.RiverCrossings = crossings;
+        HexMap.Instance.Roads = roads;
         HexMap.Instance.Load();
         // create world
         world = new World();
@@ -85,12 +98,14 @@ public class WorldController : MonoBehaviour
         print("viewport dimensions - " + viewportDimensions.x + "x" + viewportDimensions.y);
         SetTileTypes();
         doonce = true;
+        LoadComplete = true;
     }
     /// <summary>
     /// Displays the game board.
     /// </summary>
-    private void DisplayMap()
+    public void DisplayMap()
     {
+        float now = (Time.time-RPGTime.Instance.TimePaused) * 1000f;
         // get the viewport's range.
         Vector2 v = ViewportController.Instance.ViewportPosition;
         int minx = Mathf.FloorToInt(v.x);
@@ -119,7 +134,22 @@ public class WorldController : MonoBehaviour
                     if (tile != null)
                     {
                         // set the tile sprite based on underlying data
-                        tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite(tile.Type.ToString().ToLower());
+                        if (tile.Type == Tile.TerrainType.River_a || tile.Type == Tile.TerrainType.River_b || tile.Type == Tile.TerrainType.River_c || tile.Type == Tile.TerrainType.River_d)
+                        {
+                            int qrtr = (int)now % 1000;
+                            if (qrtr >= 500)
+                            {
+                                tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite("water_0");
+                            }
+                            else
+                            {
+                                tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite("water_1");
+                            }
+                        }
+                        else
+                        {
+                            tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite(tile.Type.ToString().ToLower());
+                        }
                     }
                 }
                 catch (KeyNotFoundException knfe)
@@ -138,13 +168,11 @@ public class WorldController : MonoBehaviour
     void Update()
     {
         if (hexList != null
+                && crossings != null
+                && roads != null
                 && !doonce)
         {
             InitMap();
-        }
-        else
-        {
-            DisplayMap();
         }
     }
     /// <summary>

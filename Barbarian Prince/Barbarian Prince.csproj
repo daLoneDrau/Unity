@@ -81,7 +81,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\GameController.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Constants\BPGlobals.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Constants\WealthCode.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPCharacter.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPInteractiveObject.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPInventoryData.cs" />
@@ -96,11 +98,19 @@
     <Compile Include="Assets\Scripts\BarbarianPrince\Graph\RiverGraphNode.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Scriptables\Items\Bonebiter.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Scriptables\Items\WeaponBase.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Scriptables\Mobs\CalArath.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Scriptables\Mobs\MobBase.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BPInteractive.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BPScript.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BPServiceClient.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\BpProject.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Singletons\TreasureTable.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Turn\Day.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Turn\TimePhase.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Turn\TimeTrack.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\Turn\Week.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\BoardManager.cs" />
+    <Compile Include="Assets\Scripts\BarbarianPrince\UI\Controllers\DemoController.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\Controllers\MouseListener.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\Controllers\ViewportController.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\Controllers\WorldController.cs" />
@@ -108,6 +118,8 @@
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\InvUiController.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\Model\Tile.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\Model\World.cs" />
+    <Compile Include="Assets\Scripts\Extensions\MonoBehaviourExtended.cs" />
+    <Compile Include="Assets\Scripts\Extensions\Singleton.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Behaviour.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Dice.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Die.cs" />
@@ -165,6 +177,7 @@
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Diceroller.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Interactive.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\ProjectConstants.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Singletons\RPGTime.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Script.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Speech.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\SpellController.cs" />

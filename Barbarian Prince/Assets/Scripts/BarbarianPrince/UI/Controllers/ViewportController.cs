@@ -123,7 +123,7 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
             get
             {
                 int h = (int)cameraHeight + 1;
-                int w = (int)cameraWidth + 1;
+                int w = Mathf.CeilToInt(cameraWidth) + 1;
                 return new Vector2(w, h);
             }
         }

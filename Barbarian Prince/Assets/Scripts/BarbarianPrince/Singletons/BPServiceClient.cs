@@ -223,10 +223,10 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
                         JSONNode node = n[i];
                         Hex hex = new Hex
                         {
-                            Index = i,
                             Location = new Vector2(node["x"].AsInt, node["y"].AsInt),
                             Type = HexType.ValueOf(node["hex_type"]["name"].Value.ToString())
                         };
+                        hex.Index = ((int)hex.Location.x - 1) * 23 + (int)hex.Location.y - 1;
                         if (node["name"] != null)
                         {
                             hex.Name = node["name"].Value.ToString();
@@ -245,684 +245,74 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
                 result(list);
             }
         }
-
-        public Hex[] LoadHexes()
+        public IEnumerator GetAllRiverCrossings(System.Action<RiverCrossing[]> result)
         {
-            int i = 0;
-            Hex[] list = new Hex[0];
-            Hex hex = new Hex
-            {
-                Name = "The Free City of Ogon"
-            };
-            hex.AddFeature(HexFeature.TOWN);
-            hex.Type = HexType.COUNTRY;
-            hex.Location = new Vector2(1, 1);
-            hex.Index = i++;
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 2),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.MOUNTAIN,
-                Location = new Vector2(1, 3),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 4),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.HILL,
-                Location = new Vector2(1, 5),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Name = "Dead Plains",
-                Type = HexType.DESERT,
-                Location = new Vector2(1, 6),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.HILL,
-                Location = new Vector2(1, 7),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 8),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Name = "Angleae"
-            };
-            hex.AddFeature(HexFeature.TOWN);
-            hex.Type = HexType.COUNTRY;
-            hex.Location = new Vector2(1, 9);
-            hex.Index = i++;
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 10),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(1, 11),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 12),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 13),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.SWAMP,
-                Name = "Llewyla Moor",
-                Location = new Vector2(1, 14),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.SWAMP,
-                Name = "Llewyla Moor",
-                Location = new Vector2(1, 15),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(1, 16),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(1, 17),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(1, 18),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 19),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 20),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 21),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(1, 22),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(1, 23),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.MOUNTAIN,
-                Location = new Vector2(2, 1),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(2, 2),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(2, 3),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.HILL,
-                Location = new Vector2(2, 4),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.HILL,
-                Location = new Vector2(2, 5),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Name = "The Dead Plains"
-            };
-            hex.AddFeature(HexFeature.OASIS);
-            hex.AddFeature(HexFeature.RUINS);
-            hex.Type = HexType.DESERT;
-            hex.Location = new Vector2(2, 6);
-            hex.Index = i++;
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.HILL,
-                Location = new Vector2(2, 7),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(2, 8),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(2, 9),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(2, 10),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(2, 11),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(2, 12),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.SWAMP,
-                Name = "Llewyla Moor",
-                Location = new Vector2(2, 13),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.SWAMP,
-                Name = "Llewyla Moor",
-                Location = new Vector2(2, 14),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(2, 15),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FARM,
-                Name = "Galden"
-            };
-            hex.AddFeature(HexFeature.TOWN);
-            hex.Location = new Vector2(2, 16);
-            hex.Index = i++;
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FARM,
-                Location = new Vector2(2, 17),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(2, 18),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(2, 19),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(2, 20),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(2, 21),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FARM,
-                Location = new Vector2(2, 22),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(2, 23),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.MOUNTAIN,
-                Location = new Vector2(3, 1),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(3, 2),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(3, 3),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.MOUNTAIN,
-                Location = new Vector2(3, 4),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(3, 5),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.DESERT,
-                Name = "The Dead Plains",
-                Location = new Vector2(3, 6),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.HILL,
-                Location = new Vector2(3, 7),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(3, 8),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(3, 9),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(3, 10),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(3, 11),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.SWAMP,
-                Name = "Llewyla Moor",
-                Location = new Vector2(3, 12),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.SWAMP,
-                Name = "Llewyla Moor",
-                Location = new Vector2(3, 13),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(3, 14),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FOREST,
-                Location = new Vector2(3, 15),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(3, 16),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FARM,
-                Location = new Vector2(3, 17),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(3, 18),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FARM,
-                Location = new Vector2(3, 19),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(3, 20),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.COUNTRY,
-                Location = new Vector2(3, 21),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FARM,
-                Location = new Vector2(3, 22),
-                Index = i++
-            };
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            hex = new Hex
-            {
-                Type = HexType.FARM,
-                Name = "Drogat Castle"
-            };
-            hex.AddFeature(HexFeature.CASTLE);
-            hex.Location = new Vector2(3, 23);
-            hex.Index = i++;
-            list = ArrayUtilities.Instance.ExtendArray(hex, list);
-
-            return list;
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append(Endpoint);
+            sb.Append("river_crossings");
+            UnityWebRequest www = new UnityWebRequest(sb.ToString())
+            {
+                downloadHandler = new DownloadHandlerBuffer()
+            };
+            sb.ReturnToPool();
+            yield return www.Send();
+            if (www.isError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                RiverCrossing[] list = new RiverCrossing[0];
+                var str = System.Text.Encoding.Default.GetString(www.downloadHandler.data);
+                var n = JSON.Parse(str);
+                if (n.IsArray)
+                {
+                    for (int i = 0, li = n.Count; i < li; i++)
+                    {
+                        JSONNode node = n[i];
+                        RiverCrossing rc = new RiverCrossing();
+                        int fx = node["from_x"].AsInt, fy = node["from_y"].AsInt, tx = node["to_x"].AsInt, ty = node["to_y"].AsInt;
+                        rc.From = (fx - 1) * 23 + fy - 1;
+                        rc.To = (tx - 1) * 23 + ty - 1;
+                        rc.RiverName = node["name"].Value.ToString();
+                        list = ArrayUtilities.Instance.ExtendArray(rc, list);
+                    }
+                }
+                result(list);
+            }
         }
-        public RiverCrossing[] LoadRiverCrossings()
+        public IEnumerator GetAllRoads(System.Action<int[][]> result)
         {
-            RiverCrossing[] list = new RiverCrossing[0];
-            RiverCrossing r = new RiverCrossing
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append(Endpoint);
+            sb.Append("roads");
+            UnityWebRequest www = new UnityWebRequest(sb.ToString())
             {
-                From = 0, // 1,1
-                To = 1,  // 1,2
-                RiverName = "Tragoth River"
+                downloadHandler = new DownloadHandlerBuffer()
             };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
+            sb.ReturnToPool();
+            yield return www.Send();
+            if (www.isError)
             {
-                From = 23, // 2,1
-                To = 1, // 1,2
-                RiverName = "Tragoth River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
+                Debug.Log(www.error);
+            }
+            else
             {
-                From = 23,    // 2,1
-                To = 24,      // 2,2 
-                RiverName = "Tragoth River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
-            {
-                From = 47,    //3,2
-                To = 24,      //2,2
-                RiverName = "Tragoth River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
-            {
-                From = 48,    //3,3
-                To = 47,      //3,2
-                RiverName = "Tragoth River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
-            {
-                From = 13,    // 1,14
-                To = 14,      // 1,15
-                RiverName = "Nesser River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
-            {
-                From = 13,    // 1,14
-                To = 35,      // 2,13
-                RiverName = "Nesser River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
-            {
-                From = 13,    // 1,14
-                To = 36,      // 2,14
-                RiverName = "Nesser River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
-            {
-                From = 12,    // 1,13
-                To = 35,      // 2,13
-                RiverName = "Nesser River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
-            {
-                From = 34,    // 2,12
-                To = 35,      // 2,13
-                RiverName = "Nesser River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
-            {
-                From = 34,    // 2,12
-                To = 58,      // 3,13
-                RiverName = "Nesser River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            r = new RiverCrossing
-            {
-                From = 57,    // 3,12
-                To = 58,      // 3,13
-                RiverName = "Nesser River"
-            };
-            list = ArrayUtilities.Instance.ExtendArray(r, list);
-
-            return list;
+                int[][] list = new int[0][];
+                var str = System.Text.Encoding.Default.GetString(www.downloadHandler.data);
+                var n = JSON.Parse(str);
+                if (n.IsArray)
+                {
+                    for (int i = 0, li = n.Count; i < li; i++)
+                    {
+                        JSONNode node = n[i];
+                        int fx = node["from_x"].AsInt, fy = node["from_y"].AsInt, tx = node["to_x"].AsInt, ty = node["to_y"].AsInt;
+                        int[] r = new int[2] { (fx - 1) * 23 + fy - 1, (tx - 1) * 23 + ty - 1 };
+                        list = ArrayUtilities.Instance.ExtendArray(r, list);
+                    }
+                }
+                result(list);
+            }
         }
         public int[][] LoadRoads()
         {
