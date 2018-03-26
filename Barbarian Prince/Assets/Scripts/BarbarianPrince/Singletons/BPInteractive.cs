@@ -89,22 +89,7 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             io.PcData = new BPCharacter();
             io.Script = new CalArath();
             int val = Script.Instance.SendInitScriptEvent(io);
-            StartCoroutine(BPServiceClient.Instance.GetItemByName("Bonebiter", value => EquipItemOnFreshIo(io, BPGlobals.EQUIP_SLOT_WEAPON, value)));
-            //io.PcData.NewHero();
-            //((FFController)ProjectConstants.getInstance()).setPlayer(io.getRefId());
-            //io.setScript(new Hero(io));
             return io;
-        }
-        private void EquipItemOnFreshIo(BPInteractiveObject src, int slot, BPInteractiveObject item)
-        {
-            if (src.HasIOFlag(IoGlobals.IO_01_PC))
-            {
-                src.PcData.SetEquippedItem(slot, item);
-            } else if (src.HasIOFlag(IoGlobals.IO_03_NPC))
-            {
-                src.NpcData.SetEquippedItem(slot, item);
-            }
-            print("item equipped");
         }
         /// <summary>
         /// Gets a new Item IO.

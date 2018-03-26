@@ -72,8 +72,8 @@ public class WorldController : Singleton<WorldController>
         tileHolder = new GameObject("Board").transform;
         // create map to hold references to all game tiles
         tileObjects = new Dictionary<string, GameObject>(StringComparer.OrdinalIgnoreCase);
-        viewportDimensions = ViewportController.Instance.RequiredTileDimensions;
         // create game tiles
+        viewportDimensions = ViewportController.Instance.RequiredTileDimensions;
         for (int x = (int)viewportDimensions.x - 1; x >= 0; x--)
         {
             for (int y = (int)viewportDimensions.y - 1; y >= 0; y--)
@@ -101,6 +101,27 @@ public class WorldController : Singleton<WorldController>
         SetTileTypes();
         doonce = true;
         LoadComplete = true;
+    }
+    /// <summary>
+    /// Centers the viewport on a specific hex.
+    /// </summary>
+    /// <param name="position">the hex</param>
+    public void CenterOnHex(Vector2 position)
+    {
+        // find hex's bottom-left corner
+        // hexes are 4 rows high
+        int miny = 23 - (int)position.y;
+        miny *= 4;
+        if (position.x % 2 == 1)
+        {
+            miny += 2;
+        }
+        int minx = ((int)position.x - 1) * 5;
+        int maxx = minx + 5, maxy = miny + 3;
+        float midx = (float)minx+2.5f;
+        float midy = (float)miny+1.5f;
+        print("hex " + position + " goes from " + minx + "," + miny + " to " + maxx + "," + maxy + " mid at " + midx + "," + midy);
+        ViewportController.Instance.CenterOnPoint(new Vector2(midx,midy));
     }
     /// <summary>
     /// Displays the game board.
@@ -190,133 +211,7 @@ public class WorldController : Singleton<WorldController>
         BPServiceClient.Instance.Endpoint = root.SelectSingleNode("bp_endpoint").InnerText;
         //print(BPServiceClient.Instance.Endpoint);
     }
-    private void SetCountryTiles(Hex hex, int minx, int miny, int maxx, int maxy)
-    {
-        // DO EDGES FIRST
-        // N
-        Hex other = HexMap.Instance.GetNeighborHex(hex.Index, HexCoordinateSystem.DIRECTION_N);
-        Debug.Log(other);
-        // TODO - check for river crossing
-        // north side is void/country
-        Tile tileData = world.GetTileAt(minx + 2, maxy);
-        tileData.Type = Tile.TerrainType.Grass_0;
-        tileData = world.GetTileAt(minx + 3, maxy);
-        tileData.Type = Tile.TerrainType.Grass_0;
-        // TO DO - check for river crossing
-
-        // NNE
-        other = HexMap.Instance.GetNeighborHex(hex.Index, HexCoordinateSystem.DIRECTION_NNE);
-        if (other == null)
-        {
-            // NNE side is void
-            tileData = world.GetTileAt(maxx - 1, maxy);
-            tileData.Type = Tile.TerrainType.Grass_void_3;
-            tileData = world.GetTileAt(maxx, maxy - 1);
-            tileData.Type = Tile.TerrainType.Grass_void_3;
-        }
-        else
-        {
-            tileData = world.GetTileAt(maxx - 1, maxy);
-            tileData.Type = Tile.TerrainType.Grass_0;
-            tileData = world.GetTileAt(maxx, maxy - 1);
-            tileData.Type = Tile.TerrainType.Grass_0;
-        }
-        // TO DO - check for river crossing
-        // SSE
-        other = HexMap.Instance.GetNeighborHex(hex.Index, HexCoordinateSystem.DIRECTION_SSE);
-        if (other == null)
-        {
-            // SSE side is void
-            tileData = world.GetTileAt(maxx - 1, miny);
-            tileData.Type = Tile.TerrainType.Grass_void_6;
-            tileData = world.GetTileAt(maxx, miny + 1);
-            tileData.Type = Tile.TerrainType.Grass_void_6;
-        }
-        else
-        {
-            tileData = world.GetTileAt(maxx - 1, miny);
-            tileData.Type = Tile.TerrainType.Grass_0;
-            tileData = world.GetTileAt(maxx, miny + 1);
-            tileData.Type = Tile.TerrainType.Grass_0;
-        }
-        // TO DO - check for river crossing
-        // S
-        // north side is void/country
-        tileData = world.GetTileAt(minx + 2, miny);
-        tileData.Type = Tile.TerrainType.Grass_0;
-        tileData = world.GetTileAt(minx + 3, miny);
-        tileData.Type = Tile.TerrainType.Grass_0;
-        // TO DO - check for river crossing
-        // SSW
-        other = HexMap.Instance.GetNeighborHex(hex.Index, HexCoordinateSystem.DIRECTION_SSW);
-        if (other == null)
-        {
-            // SSW side is void
-            tileData = world.GetTileAt(minx + 1, miny);
-            tileData.Type = Tile.TerrainType.Grass_void_12;
-            tileData = world.GetTileAt(minx, miny + 1);
-            tileData.Type = Tile.TerrainType.Grass_void_12;
-        }
-        else
-        {
-            tileData = world.GetTileAt(minx + 1, miny);
-            tileData.Type = Tile.TerrainType.Grass_0;
-            tileData = world.GetTileAt(minx, miny + 1);
-            tileData.Type = Tile.TerrainType.Grass_0;
-        }
-        // TO DO - check for river crossing
-        // NNW
-        other = HexMap.Instance.GetNeighborHex(hex.Index, HexCoordinateSystem.DIRECTION_NNW);
-        if (other == null)
-        {
-            // NNW side is void
-            tileData = world.GetTileAt(minx, maxy - 1);
-            tileData.Type = Tile.TerrainType.Grass_void_9;
-            tileData = world.GetTileAt(minx + 1, maxy);
-            tileData.Type = Tile.TerrainType.Grass_void_9;
-        }
-        else
-        {
-            tileData = world.GetTileAt(minx, maxy - 1);
-            tileData.Type = Tile.TerrainType.Grass_0;
-            tileData = world.GetTileAt(minx + 1, maxy);
-            tileData.Type = Tile.TerrainType.Grass_0;
-        }
-        // TO DO - check for river crossing
-        // DO MIDDLE
-        if (hex.HasFeature(HexFeature.TOWN))
-        {
-            tileData = world.GetTileAt(minx + 1, miny + 1);
-            tileData.Type = Tile.TerrainType.Grass_0;
-            tileData = world.GetTileAt(minx + 1, miny + 2);
-            tileData.Type = Tile.TerrainType.Grass_0;
-            tileData = world.GetTileAt(minx + 4, miny + 1);
-            tileData.Type = Tile.TerrainType.Grass_0;
-            tileData = world.GetTileAt(minx + 4, miny + 2);
-            tileData.Type = Tile.TerrainType.Grass_0;
-            // town sprite
-            tileData = world.GetTileAt(minx + 2, miny + 1);
-            tileData.Type = Tile.TerrainType.Town_3;
-            tileData = world.GetTileAt(minx + 2, miny + 2);
-            tileData.Type = Tile.TerrainType.Town_0;
-            tileData = world.GetTileAt(minx + 3, miny + 1);
-            tileData.Type = Tile.TerrainType.Town_2;
-            tileData = world.GetTileAt(minx + 3, miny + 2);
-            tileData.Type = Tile.TerrainType.Town_1;
-        }
-        else
-        {
-            for (int x = minx + 1; x < maxx; x++)
-            {
-                for (int y = miny + 1; y < maxy; y++)
-                {
-                    Tile td = world.GetTileAt(x, y);
-                    td.Type = Tile.TerrainType.Grass_0;
-                }
-            }
-        }
-    }
-    private void SetCountryTile(Hex hex, string terrain, int minx, int miny, int sameEdge, int dsrtedge, int voidedge, int roadEdge, int rvrEdge, bool fourPattern)
+    private void SetTileSprites(Hex hex, string terrain, int minx, int miny, int sameEdge, int dsrtedge, int voidedge, int roadEdge, int rvrEdge, bool fourPattern)
     {
         PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
         // HEX LAYOUT
@@ -911,25 +806,25 @@ public class WorldController : Singleton<WorldController>
         switch (hex.Type.Type)
         {
             case HexType.COUNTRY_VAL:
-                SetCountryTile(hex, "Grass", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, false);
+                SetTileSprites(hex, "Grass", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, false);
                 break;
             case HexType.DESERT_VAL:
-                SetCountryTile(hex, "Desert", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, true);
+                SetTileSprites(hex, "Desert", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, true);
                 break;
             case HexType.FARM_VAL:
-                SetCountryTile(hex, "Farm", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, false);
+                SetTileSprites(hex, "Farm", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, false);
                 break;
             case HexType.FOREST_VAL:
-                SetCountryTile(hex, "Forest", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, true);
+                SetTileSprites(hex, "Forest", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, true);
                 break;
             case HexType.HILL_VAL:
-                SetCountryTile(hex, "Hill", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, true);
+                SetTileSprites(hex, "Hill", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, true);
                 break;
             case HexType.MOUNTAIN_VAL:
-                SetCountryTile(hex, "Mountain", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, true);
+                SetTileSprites(hex, "Mountain", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, true);
                 break;
             case HexType.SWAMP_VAL:
-                SetCountryTile(hex, "Swamp", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, false);
+                SetTileSprites(hex, "Swamp", minx, miny, sameEdge, dsrtedge, voidedge, roadEdge, rvrEdge, false);
                 break;
         }
     }
@@ -973,11 +868,4 @@ public class WorldController : Singleton<WorldController>
     {
         return world.GetTileCoordinatesForWorldCoordinates(pos);
     }
-    private void OnTileChanged(Tile tile, GameObject obj)
-    {
-        SpriteMap sm = gameObject.GetComponent<SpriteMap>();
-        obj.GetComponent<SpriteRenderer>().sprite = sm.GetSprite(tile.Type.ToString().ToLower());
-        obj.GetComponent<SpriteRenderer>().sortingLayerName = "Floor";
-    }
-    private float randomizeTimer = 2f;
 }

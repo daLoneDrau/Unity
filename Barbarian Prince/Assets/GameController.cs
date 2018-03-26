@@ -20,7 +20,7 @@ public class GameController : Singleton<GameController>
         startMenu.SetActive(false);
         currentState = STATE_GAME;
         RPGTime.Instance.Init(); // start the game timer
-        ((BPInteractive)Interactive.Instance).NewHero();
+        StartCoroutine(MasterScript.Instance.E001TheAdventureBegins());
     }
     protected GameController() { } // guarantee this will be always a singleton only - can't use the constructor!
                                    // Use this for initialization

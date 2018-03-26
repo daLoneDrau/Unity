@@ -38,11 +38,6 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             }
         }
         public string Endpoint { get; set; }
-        /// <summary>
-        /// the sprite map for setting item icons.
-        /// </summary>
-        [SerializeField]
-        private SpriteMap SpriteMap;
         public IEnumerator GetEquipmentElementByCode(string elem, System.Action<int> result)
         {
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
@@ -175,11 +170,11 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
                         // sprite
                         if (node["sprite"] != null)
                         {
-                            io.Sprite = SpriteMap.GetSprite(node["sprite"].Value.ToString());
+                            io.Sprite = SpriteMap.Instance.GetSprite(node["sprite"].Value.ToString());
                         }
                         else
                         {
-                            io.Sprite = SpriteMap.GetSprite(data.ItemName);
+                            io.Sprite = SpriteMap.Instance.GetSprite(data.ItemName);
                         }
                         // script
                         string script = node["internal_script"].Value.ToString();

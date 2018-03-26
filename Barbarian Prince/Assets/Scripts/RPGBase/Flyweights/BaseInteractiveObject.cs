@@ -137,7 +137,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// the object's position.
         /// </summary>
-        //public Vector2 Position { get; set; }
+        public Vector2 Position { get; set; }
         /// <summary>
         /// the object's reference id.
         /// </summary>
