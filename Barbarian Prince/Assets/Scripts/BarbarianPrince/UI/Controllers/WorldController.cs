@@ -93,9 +93,11 @@ public class WorldController : Singleton<WorldController>
                 tileObject.transform.SetParent(tileHolder);
             }
         }
+        /*
         print("hexes loaded " + hexList.Length);
         print("world tiles dimensions - " + world.Width + "x" + world.Height);
         print("viewport dimensions - " + viewportDimensions.x + "x" + viewportDimensions.y);
+        */
         SetTileTypes();
         doonce = true;
         LoadComplete = true;
@@ -184,9 +186,9 @@ public class WorldController : Singleton<WorldController>
         XmlDocument xmldoc = new XmlDocument();
         xmldoc.LoadXml(textAsset.text);
         XmlNode root = xmldoc.SelectSingleNode("endpoints");
-        print(root.SelectSingleNode("bp_endpoint").InnerText);
+        //print(root.SelectSingleNode("bp_endpoint").InnerText);
         BPServiceClient.Instance.Endpoint = root.SelectSingleNode("bp_endpoint").InnerText;
-        print(BPServiceClient.Instance.Endpoint);
+        //print(BPServiceClient.Instance.Endpoint);
     }
     private void SetCountryTiles(Hex hex, int minx, int miny, int maxx, int maxy)
     {

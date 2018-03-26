@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.BarbarianPrince.Singletons;
+using Assets.Scripts.BarbarianPrince.UI.Controllers;
 using Assets.Scripts.RPGBase.Singletons;
 using RPGBase.Pooled;
 using RPGBase.Singletons;
@@ -19,12 +20,17 @@ public class GameController : Singleton<GameController>
         startMenu.SetActive(false);
         currentState = STATE_GAME;
         RPGTime.Instance.Init(); // start the game timer
-        ((BPInteractive)Interactive.Instance).NewPlayer();
+        ((BPInteractive)Interactive.Instance).NewHero();
     }
     protected GameController() { } // guarantee this will be always a singleton only - can't use the constructor!
                                    // Use this for initialization
-    private void Awake()
+    void Awake()
     {
+        // initialize all singletons
+        //Debug.Log(DemoController.Instance);
+        BPController.Init();
+        BPInteractive.Init();
+        BPScript.Init();
     }
     private const int STATE_LOADING = 0;
     private const int STATE_START_MENU = 1;

@@ -1,35 +1,34 @@
-﻿namespace RPGBase.Singletons
+﻿using System;
+using UnityEngine;
+
+namespace RPGBase.Singletons
 {
-    public abstract class ProjectConstants
+    public class ProjectConstants: MonoBehaviour, IProjectConstants
     {
         /// <summary>
         /// the singleton instance.
         /// </summary>
         public static ProjectConstants Instance { get; protected set; }
         /// <summary>
-        /// Creates a new instance of <see cref="ProjectConstants"/>.
-        /// </summary>
-        protected ProjectConstants() { }
-        /// <summary>
         /// Gets the index of the equipment element for damage.
         /// </summary>
         /// <returns></returns>
-        public abstract int GetDamageElementIndex();
+        public virtual int GetDamageElementIndex() { throw new NotImplementedException(); }
         /// <summary>
         /// Gets the maximum number of equipment slots.
         /// </summary>
         /// <returns></returns>
-        public abstract int GetMaxEquipped();
+        public virtual int GetMaxEquipped() { throw new NotImplementedException(); }
         /// <summary>
         /// Gets the maximum number of spells.
         /// </summary>
         /// <returns></returns>
-        public abstract int GetMaxSpells();
-        public abstract int GetNumberEquipmentElements();
+        public virtual int GetMaxSpells() { throw new NotImplementedException(); }
+        public virtual int GetNumberEquipmentElements() { throw new NotImplementedException(); }
         /// <summary>
         /// Gets the reference id of the player.
         /// </summary>
         /// <returns></returns>
-        public abstract int GetPlayer();
+        public virtual int GetPlayer() { throw new NotImplementedException(); }
     }
 }

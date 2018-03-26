@@ -37,7 +37,6 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
                 return instance;
             }
         }
-        private BPServiceClient() { print("new BPServiceClient"); }
         public string Endpoint { get; set; }
         /// <summary>
         /// the sprite map for setting item icons.
@@ -127,6 +126,7 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             {
                 downloadHandler = new DownloadHandlerBuffer()
             };
+            print(sb.ToString());
             sb.ReturnToPool();
             yield return www.Send();
             if (www.isError)

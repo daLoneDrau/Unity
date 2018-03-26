@@ -1,11 +1,15 @@
-﻿using Assets.Scripts.BarbarianPrince.Flyweights;
+﻿using Assets.Scripts.BarbarianPrince.Constants;
+using Assets.Scripts.BarbarianPrince.Flyweights;
+using Assets.Scripts.BarbarianPrince.Scriptables.Mobs;
 using RPGBase.Constants;
 using RPGBase.Flyweights;
 using RPGBase.Singletons;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts.BarbarianPrince.Singletons
 {
@@ -19,11 +23,17 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
         /// the list of <see cref="BPInteractiveObject"/>s.
         /// </summary>
         private BPInteractiveObject[] objs = new BPInteractiveObject[0];
-        public BPInteractive()
+        public BPInteractive() {
+        }
+        public static void Init()
         {
-            if (Interactive.Instance == null)
+            if (Instance == null)
             {
-                Interactive.Instance = this;
+                GameObject go = new GameObject
+                {
+                    name = "BPInteractive"
+                };
+                Instance = go.AddComponent<BPInteractive>();
             }
         }
         public override void ForceIOLeaveZone(BaseInteractiveObject io, long flags)
@@ -73,15 +83,28 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
         /// <returns><see cref="BPInteractiveObject"/></returns>
         public BPInteractiveObject NewHero()
         {
+            print("NewHero");
             BPInteractiveObject io = (BPInteractiveObject)GetNewIO();
             io.AddIOFlag(IoGlobals.IO_01_PC);
             io.PcData = new BPCharacter();
-            io.Script = new Hero();
+            io.Script = new CalArath();
+            int val = Script.Instance.SendInitScriptEvent(io);
+            StartCoroutine(BPServiceClient.Instance.GetItemByName("Bonebiter", value => EquipItemOnFreshIo(io, BPGlobals.EQUIP_SLOT_WEAPON, value)));
             //io.PcData.NewHero();
             //((FFController)ProjectConstants.getInstance()).setPlayer(io.getRefId());
             //io.setScript(new Hero(io));
-            //Script.getInstance().sendInitScriptEvent(io);
             return io;
+        }
+        private void EquipItemOnFreshIo(BPInteractiveObject src, int slot, BPInteractiveObject item)
+        {
+            if (src.HasIOFlag(IoGlobals.IO_01_PC))
+            {
+                src.PcData.SetEquippedItem(slot, item);
+            } else if (src.HasIOFlag(IoGlobals.IO_03_NPC))
+            {
+                src.NpcData.SetEquippedItem(slot, item);
+            }
+            print("item equipped");
         }
         /// <summary>
         /// Gets a new Item IO.

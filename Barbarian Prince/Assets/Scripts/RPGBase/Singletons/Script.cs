@@ -3,10 +3,11 @@ using RPGBase.Flyweights;
 using RPGBase.Constants;
 using RPGBase.Pooled;
 using System.Reflection;
+using UnityEngine;
 
 namespace RPGBase.Singletons
 {
-    public abstract class Script
+    public class Script : MonoBehaviour, IScript
     {
         private static int ANIM_TALK_ANGRY = 0;
         private static int ANIM_TALK_HAPPY = 0;
@@ -89,8 +90,8 @@ namespace RPGBase.Singletons
                 }
             }
         }
-        protected abstract void ClearAdditionalEventStacks();
-        protected abstract void ClearAdditionalEventStacksForIO(BaseInteractiveObject io);
+        public virtual void ClearAdditionalEventStacks() { throw new NotImplementedException(); }
+        public virtual void ClearAdditionalEventStacksForIO(BaseInteractiveObject io) { throw new NotImplementedException(); }
         /// <summary>
         /// Clones all local variables from the source <see cref="BaseInteractiveObject"/> to the destination <see cref="BaseInteractiveObject"/>.
         /// </summary>
@@ -131,7 +132,7 @@ namespace RPGBase.Singletons
             }
             return activeTimers;
         }
-        protected abstract void DestroyScriptTimers();
+        public virtual void DestroyScriptTimers() { throw new NotImplementedException(); }
         /// <summary>
         /// Checks to see if a scripted event is disallowed.
         /// </summary>
@@ -304,8 +305,8 @@ namespace RPGBase.Singletons
             EventStackExecute();
             stackFlow = 20;
         }
-        public abstract void EventStackInit();
-        protected abstract void ExecuteAdditionalStacks();
+        public virtual void EventStackInit() { throw new NotImplementedException(); }
+        public virtual void ExecuteAdditionalStacks() { throw new NotImplementedException(); }
         public void ForceDeath(BaseInteractiveObject io, string target)
 
         {
@@ -673,7 +674,7 @@ namespace RPGBase.Singletons
         /// </summary>
         /// <param name="name">the name of the variable</param>
         /// <returns></returns>
-        public string getGlobalStringVariableValue(string name)
+        public string GetGlobalStringVariableValue(string name)
         {
             if (gvars == null)
             {
@@ -798,18 +799,18 @@ namespace RPGBase.Singletons
         /// </summary>
         /// <param name="id">the timer's id</param>
         /// <returns></returns>
-        public abstract ScriptTimer GetScriptTimer(int id);
+        public virtual ScriptTimer GetScriptTimer(int id) { throw new NotImplementedException(); }
         /// <summary>
         /// Gets the script timers.
         /// </summary>
         /// <returns></returns>
-        protected abstract ScriptTimer[] GetScriptTimers();
+        public virtual ScriptTimer[] GetScriptTimers() { throw new NotImplementedException(); }
         /// <summary>
         /// Gets the stacked event at a specific index.
         /// </summary>
         /// <param name="index">the index</param>
         /// <returns></returns>
-        protected abstract StackedEvent GetStackedEvent(int index);
+        public virtual StackedEvent GetStackedEvent(int index) { throw new NotImplementedException(); }
         /// <summary>
         /// Gets the id of a named script assigned to a specific BaseInteractiveObject.
         /// </summary>
@@ -860,7 +861,7 @@ namespace RPGBase.Singletons
                 }
             }
         }
-        protected abstract void InitScriptTimers();
+        public virtual void InitScriptTimers() { throw new NotImplementedException(); }
         /**
          * Determines if an BaseInteractiveObject is in a specific group.
          * @param io the BaseInteractiveObject
@@ -1106,7 +1107,7 @@ namespace RPGBase.Singletons
                     {
                         SendScriptEvent((Scriptable)objIO.Script,
                                 ScriptConsts.SM_001_INIT,
-                                new Object[0],
+                                new object[0],
                                 objIO,
                                 null);
                     }
@@ -1128,7 +1129,7 @@ namespace RPGBase.Singletons
                     {
                         SendScriptEvent((Scriptable)objIO.Overscript,
                                 ScriptConsts.SM_001_INIT,
-                                new Object[0],
+                                new object[0],
                                 objIO,
                                 null);
                     }
@@ -1143,7 +1144,7 @@ namespace RPGBase.Singletons
                     {
                         SendScriptEvent((Scriptable)objIO.Script,
                                 ScriptConsts.SM_033_INITEND,
-                                new Object[0],
+                                new object[0],
                                 objIO,
                                 null);
                     }
@@ -1153,7 +1154,7 @@ namespace RPGBase.Singletons
                     {
                         SendScriptEvent((Scriptable)objIO.Overscript,
                                 ScriptConsts.SM_033_INITEND,
-                                new Object[0],
+                                new object[0],
                                 objIO,
                                 null);
                     }
@@ -1215,6 +1216,7 @@ namespace RPGBase.Singletons
         }
         protected void RunMessage(Scriptable script, int msg, BaseInteractiveObject io)
         {
+            print("RunMessage(" + script + "," + msg + "," + io.RefId);
             switch (msg)
             {
                 case ScriptConsts.SM_001_INIT:
@@ -1424,6 +1426,7 @@ namespace RPGBase.Singletons
         /// <returns></returns>
         public int SendInitScriptEvent(BaseInteractiveObject io)
         {
+            print("SendInitScriptEvent(" + io.RefId);
             if (io == null)
             {
                 return -1;
@@ -1503,7 +1506,7 @@ namespace RPGBase.Singletons
         /// <param name="parameters">the list of parameters applied, grouped in key-value pairs, for example, new Object[] {"key0", value, "key1", new int[] {0, 0}}</param>
         /// <param name="eventname">the name of the event</param>
         /// <returns></returns>
-        public int SendIOScriptEvent(BaseInteractiveObject target, int msg, Object[] parameters, string eventname)
+        public int SendIOScriptEvent(BaseInteractiveObject target, int msg, object[] parameters, string eventname)
         {
             // checks invalid BaseInteractiveObject
             if (target == null)
@@ -1579,7 +1582,7 @@ namespace RPGBase.Singletons
             // Refused further processing.
             return ScriptConsts.REFUSE;
         }
-        private int SendIOScriptEventReverse(BaseInteractiveObject io, int msg, Object[] parameters, string eventname)
+        private int SendIOScriptEventReverse(BaseInteractiveObject io, int msg, object[] parameters, string eventname)
         {
             // checks invalid BaseInteractiveObject
             if (io == null)
@@ -1650,7 +1653,7 @@ namespace RPGBase.Singletons
         /// <param name="msg">the message</param>
         /// <param name="dat">any script variables</param>
         /// <returns></returns>
-        public int SendMsgToAllIO(int msg, Object[] dat)
+        public int SendMsgToAllIO(int msg, object[] dat)
         {
             int ret = ScriptConsts.ACCEPT;
             int i = Interactive.Instance.GetMaxIORefId();
@@ -1676,8 +1679,9 @@ namespace RPGBase.Singletons
         /// <param name="io"></param>
         /// <param name="eventName"></param>
         /// <returns></returns>
-        public int SendScriptEvent(Scriptable localScript, int msg, Object[] p, BaseInteractiveObject io, string eventName)
+        public int SendScriptEvent(Scriptable localScript, int msg, object[] p, BaseInteractiveObject io, string eventName)
         {
+            print("SendScriptEvent(" + localScript + "," + msg + "," + p + "," + io.RefId + "," + eventName);
             int retVal = ScriptConsts.ACCEPT;
             bool keepGoing = true;
             if (localScript == null)
@@ -1881,7 +1885,7 @@ namespace RPGBase.Singletons
         /// </summary>
         /// <param name="name">the name of the global variable</param>
         /// <param name="value">the variable's value</param>
-        public void SetGlobalVariable(string name, Object value)
+        public void SetGlobalVariable(string name, object value)
         {
             if (gvars == null)
             {
@@ -1987,7 +1991,7 @@ namespace RPGBase.Singletons
                 }
             }
         }
-        protected abstract void SetScriptTimer(int index, ScriptTimer timer);
+        public virtual void SetScriptTimer(int index, ScriptTimer timer) { throw new NotImplementedException(); }
         /// <summary>
         /// Processes and BaseInteractiveObject's speech.
         /// </summary>
@@ -2243,7 +2247,7 @@ namespace RPGBase.Singletons
         /// <param name="msg">the script message</param>
         /// <param name="parameters">the parameters assigned to the script</param>
         /// <param name="eventname">the event name</param>
-        public void StackSendGroupScriptEvent(string group, int msg, Object[] parameters, string eventname)
+        public void StackSendGroupScriptEvent(string group, int msg, object[] parameters, string eventname)
 
         {
             int i = Interactive.Instance.GetMaxIORefId();
@@ -2267,7 +2271,7 @@ namespace RPGBase.Singletons
         /// <param name="msg">the script message</param>
         /// <param name="parameters">the parameters assigned to the script</param>
         /// <param name="eventname">the event name</param>
-        public void StackSendIOScriptEvent(BaseInteractiveObject io, int msg, Object[] parameters, string eventname)
+        public void StackSendIOScriptEvent(BaseInteractiveObject io, int msg, object[] parameters, string eventname)
         {
             for (int i = 0; i < ScriptConsts.MAX_EVENT_STACK; i++)
             {
@@ -2306,7 +2310,7 @@ namespace RPGBase.Singletons
         /// </summary>
         /// <param name="msg">the message</param>
         /// <param name="dat">the message parameters</param>
-        public void StackSendMsgToAllNPCIO(int msg, Object[] dat)
+        public void StackSendMsgToAllNPCIO(int msg, object[] dat)
         {
             int i = Interactive.Instance.GetMaxIORefId();
             for (; i >= 0; i--)
@@ -2662,7 +2666,7 @@ namespace RPGBase.Singletons
         /// Initializes all game timers.
         /// </summary>
         /// <param name="number">the maximum number of timers used. Must be at least 100.</param>
-        public void timerFirstInit(int number)
+        public void TimerFirstInit(int number)
         {
             if (number < 100)
             {

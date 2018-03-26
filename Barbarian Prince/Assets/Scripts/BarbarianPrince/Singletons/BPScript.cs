@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using RPGBase.Flyweights;
 using RPGBase.Constants;
+using UnityEngine;
 
 namespace Assets.Scripts.BarbarianPrince.Singletons
 {
@@ -18,7 +19,18 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
         /// the list of script timers.
         /// </summary>
         private ScriptTimer[] scriptTimers;
-        public BPScript()
+        public static void Init()
+        {
+            if (Instance == null)
+            {
+                GameObject go = new GameObject
+                {
+                    name = "BPScript"
+                };
+                Instance = go.AddComponent<BPScript>();
+            }
+        }
+        void Awake()
         {
             // master = ((FFInteractive)Interactive.getInstance()).getMasterScript();
             EventStackInit();
@@ -32,8 +44,8 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             SetGlobalVariable("PLAYERCASTING", 0);
             SetGlobalVariable("COMBATROUND", 0);
             SetGlobalVariable("SHUT_UP", 0);
-            // set singleton
-            Script.Instance = this;
+            // set singleton - now s
+            // Script.Instance = this;
         }
         public override void EventStackInit()
         {
@@ -49,17 +61,17 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             return scriptTimers[id];
         }
 
-        protected override void ClearAdditionalEventStacks()
+        public override void ClearAdditionalEventStacks()
         {
             throw new NotImplementedException();
         }
 
-        protected override void ClearAdditionalEventStacksForIO(BaseInteractiveObject io)
+        public override void ClearAdditionalEventStacksForIO(BaseInteractiveObject io)
         {
             throw new NotImplementedException();
         }
 
-        protected override void DestroyScriptTimers()
+        public override void DestroyScriptTimers()
         {
             if (scriptTimers != null)
             {
@@ -71,22 +83,22 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             }
         }
 
-        protected override void ExecuteAdditionalStacks()
+        public override void ExecuteAdditionalStacks()
         {
             //throw new NotImplementedException();
         }
 
-        protected override ScriptTimer[] GetScriptTimers()
+        public override ScriptTimer[] GetScriptTimers()
         {
             return scriptTimers;
         }
 
-        protected override StackedEvent GetStackedEvent(int index)
+        public override StackedEvent GetStackedEvent(int index)
         {
             return eventstack[index];
         }
 
-        protected override void InitScriptTimers()
+        public override void InitScriptTimers()
         {
             scriptTimers = new ScriptTimer[MaxTimerScript];
             for (int i = 0; i < scriptTimers.Length; i++)
@@ -95,7 +107,7 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             }
         }
 
-        protected override void SetScriptTimer(int index, ScriptTimer timer)
+        public override void SetScriptTimer(int index, ScriptTimer timer)
         {
             scriptTimers[index] = timer;
         }
