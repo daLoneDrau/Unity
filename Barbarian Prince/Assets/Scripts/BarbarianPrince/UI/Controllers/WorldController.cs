@@ -32,10 +32,6 @@ public class WorldController : Singleton<WorldController>
     private int[][] roads;
     private bool doonce = false;
     /// <summary>
-    /// flag indicating the world loading has completed.
-    /// </summary>
-    public bool LoadComplete { get; private set; }
-    /// <summary>
     /// the dimensions for the number of tiles that can fit in the viewport.
     /// </summary>
     private Vector2 viewportDimensions;
@@ -100,7 +96,7 @@ public class WorldController : Singleton<WorldController>
         */
         SetTileTypes();
         doonce = true;
-        LoadComplete = true;
+        GameController.Instance.StopLoad();
     }
     /// <summary>
     /// Centers the viewport on a specific hex.

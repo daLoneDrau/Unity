@@ -38,6 +38,7 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
         /// <returns></returns>
         public IEnumerator E001TheAdventureBegins()
         {
+            GameController.Instance.StartLoad(GameController.STATE_GAME);
             print("E001TheAdventureBegins");
             // create hero
             BPInteractiveObject io = ((BPInteractive)BPInteractive.Instance).NewHero();
@@ -68,6 +69,9 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             }
             WorldController.Instance.CenterOnHex(io.Position);
             print("center on " + io.Position);
+            GameController.Instance.StopLoad();
+            // display beginning message
+            GameController.Instance.ShowMessage("");
         }
         private void EquipItemOnFreshIo(BPInteractiveObject src, int slot, BPInteractiveObject item)
         {
