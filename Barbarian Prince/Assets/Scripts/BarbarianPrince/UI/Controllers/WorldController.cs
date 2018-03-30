@@ -25,7 +25,12 @@ public class WorldController : Singleton<WorldController>
     /// Transform to hold all our game objects, so they don't clog up the hierarchy.
     /// </summary>
     private Transform tileHolder;
+    /// <summary>
+    /// The map of tile objects used to display the game board
+    /// </summary>
     private Dictionary<string, GameObject> tileObjects;
+    private GameObject heroTile;
+    private GameObject possibleMove;
     // Use this for initialization
     private Hex[] hexList;
     private RiverCrossing[] crossings;
@@ -37,6 +42,7 @@ public class WorldController : Singleton<WorldController>
     private Vector2 viewportDimensions;
     void Awake()
     {
+        GameController.Instance.StartLoad(GameController.STATE_START_MENU);
         // init singletons
         MouseListener ml = MouseListener.Instance;
         ViewportController vc = ViewportController.Instance;
@@ -83,12 +89,21 @@ public class WorldController : Singleton<WorldController>
                 tileObject.transform.position = new Vector3(x, y, 0);
                 tileObject.AddComponent<SpriteRenderer>();
                 // set sprite initially to void
-                tileObject.GetComponent<SpriteRenderer>().sprite = gameObject.GetComponent<SpriteMap>().GetSprite("void");
+                tileObject.GetComponent<SpriteRenderer>().sprite = SpriteMap.Instance.GetSprite("void");
                 tileObject.GetComponent<SpriteRenderer>().sortingLayerName = "Floor";
                 // set new tile as child of tile holder
                 tileObject.transform.SetParent(tileHolder);
             }
         }
+        heroTile = new GameObject
+        {
+            name = "Hero"
+        };
+        heroTile.transform.position = new Vector3(-1, 0, 0);
+        heroTile.AddComponent<SpriteRenderer>();
+        heroTile.GetComponent<SpriteRenderer>().sprite = SpriteMap.Instance.GetSprite("Hero");
+        heroTile.GetComponent<SpriteRenderer>().sortingLayerName = "Objects";
+        heroTile.transform.SetParent(tileHolder);
         /*
         print("hexes loaded " + hexList.Length);
         print("world tiles dimensions - " + world.Width + "x" + world.Height);
@@ -98,26 +113,59 @@ public class WorldController : Singleton<WorldController>
         doonce = true;
         GameController.Instance.StopLoad();
     }
+    private Vector2 GetHexTilePosition(Vector2 hexPosition)
+    {
+        // find hex's bottom-left corner
+        // hexes are 4 rows high
+        int miny = 23 - (int)hexPosition.y;
+        miny *= 4;
+        if (hexPosition.x % 2 == 1)
+        {
+            miny += 2;
+        }
+        int minx = ((int)hexPosition.x - 1) * 5;
+        return new Vector2(minx, miny);
+    }
     /// <summary>
     /// Centers the viewport on a specific hex.
     /// </summary>
     /// <param name="position">the hex</param>
     public void CenterOnHex(Vector2 position)
     {
-        // find hex's bottom-left corner
-        // hexes are 4 rows high
-        int miny = 23 - (int)position.y;
-        miny *= 4;
-        if (position.x % 2 == 1)
-        {
-            miny += 2;
-        }
-        int minx = ((int)position.x - 1) * 5;
-        int maxx = minx + 5, maxy = miny + 3;
-        float midx = (float)minx+2.5f;
-        float midy = (float)miny+1.5f;
-        print("hex " + position + " goes from " + minx + "," + miny + " to " + maxx + "," + maxy + " mid at " + midx + "," + midy);
+        Vector2 hexBottomLeft = GetHexTilePosition(position);
+        float midx = (float)hexBottomLeft.x+ 2.5f;
+        float midy = (float)hexBottomLeft.y+ 1.5f;
+        print("hex " + position + " goes from " + hexBottomLeft.x + "," + hexBottomLeft.y + " to " + (hexBottomLeft.x+5) + "," + (hexBottomLeft.y+3) + " mid at " + midx + "," + midy);
         ViewportController.Instance.CenterOnPoint(new Vector2(midx,midy));
+    }
+    public void DrawHero()
+    {
+        float now = (Time.time - RPGTime.Instance.TimePaused) * 1000f;
+        // get the viewport's range.
+        Vector2 v = ViewportController.Instance.ViewportPosition;
+        int minx = Mathf.FloorToInt(v.x);
+        int miny = Mathf.FloorToInt(v.y);
+        float dx = v.x - (float)Math.Truncate(v.x);
+        float dy = v.y - (float)Math.Truncate(v.y);
+        dx *= -1;
+        dy *= -1;
+        BPInteractiveObject io = ((BPInteractive)BPInteractive.Instance).GetPlayerIO();
+        // player is in hex. find out if it's in view
+        Vector2 playerTilePosition = GetHexTilePosition(io.Position);
+        playerTilePosition += new Vector2(4, 1);
+        if (playerTilePosition.x >=minx
+            && playerTilePosition.x <= minx + viewportDimensions.x
+            && playerTilePosition.y >= miny
+            && playerTilePosition.y <= miny + viewportDimensions.y)
+        {
+            // player is visible
+            // adjust tile position based on viewport
+            heroTile.transform.position = new Vector3(playerTilePosition.x - minx + dx, playerTilePosition.y - miny + dy, 0);
+        }
+        else
+        {
+            heroTile.transform.position = new Vector3(-1, 0, 0);
+        }
     }
     /// <summary>
     /// Displays the game board.
@@ -130,7 +178,6 @@ public class WorldController : Singleton<WorldController>
         int minx = Mathf.FloorToInt(v.x);
         int miny = Mathf.FloorToInt(v.y);
         PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-        SpriteMap sm = gameObject.GetComponent<SpriteMap>();
         // iterate through tiles in viewport's range to set the onscreen sprites
         float dx = v.x - (float)Math.Truncate(v.x);
         float dy = v.y - (float)Math.Truncate(v.y);
@@ -158,16 +205,16 @@ public class WorldController : Singleton<WorldController>
                             int qrtr = (int)now % 1000;
                             if (qrtr >= 500)
                             {
-                                tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite("water_0");
+                                tileObject.GetComponent<SpriteRenderer>().sprite = SpriteMap.Instance.GetSprite("water_0");
                             }
                             else
                             {
-                                tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite("water_1");
+                                tileObject.GetComponent<SpriteRenderer>().sprite = SpriteMap.Instance.GetSprite("water_1");
                             }
                         }
                         else
                         {
-                            tileObject.GetComponent<SpriteRenderer>().sprite = sm.GetSprite(tile.Type.ToString().ToLower());
+                            tileObject.GetComponent<SpriteRenderer>().sprite = SpriteMap.Instance.GetSprite(tile.Type.ToString().ToLower());
                         }
                     }
                 }

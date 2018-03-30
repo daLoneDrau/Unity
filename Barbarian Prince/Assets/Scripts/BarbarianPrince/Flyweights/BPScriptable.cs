@@ -1,4 +1,5 @@
-﻿using RPGBase.Flyweights;
+﻿using RPGBase.Constants;
+using RPGBase.Flyweights;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,5 +9,8 @@ namespace Assets.Scripts.BarbarianPrince.Flyweights
 {
     public class BPScriptable : Scriptable
     {
-    }
+        public virtual int OnTimeChange() {
+            return ScriptConsts.ACCEPT;
+        }
+}
 }

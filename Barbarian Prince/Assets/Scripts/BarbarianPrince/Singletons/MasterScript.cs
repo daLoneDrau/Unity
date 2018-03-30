@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.BarbarianPrince.Constants;
 using Assets.Scripts.BarbarianPrince.Flyweights;
+using Assets.Scripts.BarbarianPrince.Turn;
 using RPGBase.Constants;
 using RPGBase.Singletons;
 using System;
@@ -71,12 +72,14 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             print("center on " + io.Position);
             GameController.Instance.StopLoad();
             // display beginning message
-            GameController.Instance.ShowMessage("");
+            GameController.Instance.ShowMessage("Evil events have overtaken your Northlands Kingdom. Your father, the old king, is dead - assassinated by rivals to the throne. These usurpers now hold the palace with their mercenary royal guard. You have escaped, and must collect 500 gold pieces to raise a force to smash them and retake your heritage. Furthermore, the usurpers have powerful friends overseas. If you can't return to take them out in ten weeks, their allies will arm and you will lose your kingdom forever.\n\nTo escape the mercenary and royal guard, your loyal body servant Ogab smuggled you into a merchant caravan to the southern border. Now, at dawn you roll out of the merchant wagons into a ditch, dust off your clothes, loosen your swordbelt, and get ready to start the first day of your adventure.");
+            TimeTrack.Instance.NextPhase();
         }
         private void EquipItemOnFreshIo(BPInteractiveObject src, int slot, BPInteractiveObject item)
         {
             if (src.HasIOFlag(IoGlobals.IO_01_PC))
             {
+                print(item.RefId);
                 src.PcData.SetEquippedItem(slot, item);
             }
             else if (src.HasIOFlag(IoGlobals.IO_03_NPC))

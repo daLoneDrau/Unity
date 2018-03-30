@@ -74,6 +74,7 @@ namespace Assets.Scripts.BarbarianPrince.Turn
                 NextDay();
             }
             Script.Instance.SendMsgToAllIO(BPGlobals.SM_300_TIME_CHANGE, null);
+            GameController.Instance.UpdateTimeTrack(ToUiString());
         }
         /// <summary>
         /// Advances the week by one.

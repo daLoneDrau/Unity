@@ -19,11 +19,13 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
         /// the next available id.
         /// </summary>
         private int nextId;
+        private int playerId;
         /// <summary>
         /// the list of <see cref="BPInteractiveObject"/>s.
         /// </summary>
         private BPInteractiveObject[] objs = new BPInteractiveObject[0];
-        public BPInteractive() {
+        public BPInteractive()
+        {
         }
         public static void Init()
         {
@@ -77,6 +79,10 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             }
             return io;
         }
+        public BPInteractiveObject GetPlayerIO()
+        {
+            return (BPInteractiveObject)GetIO(playerId);
+        }
         /// <summary>
         /// Gets a new Player IO.
         /// </summary>
@@ -89,6 +95,7 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
             io.PcData = new BPCharacter();
             io.Script = new CalArath();
             int val = Script.Instance.SendInitScriptEvent(io);
+            playerId = io.RefId;
             return io;
         }
         /// <summary>

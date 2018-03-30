@@ -185,6 +185,7 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
                         sb.ReturnToPool();
                         object o = Activator.CreateInstance(blob);
                         io.Script = (Scriptable)o;
+                        print("io script is " + io.Script);
                         Script.Instance.SendInitScriptEvent(io);
                     }
                 }

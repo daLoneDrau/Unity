@@ -1214,7 +1214,7 @@ namespace RPGBase.Singletons
                 }
             }
         }
-        protected void RunMessage(Scriptable script, int msg, BaseInteractiveObject io)
+        protected virtual void RunMessage(Scriptable script, int msg, BaseInteractiveObject io)
         {
             print("RunMessage(" + script + "," + msg + "," + io.RefId);
             switch (msg)
@@ -1530,28 +1530,18 @@ namespace RPGBase.Singletons
                 if (Interactive.Instance.HasIO(num))
                 {
                     // if this BaseInteractiveObject only has a Local script, send event to it
-                    BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
+                    BaseInteractiveObject hio = Interactive.Instance.GetIO(num);
                     if (hio.Overscript == null)
                     {
                         GLOB = 0;
-                        int ret = SendScriptEvent(
-                                (Scriptable)hio.Script,
-                                msg,
-                                    parameters,
-                                hio,
-                                eventname);
+                        int ret = SendScriptEvent(hio.Script, msg, parameters, hio, eventname);
                         EventSender = originalEventSender;
                         return ret;
                     }
 
                     // If this BaseInteractiveObject has a Global script send to Local (if exists)
                     // then to Global if not overridden by Local
-                    int s = SendScriptEvent(
-                            (Scriptable)hio.Overscript,
-                            msg,
-                                parameters,
-                            hio,
-                            eventname);
+                    int s = SendScriptEvent(hio.Overscript, msg, parameters, hio, eventname);
                     if (s != ScriptConsts.REFUSE)
                     {
                         EventSender = originalEventSender;
@@ -1661,7 +1651,7 @@ namespace RPGBase.Singletons
             {
                 if (Interactive.Instance.HasIO(i))
                 {
-                    BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
+                    BaseInteractiveObject io = Interactive.Instance.GetIO(i);
                     if (SendIOScriptEvent(io, msg, dat, null) == ScriptConsts.REFUSE)
                     {
                         ret = ScriptConsts.REFUSE;
@@ -1684,9 +1674,10 @@ namespace RPGBase.Singletons
             print("SendScriptEvent(" + localScript + "," + msg + "," + p + "," + io.RefId + "," + eventName);
             int retVal = ScriptConsts.ACCEPT;
             bool keepGoing = true;
+
             if (localScript == null)
             {
-                throw new RPGException(ErrorMessage.INVALID_PARAM, "script cannot be null");
+                throw new RPGException(ErrorMessage.INVALID_PARAM, "script for IO " + io.RefId + " cannot be null");
             }
             if (io != null)
             {

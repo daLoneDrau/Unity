@@ -766,7 +766,6 @@ namespace RPGBase.Flyweights
         /// <returns></returns>
         public virtual int OnInit()
         {
-            Console.WriteLine("base ONINUT");
             return ScriptConsts.ACCEPT;
         }
         /// <summary>

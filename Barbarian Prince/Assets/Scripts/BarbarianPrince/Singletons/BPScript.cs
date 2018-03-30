@@ -6,6 +6,8 @@ using System.Text;
 using RPGBase.Flyweights;
 using RPGBase.Constants;
 using UnityEngine;
+using Assets.Scripts.BarbarianPrince.Constants;
+using Assets.Scripts.BarbarianPrince.Flyweights;
 
 namespace Assets.Scripts.BarbarianPrince.Singletons
 {
@@ -106,7 +108,19 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
                 scriptTimers[i] = new ScriptTimer();
             }
         }
-
+        protected override void RunMessage(Scriptable script, int msg, BaseInteractiveObject io)
+        {
+            print("RunMessage(" + script + "," + msg + "," + io.RefId);
+            switch (msg)
+            {
+                case BPGlobals.SM_300_TIME_CHANGE:
+                    ((BPScriptable)script).OnTimeChange();
+                    break;
+                default:
+                    base.RunMessage(script, msg, io);
+                    break;
+            }
+        }
         public override void SetScriptTimer(int index, ScriptTimer timer)
         {
             scriptTimers[index] = timer;

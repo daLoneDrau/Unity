@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 2c00b39d2737c1247b826ffdd668cbfc
-timeCreated: 1521341771
+timeCreated: 1522285873
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -42,6 +42,7 @@ TextureImporter:
     21300070: farm_b
     21300072: water_0
     21300074: water_1
+    21300076: hero
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -618,6 +619,19 @@ TextureImporter:
         serializedVersion: 2
         x: 86
         y: 973
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: hero
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 956
         width: 16
         height: 16
       alignment: 6
