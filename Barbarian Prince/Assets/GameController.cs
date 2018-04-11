@@ -112,6 +112,7 @@ public class GameController : Singleton<GameController>
     /// </summary>
     private void LoadCycle()
     {
+        print("Loading");
         loadingText.transform.parent.gameObject.SetActive(true);
         float now = Time.realtimeSinceStartup * 1000;
         PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
@@ -216,6 +217,7 @@ public class GameController : Singleton<GameController>
     }
     public void StopLoad()
     {
+        print("StopLoad - go to " + nextState + " or " + lastState);
         // unpause
         RPGTime.Instance.Unpause();
         HideUI();

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 160331f3a38b4f448a2f5a2319c9f022
-timeCreated: 1522940641
+timeCreated: 1523383917
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -12,6 +12,28 @@ TextureImporter:
     21300010: druid
     21300012: amazon
     21300014: wolf
+    21300016: pegasus
+    21300018: search
+    21300020: search_dis
+    21300022: walk
+    21300024: rest
+    21300026: icons_3
+    21300028: fly_dis
+    21300030: fly
+    21300032: icons_7
+    21300034: pray_dis
+    21300036: pray
+    21300038: hire_dis
+    21300040: icons_11
+    21300042: icons_12
+    21300044: icons_13
+    21300046: lord_dis
+    21300048: lord
+    21300050: icons_16
+    21300052: talk_dis
+    21300054: talk
+    21300056: hire
+    21300058: icons_1
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -102,7 +124,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: travel
+      name: walk
       rect:
         serializedVersion: 2
         x: 0
@@ -115,7 +137,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: camp
+      name: rest
       rect:
         serializedVersion: 2
         x: 49
@@ -128,7 +150,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: barbarian
+      name: search_dis
       rect:
         serializedVersion: 2
         x: 98
@@ -141,7 +163,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: gold
+      name: icons_3
       rect:
         serializedVersion: 2
         x: 147
@@ -154,20 +176,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: food
-      rect:
-        serializedVersion: 2
-        x: 147
-        y: 191
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: druid
+      name: fly_dis
       rect:
         serializedVersion: 2
         x: 0
@@ -180,7 +189,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: amazon
+      name: fly
       rect:
         serializedVersion: 2
         x: 49
@@ -193,11 +202,193 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: wolf
+      name: search
       rect:
         serializedVersion: 2
         x: 98
         y: 159
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: icons_7
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 191
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: pray_dis
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 110
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: pray
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 110
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: hire_dis
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 110
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: icons_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 61
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: icons_12
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 61
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: icons_13
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 61
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: lord_dis
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 12
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: lord
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 12
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: icons_16
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 12
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: talk_dis
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 61
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: talk
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 12
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: hire
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 110
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: icons_1
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 110
         width: 48
         height: 48
       alignment: 0
