@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.BarbarianPrince.Constants;
+using Assets.Scripts.BarbarianPrince.UI.Controllers;
 using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System;

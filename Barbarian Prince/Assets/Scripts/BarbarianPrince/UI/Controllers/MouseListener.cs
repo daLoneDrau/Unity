@@ -25,7 +25,7 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
                 return instance;
             }
         }
-        private MouseListener() { print("new MouseListener"); }
+        public MouseListener() { print("new MouseListener"); }
         /*
         [SerializeField]
         private GameObject marker;
@@ -36,19 +36,31 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
         /// the position of the last frame mouse click in WORLD space.
         /// </summary>
         private Vector3 lastFramePosition;
-        private void Awake()
+        public void Init()
         {
             cameraHeight = 2f * Camera.main.orthographicSize;
             cameraWidth = cameraHeight * Camera.main.aspect;
         }
-        // Use this for initialization
-        void Start()
-        {
-        }
+        /// <summary>
+        /// the camera width.
+        /// </summary>
         private float cameraWidth;
+        /// <summary>
+        /// the camera height.
+        /// </summary>
         private float cameraHeight;
-        // Update is called once per frame
-        void Update()
+        /// <summary>
+        /// Updates the mouse position.  Should be called every frame, regardless of state.
+        /// </summary>
+        public void UpdateMousePosition()
+        {
+            lastFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            lastFramePosition.z = 0;
+        }
+        /// <summary>
+        /// Handles mouse input.
+        /// </summary>
+        public void HandleMouseInput()
         {
             Vector3 currMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             currMousePos.z = 0; // fix z value so camera doesn't move along z-axis
@@ -77,9 +89,13 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
             // handle screen dragging
             if (Input.GetMouseButton(2) || Input.GetMouseButton(1))
             {
-                // middle button
-                Vector3 diff = lastFramePosition - currMousePos; // get space between last position and current
-                ViewportController.Instance.DragMap(diff);
+                // dragging only valid during game play
+                if (GameController.Instance.CurrentState == GameController.STATE_GAME)
+                {
+                    // middle button
+                    Vector3 diff = lastFramePosition - currMousePos; // get space between last position and current
+                    ViewportController.Instance.DragMap(diff);
+                }
             }
             else if (Input.GetMouseButton(1))
             {
@@ -89,8 +105,10 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
             {
                 // left button down 
             }
-            lastFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            lastFramePosition.z = 0;
+        }
+        // Update is called once per frame
+        void Update()
+        {
         }
     }
 }

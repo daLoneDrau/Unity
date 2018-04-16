@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Assets.Scripts.BarbarianPrince.UI.Controllers;
 
 namespace Assets.Scripts.BarbarianPrince.Singletons
 {
@@ -39,7 +40,7 @@ namespace Assets.Scripts.BarbarianPrince.Singletons
         /// <returns></returns>
         public IEnumerator E001TheAdventureBegins()
         {
-            GameController.Instance.StartLoad(GameController.STATE_GAME);
+            GameController.Instance.StartLoad(GameController.STATE_CHOOSE_ACTION);
             print("E001TheAdventureBegins");
             // create hero
             BPInteractiveObject io = ((BPInteractive)BPInteractive.Instance).NewHero();
