@@ -285,7 +285,7 @@ namespace Assets.Scripts.BarbarianPrince.UI.Controllers
             print("Hud Menu Showing");
             // IGNORE ALL MOUSE/KEYBOARD INPUT
             // check to see if hud slide intro animation is playing or played
-            if (!AnimatorIsPlaying())
+            //if (!AnimatorIsPlaying())
             hudAnim.SetTrigger("ShowMenu");
             // if slide finished need to show menu onscreen
             // if exiting hud, slide offscreen

@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.FantasyWargaming.Globals;
 using RPGBase.Flyweights;
+using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,25 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
 {
     public class FWCharacter : IOPcData
     {
-        /** the list of attributes and their matching names and modifiers. */
+        /// <summary>
+        /// the character's <see cref="Bogey"/>s
+        /// </summary>
+        private Bogey[] bogeys = new Bogey[0];
+        /// <summary>
+        /// the character's <see cref="StarSign"/>.
+        /// </summary>
+        public StarSign Sign { get; set; }
+        /// <summary>
+        /// the character's height.
+        /// </summary>
+        public int Height { get; set; }
+        /// <summary>
+        /// the character's weight.
+        /// </summary>
+        public int Weight { get; set; }
+        /// <summary>
+        /// the list of attributes and their matching names and modifiers.
+        /// </summary>
         private static object[][] attributeMap = new object[][] {
             new object[] { "PHY", "Physique", FWGlobals.EQUIP_ELEMENT_PHY },
             new object[] { "AGI", "Agility", FWGlobals.EQUIP_ELEMENT_AGI },
@@ -23,13 +42,34 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             new object[] { "LUS", "Lust", FWGlobals.EQUIP_ELEMENT_LUS },
             new object[] { "FTH", "Faith", FWGlobals.EQUIP_ELEMENT_FTH },
             new object[] { "PIE", "Piety", FWGlobals.EQUIP_ELEMENT_PIE },
-            new object[] { "MAN", "Mana", FWGlobals.EQUIP_ELEMENT_MAN }
+            new object[] { "MAN", "Mana", FWGlobals.EQUIP_ELEMENT_MAN },
+            new object[] { "SOC", "Social Class", FWGlobals.EQUIP_ELEMENT_SOC },
+            new object[] { "LEA", "Leadership", FWGlobals.EQUIP_ELEMENT_LEA }
         };
+        /// <summary>
+        /// Gives the character a <see cref="Bogey"/>
+        /// </summary>
+        /// <param name="b">the bogey</param>
+        public void AddBogey(Bogey b)
+        {
+            bogeys = ArrayUtilities.Instance.ExtendArray(b, bogeys);
+        }
+        protected override void ApplyRulesModifiers()
+        {
+            // apply modifiers for Bogeys
+            for (int i = bogeys.Length - 1; i >= 0; i--)
+            {
+                bogeys[i].Apply(this);
+            }
+        }
+        protected override void ApplyRulesPercentModifiers()
+        {
+
+        }
         public override bool CalculateBackstab()
         {
             throw new NotImplementedException();
         }
-
         public override bool CalculateCriticalHit()
         {
             throw new NotImplementedException();
@@ -49,7 +89,24 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             return GetFullAttributeScore("MHP");
         }
-
+        /// <summary>
+        /// Determines if the character has a specific <see cref="Bogey"/>.
+        /// </summary>
+        /// <param name="b">the bogey being checked</param>
+        /// <returns>true if the character has the bogey; false otherwise</returns>
+        public bool HasBogey(Bogey b)
+        {
+            bool has = false;
+            for (int i = bogeys.Length - 1; i >= 0; i--)
+            {
+                if (bogeys[i].Val == b.Val)
+                {
+                    has = true;
+                    break;
+                }
+            }
+            return has;
+        }
         public override void RecreatePlayerMesh()
         {
             throw new NotImplementedException();
@@ -60,137 +117,6 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             throw new NotImplementedException();
         }
 
-        protected override void ApplyRulesModifiers()
-        {
-            /*
-            int val = (int)GetBaseAttributeScore("STR") + (int)GetAttributeModifier("STR");
-            if (val <= 8)
-            {
-                AdjustAttributeModifier("HIT", -1);
-                AdjustAttributeModifier("DMG", -1);
-            }
-            else if (val >= 13 && val <= 15)
-            {
-                AdjustAttributeModifier("HIT", 1);
-                AdjustAttributeModifier("DMG", 1);
-            }
-            else if (val >= 16 && val <= 17)
-            {
-                AdjustAttributeModifier("HIT", 2);
-                AdjustAttributeModifier("DMG", 2);
-            }
-            else if (val >= 18)
-            {
-                AdjustAttributeModifier("HIT", 3);
-                AdjustAttributeModifier("DMG", 3);
-            }
-
-            val = (int)GetBaseAttributeScore("DEX") + (int)GetAttributeModifier("DEX");
-            if (val <= 8)
-            {
-                AdjustAttributeModifier("MSS", -1);
-                AdjustAttributeModifier("ACM", -1);
-            }
-            else if (val >= 13 && val <= 15)
-            {
-                AdjustAttributeModifier("MSS", 1);
-                AdjustAttributeModifier("ACM", 1);
-            }
-            else if (val >= 16 && val <= 17)
-            {
-                AdjustAttributeModifier("MSS", 2);
-                AdjustAttributeModifier("ACM", 2);
-            }
-            else if (val >= 18)
-            {
-                AdjustAttributeModifier("MSS", 3);
-                AdjustAttributeModifier("ACM", 3);
-            }
-
-            val = (int)GetBaseAttributeScore("CON") + (int)GetAttributeModifier("CON");
-            if (val <= 8)
-            {
-                AdjustAttributeModifier("HPB", -1);
-            }
-            else if (val >= 13 && val <= 15)
-            {
-                AdjustAttributeModifier("HPB", 1);
-            }
-            else if (val >= 16 && val <= 17)
-            {
-                AdjustAttributeModifier("HPB", 2);
-            }
-            else if (val >= 18)
-            {
-                AdjustAttributeModifier("HPB", 3);
-            }
-
-            val = (int)GetBaseAttributeScore("INT") + (int)GetAttributeModifier("INT");
-            if (val <= 8)
-            {
-                AdjustAttributeModifier("LAN", 0f);
-            }
-            else if (val >= 9 && val <= 12)
-            {
-                AdjustAttributeModifier("LAN", .1f);
-            }
-            else if (val >= 13 && val <= 15)
-            {
-                AdjustAttributeModifier("LAN", .25f);
-            }
-            else if (val >= 16 && val <= 17)
-            {
-                AdjustAttributeModifier("LAN", .50f);
-            }
-            else if (val >= 18)
-            {
-                AdjustAttributeModifier("LAN", .75f);
-            }
-
-            val = (int)GetBaseAttributeScore("CHA") + (int)GetAttributeModifier("CHA");
-            if (val >= 3 && val <= 4)
-            {
-                AdjustAttributeModifier("CRM", .1f);
-                AdjustAttributeModifier("HIR", 1);
-            }
-            else if (val >= 5 && val <= 6)
-            {
-                AdjustAttributeModifier("CRM", .2f);
-                AdjustAttributeModifier("HIR", 2);
-            }
-            else if (val >= 7 && val <= 8)
-            {
-                AdjustAttributeModifier("CRM", .3f);
-                AdjustAttributeModifier("HIR", 3);
-            }
-            else if (val >= 9 && val <= 12)
-            {
-                AdjustAttributeModifier("CRM", .4f);
-                AdjustAttributeModifier("HIR", 4);
-            }
-            else if (val >= 13 && val <= 15)
-            {
-                AdjustAttributeModifier("CRM", .5f);
-                AdjustAttributeModifier("HIR", 5);
-            }
-            else if (val >= 16 && val <= 17)
-            {
-                AdjustAttributeModifier("CRM", .6f);
-                AdjustAttributeModifier("HIR", 6);
-            }
-            else if (val >= 18)
-            {
-                AdjustAttributeModifier("CRM", .75f);
-                AdjustAttributeModifier("HIR", 7);
-            }
-            AdjustAttributeModifier("MHP", GetAttributeModifier("HPB"));
-            AdjustAttributeModifier("AC", GetAttributeModifier("ACM"));
-            */
-        }
-        protected override void ApplyRulesPercentModifiers()
-        {
-
-        }
         protected override object[][] GetAttributeMap()
         {
             return attributeMap;
@@ -203,23 +129,44 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             return "HP";
         }
-        /// <summary>
-        /// Rolls new statistics for the Hero.
-        /// </summary>
-        public void NewHeroStepOne()
+        private string ToEnglishLength(int val)
         {
-            /*
-            SetBaseAttributeScore("STR", Diceroller.Instance.RollXdY(3, 6));
-            SetBaseAttributeScore("DEX", Diceroller.Instance.RollXdY(3, 6));
-            SetBaseAttributeScore("CON", Diceroller.Instance.RollXdY(3, 6));
-            SetBaseAttributeScore("INT", Diceroller.Instance.RollXdY(3, 6));
-            SetBaseAttributeScore("WIS", Diceroller.Instance.RollXdY(3, 6));
-            SetBaseAttributeScore("CHA", Diceroller.Instance.RollXdY(3, 6));
-            SetBaseAttributeScore("AC", CryptEquipGlobals.UNARMOURED_AC);
-            SetBaseAttributeScore("LUK", Diceroller.Instance.RolldXPlusY(6, 6));
-            SetBaseAttributeScore("SKL", 15);
-            SetBaseAttributeScore("SAN", GetBaseAttributeScore("WIS"));
-            */
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            string s = sb.ToString();
+            sb.ReturnToPool();
+            return s;
+        }
+        public string ToCharSheetString()
+        {
+            ComputeFullStats();
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append("Astrological Sign: ");
+            sb.Append(Sign);
+            sb.Append("\n");
+            sb.Append("Ability Scores\n");
+            sb.Append("--------------\n");
+            sb.Append("Physique:     \t");
+            sb.Append((int)GetFullAttributeScore("PHY"));
+            sb.Append("\tHeight: ");
+            sb.Append(Height);
+            sb.Append("\n");
+            sb.Append("Agility:      \t");
+            sb.Append((int)GetFullAttributeScore("AGI"));
+            sb.Append("\tWeight: ");
+            sb.Append(Weight);
+            sb.Append("\n");
+            sb.Append("Endurance:    \t");
+            sb.Append((int)GetFullAttributeScore("END"));
+            sb.Append("\n\n");
+            sb.Append("Intelligence: \t");
+            sb.Append((int)GetFullAttributeScore("INT"));
+            sb.Append("\n");
+            sb.Append("Faith:        \t");
+            sb.Append((int)GetFullAttributeScore("FTH"));
+            sb.Append("\n\n");
+            string s = sb.ToString();
+            sb.ReturnToPool();
+            return s;
         }
     }
 }

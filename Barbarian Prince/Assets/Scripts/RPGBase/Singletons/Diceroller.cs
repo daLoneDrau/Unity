@@ -53,6 +53,12 @@ namespace RPGBase.Singletons
             Check();
             return array[Math.Abs(random.Next() % array.Length)];
         }
+        public T GetRandomIndex<T>()
+        {
+            Check();
+            var v = Enum.GetValues(typeof(T));
+            return (T)v.GetValue(Math.Abs(random.Next() % v.Length));
+        }
         public int GetRandomIndex(int[] array)
         {
             Check();

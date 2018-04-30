@@ -58,5 +58,15 @@ namespace Assets.Scripts.FantasyWargaming.Globals
         /// Selfishness.
         /// </summary>
         public const int EQUIP_ELEMENT_SEL = 11;
+        /// <summary>
+        /// Social Class.
+        /// </summary>
+        public const int EQUIP_ELEMENT_SOC = 12;
+        /// <summary>
+        /// Leadership.
+        /// </summary>
+        public const int EQUIP_ELEMENT_LEA = 13;
+        public const int MAX_EQUIPPED=1;
+        public const int NUM_ELEMENTS=14;
     }
 }
