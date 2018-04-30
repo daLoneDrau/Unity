@@ -48,6 +48,20 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             // set height and weight
             pc.Height = 55 + (int)pc.GetFullAttributeScore("PHY");
             pc.Weight = 50 + 10 * (int)pc.GetFullAttributeScore("END");
+            // determine social class
+            int roll = Diceroller.Instance.RolldX(100);
+            if (roll <= 50)
+            {
+                pc.SocialGroup = 0;
+            }
+            else if (roll >= 51 && roll <= 85)
+            {
+                pc.SocialGroup = 1;
+            }
+            else if (roll >= 86 && roll <= 100)
+            {
+                pc.SocialGroup = 3;
+            }
             print(pc.ToCharSheetString());
         }
         private void SetBogey(FWCharacter pc)

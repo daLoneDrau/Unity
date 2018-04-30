@@ -16,13 +16,17 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         /// </summary>
         private Bogey[] bogeys = new Bogey[0];
         /// <summary>
+        /// the character's height.
+        /// </summary>
+        public int Height { get; set; }
+        /// <summary>
         /// the character's <see cref="StarSign"/>.
         /// </summary>
         public StarSign Sign { get; set; }
         /// <summary>
-        /// the character's height.
+        /// The character's family's social group.
         /// </summary>
-        public int Height { get; set; }
+        public int SocialGroup { get; set; }
         /// <summary>
         /// the character's weight.
         /// </summary>
@@ -54,6 +58,10 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             bogeys = ArrayUtilities.Instance.ExtendArray(b, bogeys);
         }
+        protected override void AdjustMana(float dmg)
+        {
+            throw new NotImplementedException();
+        }
         protected override void ApplyRulesModifiers()
         {
             // apply modifiers for Bogeys
@@ -61,6 +69,9 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             {
                 bogeys[i].Apply(this);
             }
+            int lea = (int)(GetFullAttributeScore("CHA") * 3 + GetFullAttributeScore("PHY") + GetFullAttributeScore("INT") + GetFullAttributeScore("BRV"));
+            lea /= 10;
+            AdjustAttributeModifier("LEA", lea);
         }
         protected override void ApplyRulesPercentModifiers()
         {
@@ -112,10 +123,6 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             throw new NotImplementedException();
         }
 
-        protected override void AdjustMana(float dmg)
-        {
-            throw new NotImplementedException();
-        }
 
         protected override object[][] GetAttributeMap()
         {
@@ -129,13 +136,6 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             return "HP";
         }
-        private string ToEnglishLength(int val)
-        {
-            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-            string s = sb.ToString();
-            sb.ReturnToPool();
-            return s;
-        }
         public string ToCharSheetString()
         {
             ComputeFullStats();
@@ -148,7 +148,7 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             sb.Append("Physique:     \t");
             sb.Append((int)GetFullAttributeScore("PHY"));
             sb.Append("\tHeight: ");
-            sb.Append(Height);
+            sb.Append(ToEnglishLength(Height));
             sb.Append("\n");
             sb.Append("Agility:      \t");
             sb.Append((int)GetFullAttributeScore("AGI"));
@@ -164,6 +164,185 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             sb.Append("Faith:        \t");
             sb.Append((int)GetFullAttributeScore("FTH"));
             sb.Append("\n\n");
+            sb.Append("Charisma:     \t");
+            sb.Append((int)GetFullAttributeScore("CHA"));
+            sb.Append("\tLeadership: ");
+            sb.Append((int)GetFullAttributeScore("LEA"));
+            sb.Append("\n");
+            sb.Append("Greed:        \t");
+            sb.Append((int)GetFullAttributeScore("GRE"));
+            sb.Append("\n");
+            sb.Append("Selfishness:  \t");
+            sb.Append((int)GetFullAttributeScore("SEL"));
+            sb.Append("\n");
+            sb.Append("Lust:         \t");
+            sb.Append((int)GetFullAttributeScore("LUS"));
+            sb.Append("\n");
+            sb.Append("Bravery:      \t");
+            sb.Append((int)GetFullAttributeScore("BRV"));
+            sb.Append("\n");
+            sb.Append("Social Class: \t");
+            sb.Append((int)GetFullAttributeScore("SOC"));
+            sb.Append("\tFather: ");
+            sb.Append(ToSocialString());
+            string s = sb.ToString();
+            sb.ReturnToPool();
+            return s;
+        }
+        private string ToSocialString()
+        {
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            switch (SocialGroup)
+            {
+                case 0:
+                    switch ((int)GetBaseAttributeScore("SOC"))
+                    {
+                        case 3:
+                        case 4:
+                            sb.Append("Serf");
+                            break;
+                        case 5:
+                            sb.Append("Outlaw");
+                            break;
+                        case 6:
+                            sb.Append("Bordar");
+                            break;
+                        case 7:
+                            sb.Append("Cottar");
+                            break;
+                        case 8:
+                            sb.Append("Poor Villein");
+                            break;
+                        case 9:
+                            sb.Append("Wealthy Villein");
+                            break;
+                        case 10:
+                            sb.Append("Sokeman");
+                            break;
+                        case 11:
+                            sb.Append("Poor Freeman");
+                            break;
+                        case 12:
+                            sb.Append("Wealthy Freeman");
+                            break;
+                        case 13:
+                        case 14:
+                        case 15:
+                        case 16:
+                        case 17:
+                        case 18:
+                            sb.Append("Reeve");
+                            break;
+                    }
+                    break;
+                case 1:
+                    switch ((int)GetBaseAttributeScore("SOC"))
+                    {
+                        case 3:
+                        case 4:
+                        case 5:
+                            sb.Append("Escaped Serf");
+                            break;
+                        case 6:
+                            sb.Append("Beggar");
+                            break;
+                        case 7:
+                            sb.Append("Thief");
+                            break;
+                        case 8:
+                            sb.Append("Unemployed Laborer");
+                            break;
+                        case 9:
+                            sb.Append("Servant");
+                            break;
+                        case 10:
+                            sb.Append("Employed Laborer");
+                            break;
+                        case 11:
+                            sb.Append("Employed Skilled Laborer");
+                            break;
+                        case 12:
+                        case 13:
+                            sb.Append("Guild Journeyman");
+                            break;
+                        case 14:
+                            sb.Append("Guild Officer");
+                            break;
+                        case 15:
+                            sb.Append("Guildmaster");
+                            break;
+                        case 16:
+                            sb.Append("Mayor");
+                            break;
+                        case 17:
+                        case 18:
+                            sb.Append("Lord Mayor");
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch ((int)GetBaseAttributeScore("SOC"))
+                    {
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                            sb.Append("Outlaw");
+                            break;
+                        case 8:
+                        case 9:
+                            sb.Append("Conscript Peasant");
+                            break;
+                        case 10:
+                            sb.Append("Mercenary Archer");
+                            break;
+                        case 11:
+                            sb.Append("Man-at-arms");
+                            break;
+                        case 12:
+                            sb.Append("Mercenary Sergeant");
+                            break;
+                        case 13:
+                            sb.Append("Mercenary Captain");
+                            break;
+                        case 14:
+                            sb.Append("Landless Knight");
+                            break;
+                        case 15:
+                            sb.Append("Knight-errant");
+                            break;
+                        case 16:
+                            sb.Append("Poor Baron");
+                            break;
+                        case 17:
+                            sb.Append("Wealthy Baron");
+                            break;
+                        case 18:
+                            sb.Append("Earl");
+                            break;
+                    }
+                    break;
+            }
+            string s = sb.ToString();
+            sb.ReturnToPool();
+            return s;
+        }
+        /// <summary>
+        /// Converts a length to english feet and inches.
+        /// </summary>
+        /// <param name="val">the value</param>
+        /// <returns></returns>
+        private string ToEnglishLength(int val)
+        {
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append(Height / 12);
+            sb.Append("' ");
+            if (Height % 12 > 0)
+            {
+                sb.Append(Height % 12);
+                sb.Append("\"");
+            }
             string s = sb.ToString();
             sb.ReturnToPool();
             return s;
