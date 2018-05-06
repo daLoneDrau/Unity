@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.FantasyWargaming.Globals;
+using RPGBase.Constants;
 using RPGBase.Flyweights;
 using RPGBase.Pooled;
 using RPGBase.Singletons;
@@ -90,7 +91,10 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             throw new NotImplementedException();
         }
-
+        public void ClearBogeys()
+        {
+            bogeys = new Bogey[0];
+        }
         public override float GetFullDamage()
         {
             throw new NotImplementedException();
@@ -122,8 +126,6 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             throw new NotImplementedException();
         }
-
-
         protected override object[][] GetAttributeMap()
         {
             return attributeMap;
@@ -140,6 +142,8 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             ComputeFullStats();
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append(Name);
+            sb.Append("\n");
             sb.Append("Astrological Sign: ");
             sb.Append(Sign);
             sb.Append("\n");
@@ -185,6 +189,67 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             sb.Append((int)GetFullAttributeScore("SOC"));
             sb.Append("\tFather: ");
             sb.Append(ToSocialString());
+            sb.Append("\n");
+            if (bogeys.Length > 0)
+            {
+                sb.Append("Miscellaneous Traits:\t");
+                for (int i = bogeys.Length - 1; i >= 0; i--)
+                {
+                    if (i < bogeys.Length - 1)
+                    {
+                        sb.Append("\t\t");
+                    }
+                    sb.Append(bogeys[i].Title);
+                    if (i > 0)
+                    {
+                        sb.Append("\n");
+                    }
+                }
+            }
+            sb.Append("\n");
+            sb.Append("Weapon:");
+            int wpnIoId = GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+            if (wpnIoId >= 0)
+            {
+                BaseInteractiveObject io = Interactive.Instance.GetIO(wpnIoId);
+                FWItemData item = (FWItemData)io.ItemData;
+                sb.Append(item.ItemName);
+                sb.Append("\t\tDamage:\t");
+                switch (item.Dice)
+                {
+                    case Dice.ONE_D10:
+                        sb.Append("D10");
+                        break;
+                    case Dice.ONE_D12:
+                        sb.Append("D12");
+                        break;
+                    case Dice.ONE_D2:
+                        sb.Append("D2");
+                        break;
+                    case Dice.ONE_D20:
+                        sb.Append("D20");
+                        break;
+                    case Dice.ONE_D3:
+                        sb.Append("D3");
+                        break;
+                    case Dice.ONE_D4:
+                        sb.Append("D4");
+                        break;
+                    case Dice.ONE_D6:
+                        sb.Append("D6");
+                        break;
+                    case Dice.ONE_D8:
+                        sb.Append("D8");
+                        break;
+                }
+                if (item.DmgModifier > 0)
+                {
+                    sb.Append(" + ");
+                    sb.Append(item.DmgModifier);
+                }
+                sb.Append("\tRange:\t");
+                sb.Append(this.ToEnglishLength((int)(item.Range * 12f)));
+            }
             string s = sb.ToString();
             sb.ReturnToPool();
             return s;
@@ -234,6 +299,7 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
                             sb.Append("Reeve");
                             break;
                     }
+                    sb.Append(" (Rural Areas)");
                     break;
                 case 1:
                     switch ((int)GetBaseAttributeScore("SOC"))
@@ -279,6 +345,7 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
                             sb.Append("Lord Mayor");
                             break;
                     }
+                    sb.Append(" (Townsman)");
                     break;
                 case 3:
                     switch ((int)GetBaseAttributeScore("SOC"))
@@ -322,6 +389,7 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
                             sb.Append("Earl");
                             break;
                     }
+                    sb.Append(" (Chivalric)");
                     break;
             }
             string s = sb.ToString();

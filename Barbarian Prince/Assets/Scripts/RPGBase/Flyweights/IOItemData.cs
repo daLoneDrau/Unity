@@ -315,7 +315,7 @@ namespace RPGBase.Flyweights
          * @throws PooledException if an error occurs
          * @ if an error occurs
          */
-        public void Equip(BaseInteractiveObject target)
+        public virtual void Equip(BaseInteractiveObject target)
         {
             if (Io == null)
             {
@@ -412,13 +412,12 @@ namespace RPGBase.Flyweights
                 Equipitem = null;
             }
         }
-        /**
-         * Sets the item's object type.
-         * @param flag the type flag
-         * @param added if <tt>true</tt>, the type is set; otherwise it is removed
-         * @ if an error occurs
-         */
-        public void SetObjectType(int flag, bool added)
+        /// <summary>
+        /// Sets the item's object type.
+        /// </summary>
+        /// <param name="flag">the type flag</param>
+        /// <param name="added">if <tt>true</tt>, the type is set; otherwise it is removed</param>
+        public void SetObjectType(int flag, bool added = true)
         {
             if (added)
             {

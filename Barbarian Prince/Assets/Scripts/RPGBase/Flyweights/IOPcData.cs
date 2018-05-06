@@ -62,7 +62,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// the <see cref="IoPcData"/>'s name.
         /// </summary>
-        private string Name
+        public string Name
         {
             get { return name; }
             set

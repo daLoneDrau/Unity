@@ -1,22 +1,71 @@
 ﻿using Assets.Scripts.FantasyWargaming.Flyweights;
 using Assets.Scripts.FantasyWargaming.Globals;
+using Assets.Scripts.FantasyWargaming.Scriptables.Items;
 using RPGBase.Singletons;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 namespace Assets.Scripts.FantasyWargaming.Singletons
 {
     public class CharacterCreator : MonoBehaviour
     {
         [SerializeField]
-        private FWInteractiveObject io;
+        private FWInteractiveObject io0;
+        private FWInteractiveObject io1;
         // Use this for initialization
         void Start()
         {
             FWController.Init();
             FWInteractive.Init();
-            io = ((FWInteractive)Interactive.Instance).NewHero();
-            CreateCharacter();
+            FWScript.Init();
+            io0 = ((FWInteractive)Interactive.Instance).NewHero();
+            io1 = ((FWInteractive)Interactive.Instance).NewHero();
+            CreateCharacter(io0);
+            CreateCharacter(io1);
+            FWInteractiveObject wpnIO = ((FWInteractive)Interactive.Instance).NewItem(new Longspear());
+            wpnIO.ItemData.Equip(io0);
+            wpnIO = ((FWInteractive)Interactive.Instance).NewItem(new Longspear());
+            wpnIO.ItemData.Equip(io1);
+            text0.text = ((FWCharacter)io0.PcData).ToCharSheetString();
+            text1.text = ((FWCharacter)io1.PcData).ToCharSheetString();
+            // put them in combat
+            Combat();
+        }
+        [SerializeField]
+        private Text text0;
+        [SerializeField]
+        private Text text1;
+        void Combat()
+        {
+            FWCharacter pc0 = (FWCharacter)io0.PcData;
+            FWCharacter pc1 = (FWCharacter)io1.PcData;
+            bool combatIsOver = false;
+            while (!combatIsOver)
+            {
+                // go through each phase
+                // PRE-COMBAT
+                // 1. check morale
+                Script.Instance.SendIOScriptEvent(io0, FWGlobals.SM_300_MORALE_CHECK, null, null);
+                Script.Instance.SendIOScriptEvent(io1, FWGlobals.SM_300_MORALE_CHECK, null, null);
+                // 2. control check for berserk
+                Script.Instance.SendIOScriptEvent(io0, FWGlobals.SM_301_BERSERK_CHECK, null, null);
+                Script.Instance.SendIOScriptEvent(io1, FWGlobals.SM_301_BERSERK_CHECK, null, null);
+                // 3. choose actions
+                // 4. missile weapon engaged
+                // 5. ready spells and instant spells engaged
+
+                // COMBAT
+                // 1. characters with longer weapons or AGI GTE 4+ opponent attach first
+                // 2. opponents counterattack unless killed or END LTE 1/2
+                // 3. simultaneous flurry of blows
+
+                // POST-COMBAT
+                // 1. check morale
+                // 2. go back to combat phase
+                break;
+            }
         }
         // Update is called once per frame
         void Update()
@@ -26,43 +75,58 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
         /********************************
          * Character Creation procedure *
          *******************************/
-        private void CreateCharacter()
+        private void CreateCharacter(FWInteractiveObject io)
         {
             FWCharacter pc = (FWCharacter)io.PcData;
-            int valid = 0;
+            int valid = 0, rc = 0;
             do
             {
-                print("looping");
-                // get star sign
-                pc.Sign = Diceroller.Instance.GetRandomIndex<StarSign>();
-                // roll initial values
-                RollScores(pc);
-                // adjust base scores based on star sign
-                ApplySign(pc);
-                // assign bogeys
-                SetBogey(pc);
-                // validate
-                valid = Validate(pc);
-            }
-            while (valid == 0);
-            // set height and weight
-            pc.Height = 55 + (int)pc.GetFullAttributeScore("PHY");
-            pc.Weight = 50 + 10 * (int)pc.GetFullAttributeScore("END");
-            // determine social class
-            int roll = Diceroller.Instance.RolldX(100);
-            if (roll <= 50)
+                do
+                {
+                    pc.ClearBogeys();
+                    // get star sign
+                    pc.Sign = Diceroller.Instance.GetRandomIndex<StarSign>();
+                    // roll initial values
+                    RollScores(pc);
+                    // adjust base scores based on star sign
+                    ApplySign(pc);
+                    // assign bogeys
+                    SetBogey(pc);
+                    // validate
+                    valid = Validate(pc);
+                }
+                while (valid == 0);
+                // set height and weight
+                pc.Height = 55 + (int)pc.GetFullAttributeScore("PHY");
+                pc.Weight = 50 + 10 * (int)pc.GetFullAttributeScore("END");
+                // determine social class
+                int roll = Diceroller.Instance.RolldX(100);
+                if (roll <= 50)
+                {
+                    pc.SocialGroup = 0;
+                }
+                else if (roll >= 51 && roll <= 85)
+                {
+                    pc.SocialGroup = 1;
+                }
+                else if (roll >= 86 && roll <= 100)
+                {
+                    pc.SocialGroup = 3;
+                }
+                rc = GetRecommendedClass(pc);
+            } while (rc != 1);
+            switch (rc)
             {
-                pc.SocialGroup = 0;
+                case 1:
+                    print("Recommended Class: Fighter");
+                    break;
+                case 2:
+                    print("Recommended Class: Mage");
+                    break;
+                case 3:
+                    print("Recommended Class: Cleric");
+                    break;
             }
-            else if (roll >= 51 && roll <= 85)
-            {
-                pc.SocialGroup = 1;
-            }
-            else if (roll >= 86 && roll <= 100)
-            {
-                pc.SocialGroup = 3;
-            }
-            print(pc.ToCharSheetString());
         }
         private void SetBogey(FWCharacter pc)
         {
@@ -71,7 +135,8 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                 case 1:
                 case 2:
                     Bogey b = GetRandomBogey();
-                    if (b != null)
+                    if (b != null
+                        && !pc.HasBogey(b))
                     {
                         pc.AddBogey(b);
                     }
@@ -183,6 +248,28 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     break;
             }
             return o;
+        }
+        private int GetRecommendedClass(FWCharacter pc)
+        {
+            int val = 0, fVal = 0, mVal = 0, cVal = 0;
+            int minPrime = 13;
+            fVal = (int)(pc.GetFullAttributeScore("PHY") + pc.GetFullAttributeScore("AGI") + pc.GetFullAttributeScore("END") + pc.GetFullAttributeScore("BRV")) - (minPrime * 4);
+            mVal = (int)(pc.GetFullAttributeScore("INT") + pc.GetFullAttributeScore("FTH")) - (minPrime * 2);
+            cVal = (int)(pc.GetFullAttributeScore("FTH") + pc.GetFullAttributeScore("PIE")) - (minPrime * 2);
+            int max = Mathf.Max(fVal, Mathf.Max(mVal, cVal));
+            if (max == fVal)
+            {
+                val = 1;
+            }
+            if (max == mVal)
+            {
+                val = 2;
+            }
+            if (max == cVal)
+            {
+                val = 3;
+            }
+            return val;
         }
         private int Validate(FWCharacter pc)
         {

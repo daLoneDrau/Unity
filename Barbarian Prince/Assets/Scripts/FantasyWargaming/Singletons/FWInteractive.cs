@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.FantasyWargaming.Flyweights;
+using Assets.Scripts.FantasyWargaming.Scriptables.Mobs;
 using RPGBase.Constants;
 using RPGBase.Flyweights;
 using RPGBase.Singletons;
@@ -91,8 +92,8 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             FWInteractiveObject io = (FWInteractiveObject)GetNewIO();
             io.AddIOFlag(IoGlobals.IO_01_PC);
             io.PcData = new FWCharacter();
-            //io.Script = new CalArath();
-            //int val = Script.Instance.SendInitScriptEvent(io);
+            io.Script = new HeroBase();
+            int val = Script.Instance.SendInitScriptEvent(io);
             playerId = io.RefId;
             return io;
         }
@@ -105,6 +106,15 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             FWInteractiveObject io = (FWInteractiveObject)GetNewIO();
             io.AddIOFlag(IoGlobals.IO_02_ITEM);
             io.ItemData = new FWItemData();
+            return io;
+        }
+        public FWInteractiveObject NewItem(FWScriptable script)
+        {
+            FWInteractiveObject io = (FWInteractiveObject)GetNewIO();
+            io.AddIOFlag(IoGlobals.IO_02_ITEM);
+            io.ItemData = new FWItemData();
+            io.Script = script;
+            Script.Instance.SendInitScriptEvent(io);
             return io;
         }
     }
