@@ -1,6 +1,8 @@
 ﻿using Assets.Scripts.FantasyWargaming.Flyweights;
 using Assets.Scripts.FantasyWargaming.Globals;
 using Assets.Scripts.FantasyWargaming.Scriptables.Items;
+using Assets.Scripts.FantasyWargaming.Scriptables.Mobs;
+using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +13,11 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
 {
     public class CharacterCreator : MonoBehaviour
     {
+        private PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+        [SerializeField]
+        private Text text0;
+        [SerializeField]
+        private Text text1;
         [SerializeField]
         private FWInteractiveObject io0;
         private FWInteractiveObject io1;
@@ -21,22 +28,57 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             FWInteractive.Init();
             FWScript.Init();
             io0 = ((FWInteractive)Interactive.Instance).NewHero();
+            io0.PcData.Name = "Gotzstaf";
             io1 = ((FWInteractive)Interactive.Instance).NewHero();
+            io1.PcData.Name = "Tuste";
             CreateCharacter(io0);
             CreateCharacter(io1);
             FWInteractiveObject wpnIO = ((FWInteractive)Interactive.Instance).NewItem(new Longspear());
             wpnIO.ItemData.Equip(io0);
             wpnIO = ((FWInteractive)Interactive.Instance).NewItem(new Longspear());
             wpnIO.ItemData.Equip(io1);
-            text0.text = ((FWCharacter)io0.PcData).ToCharSheetString();
-            text1.text = ((FWCharacter)io1.PcData).ToCharSheetString();
+            sb.Append(((FWCharacter)io0.PcData).ToCharSheetString());
+            sb.Append("\n----------------------------\n");
+            sb.Append(((FWCharacter)io1.PcData).ToCharSheetString());
+            text0.text = sb.ToString();
+            sb.Length = 0;
             // put them in combat
             Combat();
         }
-        [SerializeField]
-        private Text text0;
-        [SerializeField]
-        private Text text1;
+        private void GetMoraleString(FWInteractiveObject io)
+        {
+            sb.Append(io.PcData.Name);
+            sb.Append(" makes morale check - ");
+            switch (io.Script.GetLocalIntVariableValue("morale_check"))
+            {
+                case HeroBase.MORALE_GOOD:
+                    sb.Append("PASS!");
+                    break;
+                case HeroBase.MORALE_DITHER:
+                    sb.Append("WAVERING!");
+                    break;
+                case HeroBase.MORALE_SELFISH:
+                    sb.Append("LOOKING TOWARDS SELF_PRESERVATION!");
+                    break;
+                case HeroBase.MORALE_PANIC:
+                    sb.Append("PANICKING!");
+                    break;
+                case HeroBase.MORALE_FLEE:
+                    sb.Append("FLEEING!");
+                    break;
+            }
+            sb.Append("\n");
+        }
+        private void GetBerserkString(FWInteractiveObject io)
+        {
+            switch (io.Script.GetLocalIntVariableValue("berserk_check"))
+            {
+                case HeroBase.BERSERK_BERSERK:
+                    sb.Append(io.PcData.Name);
+                    sb.Append(" goes BERSERK!\n\n");
+                    break;
+            }
+        }
         void Combat()
         {
             FWCharacter pc0 = (FWCharacter)io0.PcData;
@@ -44,14 +86,23 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             bool combatIsOver = false;
             while (!combatIsOver)
             {
+                sb.Length = 0;
                 // go through each phase
                 // PRE-COMBAT
                 // 1. check morale
                 Script.Instance.SendIOScriptEvent(io0, FWGlobals.SM_300_MORALE_CHECK, null, null);
+                sb.Append(text0.text);
+                sb.Append("\n\n");
+                GetMoraleString(io0);
+                sb.Append("\n");
                 Script.Instance.SendIOScriptEvent(io1, FWGlobals.SM_300_MORALE_CHECK, null, null);
+                GetMoraleString(io1);
+                sb.Append("\n");
                 // 2. control check for berserk
                 Script.Instance.SendIOScriptEvent(io0, FWGlobals.SM_301_BERSERK_CHECK, null, null);
+                GetBerserkString(io0);
                 Script.Instance.SendIOScriptEvent(io1, FWGlobals.SM_301_BERSERK_CHECK, null, null);
+                GetBerserkString(io1);
                 // 3. choose actions
                 // 4. missile weapon engaged
                 // 5. ready spells and instant spells engaged
@@ -64,6 +115,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                 // POST-COMBAT
                 // 1. check morale
                 // 2. go back to combat phase
+                text0.text = sb.ToString();
                 break;
             }
         }

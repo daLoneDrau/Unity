@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts.FantasyWargaming.Flyweights
 {
@@ -404,11 +405,11 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         private string ToEnglishLength(int val)
         {
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-            sb.Append(Height / 12);
+            sb.Append(val / 12);
             sb.Append("' ");
-            if (Height % 12 > 0)
+            if (val % 12 > 0)
             {
-                sb.Append(Height % 12);
+                sb.Append(val % 12);
                 sb.Append("\"");
             }
             string s = sb.ToString();

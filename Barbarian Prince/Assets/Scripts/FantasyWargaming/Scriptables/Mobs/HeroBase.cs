@@ -214,6 +214,10 @@ namespace Assets.Scripts.FantasyWargaming.Scriptables.Mobs
                 Io.Script.SetLocalVariable("berserk_check", result);
                 // TODO set time of last berserk check
             }
+            else
+            {
+                Io.Script.SetLocalVariable("berserk_check", BERSERK_CONTROL);
+            }
             return base.OnBerserkCheck();
         }
         public override int OnMoraleCheck()
