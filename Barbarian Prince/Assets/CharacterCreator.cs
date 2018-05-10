@@ -2,6 +2,7 @@
 using Assets.Scripts.FantasyWargaming.Globals;
 using Assets.Scripts.FantasyWargaming.Scriptables.Items;
 using Assets.Scripts.FantasyWargaming.Scriptables.Mobs;
+using RPGBase.Constants;
 using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System.Collections;
@@ -79,38 +80,57 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     break;
             }
         }
-        void Combat()
+        private void PreCombatTests(FWInteractiveObject io)
+        {
+            // 1. check morale
+            Script.Instance.SendIOScriptEvent(io, FWGlobals.SM_300_MORALE_CHECK, null, null);
+            GetMoraleString(io);
+            // 2. control check for berserk
+            Script.Instance.SendIOScriptEvent(io, FWGlobals.SM_301_BERSERK_CHECK, null, null);
+            GetBerserkString(io);
+        }
+        private void PreCombat()
         {
             FWCharacter pc0 = (FWCharacter)io0.PcData;
             FWCharacter pc1 = (FWCharacter)io1.PcData;
+            // pre-combat tests
+            // 1. check morale
+            // 2. control check for berserk
+            PreCombatTests(io0);
+            PreCombatTests(io1);
+            // 3. choose actions
+            // everyone will attack
+            // 4. missile weapon engaged
+            // 5. ready spells and instant spells engaged
+        }
+        private void Combat()
+        {
+            FWCharacter pc0 = (FWCharacter)io0.PcData;
+            FWCharacter pc1 = (FWCharacter)io1.PcData;
+            List<FWInteractiveObject> combatants = new List<FWInteractiveObject>
+            {
+                io0,
+                io1
+            };
+            InitiativeComparer sorter = new InitiativeComparer();
             bool combatIsOver = false;
             while (!combatIsOver)
             {
                 sb.Length = 0;
-                // go through each phase
-                // PRE-COMBAT
-                // 1. check morale
-                Script.Instance.SendIOScriptEvent(io0, FWGlobals.SM_300_MORALE_CHECK, null, null);
                 sb.Append(text0.text);
                 sb.Append("\n\n");
-                GetMoraleString(io0);
-                sb.Append("\n");
-                Script.Instance.SendIOScriptEvent(io1, FWGlobals.SM_300_MORALE_CHECK, null, null);
-                GetMoraleString(io1);
-                sb.Append("\n");
-                // 2. control check for berserk
-                Script.Instance.SendIOScriptEvent(io0, FWGlobals.SM_301_BERSERK_CHECK, null, null);
-                GetBerserkString(io0);
-                Script.Instance.SendIOScriptEvent(io1, FWGlobals.SM_301_BERSERK_CHECK, null, null);
-                GetBerserkString(io1);
-                // 3. choose actions
-                // 4. missile weapon engaged
-                // 5. ready spells and instant spells engaged
+                // go through each phase
+                // PRE-COMBAT
+                PreCombat();
+
 
                 // COMBAT
-                // 1. characters with longer weapons or AGI GTE 4+ opponent attach first
+                // 1. characters with longer weapons or SURPLUS AGI GTE 4+ opponent attach first
+                // sort combatants by weapon length or surplus agility
+                combatants.Sort(sorter);
+                combatants[0]
                 // 2. opponents counterattack unless killed or END LTE 1/2
-                // 3. simultaneous flurry of blows
+                // 3. simultaneous flurry of blows;
 
                 // POST-COMBAT
                 // 1. check morale
@@ -552,6 +572,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             pc.SetBaseAttributeScore("PHY", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("AGI", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("END", Diceroller.Instance.RollXdY(3, 6));
+            pc.SetBaseAttributeScore("MEND", pc.GetBaseAttributeScore("END"));
             pc.SetBaseAttributeScore("BRV", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("CHA", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("INT", Diceroller.Instance.RollXdY(3, 6));
@@ -562,6 +583,84 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             pc.SetBaseAttributeScore("PIE", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("MAN", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("SOC", Diceroller.Instance.RollXdY(3, 6));
+        }
+
+        private class InitiativeComparer : IComparer<FWInteractiveObject>
+        {
+            public int Compare(FWInteractiveObject x, FWInteractiveObject y)
+            {
+                int c = 0;
+                if ((x.HasIOFlag(IoGlobals.IO_01_PC)
+                    || x.HasIOFlag(IoGlobals.IO_03_NPC))
+                    && (y.HasIOFlag(IoGlobals.IO_01_PC)
+                    || y.HasIOFlag(IoGlobals.IO_03_NPC)))
+                {
+                    int xWpnId = -1,yWpnId=-1;
+                    // get weapon lengths
+                    float xWpnLen = 0, yWpnLen = 0;
+                    if (x.HasIOFlag(IoGlobals.IO_01_PC))
+                    {
+                        xWpnId = x.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+                    }
+                    else
+                    {
+                        xWpnId = x.NpcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+                    }
+                    if (y.HasIOFlag(IoGlobals.IO_01_PC))
+                    {
+                        yWpnId = y.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+                    }
+                    else
+                    {
+                        yWpnId = y.NpcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+                    }
+                    if (xWpnId >= 0)
+                    {
+                        xWpnLen = ((FWItemData)Interactive.Instance.GetIO(xWpnId).ItemData).Range;
+                    }
+                    if (yWpnId >= 0)
+                    {
+                        yWpnLen = ((FWItemData)Interactive.Instance.GetIO(yWpnId).ItemData).Range;
+                    }
+                    if (xWpnLen >= yWpnLen + 2)
+                    {
+                        // x goes first
+                        c = 1;
+                    }
+                    else if (xWpnLen + 2 <= yWpnLen)
+                    {
+                        // y goes first
+                        c = -1;
+                    }
+                    else
+                    {
+                        int xSurplus = 0, ySurplus = 0;
+                        // weapon lengths are even enough
+                        // get surplus agilities
+                        if (x.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            ((FWCharacter)x.PcData).ComputeFullStats();
+                            xSurplus = ((FWCharacter)x.PcData).SurplusAgility;
+                        }
+                        if (y.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            ((FWCharacter)y.PcData).ComputeFullStats();
+                            ySurplus = ((FWCharacter)y.PcData).SurplusAgility;
+                        }
+                        if (xSurplus > ySurplus)
+                        {
+                            // x goes first
+                            c = 1;
+                        }
+                        else if (xSurplus < ySurplus)
+                        {
+                            // y goes first
+                            c = -1;
+                        }
+                    }
+                }
+                return c;
+            }
         }
     }
 }

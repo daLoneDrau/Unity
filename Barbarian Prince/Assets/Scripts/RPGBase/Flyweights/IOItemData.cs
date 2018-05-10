@@ -125,6 +125,15 @@ namespace RPGBase.Flyweights
             }
             Count += val;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="io_source"></param>
+        /// <param name="io_weapon"></param>
+        /// <param name="flags">flags & 1 = blood spawn only    </param>
+        /// <param name="targ"></param>
+        /// <returns></returns>
+        public abstract bool StrikeCheck(BaseInteractiveObject io_source, long flags, long targ);
         protected abstract float ApplyCriticalModifier();
         public float ComputeDamages(BaseInteractiveObject io_source, BaseInteractiveObject io_target, float dmgModifier)
         {

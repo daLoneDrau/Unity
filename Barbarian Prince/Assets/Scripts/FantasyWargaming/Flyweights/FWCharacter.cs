@@ -30,6 +30,14 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         /// </summary>
         public int SocialGroup { get; set; }
         /// <summary>
+        /// The character's surplus Agility.
+        /// </summary>
+        public int SurplusAgility { get; private set; }
+        /// <summary>
+        /// The character's surplus Physique.
+        /// </summary>
+        public int SurplusPhysique { get; private set; }
+        /// <summary>
         /// the character's weight.
         /// </summary>
         public int Weight { get; set; }
@@ -40,6 +48,7 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             new object[] { "PHY", "Physique", FWGlobals.EQUIP_ELEMENT_PHY },
             new object[] { "AGI", "Agility", FWGlobals.EQUIP_ELEMENT_AGI },
             new object[] { "END", "Endurance", FWGlobals.EQUIP_ELEMENT_END },
+            new object[] { "MEND", "Endurance", FWGlobals.EQUIP_ELEMENT_END },
             new object[] { "BRV", "Bravery", FWGlobals.EQUIP_ELEMENT_BRV },
             new object[] { "CHA", "Charisma", FWGlobals.EQUIP_ELEMENT_CHA },
             new object[] { "INT", "Intelligence", FWGlobals.EQUIP_ELEMENT_INT },
@@ -96,6 +105,33 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             bogeys = new Bogey[0];
         }
+        public override void ComputeFullStats()
+        {
+            base.ComputeFullStats();
+            SurplusAgility = 0;
+            // TODO - apply encumbrance for armour
+            // calculate surplus physique and agility
+            int wpnId = GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+            if (wpnId >= 0)
+            {
+                FWInteractiveObject wpnIo= (FWInteractiveObject)Interactive.Instance.GetIO(wpnId);
+                if (wpnIo.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_BOW))
+                {
+                    // TODO - calculate surplus agility
+                }
+                else
+                {
+                    int surplus = (int)(GetFullAttributeScore("AGI") - ((FWItemData)wpnIo.ItemData).MinMeleeAgility);
+                    if (surplus < 0)
+                    {
+                        SurplusAgility = surplus;
+                    } else
+                    {
+                        SurplusAgility = (int)Math.Ceiling((float)surplus / 2f);
+                    }
+                }
+            }
+        }
         public override float GetFullDamage()
         {
             throw new NotImplementedException();
@@ -103,7 +139,7 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
 
         public override float GetMaxLife()
         {
-            return GetFullAttributeScore("MHP");
+            return GetFullAttributeScore("MEND");
         }
         /// <summary>
         /// Determines if the character has a specific <see cref="Bogey"/>.
@@ -137,7 +173,7 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         }
         protected override string GetLifeAttribute()
         {
-            return "HP";
+            return "END";
         }
         public string ToCharSheetString()
         {
@@ -162,6 +198,8 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             sb.Append("\n");
             sb.Append("Endurance:    \t");
             sb.Append((int)GetFullAttributeScore("END"));
+            sb.Append("/");
+            sb.Append((int)GetFullAttributeScore("MEND"));
             sb.Append("\n\n");
             sb.Append("Intelligence: \t");
             sb.Append((int)GetFullAttributeScore("INT"));

@@ -221,7 +221,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// Compute FULL versions of player stats including equipped items, spells, and any other effect altering them.
         /// </summary>
-        public void ComputeFullStats()
+        public virtual void ComputeFullStats()
         {
             // clear mods
             ClearModAbilityScores();
