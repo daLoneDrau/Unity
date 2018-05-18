@@ -182,6 +182,24 @@ namespace RPGBase.Flyweights
          * @return
          */
         public abstract bool CanIdentifyEquipment(IOEquipItem equipitem);
+        /// <summary>
+        /// Checks the character's attribute against a range of values to see if it falls between the valid range.
+        /// </summary>
+        /// <param name="attribute">the attribute's abbreviation</param>
+        /// <param name="rangeLow">the low-end range value</param>
+        /// <param name="rangeHigh">the high-end range value</param>
+        /// <returns></returns>
+        public bool CheckAttributeRange(string attribute, int rangeLow, int rangeHigh)
+        {
+            bool pass = false;
+            ComputeFullStats();
+            if (GetFullAttributeScore(attribute) >= rangeLow
+                && GetFullAttributeScore(attribute) <= rangeHigh)
+            {
+                pass = true;
+            }
+            return pass;
+        }
         /** Clears all interface flags that were set. */
         public void ClearInterfaceFlags()
         {
@@ -192,7 +210,7 @@ namespace RPGBase.Flyweights
         /// </summary>
         /// <param name="dmg">the damage amount</param>
         /// <param name="type">the type of damage</param>
-        /// <param name="source">the source of the damage</param>
+        /// <param name="source">the source reference id of the damage (if attacked, should be the attacker)</param>
         /// <returns>the total damage done</returns>
         public float DamagePlayer(float dmg, long type, int source)
         {

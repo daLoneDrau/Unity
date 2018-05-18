@@ -17,7 +17,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             {
                 GameObject go = new GameObject
                 {
-                    name = "BPController"
+                    name = "FWController"
                 };
                 Instance = go.AddComponent<FWController>();
             }

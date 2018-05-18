@@ -145,9 +145,11 @@
     <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Items\WeaponBase.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Mobs\HeroBase.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Mobs\MobBase.cs" />
+    <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\FWCombat.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\FWScript.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\FWController.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\FWInteractive.cs" />
+    <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\Messages.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Behaviour.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Dice.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Die.cs" />
@@ -203,9 +205,11 @@
     <Compile Include="Assets\Scripts\RPGBase\Pooled\StringBuilderPool.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\ArrayUtilities.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Diceroller.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Singletons\ICombat.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\IProjectConstants.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\IScript.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Interactive.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Singletons\Combat.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\ProjectConstants.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\RPGTime.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Script.cs" />

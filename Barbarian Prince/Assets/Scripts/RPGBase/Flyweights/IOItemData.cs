@@ -135,7 +135,7 @@ namespace RPGBase.Flyweights
         /// <returns></returns>
         public abstract bool StrikeCheck(BaseInteractiveObject io_source, long flags, long targ);
         protected abstract float ApplyCriticalModifier();
-        public float ComputeDamages(BaseInteractiveObject io_source, BaseInteractiveObject io_target, float dmgModifier)
+        public virtual float ComputeDamages(BaseInteractiveObject io_source, BaseInteractiveObject io_target, float dmgModifier)
         {
             float damages = 0;
             // send event to target. someone attacked you!
@@ -643,7 +643,7 @@ namespace RPGBase.Flyweights
                 UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_SHIELD);
             }
         }
-        protected abstract float GetBackstabModifier();
+        public abstract float GetBackstabModifier();
         /**
          * Gets the type of weapon an item is.
          * @return {@link int}

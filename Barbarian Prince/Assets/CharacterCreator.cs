@@ -128,7 +128,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                 // 1. characters with longer weapons or SURPLUS AGI GTE 4+ opponent attach first
                 // sort combatants by weapon length or surplus agility
                 combatants.Sort(sorter);
-                combatants[0]
+                combatants[0].PcData.StrikeTarget(combatants[0].PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON), combatants[1], );
                 // 2. opponents counterattack unless killed or END LTE 1/2
                 // 3. simultaneous flurry of blows;
 
@@ -573,6 +573,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             pc.SetBaseAttributeScore("AGI", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("END", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("MEND", pc.GetBaseAttributeScore("END"));
+            pc.HealPlayer(999);
             pc.SetBaseAttributeScore("BRV", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("CHA", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("INT", Diceroller.Instance.RollXdY(3, 6));
