@@ -30,7 +30,7 @@ namespace RPGBase.Flyweights
         /// the reference ids of all items equipped by the <see cref="IOCharacter"/> indexed by equipment slot.
         /// </summary>
         private int[] equippedItems;
-        private int gender = -1;
+        private int gender = RPGBase.Constants.Gender.GENDER_NEUTRAL;
         /// <summary>
         /// the <see cref="IOCharacter"/>'s gender.
         /// </summary>

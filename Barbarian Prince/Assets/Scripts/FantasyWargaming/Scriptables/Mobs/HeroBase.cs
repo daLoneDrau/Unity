@@ -106,6 +106,10 @@ namespace Assets.Scripts.FantasyWargaming.Scriptables.Mobs
         new int[]{ 1594, MORALE_SELFISH },
         new int[]{ 1597, MORALE_PANIC },
         new int[]{ 1600, MORALE_FLEE },
+        new int[]{ 1673, MORALE_GOOD },
+        new int[]{ 1688, MORALE_DITHER },
+        new int[]{ 1697, MORALE_SELFISH },
+        new int[]{ 1700, MORALE_PANIC },
         new int[]{ 1780, MORALE_GOOD },
         new int[]{ 1790, MORALE_DITHER },
         new int[]{ 1798, MORALE_SELFISH },
@@ -135,7 +139,7 @@ namespace Assets.Scripts.FantasyWargaming.Scriptables.Mobs
             {
                 int val = 0;
                 // -1 if morale check failed
-                if (GetLocalIntVariableValue("morale_check")== MORALE_DITHER)
+                if (GetLocalIntVariableValue("morale_check") == MORALE_DITHER)
                 {
                     val--;
                 }
@@ -222,13 +226,14 @@ namespace Assets.Scripts.FantasyWargaming.Scriptables.Mobs
         }
         public override int OnMoraleCheck()
         {
-            Console.WriteLine("Hero ONMORALECHECK");
-            Debug.Log("Hero ONMORALECHECK");
             FWCharacter pc = (FWCharacter)Io.PcData;
             // add combat level and bravery
             pc.ComputeFullStats();
             float val = pc.GetFullAttributeScore("BRV");
             // TODO - add combat level
+            // give val bonus of 2.  too many fleeing for just starting a fight
+            val += 2;
+            val += pc.CombatLevel;
             // TODO - +1 for each victory this day
             // TODO - +1 for each level lower than party leader
             // +1 for Selfishness LTE 8
@@ -236,12 +241,20 @@ namespace Assets.Scripts.FantasyWargaming.Scriptables.Mobs
             {
                 val++;
             }
-            // TODO - +2 being unharmed
+            // +2 being unharmed
+            if (pc.Life == pc.GetMaxLife())
+            {
+                val += 2;
+            }
             // TODO - +2 being party leader
             // TODO - +2 all party members alive
             // TODO - +2 least brave member of party passed the morale test
             // TODO - -1 mage facing more powerful mage
-            // TODO - -1 being wounded
+            // -1 being wounded
+            if (pc.Life < pc.GetMaxLife())
+            {
+                val--;
+            }
             // -1 for Intelligence LTE 8
             if (pc.GetFullAttributeScore("INT") <= 8)
             {
@@ -258,8 +271,17 @@ namespace Assets.Scripts.FantasyWargaming.Scriptables.Mobs
             {
                 val++;
             }
-            // TODO - -1 below half endurance
-            // TODO - -1 below 4 endurance
+            // -1 below half endurance OR below 4 endurance
+            if (pc.Life / pc.GetMaxLife() < 0.5f
+                || pc.Life < 4f)
+            {
+                val--;
+            }
+            else if (pc.Life < 4f)
+            {
+                val--;
+
+            }
             // TODO - -4 if already fleeing
             int roll = Diceroller.Instance.RolldX(6);
             roll += (int)val;
@@ -269,6 +291,7 @@ namespace Assets.Scripts.FantasyWargaming.Scriptables.Mobs
             }
             roll *= 100;
             roll += Diceroller.Instance.RolldX(100);
+            Debug.Log("morale roll " + roll);
             int result = 0;
             // check morale matrix for result
             for (int i = 0, li = MORALE_MATRIX.Length, last = 0; i < li; i++)

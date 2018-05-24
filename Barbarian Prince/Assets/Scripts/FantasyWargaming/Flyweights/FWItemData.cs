@@ -63,7 +63,7 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             throw new NotImplementedException();
         }
-        protected override float GetBackstabModifier()
+        public override float GetBackstabModifier()
         {
             throw new NotImplementedException();
         }

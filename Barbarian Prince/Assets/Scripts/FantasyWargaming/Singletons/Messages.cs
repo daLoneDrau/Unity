@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.FantasyWargaming.Singletons
 {
-    public class Messages: MonoBehaviour
+    public class Messages : MonoBehaviour
     {
         private static Messages instance;
         /// <summary>
@@ -27,22 +27,28 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                 return instance;
             }
         }
-        private Stack<string> messages;
+        private Queue<string> messages;
         public void Add(string msg)
         {
             if (messages == null)
             {
-                messages = new Stack<string>();
+                messages = new Queue<string>();
             }
-            messages.Push(msg);
+            messages.Enqueue(msg);
         }
-        public bool IsEmpty()
+        public bool IsEmpty
         {
-            return messages.Count == 0;
+            get
+            {
+                return messages.Count == 0;
+            }
         }
-        public string Pop()
+        public string Dequeue
         {
-            return messages.Pop();
+            get
+            {
+                return messages.Dequeue();
+            }
         }
     }
 }

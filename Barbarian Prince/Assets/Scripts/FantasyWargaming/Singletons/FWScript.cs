@@ -111,7 +111,10 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
         }
         protected override void RunMessage(Scriptable script, int msg, BaseInteractiveObject io)
         {
-            print("RunMessage(" + script + "," + msg + "," + io.RefId);
+            if (Debug)
+            {
+                print("RunMessage(" + script + "," + msg + "," + io.RefId);
+            }
             switch (msg)
             {
                 case FWGlobals.SM_300_MORALE_CHECK:
@@ -119,6 +122,9 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     break;
                 case FWGlobals.SM_301_BERSERK_CHECK:
                     ((FWScriptable)script).OnBerserkCheck();
+                    break;
+                case FWGlobals.SM_302_COMBAT_FLURRY:
+                    ((FWScriptable)script).OnCombatFlurry();
                     break;
                 default:
                     base.RunMessage(script, msg, io);

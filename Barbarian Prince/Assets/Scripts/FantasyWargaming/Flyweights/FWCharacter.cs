@@ -41,6 +41,10 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         /// the character's weight.
         /// </summary>
         public int Weight { get; set; }
+        public int CombatLevel { get; set; }
+        public int MagicLevel { get; set; }
+        public int ReligiousLevel { get; set; }
+
         /// <summary>
         /// the list of attributes and their matching names and modifiers.
         /// </summary>
@@ -90,11 +94,11 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         }
         public override bool CalculateBackstab()
         {
-            throw new NotImplementedException();
+            return false;
         }
         public override bool CalculateCriticalHit()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override bool CanIdentifyEquipment(IOEquipItem equipitem)
@@ -132,11 +136,18 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
                 }
             }
         }
+        protected override object[][] GetAttributeMap()
+        {
+            return attributeMap;
+        }
+        protected override float GetBaseMana()
+        {
+            throw new NotImplementedException();
+        }
         public override float GetFullDamage()
         {
             throw new NotImplementedException();
         }
-
         public override float GetMaxLife()
         {
             return GetFullAttributeScore("MEND");
@@ -160,14 +171,6 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             return has;
         }
         public override void RecreatePlayerMesh()
-        {
-            throw new NotImplementedException();
-        }
-        protected override object[][] GetAttributeMap()
-        {
-            return attributeMap;
-        }
-        protected override float GetBaseMana()
         {
             throw new NotImplementedException();
         }
@@ -197,7 +200,7 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
             sb.Append(Weight);
             sb.Append("\n");
             sb.Append("Endurance:    \t");
-            sb.Append((int)GetFullAttributeScore("END"));
+            sb.Append(Life);
             sb.Append("/");
             sb.Append((int)GetFullAttributeScore("MEND"));
             sb.Append("\n\n");

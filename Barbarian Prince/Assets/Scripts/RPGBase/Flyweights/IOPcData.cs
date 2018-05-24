@@ -507,6 +507,15 @@ namespace RPGBase.Flyweights
                 }
             }
         }
+        public bool IsDead()
+        {
+            bool dead = false;
+            if (Life <= 0f)
+            {
+                dead = true;
+            }
+            return dead;
+        }
         /// <summary>
         /// Determines if the player has an item equipped.
         /// </summary>

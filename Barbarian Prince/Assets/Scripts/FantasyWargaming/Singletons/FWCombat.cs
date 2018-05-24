@@ -464,7 +464,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                         */
                     }
                     // calculate how much damage is absorbed by armor
-                    float absorb = this.CalculateArmorDeflection(targetIo, result);
+                    float absorb = CalculateArmorDeflection(targetIo, result);
                     damages -= absorb;
                     if (damages < 0)
                     {
@@ -517,6 +517,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             }
             return damages;
         }
+        public const int INITIAL_STRIKE = 1;
         /// <summary>
         /// Calculates the deflection value for a piece of armour based on the targeted area.
         /// </summary>
@@ -588,9 +589,9 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                         }
                         break;
                     case STRIKE_SHIELD:
-                        if (targetIo.PcData.GetEquippedItem(EquipmentGlobals.OBJECT_TYPE_SHIELD) >= 0)
+                        if (targetIo.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_SHIELD) >= 0)
                         {
-                            BaseInteractiveObject io = Interactive.Instance.GetIO(targetIo.PcData.GetEquippedItem(EquipmentGlobals.OBJECT_TYPE_SHIELD));
+                            BaseInteractiveObject io = Interactive.Instance.GetIO(targetIo.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_SHIELD));
                             armorIo = io;
                         }
                         else if (targetIo.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_TORSO) >= 0)
@@ -792,7 +793,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             }
             return wmat;
         }
-        public bool StrikeCheck(BaseInteractiveObject srcIo, BaseInteractiveObject wpnIo, long flags, int targ)
+        public override bool StrikeCheck(BaseInteractiveObject srcIo, BaseInteractiveObject wpnIo, long flags, int targ)
         {
             int source = srcIo.RefId;
             int weapon = wpnIo.RefId;
@@ -820,7 +821,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                 }
                 // TODO check for lunge
                 int result = StrikeCheck(roll, Diceroller.Instance.RolldX(100));
-                if (result >= STRIKE_MISS)
+                if (result > STRIKE_MISS)
                 {
                     dmgs = ComputeDamages(srcIo, wpnIo, targIo, result);
                     // damage the target
@@ -828,14 +829,56 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     {
                         targIo.PcData.DamagePlayer(dmgs, 0, srcIo.RefId);
                     }
+                    else if (targIo.HasIOFlag(IoGlobals.IO_03_NPC))
+                    {
+                        targIo.NpcData.DamageNPC(dmgs, srcIo.RefId, false);
+                    }
                     // TODO handle special effects, such as paralyze or drain life
                     // TODO - check if weapon durability is affected
+                    switch (result)
+                    {
+                        case STRIKE_HEAD:
+                            if (dmgs >= 4)
+                            {
+                                if (!targIo.Script.HasLocalVariable("stun_round_start"))
+                                {
+                                    // target is stunned for D4 flurries
+                                    targIo.Script.SetLocalVariable("stunned_duration", Diceroller.Instance.RolldX(4));
+                                    targIo.Script.SetLocalVariable("stun_round_start", FlurryNumber);
+                                }
+                            }
+                            break;
+                        case STRIKE_FACE:
+                            if (dmgs >=3)
+                            {
+                                if (!targIo.Script.HasLocalVariable("blind_round_start"))
+                                {
+                                    // target is stunned for D4 flurries
+                                    targIo.Script.SetLocalVariable("blind_duration", Diceroller.Instance.RolldX(4));
+                                    targIo.Script.SetLocalVariable("blind_round_start", FlurryNumber);
+                                }
+                            }
+                            break;
+                        case STRIKE_GUTS:
+                            if (dmgs >= 4)
+                            {
+                                targIo.Script.SetLocalVariable("disengaging", 1);
+                            }
+                            break;
+                    }
+                }
+                // save the damage the attack caused
+                if ((flags & INITIAL_STRIKE) == INITIAL_STRIKE)
+                {
+                    targIo.Script.SetLocalVariable("initial_strike_dmg", dmgs);
+                    targIo.Script.SetLocalVariable("initial_strike_result", result);
                 }
                 // store message about attack
                 Messages.Instance.Add(BuildMessage(srcIo, targIo, result, dmgs));
             }
             return false;
         }
+        public int FlurryNumber { get; set; }
         private string BuildMessage(BaseInteractiveObject attacker, BaseInteractiveObject target, int result, float damages = 0f)
         {
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
@@ -861,7 +904,16 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     sb.Append(" in the face ");
                     if (damages == 0)
                     {
-                        sb.Append(" but cannot penetrate their helmet.");
+                        sb.Append(" but cannot penetrate ");
+                        if (target.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.PcData.Gender]);
+                        }
+                        else
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.NpcData.Gender]);
+                        }
+                        sb.Append(" helmet.");
                     }
                     else
                     {
@@ -876,11 +928,20 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     sb.Append(" in the head ");
                     if (damages == 0)
                     {
-                        sb.Append(" but they are saved by their helmet!");
+                        sb.Append("but they are saved by ");
+                        if (target.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.PcData.Gender]);
+                        }
+                        else
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.NpcData.Gender]);
+                        }
+                        sb.Append(" helmet!");
                     }
                     else
                     {
-                        sb.Append(" for ");
+                        sb.Append("for ");
                         sb.Append((int)damages);
                         sb.Append(" damage!\n");
                     }
@@ -891,11 +952,28 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     sb.Append(" across the abdomen ");
                     if (damages == 0)
                     {
-                        sb.Append(" but failing to penetrate their armour.");
+                        sb.Append(" but failing to penetrate ");
+                        if (target.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.PcData.Gender]);
+                        }
+                        else
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.NpcData.Gender]);
+                        }
+                        sb.Append(" armour.");
                     }
                     else
                     {
-                        sb.Append(" - slicing them for ");
+                        sb.Append(" - slicing ");
+                        if (target.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            sb.Append(Gender.GENDER_OBJECTIVE[target.PcData.Gender]);
+                        } else
+                        {
+                            sb.Append(Gender.GENDER_OBJECTIVE[target.NpcData.Gender]);
+                        }
+                        sb.Append(" for ");
                         sb.Append((int)damages);
                         sb.Append(" damage!\n");
                     }
@@ -906,7 +984,16 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     sb.Append(" in the heart");
                     if (damages == 0)
                     {
-                        sb.Append(", denting their armour but causing nor further damage.");
+                        sb.Append(", denting ");
+                        if (target.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.PcData.Gender]);
+                        }
+                        else
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.NpcData.Gender]);
+                        }
+                        sb.Append(" armour but causing nor further damage.");
                     }
                     else
                     {
@@ -920,18 +1007,36 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     sb.Append(targName);
                     if (damages == 0)
                     {
-                        sb.Append(" who is saved by their armour.");
+                        sb.Append(" who is saved by ");
+                        if (target.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.PcData.Gender]);
+                        }
+                        else
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.NpcData.Gender]);
+                        }
+                        sb.Append(" armour.");
                     }
                     else
                     {
-                        sb.Append(" catching them in the ribs for ");
+                        sb.Append(" catching ");
+                        if (target.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            sb.Append(Gender.GENDER_OBJECTIVE[target.PcData.Gender]);
+                        }
+                        else
+                        {
+                            sb.Append(Gender.GENDER_OBJECTIVE[target.NpcData.Gender]);
+                        }
+                        sb.Append(" in the ribs for ");
                         sb.Append((int)damages);
                         sb.Append(" damage!\n");
                     }
                     break;
                 case STRIKE_LEFT_LEG:
                 case STRIKE_RIGHT_LEG:
-                    sb.Append(" swings at  ");
+                    sb.Append(" swings at ");
                     sb.Append(targName);
                     sb.Append("'s legs");
                     if (damages == 0)
@@ -946,7 +1051,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     }
                     break;
                 case STRIKE_OTHER_ARM:
-                    sb.Append(" swings at  ");
+                    sb.Append(" swings at ");
                     sb.Append(targName);
                     sb.Append("'s free arm");
                     if (damages == 0)
@@ -961,7 +1066,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     }
                     break;
                 case STRIKE_SWORD_ARM:
-                    sb.Append(" swings at  ");
+                    sb.Append(" swings at ");
                     sb.Append(targName);
                     sb.Append("'s sword arm");
                     if (damages == 0)
@@ -985,13 +1090,22 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     }
                     else
                     {
-                        sb.Append(" breaking through their defenses and scoring a wound for ");
+                        sb.Append(" breaking through ");
+                        if (target.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.PcData.Gender]);
+                        }
+                        else
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.NpcData.Gender]);
+                        }
+                        sb.Append(" defenses and scoring a wound for ");
                         sb.Append((int)damages);
                         sb.Append(" damage!\n");
                     }
                     break;
                 case STRIKE_THROAT:
-                    sb.Append(" chops at  ");
+                    sb.Append(" chops at ");
                     sb.Append(targName);
                     sb.Append("'s throat");
                     if (damages == 0)
@@ -1000,7 +1114,16 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     }
                     else
                     {
-                        sb.Append(" breaking through their defenses and scoring a wound for ");
+                        sb.Append(" breaking through ");
+                        if (target.HasIOFlag(IoGlobals.IO_01_PC))
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.PcData.Gender]);
+                        }
+                        else
+                        {
+                            sb.Append(Gender.GENDER_POSSESSIVE[target.NpcData.Gender]);
+                        }
+                        sb.Append(" defenses and scoring a wound for ");
                         sb.Append((int)damages);
                         sb.Append(" damage!\n");
                     }

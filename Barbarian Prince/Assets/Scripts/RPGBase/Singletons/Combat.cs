@@ -10,12 +10,13 @@ namespace RPGBase.Singletons
         /// the singleton instance.
         /// </summary>
         public static Combat Instance { get; protected set; }
+
         public virtual float ComputeDamages(BaseInteractiveObject srcIo, BaseInteractiveObject wpnIo, BaseInteractiveObject targetIo, int result)
         {
             throw new NotImplementedException();
         }
 
-        public bool StrikeCheck(BaseInteractiveObject srcIo, BaseInteractiveObject wpnIo, long flags, int targ)
+        public virtual bool StrikeCheck(BaseInteractiveObject srcIo, BaseInteractiveObject wpnIo, long flags, int targ)
         {
             throw new NotImplementedException();
         }

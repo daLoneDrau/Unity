@@ -28,10 +28,13 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             FWController.Init();
             FWInteractive.Init();
             FWScript.Init();
+            FWCombat.Init();
             io0 = ((FWInteractive)Interactive.Instance).NewHero();
             io0.PcData.Name = "Gotzstaf";
+            io0.PcData.Gender = Gender.GENDER_MALE;
             io1 = ((FWInteractive)Interactive.Instance).NewHero();
             io1.PcData.Name = "Tuste";
+            io1.PcData.Gender = Gender.GENDER_MALE;
             CreateCharacter(io0);
             CreateCharacter(io1);
             FWInteractiveObject wpnIO = ((FWInteractive)Interactive.Instance).NewItem(new Longspear());
@@ -113,28 +116,78 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                 io1
             };
             InitiativeComparer sorter = new InitiativeComparer();
+            FlurryComparer flurrySorter = new FlurryComparer();
             bool combatIsOver = false;
             while (!combatIsOver)
             {
+                ((FWCombat)FWCombat.Instance).FlurryNumber++;
                 sb.Length = 0;
                 sb.Append(text0.text);
+                sb.Append("\n\n");
+                // print combatants' health
+                sb.Append(pc0.Name);
+                sb.Append(": ");
+                sb.Append(pc0.Life);
+                sb.Append("/");
+                sb.Append(pc0.GetMaxLife());
+                sb.Append("\n");
+                sb.Append(pc1.Name);
+                sb.Append(": ");
+                sb.Append(pc1.Life);
+                sb.Append("/");
+                sb.Append(pc1.GetMaxLife());
                 sb.Append("\n\n");
                 // go through each phase
                 // PRE-COMBAT
                 PreCombat();
+                for (int i = combatants.Count - 1; i >= 0; i--)
+                {
+                    combatants[0].Script.SetLocalVariable("initial_strike_dmg", 0);
+                    combatants[0].Script.SetLocalVariable("initial_strike_result", -1);
+                }
 
 
                 // COMBAT
                 // 1. characters with longer weapons or SURPLUS AGI GTE 4+ opponent attach first
                 // sort combatants by weapon length or surplus agility
                 combatants.Sort(sorter);
-                combatants[0].PcData.StrikeTarget(combatants[0].PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON), combatants[1], );
+                print(combatants[0].PcData.Name + " goes first");
+                float startingEnd = combatants[1].PcData.Life;
+                FWCombat.Instance.StrikeCheck(combatants[0], Interactive.Instance.GetIO(combatants[0].PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON)), FWCombat.INITIAL_STRIKE, combatants[1].RefId);
+                float currEnd = combatants[1].PcData.Life;
                 // 2. opponents counterattack unless killed or END LTE 1/2
-                // 3. simultaneous flurry of blows;
-
+                if (!combatants[1].PcData.IsDead()
+                    && currEnd / startingEnd > .5f)
+                {
+                    PooledStringBuilder sb1 = StringBuilderPool.Instance.GetStringBuilder();
+                    sb1.Append(combatants[1].PcData.Name);
+                    sb1.Append(" counterattacks!\n");
+                    Messages.Instance.Add(sb1.ToString());
+                    sb1.ReturnToPool();
+                    sb1 = null;
+                    FWCombat.Instance.StrikeCheck(combatants[1], Interactive.Instance.GetIO(combatants[1].PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON)), FWCombat.INITIAL_STRIKE, combatants[0].RefId);
+                }
+                else if (currEnd / startingEnd <= .5f)
+                {
+                    PooledStringBuilder sb1 = StringBuilderPool.Instance.GetStringBuilder();
+                    sb1.Append(combatants[1].PcData.Name);
+                    sb1.Append(" staggers...\n");
+                }
+                ((FWCombat)FWCombat.Instance).FlurryNumber++;
+                // 3. simultaneous flurry of blows
+                // combatants are re-sorted by who caused the most damage
+                // each combatant needs to choose their action
+                for (int i = combatants.Count - 1; i >= 0; i--)
+                {
+                    Script.Instance.SendIOScriptEvent(combatants[0], FWGlobals.SM_302_COMBAT_FLURRY, null, "");
+                }
                 // POST-COMBAT
                 // 1. check morale
                 // 2. go back to combat phase
+                while (!Messages.Instance.IsEmpty)
+                {
+                    sb.Append(Messages.Instance.Dequeue);
+                }
                 text0.text = sb.ToString();
                 break;
             }
@@ -573,7 +626,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
             pc.SetBaseAttributeScore("AGI", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("END", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("MEND", pc.GetBaseAttributeScore("END"));
-            pc.HealPlayer(999);
+            pc.HealPlayer(999, true);
             pc.SetBaseAttributeScore("BRV", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("CHA", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("INT", Diceroller.Instance.RollXdY(3, 6));
@@ -596,7 +649,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                     && (y.HasIOFlag(IoGlobals.IO_01_PC)
                     || y.HasIOFlag(IoGlobals.IO_03_NPC)))
                 {
-                    int xWpnId = -1,yWpnId=-1;
+                    int xWpnId = -1, yWpnId = -1;
                     // get weapon lengths
                     float xWpnLen = 0, yWpnLen = 0;
                     if (x.HasIOFlag(IoGlobals.IO_01_PC))

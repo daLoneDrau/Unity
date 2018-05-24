@@ -1216,7 +1216,10 @@ namespace RPGBase.Singletons
         }
         protected virtual void RunMessage(Scriptable script, int msg, BaseInteractiveObject io)
         {
-            print("RunMessage(" + script + "," + msg + "," + io.RefId);
+            if (Debug)
+            {
+                print("RunMessage(" + script + "," + msg + "," + io.RefId);
+            }
             switch (msg)
             {
                 case ScriptConsts.SM_001_INIT:
@@ -1426,7 +1429,10 @@ namespace RPGBase.Singletons
         /// <returns></returns>
         public int SendInitScriptEvent(BaseInteractiveObject io)
         {
-            print("SendInitScriptEvent(" + io.RefId);
+            if (Debug)
+            {
+                print("SendInitScriptEvent(" + io.RefId);
+            }
             if (io == null)
             {
                 return -1;
@@ -1671,7 +1677,10 @@ namespace RPGBase.Singletons
         /// <returns></returns>
         public int SendScriptEvent(Scriptable localScript, int msg, object[] p, BaseInteractiveObject io, string eventName)
         {
-            print("SendScriptEvent(" + localScript + "," + msg + "," + p + "," + io.RefId + "," + eventName);
+            if (Debug)
+            {
+                print("SendScriptEvent(" + localScript + "," + msg + "," + p + "," + io.RefId + "," + eventName);
+            }
             int retVal = ScriptConsts.ACCEPT;
             bool keepGoing = true;
 

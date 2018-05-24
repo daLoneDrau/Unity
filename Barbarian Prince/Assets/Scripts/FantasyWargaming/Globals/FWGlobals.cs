@@ -89,5 +89,9 @@ namespace Assets.Scripts.FantasyWargaming.Globals
         /// script message berserk check
         /// </summary>
         public const int SM_301_BERSERK_CHECK = 301;
+        /// <summary>
+        /// script message combat flurry
+        /// </summary>
+        public const int SM_302_COMBAT_FLURRY = 302;
     }
 }

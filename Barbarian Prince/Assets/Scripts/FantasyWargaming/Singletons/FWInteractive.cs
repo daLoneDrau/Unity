@@ -88,7 +88,6 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
         /// <returns><see cref="BPInteractiveObject"/></returns>
         public FWInteractiveObject NewHero()
         {
-            print("NewHero");
             FWInteractiveObject io = (FWInteractiveObject)GetNewIO();
             io.AddIOFlag(IoGlobals.IO_01_PC);
             io.PcData = new FWCharacter();

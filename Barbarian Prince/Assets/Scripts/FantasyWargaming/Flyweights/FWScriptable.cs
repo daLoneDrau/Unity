@@ -35,5 +35,13 @@ namespace Assets.Scripts.FantasyWargaming.Flyweights
         {
             return ScriptConsts.ACCEPT;
         }
+        /// <summary>
+        /// Set actions prior to a combat flurry.
+        /// </summary>
+        /// <returns></returns>
+        public virtual int OnCombatFlurry()
+        {
+            return ScriptConsts.ACCEPT;
+        }
     }
 }

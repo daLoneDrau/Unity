@@ -27,6 +27,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
         /// </summary>
         /// <returns></returns>
         public override int GetMaxEquipped() { return FWGlobals.MAX_EQUIPPED; }
+        public override int GetMaxSpells() { return 0; }
         public override int GetNumberEquipmentElements() { return FWGlobals.NUM_ELEMENTS; }
     }
 }
