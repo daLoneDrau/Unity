@@ -57,9 +57,10 @@ namespace RPGBase.Flyweights
             DefineAttributes();
             InitEquippedItems(ProjectConstants.Instance.GetMaxEquipped());
         }
-        /**
-         * {@inheritDoc}
-         */
+        /// <summary>
+        /// Adds a watcher for this instance.
+        /// </summary>
+        /// <param name="watcher">the new <see cref="Watcher"/></param>
         public override void AddWatcher(Watcher watcher)
         {
             if (watcher != null)
@@ -162,6 +163,9 @@ namespace RPGBase.Flyweights
             }
             return toadd;
         }
+        /// <summary>
+        /// Applies modifiers to the character's attributes and skills based on the game rules.
+        /// </summary>
         protected abstract void ApplyRulesModifiers();
         protected abstract void ApplyRulesPercentModifiers();
         /// <summary>

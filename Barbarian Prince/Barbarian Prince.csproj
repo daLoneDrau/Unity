@@ -89,7 +89,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CharacterCreator.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Globals\BHRace.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Singletons\BHCharacterCreator.cs" />
+    <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\CharacterCreator.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Constants\BPGlobals.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Constants\WealthCode.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPCharacter.cs" />
@@ -129,6 +131,22 @@
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\InvUiController.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\Model\Tile.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\UI\Model\World.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHCharacter.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHInteractiveObject.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHInventoryData.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHItemData.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHScriptable.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Globals\BHGlobals.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Globals\BHProfession.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Scriptables\Items\Shortsword.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Scriptables\Items\WeaponBase.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Scriptables\Mobs\HeroBase.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Scriptables\Mobs\MobBase.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Singletons\BHCombat.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Singletons\BHController.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Singletons\BHInteractive.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Singletons\BHScript.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Singletons\Messages.cs" />
     <Compile Include="Assets\Scripts\Extensions\MonoBehaviourExtended.cs" />
     <Compile Include="Assets\Scripts\Extensions\Singleton.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Flyweights\FWCharacter.cs" />

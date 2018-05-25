@@ -116,7 +116,7 @@ namespace Assets.Scripts.FantasyWargaming.Singletons
                 io1
             };
             InitiativeComparer sorter = new InitiativeComparer();
-            FlurryComparer flurrySorter = new FlurryComparer();
+            //FlurryComparer flurrySorter = new FlurryComparer();
             bool combatIsOver = false;
             while (!combatIsOver)
             {
