@@ -1,4 +1,4 @@
-﻿using RPGBase.Constants;
+using RPGBase.Constants;
 using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System;
