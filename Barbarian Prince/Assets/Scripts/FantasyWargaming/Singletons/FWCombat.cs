@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.FantasyWargaming.Flyweights;
+using Assets.Scripts.FantasyWargaming.Flyweights;
 using Assets.Scripts.FantasyWargaming.Scriptables.Mobs;
 using RPGBase.Constants;
 using RPGBase.Flyweights;
