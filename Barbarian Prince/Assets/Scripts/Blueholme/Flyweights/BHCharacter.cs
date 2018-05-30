@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Blueholme.Globals;
+using Assets.Scripts.Blueholme.Globals;
+using Assets.Scripts.Blueholme.Singletons;
 using RPGBase.Constants;
 using RPGBase.Flyweights;
 using RPGBase.Pooled;
@@ -31,6 +32,7 @@ namespace Assets.Scripts.Blueholme.Flyweights
             new object[] { "SRP", "Save vs. Ray or Poison", BHGlobals.EQUIP_ELEMENT_SRP },
             new object[] { "SSS", "Save vs. Spell or Staff", BHGlobals.EQUIP_ELEMENT_SSS },
             new object[] { "AC", "Armour Class", BHGlobals.EQUIP_ELEMENT_AC },
+            new object[] { "THM", "To Hit Modifier", BHGlobals.EQUIP_ELEMENT_THM },
         };
         protected override void AdjustMana(float dmg)
         {
@@ -59,10 +61,27 @@ namespace Assets.Scripts.Blueholme.Flyweights
             {
                 AdjustAttributeModifier("MHP", 3);
             }
+            // apply To Hit Modifier for DEX
+            if (GetBaseAttributeScore("DEX") <= 8)
+            {
+                AdjustAttributeModifier("THM", -1);
+            }
+            else if (GetBaseAttributeScore("CON") >= 13)
+            {
+                AdjustAttributeModifier("THM", 1);
+            }
+
         }
         protected override void ApplyRulesPercentModifiers()
         {
 
+        }
+        /// <summary>
+        /// Called when a player dies.
+        /// </summary>
+        public override void BecomesDead()
+        {
+            base.BecomesDead();
         }
         public override bool CalculateBackstab()
         {
