@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Blueholme.Flyweights;
+using Assets.Scripts.Blueholme.Flyweights;
+using Assets.Scripts.Blueholme.Globals;
 using RPGBase.Constants;
 using RPGBase.Flyweights;
 using RPGBase.Pooled;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Blueholme.Singletons
 {
@@ -24,9 +26,130 @@ namespace Assets.Scripts.Blueholme.Singletons
                 Instance = go.AddComponent<BHCombat>();
             }
         }
-        public void InitiateCombat()
+        /// <summary>
+        /// the list of combatants.
+        /// </summary>
+        private List<BHInteractiveObject> side1;
+        /// <summary>
+        /// the list of combatants.
+        /// </summary>
+        private List<BHInteractiveObject> side2;
+        /// <summary>
+        /// all combatants who strike in the initial melee.
+        /// </summary>
+        private List<BHInteractiveObject> initial = new List<BHInteractiveObject>();
+        /// <summary>
+        /// combatants who get one more strike per round.
+        /// </summary>
+        private List<BHInteractiveObject> supplemental = new List<BHInteractiveObject>();
+        public Text Output { get; set; }
+        /// <summary>
+        /// The roll needed for a level 0 PC to hit Armour Class 0.
+        /// </summary>
+        private const int PC_LVL_0_THAC0 = 20;
+        /// <summary>
+        /// A map of the rolls needed for creatures to hit Armour Class 0.
+        /// </summary>
+        private static Dictionary<int, int> CREATURE_THAC0 = new Dictionary<int, int>() {
+            { 0, 20 },
+            { 1, 19 },
+            { 2, 18 },
+            { 3, 17 },
+            { 4, 15 },
+            { 5, 14 },
+            { 6, 14 },
+            { 7, 13 },
+            { 8, 13 },
+            { 9, 12 },
+            { 10, 12 },
+            { 11, 11 }
+        };
+        /// <summary>
+        /// The roll needed for a level 1-3 PC to hit Armour Class 0.
+        /// </summary>
+        private const int PC_LVL_1_3_THAC0 = 19;
+        public int Round { get; private set; }
+        /// <summary>
+        /// Determines if combat is over.  Combat is over when either side has no combatants left.
+        /// </summary>
+        public bool IsCombatOver
         {
-            Script.Instance.SetGlobalVariable("FIGHTING", 1);
+            get
+            {
+                bool side1dead = true, side2dead = true;
+                for (int i = side2.Count - 1; i >= 0; i--)
+                {
+                    if (!IsIoDead(side2[i]))
+                    {
+                        side2dead = false;
+                        break;
+                    }
+                }
+                for (int i = side1.Count - 1; i >= 0; i--)
+                {
+                    if (!IsIoDead(side1[i]))
+                    {
+                        side1dead = false;
+                        break;
+                    }
+                }
+                return side1dead || side2dead;
+            }
+        }
+        /// <summary>
+        /// Gets the modifier applied to the damage amount for a successful critical hit.
+        /// </summary>
+        /// <returns><see cref="float"/></returns>
+        protected override float ApplyCriticalModifier()
+        {
+            return 1;
+        }
+        private string BuildMessage(BaseInteractiveObject attacker, BaseInteractiveObject source, BaseInteractiveObject target, int result, float damages = 0f)
+        {
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            int gender = 0;
+            if (attacker.HasIOFlag(IoGlobals.IO_01_PC))
+            {
+                sb.Append(attacker.PcData.Name);
+                gender = attacker.PcData.Gender;
+            }
+            string targName = "";
+            if (target.HasIOFlag(IoGlobals.IO_01_PC))
+            {
+                targName = target.PcData.Name;
+            }
+            sb.Append(" attacks ");
+            sb.Append(targName);
+            sb.Append(" with ");
+            sb.Append(Gender.GENDER_POSSESSIVE[gender]);
+            sb.Append(" ");
+            sb.Append(source.ItemData.ItemName);
+            sb.Append(" - ");
+            if (result == 0)
+            {
+                sb.Append("MISS!\n");
+            }
+            else
+            {
+                sb.Append("HIT for ");
+                sb.Append((int)damages);
+                sb.Append(" damage!\n");
+            }
+            string s = sb.ToString();
+            sb.ReturnToPool();
+            sb = null;
+            return s;
+        }
+        /// <summary>
+        /// Calculates the deflection value for a piece of armour based on the targeted area.
+        /// </summary>
+        /// <param name="targetIo">the IO being targeted</param>
+        /// <param name="targetArea">the area being targeted</param>
+        /// <returns>float</returns>
+        public float CalculateArmorDeflection(BaseInteractiveObject targetIo, int targetArea)
+        {
+            float absorb = 0;
+            return absorb;
         }
         public override float ComputeDamages(BaseInteractiveObject srcIo, BaseInteractiveObject wpnIo, BaseInteractiveObject targetIo, int result)
         {
@@ -172,7 +295,6 @@ namespace Assets.Scripts.Blueholme.Singletons
                             damages = this.ApplyCriticalModifier();
                             // dmgs *= 1.5f;
                         }
-
                         if (targetIo.HasIOFlag(IoGlobals.IO_01_PC))
                         {
                             // TODO - push player when hit
@@ -191,16 +313,256 @@ namespace Assets.Scripts.Blueholme.Singletons
             }
             return damages;
         }
-        /// <summary>
-        /// Calculates the deflection value for a piece of armour based on the targeted area.
-        /// </summary>
-        /// <param name="targetIo">the IO being targeted</param>
-        /// <param name="targetArea">the area being targeted</param>
-        /// <returns>float</returns>
-        public float CalculateArmorDeflection(BaseInteractiveObject targetIo, int targetArea)
+        private bool IsIoDead(BaseInteractiveObject io)
         {
-            float absorb = 0;
-            return absorb;
+            bool dead = false;
+            if (io.HasIOFlag(IoGlobals.IO_01_PC))
+            {
+                dead = io.PcData.IsDead();
+            }
+            return dead;
+        }
+        public void DoRound()
+        {
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append("Round ");
+            sb.Append(Round + 1);
+            sb.Append("\n");
+            Messages.Instance.Add(sb.ToString());
+            InitiativeComparer sorter = new InitiativeComparer();
+            initial.Clear();
+            supplemental.Clear();
+            // get IO weapon speeds
+            for (int i = side1.Count - 1; i >= 0; i--)
+            {
+                BHInteractiveObject io = side1[i];
+                // TODO - is io stunned? paralyzed?
+                int wpnSpeed = BHGlobals.LIGHT_WEAPON;
+                if (io.HasIOFlag(IoGlobals.IO_01_PC))
+                {
+                    wpnSpeed = GetWeaponSpeed(io.PcData);
+                }
+                if (wpnSpeed == BHGlobals.HEAVY_WEAPON)
+                {
+                    // heavy weapons strike every other round
+                    if (io.Script.GetLocalIntVariableValue("last_round_attack") + 2 == Round)
+                    {
+                        // IO gets to attack this round
+                        initial.Add(io);
+                    }
+                }
+                else
+                {
+                    // light and medium weapons strike every round
+                    initial.Add(io);
+                }
+                if (wpnSpeed == BHGlobals.LIGHT_WEAPON)
+                {
+                    // light weapons strike 2x every round
+                    supplemental.Add(io);
+                }
+            }
+            for (int i = side2.Count - 1; i >= 0; i--)
+            {
+                BHInteractiveObject io = side2[i];
+                // TODO - is io stunned? paralyzed?
+                int wpnSpeed = BHGlobals.LIGHT_WEAPON;
+                if (io.HasIOFlag(IoGlobals.IO_01_PC))
+                {
+                    wpnSpeed = GetWeaponSpeed(io.PcData);
+                }
+                if (wpnSpeed == BHGlobals.HEAVY_WEAPON)
+                {
+                    // heavy weapons strike every other round
+                    if (io.Script.GetLocalIntVariableValue("last_round_attack") + 2 == Round)
+                    {
+                        // IO gets to attack this round
+                        initial.Add(io);
+                    }
+                    else
+                    {
+                        sb.Append(io.PcData.Name);
+                        sb.Append(" readies ");
+                        sb.Append(Gender.GENDER_POSSESSIVE[io.PcData.Gender]);
+                        sb.Append(" weapon.\n");
+                        Messages.Instance.Add(sb.ToString());
+                    }
+                }
+                else
+                {
+                    // light and medium weapons strike every round
+                    initial.Add(io);
+                }
+                if (wpnSpeed == BHGlobals.LIGHT_WEAPON)
+                {
+                    // light weapons strike 2x every round
+                    supplemental.Add(io);
+                }
+            }
+            // sort the combatants
+            initial.Sort(sorter);
+            supplemental.Sort(sorter);
+            // give each combatant an initial attack
+            ExecuteCombatantsActions(initial);
+            // allow supplemental attacks
+            ExecuteCombatantsActions(supplemental);
+            Round++;
+            sb.ReturnToPool();
+        }
+        private void ExecuteCombatantsActions(List<BHInteractiveObject> list)
+        {
+            for (int i = 0, li = list.Count; i < li; i++)
+            {
+                // get each combatants action
+                // for now it will be to strike
+                BHInteractiveObject io = list[i];
+                // TODO check to see if IO is dead
+                if (io.HasIOFlag(IoGlobals.IO_01_PC))
+                {
+                    Debug.Log(io.PcData.Name);
+                    if (IsIoDead(io))
+                    {
+                        Debug.Log("is dead");
+                    }
+                    else
+                    {
+                        BHInteractiveObject wpnIo = null;
+                        int wpnId = io.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+                        if (Interactive.Instance.HasIO(wpnId))
+                        {
+                            wpnIo = (BHInteractiveObject)Interactive.Instance.GetIO(wpnId);
+                        }
+                        // TODO check to see if target is dead
+                        int targId = io.Script.GetLocalIntVariableValue("target_practice");
+                        if (Interactive.Instance.HasIO(targId)
+                            && !IsIoDead(Interactive.Instance.GetIO(targId)))
+                        {
+                            // IO can strike.  check to see if attack is allowed
+                            int lastRoundAttack = io.Script.GetLocalIntVariableValue("last_round_attack");
+                            int wpnSpd = GetWeaponSpeed(io.PcData);
+                            // HVY weapons strike every other round
+                            if (wpnSpd == BHGlobals.HEAVY_WEAPON)
+                            {
+                                if (Round - lastRoundAttack == 2)
+                                {
+                                    Debug.Log("`shiudl strike");
+                                    StrikeCheck(io, wpnIo, 0, targId);
+                                    io.Script.SetLocalVariable("last_round_attack", Round);
+                                }
+                                else
+                                {
+                                    Debug.Log("`no strike");
+                                    PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+                                    sb.Append(io.PcData.Name);
+                                    sb.Append(" readies ");
+                                    sb.Append(Gender.GENDER_POSSESSIVE[io.PcData.Gender]);
+                                    sb.Append(" weapon.\n");
+                                    Messages.Instance.Add(sb.ToString());
+                                    sb.ReturnToPool();
+                                }
+                            }
+                            else
+                            {
+                                Debug.Log("`shiudl strike");
+                                StrikeCheck(io, wpnIo, 0, targId);
+                                io.Script.SetLocalVariable("last_round_attack", Round);
+                            }
+                            if (IsIoDead(Interactive.Instance.GetIO(targId)))
+                            {
+                                BaseInteractiveObject targIo = Interactive.Instance.GetIO(targId);
+                                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+                                if (targIo.HasIOFlag(IoGlobals.IO_01_PC))
+                                {
+                                    sb.Append(targIo.PcData.Name);
+                                }
+                                sb.Append(" dies!\n");
+                                Messages.Instance.Add(sb.ToString());
+                                sb.ReturnToPool();
+                            }
+                        }
+                    }
+                }
+                else if (io.HasIOFlag(IoGlobals.IO_03_NPC))
+                {
+
+                }
+            }
+        }
+        /// <summary>
+        /// Gets the speed of the weapon the PC is wielding
+        /// </summary>
+        /// <param name="pc">the <see cref="IOPcData"/></param>
+        /// <returns></returns>
+        private int GetWeaponSpeed(IOPcData pc)
+        {
+            int wpnSpeed = BHGlobals.LIGHT_WEAPON;
+            int wpnId = pc.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+            if (Interactive.Instance.HasIO(wpnId))
+            {
+                BHInteractiveObject wpnIo = (BHInteractiveObject)Interactive.Instance.GetIO(wpnId);
+                wpnSpeed = ((BHItemData)wpnIo.ItemData).WeaponSpeed;
+            }
+            else // PC has no weapons. fighting with fist?
+            {
+
+            }
+            // Halfling weapon speeds are increased due to their diminutive size
+            if (((BHCharacter)pc).Race == BHRace.Halfling)
+            {
+                wpnSpeed++;
+            }
+            return wpnSpeed;
+        }
+        public void InitiateCombat(List<BHInteractiveObject> a, List<BHInteractiveObject> b)
+        {
+            Script.Instance.SetGlobalVariable("FIGHTING", 1);
+            side1 = a;
+            for (int i = side1.Count - 1; i >= 0; i--)
+            {
+                side1[i].Script.SetLocalVariable("last_round_attack", -1);
+            }
+            side2 = b;
+            for (int i = side2.Count - 1; i >= 0; i--)
+            {
+                side2[i].Script.SetLocalVariable("last_round_attack", -1);
+            }
+            Round = 0;
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            do
+            {
+                DoRound();
+                sb.Append(Output.text);
+                while (!Messages.Instance.IsEmpty)
+                {
+                    sb.Append(Messages.Instance.Dequeue);
+                }
+                for (int i = side1.Count - 1; i >= 0; i--)
+                {
+                    sb.Append(GetStats(side1[i]));
+                }
+                for (int i = side2.Count - 1; i >= 0; i--)
+                {
+                    sb.Append(GetStats(side2[i]));
+                }
+                Output.text = sb.ToString();
+                sb.Length = 0;
+            } while (!IsCombatOver);
+            sb.ReturnToPool();
+        }
+        private string GetStats(BHInteractiveObject io)
+        {
+            PooledStringBuilder sb0 = StringBuilderPool.Instance.GetStringBuilder();
+            sb0.Append(io.PcData.Name);
+            sb0.Append("  ");
+            sb0.Append(io.PcData.Life);
+            sb0.Append("/");
+            sb0.Append(io.PcData.GetMaxLife());
+            sb0.Append("\tAC: ");
+            sb0.Append(io.PcData.GetFullAttributeScore("AC"));
+            sb0.Append("\n");
+            string s = sb0.ToString();
+            sb0.ReturnToPool();
+            return s;
         }
         /// <summary>
         /// Gets the armour's material.  Used for sound effects.
@@ -303,59 +665,46 @@ namespace Assets.Scripts.Blueholme.Singletons
                 && Interactive.Instance.HasIO(Interactive.Instance.GetIO(targ)))
             {
                 BaseInteractiveObject targIo = Interactive.Instance.GetIO((int)targ);
+                int targAc = 0;
+                if (targIo.HasIOFlag(IoGlobals.IO_01_PC))
+                {
+                    targIo.PcData.ComputeFullStats();
+                    targAc = (int)targIo.PcData.GetFullAttributeScore("AC");
+                }
                 float dmgs = 0;
-                // get specials, such as drain life or paralyze
+                // TODO get specials, such as drain life or paralyze
                 /*
                  * float drain_life = ARX_EQUIPMENT_GetSpecialValue(wpnIo, IO_SPECIAL_ELEM_DRAIN_LIFE);
                  * float paralyse = ARX_EQUIPMENT_GetSpecialValue(wpnIo, IO_SPECIAL_ELEM_PARALYZE);
                  */
                 // check for a hit
-                int roll = Diceroller.Instance.RolldX(6);
+                int roll = Diceroller.Instance.RolldX(20);
+                if (srcIo.HasIOFlag(IoGlobals.IO_01_PC))
+                {
+                    srcIo.PcData.ComputeFullStats();
+                    roll += (int)srcIo.PcData.GetFullAttributeScore("THM");
+                }
                 roll += GetStrikeModifiers(srcIo, wpnIo);
-                if (roll < -6)
+                Debug.Log(srcIo.PcData.Name + " attacks AC " + targAc + " - roll is " + roll);
+                int result = StrikeCheck(roll, targAc);
+                if (result > 0)
                 {
-                    roll = -6;
+                    dmgs = ComputeDamages(srcIo, wpnIo, targIo, result);
+                    // damage the target
+                    if (targIo.HasIOFlag(IoGlobals.IO_01_PC))
+                    {
+                        Debug.Log(targIo.PcData.Name + " takes " + dmgs + " damage");
+                        targIo.PcData.DamagePlayer(dmgs, 0, srcIo.RefId);
+                    }
+                    else if (targIo.HasIOFlag(IoGlobals.IO_03_NPC))
+                    {
+                        targIo.NpcData.DamageNPC(dmgs, srcIo.RefId, false);
+                    }
                 }
-                else if (roll > 14)
-                {
-                    roll = 14;
-                }
-                // TODO check for lunge
-                int result = StrikeCheck(roll, Diceroller.Instance.RolldX(100));
                 // store message about attack
-                Messages.Instance.Add(BuildMessage(srcIo, targIo, result, dmgs));
+                Messages.Instance.Add(BuildMessage(srcIo, wpnIo, targIo, result, dmgs));
             }
             return false;
-        }
-        private string BuildMessage(BaseInteractiveObject attacker, BaseInteractiveObject target, int result, float damages = 0f)
-        {
-            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-            if (attacker.HasIOFlag(IoGlobals.IO_01_PC))
-            {
-                sb.Append(attacker.PcData.Name);
-            }
-            string targName = "";
-            if (target.HasIOFlag(IoGlobals.IO_01_PC))
-            {
-                targName = target.PcData.Name;
-            }
-            if (result == 0)
-            {
-                sb.Append(" slashes wildly at ");
-                sb.Append(targName);
-                sb.Append(" but misses.\n");
-            } else
-            {
-                sb.Append(" hits ");
-                sb.Append(targName);
-                sb.Append(" for ");
-                sb.Append((int)damages);
-                sb.Append(" damage!\n");
-            }
-            string s = sb.ToString();
-            sb.ReturnToPool();
-            sb = null;
-            return s;
         }
         /// <summary>
         /// Checks the Strike Matrix for a hit.
@@ -363,10 +712,76 @@ namespace Assets.Scripts.Blueholme.Singletons
         /// <param name="key">the dice roll plus modifiers</param>
         /// <param name="roll">the percentile roll, plus lunge modifier</param>
         /// <returns></returns>
-        private int StrikeCheck(int key, int roll)
+        private int StrikeCheck(int roll, int opponentAc)
         {
             int result = 0;
+            // check against matrix
+            int rollNeeded = PC_LVL_1_3_THAC0;
+            rollNeeded -= opponentAc;
+            if (roll >= rollNeeded)
+            {
+                result = 1;
+            }
             return result;
+        }
+        private class InitiativeComparer : IComparer<BHInteractiveObject>
+        {
+            private float GetIoDex(BHInteractiveObject io)
+            {
+                float dex = 0;
+                if (io.HasIOFlag(IoGlobals.IO_01_PC))
+                {
+                    io.PcData.ComputeFullStats();
+                    dex = io.PcData.GetFullAttributeScore("DEX");
+                }
+                else if (io.HasIOFlag(IoGlobals.IO_03_NPC))
+                {
+                    if (io.IsInGroup("HUMANOIDS"))
+                    {
+                        if (io.Script.HasLocalVariable("DEXTERITY"))
+                        {
+                            dex = io.Script.GetLocalFloatVariableValue("DEXTERITY");
+                        }
+                        else
+                        {
+                            dex = Diceroller.Instance.RollXdY(3, 6);
+                            io.Script.SetLocalVariable("DEXTERITY", dex);
+                        }
+                    }
+                }
+                return dex;
+            }
+            public int Compare(BHInteractiveObject x, BHInteractiveObject y)
+            {
+                int c = 0;
+                float xd = GetIoDex(x), yd = GetIoDex(y);
+                if (xd < yd)
+                {
+                    c = 1;
+                }
+                else if (xd > yd)
+                {
+                    c = -1;
+                }
+                else
+                {
+                    int xr = 0, yr = 0;
+                    do
+                    {
+                        xr = Diceroller.Instance.RolldX(6);
+                        yr = Diceroller.Instance.RolldX(6);
+                    } while (xr == yr);
+                    if (xr < yr)
+                    {
+                        c = 1;
+                    }
+                    else
+                    {
+                        c = -1;
+                    }
+                }
+                return c;
+            }
         }
     }
 }
