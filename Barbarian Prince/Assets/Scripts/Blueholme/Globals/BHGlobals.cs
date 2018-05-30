@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,9 +64,13 @@ namespace Assets.Scripts.Blueholme.Globals
         /// </summary>
         public const int EQUIP_ELEMENT_WIS = 12;
         /// <summary>
-        /// Dexterity.
+        /// Armour Class.
         /// </summary>
         public const int EQUIP_ELEMENT_AC = 13;
+        /// <summary>
+        /// To Hit Modifier.
+        /// </summary>
+        public const int EQUIP_ELEMENT_THM = 14;
         /// <summary>
         /// the number of equipment slots
         /// <para>0 - Left hand ring</para>
@@ -79,8 +83,8 @@ namespace Assets.Scripts.Blueholme.Globals
         /// <para>7 - leggings</para>
         /// see complete list in <see cref="EquipmentGlobals"/>
         /// </summary>
-        public const int MAX_EQUIPPED=8;
-        public const int NUM_ELEMENTS=14;
+        public const int MAX_EQUIPPED = 8;
+        public const int NUM_ELEMENTS = 15;
         /// <summary>
         /// script message morale check
         /// </summary>
@@ -93,5 +97,8 @@ namespace Assets.Scripts.Blueholme.Globals
         /// script message combat flurry
         /// </summary>
         public const int SM_302_COMBAT_FLURRY = 302;
+        public const int LIGHT_WEAPON = 0;
+        public const int MEDIUM_WEAPON = 1;
+        public const int HEAVY_WEAPON = 2;
     }
 }
