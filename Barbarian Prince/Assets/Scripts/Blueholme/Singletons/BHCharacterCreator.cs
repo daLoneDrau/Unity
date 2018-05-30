@@ -18,8 +18,6 @@ namespace Assets.Scripts.Blueholme.Singletons
         [SerializeField]
         private Text text0;
         [SerializeField]
-        private Text text1;
-        [SerializeField]
         private BHInteractiveObject io0;
         private BHInteractiveObject io1;
         // Use this for initialization
@@ -29,6 +27,7 @@ namespace Assets.Scripts.Blueholme.Singletons
             BHInteractive.Init();
             BHScript.Init();
             BHCombat.Init();
+            ((BHCombat)BHCombat.Instance).Output = text0;
             io0 = ((BHInteractive)Interactive.Instance).NewHero();
             io0.PcData.Name = "Gotzstaf";
             io0.PcData.Gender = Gender.GENDER_MALE;
@@ -37,15 +36,16 @@ namespace Assets.Scripts.Blueholme.Singletons
             io1.PcData.Gender = Gender.GENDER_MALE;
             CreateCharacter(io0);
             CreateCharacter(io1);
-            /*
-            BHInteractiveObject wpnIO = ((BHInteractive)Interactive.Instance).NewItem(new Shortsword());
+            ((BHCharacter)io0.PcData).Race = BHRace.Halfling;
+            ((BHCharacter)io1.PcData).Race = BHRace.Halfling;
+            BHInteractiveObject wpnIO = ((BHInteractive)Interactive.Instance).NewItem(new Handaxe());
             wpnIO.ItemData.Equip(io0);
             wpnIO = ((BHInteractive)Interactive.Instance).NewItem(new Shortsword());
             wpnIO.ItemData.Equip(io1);
-            */
             sb.Append(((BHCharacter)io0.PcData).ToCharSheetString());
             sb.Append("\n----------------------------\n");
             sb.Append(((BHCharacter)io1.PcData).ToCharSheetString());
+            sb.Append("\n----------------------------\n");
             text0.text = sb.ToString();
             sb.Length = 0;
             // put them in combat
@@ -53,6 +53,12 @@ namespace Assets.Scripts.Blueholme.Singletons
         }
         private void Combat()
         {
+            // set targets for each
+            io0.Script.SetLocalVariable("target_practice", io1.RefId);
+            io1.Script.SetLocalVariable("target_practice", io0.RefId);
+            print("starting combat");
+            // start combat
+            ((BHCombat)BHCombat.Instance).InitiateCombat(new List<BHInteractiveObject> { io0 }, new List<BHInteractiveObject> { io1 });
             /*
             FWCharacter pc0 = (FWCharacter)io0.PcData;
             FWCharacter pc1 = (FWCharacter)io1.PcData;
@@ -165,7 +171,7 @@ namespace Assets.Scripts.Blueholme.Singletons
                     valid = Validate(pc);
                 }
                 while (valid == 0);
-            } while ((valid & BHProfession.Fighter.Val) == BHProfession.Fighter.Val);
+            } while ((valid & BHProfession.Fighter.Val) != BHProfession.Fighter.Val);
             switch (rc)
             {
                 case 1:
@@ -207,6 +213,7 @@ namespace Assets.Scripts.Blueholme.Singletons
             pc.SetBaseAttributeScore("INT", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("WIS", Diceroller.Instance.RollXdY(3, 6));
             pc.SetBaseAttributeScore("CHA", Diceroller.Instance.RollXdY(3, 6));
+            pc.SetBaseAttributeScore("AC", 9);
         }
         private void SetPlayerProfession(BHCharacter pc, BHProfession profession)
         {
@@ -222,7 +229,7 @@ namespace Assets.Scripts.Blueholme.Singletons
                     pc.SetBaseAttributeScore("MHP", Diceroller.Instance.RolldX(6));
                 }
                 pc.ComputeFullStats();
-                hp = (int) pc.GetFullAttributeScore("MHP");
+                hp = (int)pc.GetFullAttributeScore("MHP");
             } while (hp <= 0);
 
             pc.SetBaseAttributeScore("HP", pc.GetBaseAttributeScore("MHP"));
@@ -250,50 +257,6 @@ namespace Assets.Scripts.Blueholme.Singletons
                 recommendedClass += BHProfession.Thief.Val;
             }
             return recommendedClass;
-        }
-
-        private class InitiativeComparer : IComparer<BHInteractiveObject>
-        {
-            public int Compare(BHInteractiveObject x, BHInteractiveObject y)
-            {
-                int c = 0;
-                if ((x.HasIOFlag(IoGlobals.IO_01_PC)
-                    || x.HasIOFlag(IoGlobals.IO_03_NPC))
-                    && (y.HasIOFlag(IoGlobals.IO_01_PC)
-                    || y.HasIOFlag(IoGlobals.IO_03_NPC)))
-                {
-                    int xWpnId = -1, yWpnId = -1;
-                    // get weapon lengths
-                    float xWpnLen = 0, yWpnLen = 0;
-                    if (x.HasIOFlag(IoGlobals.IO_01_PC))
-                    {
-                        xWpnId = x.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
-                    }
-                    else
-                    {
-                        xWpnId = x.NpcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
-                    }
-                    if (y.HasIOFlag(IoGlobals.IO_01_PC))
-                    {
-                        yWpnId = y.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
-                    }
-                    else
-                    {
-                        yWpnId = y.NpcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
-                    }
-                    if (xWpnLen >= yWpnLen + 2)
-                    {
-                        // x goes first
-                        c = 1;
-                    }
-                    else if (xWpnLen + 2 <= yWpnLen)
-                    {
-                        // y goes first
-                        c = -1;
-                    }
-                }
-                return c;
-            }
         }
     }
 }
