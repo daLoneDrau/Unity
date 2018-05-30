@@ -1,10 +1,11 @@
-﻿using RPGBase.Constants;
+using RPGBase.Constants;
 using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace RPGBase.Flyweights
 {
@@ -162,7 +163,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// Called when a player dies.
         /// </summary>
-        public void BecomesDead()
+        public virtual void BecomesDead()
         {
             int i = ProjectConstants.Instance.GetMaxSpells() - 1;
             for (; i >= 0; i--)
@@ -243,7 +244,7 @@ namespace RPGBase.Flyweights
                 }
                 Script.Instance.SendIOScriptEvent(io,
                         ScriptConsts.SM_045_OUCH,
-                        new Object[] { "OUCH", io.DamageSum, "SUMMONED_OUCH", 0f },
+                        new System.Object[] { "OUCH", io.DamageSum, "SUMMONED_OUCH", 0f },
                         null);
                 Script.Instance.EventSender = oes;
                 io.DamageSum = 0;
@@ -348,7 +349,7 @@ namespace RPGBase.Flyweights
                                         }
                                         Script.Instance.SendIOScriptEvent(ioo,
                                                 0,
-                                                new Object[] { "tmp_int1", source },
+                                                new System.Object[] { "tmp_int1", source },
                                                 "TargetDeath");
                                     }
                                 }
