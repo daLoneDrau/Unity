@@ -23,5 +23,13 @@ namespace Assets.Scripts.Blueholme.Flyweights
             */
             return ScriptConsts.ACCEPT;
         }
+        /// <summary>
+        /// On participating in a combat round.
+        /// </summary>
+        /// <returns></returns>
+        public virtual int OnCombatFlurry()
+        {
+            return ScriptConsts.ACCEPT;
+        }
     }
 }

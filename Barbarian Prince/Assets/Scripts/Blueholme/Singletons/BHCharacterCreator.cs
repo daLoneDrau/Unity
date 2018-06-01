@@ -54,96 +54,19 @@ namespace Assets.Scripts.Blueholme.Singletons
         private void Combat()
         {
             // set targets for each
-            io0.Script.SetLocalVariable("target_practice", io1.RefId);
-            io1.Script.SetLocalVariable("target_practice", io0.RefId);
+            BHParty group = new BHParty();
+            group.Add(io0);
+            group.Configuration.AssignToPosition(BHPartyConfiguration.POSITION_FRONT_CENTER, io0);
+            io0.PcData.EncounterParty = group;
+
+            group = new BHParty();
+            group.Add(io1);
+            group.Configuration.AssignToPosition(BHPartyConfiguration.POSITION_FRONT_CENTER, io1);
+            io1.PcData.EncounterParty = group;
+            
             print("starting combat");
             // start combat
-            ((BHCombat)BHCombat.Instance).InitiateCombat(new List<BHInteractiveObject> { io0 }, new List<BHInteractiveObject> { io1 });
-            /*
-            FWCharacter pc0 = (FWCharacter)io0.PcData;
-            FWCharacter pc1 = (FWCharacter)io1.PcData;
-            List<FWInteractiveObject> combatants = new List<FWInteractiveObject>
-            {
-                io0,
-                io1
-            };
-            InitiativeComparer sorter = new InitiativeComparer();
-            //FlurryComparer flurrySorter = new FlurryComparer();
-            bool combatIsOver = false;
-            while (!combatIsOver)
-            {
-                ((FWCombat)FWCombat.Instance).FlurryNumber++;
-                sb.Length = 0;
-                sb.Append(text0.text);
-                sb.Append("\n\n");
-                // print combatants' health
-                sb.Append(pc0.Name);
-                sb.Append(": ");
-                sb.Append(pc0.Life);
-                sb.Append("/");
-                sb.Append(pc0.GetMaxLife());
-                sb.Append("\n");
-                sb.Append(pc1.Name);
-                sb.Append(": ");
-                sb.Append(pc1.Life);
-                sb.Append("/");
-                sb.Append(pc1.GetMaxLife());
-                sb.Append("\n\n");
-                // go through each phase
-                // PRE-COMBAT
-                PreCombat();
-                for (int i = combatants.Count - 1; i >= 0; i--)
-                {
-                    combatants[0].Script.SetLocalVariable("initial_strike_dmg", 0);
-                    combatants[0].Script.SetLocalVariable("initial_strike_result", -1);
-                }
-
-
-                // COMBAT
-                // 1. characters with longer weapons or SURPLUS AGI GTE 4+ opponent attach first
-                // sort combatants by weapon length or surplus agility
-                combatants.Sort(sorter);
-                print(combatants[0].PcData.Name + " goes first");
-                float startingEnd = combatants[1].PcData.Life;
-                FWCombat.Instance.StrikeCheck(combatants[0], Interactive.Instance.GetIO(combatants[0].PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON)), FWCombat.INITIAL_STRIKE, combatants[1].RefId);
-                float currEnd = combatants[1].PcData.Life;
-                // 2. opponents counterattack unless killed or END LTE 1/2
-                if (!combatants[1].PcData.IsDead()
-                    && currEnd / startingEnd > .5f)
-                {
-                    PooledStringBuilder sb1 = StringBuilderPool.Instance.GetStringBuilder();
-                    sb1.Append(combatants[1].PcData.Name);
-                    sb1.Append(" counterattacks!\n");
-                    Messages.Instance.Add(sb1.ToString());
-                    sb1.ReturnToPool();
-                    sb1 = null;
-                    FWCombat.Instance.StrikeCheck(combatants[1], Interactive.Instance.GetIO(combatants[1].PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON)), FWCombat.INITIAL_STRIKE, combatants[0].RefId);
-                }
-                else if (currEnd / startingEnd <= .5f)
-                {
-                    PooledStringBuilder sb1 = StringBuilderPool.Instance.GetStringBuilder();
-                    sb1.Append(combatants[1].PcData.Name);
-                    sb1.Append(" staggers...\n");
-                }
-                ((FWCombat)FWCombat.Instance).FlurryNumber++;
-                // 3. simultaneous flurry of blows
-                // combatants are re-sorted by who caused the most damage
-                // each combatant needs to choose their action
-                for (int i = combatants.Count - 1; i >= 0; i--)
-                {
-                    Script.Instance.SendIOScriptEvent(combatants[0], FWGlobals.SM_302_COMBAT_FLURRY, null, "");
-                }
-                // POST-COMBAT
-                // 1. check morale
-                // 2. go back to combat phase
-                while (!Messages.Instance.IsEmpty)
-                {
-                    sb.Append(Messages.Instance.Dequeue);
-                }
-                text0.text = sb.ToString();
-                break;
-            }
-            */
+            ((BHCombat)BHCombat.Instance).InitiateCombat(io0.PcData.EncounterParty, io1.PcData.EncounterParty);
         }
         // Update is called once per frame
         void Update()
@@ -238,13 +161,14 @@ namespace Assets.Scripts.Blueholme.Singletons
         private int Validate(BHCharacter pc)
         {
             pc.ComputeFullStats();
-            int minPrime = 13;
+            int minPrime = 13, min2nd = 9;
             int recommendedClass = 0;
             if (pc.GetFullAttributeScore("WIS") >= minPrime)
             {
                 recommendedClass += BHProfession.Cleric.Val;
             }
-            if (pc.GetFullAttributeScore("STR") >= minPrime)
+            if (pc.GetFullAttributeScore("STR") >= minPrime
+                && pc.GetFullAttributeScore("CON") >= min2nd)
             {
                 recommendedClass += BHProfession.Fighter.Val;
             }

@@ -89,9 +89,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Blueholme\Globals\BHRace.cs" />
-    <Compile Include="Assets\Scripts\Blueholme\Singletons\BHCharacterCreator.cs" />
-    <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\CharacterCreator.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Constants\BPGlobals.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Constants\WealthCode.cs" />
     <Compile Include="Assets\Scripts\BarbarianPrince\Flyweights\BPCharacter.cs" />
@@ -135,13 +132,19 @@
     <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHInteractiveObject.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHInventoryData.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHItemData.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHParty.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHPartyConfiguration.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Flyweights\BHScriptable.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Globals\BHGlobals.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Globals\BHProfession.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Globals\BHRace.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Scriptables\Items\Handaxe.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Scriptables\Items\Shortsword.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Scriptables\Items\WeaponBase.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Scriptables\Mobs\FighterBase.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Scriptables\Mobs\HeroBase.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Scriptables\Mobs\MobBase.cs" />
+    <Compile Include="Assets\Scripts\Blueholme\Singletons\BHCharacterCreator.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Singletons\BHCombat.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Singletons\BHController.cs" />
     <Compile Include="Assets\Scripts\Blueholme\Singletons\BHInteractive.cs" />
@@ -157,16 +160,17 @@
     <Compile Include="Assets\Scripts\FantasyWargaming\Globals\Bogey.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Globals\FWGlobals.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Globals\StarSign.cs" />
-    <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Items\Shortsword.cs" />
-    <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Items\Shortspear.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Items\Longspear.cs" />
+    <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Items\Shortspear.cs" />
+    <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Items\Shortsword.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Items\WeaponBase.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Mobs\HeroBase.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Scriptables\Mobs\MobBase.cs" />
+    <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\CharacterCreator.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\FWCombat.cs" />
-    <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\FWScript.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\FWController.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\FWInteractive.cs" />
+    <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\FWScript.cs" />
     <Compile Include="Assets\Scripts\FantasyWargaming\Singletons\Messages.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Behaviour.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Constants\Dice.cs" />
@@ -222,12 +226,12 @@
     <Compile Include="Assets\Scripts\RPGBase\Pooled\PooledStringBuilder.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Pooled\StringBuilderPool.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\ArrayUtilities.cs" />
+    <Compile Include="Assets\Scripts\RPGBase\Singletons\Combat.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Diceroller.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\ICombat.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\IProjectConstants.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\IScript.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Interactive.cs" />
-    <Compile Include="Assets\Scripts\RPGBase\Singletons\Combat.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\ProjectConstants.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\RPGTime.cs" />
     <Compile Include="Assets\Scripts\RPGBase\Singletons\Script.cs" />
@@ -251,7 +255,6 @@
   <ItemGroup>
     <None Include="Assets\Resources\config.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
 </Project>

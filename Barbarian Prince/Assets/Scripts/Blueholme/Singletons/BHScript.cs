@@ -119,6 +119,9 @@ namespace Assets.Scripts.Blueholme.Singletons
                 case BHGlobals.SM_300_MORALE_CHECK:
                     ((BHScriptable)script).OnMoraleCheck();
                     break;
+                case BHGlobals.SM_302_COMBAT_FLURRY:
+                    ((BHScriptable)script).OnCombatFlurry();
+                    break;
                 default:
                     base.RunMessage(script, msg, io);
                     break;

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Assets.Scripts.Blueholme.Flyweights;
 
 namespace RPGBase.Flyweights
 {
@@ -105,6 +106,9 @@ namespace RPGBase.Flyweights
         /// </summary>
         private int xp;
         public int Xp { get { return xp; } }
+
+        public BHParty EncounterParty { get; set; }
+
         /// <summary>
         /// Creates a new instance of <see cref="IoPcData"/>.
         /// </summary>
