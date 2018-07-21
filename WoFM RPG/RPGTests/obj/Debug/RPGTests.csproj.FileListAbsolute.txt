@@ -1,0 +1,2 @@
+C:\Users\588648\Unity\WoFM RPG\RPGTests\obj\Debug\RPGTests.dll
+C:\Users\588648\Unity\WoFM RPG\RPGTests\obj\Debug\RPGTests.pdb
