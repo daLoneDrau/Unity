@@ -3703,9 +3703,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Donald\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\588648\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -3713,20 +3711,15 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\Donald\\Unity\\RPGBase\\RPGBase.csproj",
+      "projectUniqueName": "C:\\Users\\588648\\Unity\\RPGBase\\RPGBase.csproj",
       "projectName": "RPGBase",
-      "projectPath": "C:\\Users\\Donald\\Unity\\RPGBase\\RPGBase.csproj",
-      "packagesPath": "C:\\Users\\Donald\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Donald\\Unity\\RPGBase\\obj\\",
+      "projectPath": "C:\\Users\\588648\\Unity\\RPGBase\\RPGBase.csproj",
+      "packagesPath": "C:\\Users\\588648\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\588648\\Unity\\RPGBase\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Donald\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Users\\588648\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard1.4"
@@ -3739,11 +3732,6 @@
         "netstandard1.4": {
           "projectReferences": {}
         }
-      },
-      "warningProperties": {
-        "warnAsError": [
-          "NU1605"
-        ]
       }
     },
     "frameworks": {
@@ -3751,7 +3739,7 @@
         "dependencies": {
           "NETStandard.Library": {
             "target": "Package",
-            "version": "[1.6.1, )",
+            "version": "1.6.1",
             "autoReferenced": true
           }
         }
