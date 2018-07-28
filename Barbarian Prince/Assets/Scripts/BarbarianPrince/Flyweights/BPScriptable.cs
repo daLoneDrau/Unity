@@ -9,8 +9,9 @@ namespace Assets.Scripts.BarbarianPrince.Flyweights
 {
     public class BPScriptable : Scriptable
     {
-        public virtual int OnTimeChange() {
+        public virtual int OnTimeChange()
+        {
             return ScriptConsts.ACCEPT;
         }
-}
+    }
 }

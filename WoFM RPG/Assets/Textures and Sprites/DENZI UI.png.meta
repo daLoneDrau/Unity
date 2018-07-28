@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 40e75e90c87f74e43a623c7a0797e3aa
-timeCreated: 1532126842
+timeCreated: 1532626607
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -13,6 +13,10 @@ TextureImporter:
     21300012: Banner (Big)
     21300014: pointer
     21300016: Panel (Large)
+    21300018: Border (Statbar)
+    21300020: Statbar
+    21300022: Warrior (no shield)
+    21300024: Warrior (shield)
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -204,6 +208,58 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 28, y: 24, z: 28, w: 24}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Border (Statbar)
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 618
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 3, z: 5, w: 3}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Statbar
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 613
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 2, y: 0, z: 2, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Warrior (no shield)
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 607
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Warrior (shield)
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 624
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     outline: []

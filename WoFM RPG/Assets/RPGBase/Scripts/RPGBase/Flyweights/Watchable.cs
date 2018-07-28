@@ -2,8 +2,8 @@
 {
     public abstract class Watchable
     {
-        public abstract void AddWatcher(Watcher watcher);
+        public abstract void AddWatcher(IWatcher watcher);
         public abstract void NotifyWatchers();
-        public abstract void RemoveWatcher(Watcher watcher);
+        public abstract void RemoveWatcher(IWatcher watcher);
     }
 }

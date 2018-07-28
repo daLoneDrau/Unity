@@ -45,23 +45,23 @@ namespace RPGBase.Flyweights
         }
         public float Life { get; private set; }
         /// <summary>
-        /// the list of <see cref="Watcher"/>s associated with this <see cref="IOCharacter"/>.
+        /// the list of <see cref="IWatcher"/>s associated with this <see cref="IOCharacter"/>.
         /// </summary>
-        private Watcher[] watchers = new Watcher[0];
+        private IWatcher[] watchers = new IWatcher[0];
         /// <summary>
         /// Creates a new instance of <see cref="IOCharacter"/>.
         /// </summary>
         protected IOCharacter()
         {
-            watchers = new Watcher[0];
+            watchers = new IWatcher[0];
             DefineAttributes();
             InitEquippedItems(ProjectConstants.Instance.GetMaxEquipped());
         }
         /// <summary>
         /// Adds a watcher for this instance.
         /// </summary>
-        /// <param name="watcher">the new <see cref="Watcher"/></param>
-        public override void AddWatcher(Watcher watcher)
+        /// <param name="watcher">the new <see cref="IWatcher"/></param>
+        public override void AddWatcher(IWatcher watcher)
         {
             if (watcher != null)
             {
@@ -416,7 +416,7 @@ namespace RPGBase.Flyweights
         /**
          * {@inheritDoc}
          */
-        public override void RemoveWatcher(Watcher watcher)
+        public override void RemoveWatcher(IWatcher watcher)
         {
             int index = -1;
             for (int i = watchers.Length - 1; i >= 0; i--)

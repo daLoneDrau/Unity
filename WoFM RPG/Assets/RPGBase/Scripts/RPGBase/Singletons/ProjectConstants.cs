@@ -24,6 +24,10 @@ namespace RPGBase.Singletons
         /// </summary>
         /// <returns></returns>
         public virtual int GetMaxSpells() { throw new NotImplementedException(); }
+        /// <summary>
+        /// Gets the number of equipment element modifiers there are.
+        /// </summary>
+        /// <returns></returns>
         public virtual int GetNumberEquipmentElements() { throw new NotImplementedException(); }
         /// <summary>
         /// Gets the reference id of the player.
