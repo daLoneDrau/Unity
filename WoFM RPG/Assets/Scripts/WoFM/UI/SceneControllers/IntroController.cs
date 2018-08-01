@@ -17,6 +17,14 @@ namespace WoFM.UI.SceneControllers
         private TextGenerationSettings generationSettings;
         public Button btnBegin;
         public Button btnNext;
+        public List<string> words;
+        public string text;
+        private string textRemaining;
+        public string[] linesDisplayed;
+        public bool isDebug = true;
+        public Text textUi;
+        public Canvas canvas;
+        private Vector3 scale;
         void Awake()
         {
             btnBegin.interactable = false;
@@ -27,22 +35,20 @@ namespace WoFM.UI.SceneControllers
             btnBegin.interactable = false;
             textGen = new TextGenerator();
             generationSettings = textUi.GetGenerationSettings(textUi.rectTransform.rect.size);
+            print(generationSettings.fontSize);
+            scale = canvas.transform.localScale;
             float width = textGen.GetPreferredWidth(" ", generationSettings);
             float height = textGen.GetPreferredHeight(" ", generationSettings);
             PrepareText();
             NextText();
+            // get canvas local scale
+            print("local scale "+scale);
         }
         bool doonce;
         // Update is called once per frame
         void Update()
         {
         }
-        public List<string> words;
-        public string text;
-        private string textRemaining;
-        public string[] linesDisplayed;
-        public bool isDebug = true;
-        public Text textUi;
         private float GetWordWidth(string word)
         {
             float size = 0;
@@ -78,8 +84,8 @@ namespace WoFM.UI.SceneControllers
 
                 // all tabs replaced with spaces
                 var rectTransform = textUi.GetComponent<RectTransform>();
-                float innerWidth = rectTransform.rect.width;
-                float maxHeight = rectTransform.rect.height;
+                float innerWidth = rectTransform.rect.width * scale.x;
+                float maxHeight = rectTransform.rect.height * scale.y;
                 print(rectTransform.rect);
                 // start a line of text
                 PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
@@ -90,13 +96,10 @@ namespace WoFM.UI.SceneControllers
                 float spaceWidth = textGen.GetPreferredWidth(" ", generationSettings), spaceHeight = textGen.GetPreferredHeight(" ", generationSettings);
                 print("spaceWidth::" + spaceWidth);
                 print("spaceHeight::" + spaceHeight);
+                maxHeight -= spaceHeight;
                 int i = 0;
                 for (int li = words.Count; i < li; i++)
                 {
-                    if (isDebug)
-                    {
-                        print("word " + i + "::" + words[i] + "::" + words[i].Length);
-                    }
                     if (words[i].StartsWith(" "))
                     {
                         // HANDLE SPACE
@@ -117,6 +120,7 @@ namespace WoFM.UI.SceneControllers
                              ******************/
                             // add line height
                             currentHeight += spaceHeight;
+                            print("ending line - height is now " + currentHeight);
                             // add line to lines displayed
                             linesDisplayed = ArrayUtilities.Instance.ExtendArray(sb.ToString(), linesDisplayed);
                             // reset stringbuilder, width, and words
@@ -156,6 +160,7 @@ namespace WoFM.UI.SceneControllers
                              ******************/
                             // add line height
                             currentHeight += spaceHeight;
+                            print("ending line - height is now " + currentHeight);
                             // add line to lines displayed
                             linesDisplayed = ArrayUtilities.Instance.ExtendArray(sb.ToString(), linesDisplayed);
                             // reset stringbuilder, width, and words
@@ -188,6 +193,7 @@ namespace WoFM.UI.SceneControllers
                          ******************/
                         // add line height
                         currentHeight += spaceHeight;
+                        print("ending line - height is now " + currentHeight);
                         // add line to lines displayed
                         linesDisplayed = ArrayUtilities.Instance.ExtendArray(sb.ToString(), linesDisplayed);
                         // reset stringbuilder, width, and words
@@ -222,6 +228,7 @@ namespace WoFM.UI.SceneControllers
                              ******************/
                             // add line height
                             currentHeight += spaceHeight;
+                            print("ending line - height is now " + currentHeight);
                             // add line to lines displayed
                             linesDisplayed = ArrayUtilities.Instance.ExtendArray(sb.ToString(), linesDisplayed);
                             // reset stringbuilder, width, and words

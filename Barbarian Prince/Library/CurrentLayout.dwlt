@@ -43,7 +43,7 @@ MonoBehaviour:
     y: 0
     width: 1536
     height: 740
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
 MonoBehaviour:
@@ -106,10 +106,10 @@ MonoBehaviour:
     y: 30
     width: 1536
     height: 690
-  m_MinSize: {x: 681, y: 492}
-  m_MaxSize: {x: 14004, y: 14042}
+  m_MinSize: {x: 679, y: 492}
+  m_MaxSize: {x: 14002, y: 14042}
   vertical: 0
-  controlID: 50
+  controlID: 116
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -255,8 +255,8 @@ MonoBehaviour:
     y: 0
     width: 321
     height: 690
-  m_MinSize: {x: 277, y: 71}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 19}
@@ -445,10 +445,10 @@ MonoBehaviour:
     width: 231
     height: 292
   m_TreeViewState:
-    scrollPos: {x: 0, y: 180}
-    m_SelectedIDs: 82280000
-    m_LastClickedID: 0
-    m_ExpandedIDs: 74eeffffcefbffff00000000
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 662a0000
+    m_LastClickedID: 10854
+    m_ExpandedIDs: cefbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -582,19 +582,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Sprites
+    - Assets/Scripts/BarbarianPrince/UI/Controllers
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Sprites
+  - Assets/Scripts/BarbarianPrince/UI/Controllers
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\588648\Unity\Barbarian Prince
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 5c260000
-    m_LastClickedID: 9820
-    m_ExpandedIDs: 0000000038260000a2260000f8260000fc26000052270000e8270000ec27000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 93}
+    m_SelectedIDs: 88290000
+    m_LastClickedID: 10632
+    m_ExpandedIDs: 00000000a42600000e2700006427000068270000be270000cc270000542800005828000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -622,7 +622,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000382600009e260000a2260000f8260000fc2600005227000060270000e8270000ec270000
+    m_ExpandedIDs: 00000000a42600000e2700006427000068270000be2700005428000058280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
