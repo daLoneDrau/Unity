@@ -14,6 +14,10 @@ namespace RPGBase.Constants
         /// <summary>
         /// the female gender.
         /// </summary>
+        public static int GENDER_NEUTRAL = 2;
+        /// <summary>
+        /// the female gender.
+        /// </summary>
         public static int GENDER_FEMALE = 1;
         /// <summary>
         /// the male gender.
@@ -22,23 +26,23 @@ namespace RPGBase.Constants
         /// <summary>
         /// objective nouns by gender.
         /// </summary>
-        public static string[] GENDER_OBJECTIVE = { "him", "her" };
+        public static string[] GENDER_OBJECTIVE = { "him", "her", "it" };
         /// <summary>
         /// possessive adjectives by gender.
         /// </summary>
-        public static string[] GENDER_POSSESSIVE = { "his", "her" };
+        public static string[] GENDER_POSSESSIVE = { "his", "her", "its" };
         /// <summary>
         /// possessive objective nouns by gender.
         /// </summary>
-        public static string[] GENDER_POSSESSIVE_OBJECTIVE = { "his", "hers" };
+        public static string[] GENDER_POSSESSIVE_OBJECTIVE = { "his", "hers", "theirs" };
         /// <summary>
         /// pronouns by gender.
         /// </summary>
-        public static string[] GENDER_PRONOUN = { "he", "she" };
+        public static string[] GENDER_PRONOUN = { "he", "she", "it" };
         /// <summary>
         /// a list of player gender names.
         /// </summary>
-        public static string[] GENDERS = { "Male", "Female" };
+        public static string[] GENDERS = { "Male", "Female", "It" };
         /// <summary>
         /// Hidden constructor.
         /// </summary>

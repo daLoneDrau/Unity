@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 40e75e90c87f74e43a623c7a0797e3aa
-timeCreated: 1532626607
+timeCreated: 1533865530
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -17,6 +17,9 @@ TextureImporter:
     21300020: Statbar
     21300022: Warrior (no shield)
     21300024: Warrior (shield)
+    21300026: Panel (map)
+    21300028: Panel (bottom)
+    21300030: Panel (right)
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -245,7 +248,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -258,8 +261,47 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Panel (map)
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 500
+        width: 121
+        height: 121
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 60, y: 60, z: 60, w: 60}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Panel (bottom)
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 467
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 16, y: 16, z: 16, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Panel (right)
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 451
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 16, z: 16, w: 16}
       outline: []
       tessellationDetail: 0
     outline: []

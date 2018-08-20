@@ -133,10 +133,10 @@ public class WorldController : Singleton<WorldController>
     public void CenterOnHex(Vector2 position)
     {
         Vector2 hexBottomLeft = GetHexTilePosition(position);
-        float midx = (float)hexBottomLeft.x+ 2.5f;
-        float midy = (float)hexBottomLeft.y+ 1.5f;
-        print("hex " + position + " goes from " + hexBottomLeft.x + "," + hexBottomLeft.y + " to " + (hexBottomLeft.x+5) + "," + (hexBottomLeft.y+3) + " mid at " + midx + "," + midy);
-        ViewportController.Instance.CenterOnPoint(new Vector2(midx,midy));
+        float midx = (float)hexBottomLeft.x + 2.5f;
+        float midy = (float)hexBottomLeft.y + 1.5f;
+        print("hex " + position + " goes from " + hexBottomLeft.x + "," + hexBottomLeft.y + " to " + (hexBottomLeft.x + 5) + "," + (hexBottomLeft.y + 3) + " mid at " + midx + "," + midy);
+        ViewportController.Instance.CenterOnPoint(new Vector2(midx, midy));
     }
     public void DrawHero()
     {
@@ -153,7 +153,7 @@ public class WorldController : Singleton<WorldController>
         // player is in hex. find out if it's in view
         Vector2 playerTilePosition = GetHexTilePosition(io.Position);
         playerTilePosition += new Vector2(4, 1);
-        if (playerTilePosition.x >=minx
+        if (playerTilePosition.x >= minx
             && playerTilePosition.x <= minx + viewportDimensions.x
             && playerTilePosition.y >= miny
             && playerTilePosition.y <= miny + viewportDimensions.y)
@@ -172,7 +172,8 @@ public class WorldController : Singleton<WorldController>
     /// </summary>
     public void DisplayMap()
     {
-        float now = (Time.time-RPGTime.Instance.TimePaused) * 1000f;
+        // get current time for animations
+        float now = (Time.time - RPGTime.Instance.TimePaused) * 1000f;
         // get the viewport's range.
         Vector2 v = ViewportController.Instance.ViewportPosition;
         int minx = Mathf.FloorToInt(v.x);
@@ -202,6 +203,7 @@ public class WorldController : Singleton<WorldController>
                         // set the tile sprite based on underlying data
                         if (tile.Type == Tile.TerrainType.River_a || tile.Type == Tile.TerrainType.River_b || tile.Type == Tile.TerrainType.River_c || tile.Type == Tile.TerrainType.River_d)
                         {
+                            // animate rivers
                             int qrtr = (int)now % 1000;
                             if (qrtr >= 500)
                             {

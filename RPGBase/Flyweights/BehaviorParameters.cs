@@ -6,11 +6,12 @@ namespace RPGBase.Flyweights
     public class BehaviorParameters
     {
         public string Action { get; set; }
-        public float BehaviorParam { get; }
+        private float behaviorParam;
+        public float BehaviorParam { get { return behaviorParam; } }
         private long flags;
-        public int Movemode { get; set; } = -1;
-        public int Tactics { get; set; } = -1;
-        public int TargetInfo { get; set; } = -1;
+        public int Movemode { get; set; }
+        public int Tactics { get; set; }
+        public int TargetInfo { get; set; }
         public string TargetName { get; set; }
         /**
          * Creates a new instance of {@link BehaviorParameters}.
@@ -25,7 +26,10 @@ namespace RPGBase.Flyweights
         /// <param name="bParam"></param>
         public BehaviorParameters(string initParams, float bParam)
         {
-            BehaviorParam = bParam;
+            behaviorParam = bParam;
+            Movemode = -1;
+            Tactics = -1;
+            TargetInfo = -1;
             string[] split = initParams.Split(' ');
             for (int i = split.Length - 1; i >= 0; i--)
             {

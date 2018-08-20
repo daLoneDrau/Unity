@@ -644,7 +644,7 @@ namespace RPGBase.Flyweights
         /// Script run when the <see cref="Scriptable"/> is added to a party.
         /// </summary>
         /// <returns></returns>
-        public int OnAddToParty()
+        public virtual int OnAddToParty()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -652,15 +652,15 @@ namespace RPGBase.Flyweights
         /// Script run when the <see cref="Scriptable"/> is a target of aggression.
         /// </summary>
         /// <returns></returns>
-        public int OnAggression()
+        public virtual int OnAggression()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnAttackPlayer()
+        public virtual int OnAttackPlayer()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnCallHelp()
+        public virtual int OnCallHelp()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -668,23 +668,23 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject chat start.
         /// </summary>
         /// <returns></returns>
-        public int OnChat()
+        public virtual int OnChat()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnCheatDie()
+        public virtual int OnCheatDie()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnCollideDoor()
+        public virtual int OnCollideDoor()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnCollideNPC()
+        public virtual int OnCollideNPC()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnCollisionError()
+        public virtual int OnCollisionError()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -692,23 +692,23 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject combine.
         /// </summary>
         /// <returns></returns>
-        public int OnCombine()
+        public virtual int OnCombine()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnControlsOff()
+        public virtual int OnControlsOff()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnControlsOn()
+        public virtual int OnControlsOn()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnDelation()
+        public virtual int OnDelation()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnDetectPlayer()
+        public virtual int OnDetectPlayer()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -716,11 +716,11 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject dies.
         /// </summary>
         /// <returns></returns>
-        public int OnDie()
+        public virtual int OnDie()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnDoorLocked()
+        public virtual int OnDoorLocked()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -728,19 +728,19 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject equipped.
         /// </summary>
         /// <returns></returns>
-        public int OnEquip()
+        public virtual int OnEquip()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnFleeEnd()
+        public virtual int OnFleeEnd()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnGameReady()
+        public virtual int OnGameReady()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnHear()
+        public virtual int OnHear()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -748,7 +748,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject hit.
         /// </summary>
         /// <returns></returns>
-        public int OnHit()
+        public virtual int OnHit()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -756,7 +756,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject attempt to identify.
         /// </summary>
         /// <returns></returns>
-        public int OnIdentify()
+        public virtual int OnIdentify()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -764,7 +764,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject initialization.
         /// </summary>
         /// <returns></returns>
-        public int OnInit()
+        public virtual int OnInit()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -772,7 +772,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject initialization end.
         /// </summary>
         /// <returns></returns>
-        public int OnInitEnd()
+        public virtual int OnInitEnd()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -780,7 +780,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject closes inventory.
         /// </summary>
         /// <returns></returns>
-        public int OnInventoryClose()
+        public virtual int OnInventoryClose()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -788,7 +788,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject goes into inventory.
         /// </summary>
         /// <returns></returns>
-        public int OnInventoryIn()
+        public virtual int OnInventoryIn()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -796,7 +796,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject opens inventory.
         /// </summary>
         /// <returns></returns>
-        public int OnInventoryOpen()
+        public virtual int OnInventoryOpen()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -804,7 +804,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject comes out of inventory.
         /// </summary>
         /// <returns></returns>
-        public int OnInventoryOut()
+        public virtual int OnInventoryOut()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -812,23 +812,23 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject is used inside inventory.
         /// </summary>
         /// <returns></returns>
-        public int OnInventoryUse()
+        public virtual int OnInventoryUse()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnLoad()
+        public virtual int OnLoad()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnLookFor()
+        public virtual int OnLookFor()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnLookMe()
+        public virtual int OnLookMe()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnMiscReflection()
+        public virtual int OnMiscReflection()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -836,7 +836,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject traveling on the game map.
         /// </summary>
         /// <returns></returns>
-        public int OnMovement()
+        public virtual int OnMovement()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -844,43 +844,43 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject ouch.
         /// </summary>
         /// <returns></returns>
-        public int OnOuch()
+        public virtual int OnOuch()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnOtherReflection()
+        public virtual int OnOtherReflection()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnPathfinderFailure()
+        public virtual int OnPathfinderFailure()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnSpellEnd()
+        public virtual int OnSpellEnd()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnPlayerEnemy()
+        public virtual int OnPlayerEnemy()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnReachedTarget()
+        public virtual int OnReachedTarget()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnReload()
+        public virtual int OnReload()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnSpeakNoRepeat()
+        public virtual int OnSpeakNoRepeat()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnSpellcast()
+        public virtual int OnSpellcast()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnSteal()
+        public virtual int OnSteal()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -888,15 +888,15 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject successfully strikes a target.
         /// </summary>
         /// <returns></returns>
-        public int OnStrike()
+        public virtual int OnStrike()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnTargetDeath()
+        public virtual int OnTargetDeath()
         {
             return ScriptConsts.ACCEPT;
         }
-        public int OnUndetectPlayer()
+        public virtual int OnUndetectPlayer()
         {
             return ScriptConsts.ACCEPT;
         }
@@ -904,7 +904,7 @@ namespace RPGBase.Flyweights
         /// On BaseInteractiveObject unequipped.
         /// </summary>
         /// <returns></returns>
-        public int OnUnequip()
+        public virtual int OnUnequip()
         {
             return ScriptConsts.ACCEPT;
         }

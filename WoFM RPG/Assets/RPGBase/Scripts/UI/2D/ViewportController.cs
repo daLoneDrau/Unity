@@ -40,6 +40,10 @@ namespace RPGBase.Scripts.UI._2D
         /// the width of the camera
         /// </summary>
         private float cameraWidth;
+        /// <summary>
+        /// Property to set the viewport's dimensions.  If not set, the viewport will cover the entire screen.
+        /// </summary>
+        public Vector2 ViewportTileDimensions { get; set; }
         public int MaxX { get; set; }
         public int MaxY { get; set; }
         /// <summary>
@@ -49,8 +53,18 @@ namespace RPGBase.Scripts.UI._2D
         {
             get
             {
-                int h = (int)cameraHeight + 1;
-                int w = Mathf.CeilToInt(cameraWidth) + 1;
+                int h,w;
+                if (ViewportTileDimensions != null)
+                {
+                    w = (int)ViewportTileDimensions.x + 1;
+                    h = (int)ViewportTileDimensions.y + 1;
+                }
+                else
+                {
+
+                    h = (int)cameraHeight + 1;
+                    w = Mathf.CeilToInt(cameraWidth) + 1;
+                }
                 return new Vector2(w, h);
             }
         }

@@ -35,10 +35,10 @@ namespace RPGBase.Flyweights
             }
         }
         /// <summary>
-        /// the list of <see cref="Watcher"/>s associated with this <see cref="InventorySlot"/>.
+        /// the list of <see cref="IWatcher"/>s associated with this <see cref="InventorySlot"/>.
         /// </summary>
-        private List<Watcher> watchers = new List<Watcher>();
-        public override void AddWatcher(Watcher watcher)
+        private List<IWatcher> watchers = new List<IWatcher>();
+        public override void AddWatcher(IWatcher watcher)
         {
             watchers.Add(watcher);
         }
@@ -49,7 +49,7 @@ namespace RPGBase.Flyweights
                 watchers[i].WatchUpdated(this);
             }
         }
-        public override void RemoveWatcher(Watcher watcher)
+        public override void RemoveWatcher(IWatcher watcher)
         {
             watchers.Remove(watcher);
         }

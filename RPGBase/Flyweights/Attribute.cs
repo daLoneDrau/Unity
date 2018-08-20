@@ -13,7 +13,8 @@ namespace RPGBase.Flyweights
             get { return abbr; }
             set
             {
-                abbr = value ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Abbreviation cannot be null");
+                abbr = value;
+                if (abbr == null) { throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Abbreviation cannot be null"); }
             }
         }
         /// <summary>
@@ -29,7 +30,8 @@ namespace RPGBase.Flyweights
             get { return description; }
             set
             {
-                description = value ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Description cannot be null");
+                description = value;
+                if (description == null) { throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Description cannot be null"); }
             }
         }
         private string displayName;
@@ -41,7 +43,8 @@ namespace RPGBase.Flyweights
             get { return displayName; }
             set
             {
-                displayName = value ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Display name cannot be null");
+                displayName = value;
+                if (displayName == null) { throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Display name cannot be null"); }
             }
         }
         /// <summary>
@@ -59,8 +62,8 @@ namespace RPGBase.Flyweights
         /// <param name="n">the <see cref="Attribute"/>'s display name</param>
         public Attribute(String a, String n)
         {
-            Abbr = a ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Name abbreviation cannot be null");
-            DisplayName = n ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Display name cannot be null");
+            Abbr = a;
+            DisplayName = n;
         }
         /// <summary>
         /// Creates a new instance of <see cref="Attribute"/>.
@@ -70,9 +73,9 @@ namespace RPGBase.Flyweights
         /// <param name="desc">the <see cref="Attribute"/>'s description</param>
         public Attribute(String a, String n, String desc)
         {
-            Abbr = a ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Name abbreviation cannot be null");
-            DisplayName = n ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Display name cannot be null");
-            Description = desc ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Description cannot be null");
+            Abbr = a;
+            DisplayName = n;
+            Description = desc;
         }
         /// <summary>
         /// Adjusts the value for the modifier.

@@ -33,26 +33,35 @@ namespace WoFM.UI.SceneControllers
                     break;
             }
         }
+        #region MonoBehaviour messages
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake()
         {
         }
-        // Use this for initialization
+        /// <summary>
+        /// Start is called on the frame when a script is enabled just before any of the Update methods are called the first time.
+        /// </summary>
         void Start()
         {
             WoFMInteractiveObject playerIo = ((WoFMInteractive)Interactive.Instance).NewHero();
             playerIo.PcData.AddWatcher(GetComponent<PlayerWatcher>());
             Script.Instance.SendInitScriptEvent(playerIo);
         }
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
+        void Update()
+        {
+        }
+        #endregion
         public void RerollStats()
         {
             WoFMInteractiveObject playerIo = (WoFMInteractiveObject)Interactive.Instance.GetIO(0);
             Script.Instance.SendInitScriptEvent(playerIo);
         }
         bool doonce;
-        // Update is called once per frame
-        void Update()
-        {
-        }
         /// <summary>
         /// Loads the next scene.
         /// </summary>

@@ -9,7 +9,7 @@ namespace Assets.Scripts.UI
         [SerializeField]
         SpriteEntry[] Map;
         /// <summary>
-        /// the one and only instance of the <see cref="Diceroller"/> class.
+        /// the one and only instance of the <see cref="SpriteMap"/> class.
         /// </summary>
         public static SpriteMap Instance { get; private set; }
         private void Awake()

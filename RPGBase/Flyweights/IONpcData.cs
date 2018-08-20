@@ -344,7 +344,7 @@ namespace RPGBase.Flyweights
             if (io.Show > 0
                     && !io.HasIOFlag(IoGlobals.IO_08_INVULNERABILITY))
             {
-                if (GetBaseLife() <= 0f)
+                if (Life <= 0f)
                 {
                     DamageNonLivingNPC(dmg, srcIoid, isSpellDamage);
                 }
@@ -595,7 +595,7 @@ namespace RPGBase.Flyweights
         /// <param name="healAmt">the healing amount</param>
         public void HealNPC(float healAmt)
         {
-            if (GetBaseLife() > 0f)
+            if (Life > 0f)
             {
                 if (healAmt > 0f)
                 {
@@ -629,9 +629,9 @@ namespace RPGBase.Flyweights
         protected abstract void MoveToInitialPosition();
         private float ProcessDamage(float dmg, int srcIoid)
         {
-            float damagesdone = Math.Min(dmg, GetBaseLife());
+            float damagesdone = Math.Min(dmg, Life);
             AdjustLife(-dmg);
-            if (GetBaseLife() <= 0f)
+            if (Life <= 0f)
             { // IONpcData is dead
               // base life should be 0
                 if (Interactive.Instance.HasIO(srcIoid))

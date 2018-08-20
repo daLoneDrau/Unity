@@ -20,7 +20,14 @@ namespace RPGBase.Flyweights
         public string Description
         {
             get { return description; }
-            set { description = value ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Description cannot be null"); }
+            set
+            {
+                description = value;
+                if (description == null)
+                {
+                    throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Description cannot be null");
+                }
+            }
         }
         /// <summary>
         /// modifier data for the item.
@@ -54,7 +61,14 @@ namespace RPGBase.Flyweights
         public string ItemName
         {
             get { return itemName; }
-            set { itemName = value ?? throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Item name cannot be null"); }
+            set
+            {
+                itemName = value;
+                if (itemName == null)
+                {
+                    throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Item name cannot be null");
+                }
+            }
         }
         /// <summary>
         /// the item's light value.
@@ -112,196 +126,13 @@ namespace RPGBase.Flyweights
             Count += val;
         }
         protected abstract float ApplyCriticalModifier();
-        public float ComputeDamages(BaseInteractiveObject io_source, BaseInteractiveObject io_target, float dmgModifier)
-        {
-            float damages = 0;
-            // send event to target. someone attacked you!
-            Script.Instance.EventSender = io_source;
-            Script.Instance.SendIOScriptEvent(io_target, ScriptConsts.SM_057_AGGRESSION, null, null);
-            if (io_source != null
-                    && io_target != null)
-            {
-                if (!io_target.HasIOFlag(IoGlobals.IO_01_PC)
-                        && !io_target.HasIOFlag(IoGlobals.IO_03_NPC)
-                /* && io_target.HasIOFlag(IoGlobals.fix) */)
-                {
-                    if (io_source.HasIOFlag(IoGlobals.IO_01_PC))
-                    {
-                        // player fixing the target object
-                        // ARX_DAMAGES_DamageFIX(io_target, player.Full_damages, 0,
-                        // 0);
-                    }
-                    else if (io_source.HasIOFlag(IoGlobals.IO_03_NPC))
-                    {
-                        // IONpcData fixing target
-                        // ARX_DAMAGES_DamageFIX(io_target,
-                        // io_source->_npcdata->damages, GetInterNum(io_source), 0);
-                    }
-                    else
-                    {
-                        // unknown fixing target
-                        // ARX_DAMAGES_DamageFIX(io_target, 1,
-                        // GetInterNum(io_source), 0);
-                    }
-                }
-                else
-                {
-                    float attack, ac;
-                    float backstab = 1f;
-                    // weapon material
-                    String wmat = "BARE";
-                    // armor material
-                    String amat = "FLESH";
-                    bool critical = false;
-                    if (io_source.HasIOFlag(IoGlobals.IO_01_PC))
-                    {
-                        int wpnId = io_source.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
-                        if (Interactive.Instance.HasIO(wpnId))
-                        {
-                            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(wpnId);
-                            if (io.Weaponmaterial != null
-                                    && io.Weaponmaterial.Length > 0)
-                            {
-                                wmat = io.Weaponmaterial;
-                            }
-                            io = null;
-                        }
-                        attack = io_source.PcData.GetFullDamage();
-                        if (io_source.PcData.CalculateCriticalHit()
-                                && Script.Instance.SendIOScriptEvent(io_source, ScriptConsts.SM_054_CRITICAL, null, null) != ScriptConsts.REFUSE)
-                        {
-                            critical = true;
-                        }
-                        damages = attack * dmgModifier;
-                        if (io_source.PcData.CalculateBackstab()
-                                && Script.Instance.SendIOScriptEvent(io_source, ScriptConsts.SM_056_BACKSTAB, null, null) != ScriptConsts.REFUSE)
-                        {
-                            backstab = this.GetBackstabModifier();
-                        }
-                    }
-                    else
-                    {
-                        if (io_source.HasIOFlag(IoGlobals.IO_03_NPC))
-                        {
-                            int wpnId = io_source.NpcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
-                            if (Interactive.Instance.HasIO(wpnId))
-                            {
-                                BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(wpnId);
-                                if (io.Weaponmaterial != null
-                                        && io.Weaponmaterial.Length > 0)
-                                {
-                                    wmat = io.Weaponmaterial;
-                                }
-                                io = null;
-                            }
-                            else
-                            {
-                                if (io_source.Weaponmaterial != null
-                                        && io_source.Weaponmaterial.Length > 0)
-                                {
-                                    wmat = io_source.Weaponmaterial;
-                                }
-                            }
-                            attack = io_source.NpcData.GetFullDamage();
-                            if (io_source.NpcData.CalculateCriticalHit()
-                                    && Script.Instance.SendIOScriptEvent(io_source, ScriptConsts.SM_054_CRITICAL, null, null) != ScriptConsts.REFUSE)
-                            {
-                                critical = true;
-                            }
-                            damages = attack * dmgModifier;
-                            if (io_source.NpcData.CalculateBackstab()
-                                    && Script.Instance.SendIOScriptEvent(io_source, ScriptConsts.SM_056_BACKSTAB, null, null) != ScriptConsts.REFUSE)
-                            {
-                                backstab = this.GetBackstabModifier();
-                            }
-                        }
-                        else
-                        {
-                            throw new RPGException(ErrorMessage.BAD_PARAMETERS, "Compute Damages call made by non-character");
-                        }
-                    }
-                    // calculate how much damage is absorbed by armor
-                    float absorb = this.CalculateArmorDeflection();
-                    // float absorb;
-
-                    // if (io_target == inter.iobj[0]) {
-                    // ac = player.Full_armor_class;
-                    // absorb = player.Full_Skill_Defense * DIV2;
-                    // } else {
-                    // ac = ARX_INTERACTIVE_GetArmorClass(io_target);
-                    // absorb = io_target->_npcdata->absorb;
-                    // long value = ARX_SPELLS_GetSpellOn(io_target, SPELL_CURSE);
-                    // if (value >= 0) {
-                    // float modif = (spells[value].caster_level * 0.05f);
-                    // ac *= modif;
-                    // absorb *= modif;
-                    // }
-                    // }
-                    if (io_target.Armormaterial != null
-                            && io.Armormaterial.Length > 0)
-                    {
-                        amat = io.Armormaterial;
-                    }
-                    if (io_target.HasIOFlag(IoGlobals.IO_03_NPC)
-                            || io_target.HasIOFlag(IoGlobals.IO_01_PC))
-                    {
-                        int armrId;
-                        if (io_target.HasIOFlag(IoGlobals.IO_03_NPC))
-                        {
-                            armrId = io_target.NpcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_TORSO);
-                        }
-                        else
-                        {
-                            armrId = io_target.PcData.GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_TORSO);
-                        }
-                        if (Interactive.Instance.HasIO(armrId))
-                        {
-                            BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(armrId);
-                            if (io.Armormaterial != null
-                                    && io.Armormaterial.Length > 0)
-                            {
-                                amat = io.Armormaterial;
-                            }
-                            io = null;
-                        }
-                    }
-                    damages *= backstab;
-                    // dmgs -= dmgs * (absorb * DIV100);
-
-                    // TODO - play sound based on the power of the hit
-                    if (damages > 0f)
-                    {
-                        if (critical)
-                        {
-                            damages = this.ApplyCriticalModifier();
-                            // dmgs *= 1.5f;
-                        }
-
-                        if (io_target.HasIOFlag(IoGlobals.IO_01_PC))
-                        {
-                            // TODO - push player when hit
-                            // ARX_DAMAGES_SCREEN_SPLATS_Add(&ppos, dmgs);
-                            io_target.PcData.DamagePlayer(damages, 0, io_source.RefId);
-                            // ARX_DAMAGES_DamagePlayerEquipment(dmgs);
-                        }
-                        else
-                        {
-                            // TODO - push IONpcData when hit
-                            io_target.NpcData.DamageNPC(damages, io_source.RefId, false);
-                        }
-                    }
-                }
-
-            }
-            return damages;
-        }
         /**
          * Equips the item on a target BaseInteractiveObject.
          * @param target the target BaseInteractiveObject
          * @throws PooledException if an error occurs
          * @ if an error occurs
          */
-        public void Equip(BaseInteractiveObject target)
+        public virtual void Equip(BaseInteractiveObject target)
         {
             if (Io == null)
             {
@@ -398,13 +229,12 @@ namespace RPGBase.Flyweights
                 Equipitem = null;
             }
         }
-        /**
-         * Sets the item's object type.
-         * @param flag the type flag
-         * @param added if <tt>true</tt>, the type is set; otherwise it is removed
-         * @ if an error occurs
-         */
-        public void SetObjectType(int flag, bool added)
+        /// <summary>
+        /// Sets the item's object type.
+        /// </summary>
+        /// <param name="flag">the type flag</param>
+        /// <param name="added">if <tt>true</tt>, the type is set; otherwise it is removed</param>
+        public void SetObjectType(int flag, bool added = true)
         {
             if (added)
             {
@@ -621,7 +451,7 @@ namespace RPGBase.Flyweights
                 UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_SHIELD);
             }
         }
-        protected abstract float GetBackstabModifier();
+        public abstract float GetBackstabModifier();
         /**
          * Gets the type of weapon an item is.
          * @return {@link int}

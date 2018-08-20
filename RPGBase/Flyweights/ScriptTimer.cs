@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RPGBase.Flyweights
 {
-    public struct ScriptTimer
+    public class ScriptTimer
     {
         /// <summary>
         /// the action taken when the script timer completes.

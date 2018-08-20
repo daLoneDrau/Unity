@@ -1,10 +1,11 @@
 ﻿using RPGBase.Constants;
 using RPGBase.Flyweights;
 using System;
+using UnityEngine;
 
 namespace RPGBase.Singletons
 {
-    public abstract class Interactive
+    public class Interactive : MonoBehaviour
     {
         /// <summary>
         /// the singleton instance.
@@ -98,7 +99,6 @@ namespace RPGBase.Singletons
             }
         }
         public void DestroyIO(BaseInteractiveObject io)
-
         {
             if (io != null
                     && io.Show != IoGlobals.SHOW_FLAG_DESTROYED)
@@ -180,7 +180,7 @@ namespace RPGBase.Singletons
                 }
             }
         }
-        public abstract void ForceIOLeaveZone(BaseInteractiveObject io, long flags);
+        public virtual void ForceIOLeaveZone(BaseInteractiveObject io, long flags) { throw new NotImplementedException(); }
         public int GetInterNum(BaseInteractiveObject io)
         {
             int num = -1;
@@ -199,12 +199,11 @@ namespace RPGBase.Singletons
             }
             return num;
         }
-        /**
-         * Gets a <see cref="BaseInteractiveObject"/> by its reference id.
-         * @param id the reference id
-         * @return <see cref="BaseInteractiveObject"/>
-         * @ if the object does not exist
-         */
+        /// <summary>
+        /// Gets a <see cref="BaseInteractiveObject"/> by its reference id.
+        /// </summary>
+        /// <param name="id">the reference id</param>
+        /// <returns><see cref="BaseInteractiveObject"/></returns>
         public BaseInteractiveObject GetIO(int id)
         {
             BaseInteractiveObject io = null;
@@ -228,28 +227,26 @@ namespace RPGBase.Singletons
             }
             return io;
         }
-        /**
-         * Gets the internal list of IOs.
-         * @return <see cref="BaseInteractiveObject"/>[]
-         */
-        protected abstract BaseInteractiveObject[] GetIOs();
-        /**
-         * Gets the largest reference Id in use.
-         * @return {@link int}
-         */
-        public abstract int GetMaxIORefId();
-        /**
-         * Gets a new interactive object.
-         * @return <see cref="BaseInteractiveObject"/>
-         */
-        protected abstract BaseInteractiveObject GetNewIO();
-        /**
-         * Gets an BaseInteractiveObject's reference id by name.  If the target is "none" or does not
-         * exist, -1 is returned.  If the target is "self" or "me", -2; 
-         * @param name the BaseInteractiveObject's name
-         * @return {@link int}
-         * @ if an error occurs
-         */
+        /// <summary>
+        /// Gets the internal list of IOs.
+        /// </summary>
+        /// <returns><see cref="BaseInteractiveObject"/>[]</returns>
+        protected virtual BaseInteractiveObject[] GetIOs() { throw new NotImplementedException(); }
+        /// <summary>
+        /// Gets the largest reference Id in use.
+        /// </summary>
+        /// <returns>int</returns>
+        public virtual int GetMaxIORefId() { throw new NotImplementedException(); }
+        /// <summary>
+        /// Gets a new interactive object.
+        /// </summary>
+        /// <returns><see cref="BaseInteractiveObject"/></returns>
+        protected virtual BaseInteractiveObject GetNewIO() { throw new NotImplementedException(); }
+        /// <summary>
+        /// Gets an BaseInteractiveObject's reference id by name.  If the target is "none" or does not exist, -1 is returned.If the target is "self" or "me", -2;
+        /// </summary>
+        /// <param name="name">the BaseInteractiveObject's name</param>
+        /// <returns>int</returns>
         public int GetTargetByNameTarget(string name)
         {
             int ioid = -1;
@@ -293,13 +290,11 @@ namespace RPGBase.Singletons
             }
             return ioid;
         }
-        /**
-         * Determines if the {@link Interactive} has an interactive object by a
-         * specific id.
-         * @param id the id
-         * @return true if an interactive object by that id has been stored already;
-         *         false otherwise
-         */
+        /// <summary>
+        /// Determines if the {@link Interactive} has an interactive object by a specific id.
+        /// </summary>
+        /// <param name="id">the id</param>
+        /// <returns>true if an interactive object by that id has been stored already; false otherwise</returns>
         public bool HasIO(int id)
         {
             bool has = false;

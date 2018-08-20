@@ -1,15 +1,17 @@
-﻿using RPGBase.Constants;
+using RPGBase.Constants;
 using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace RPGBase.Flyweights
 {
     public abstract class IOPcData : IOCharacter
     {
+        private float life;
         /// <summary>
         /// the number of bags the player has.
         /// </summary>
@@ -61,7 +63,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// the <see cref="IoPcData"/>'s name.
         /// </summary>
-        private string Name
+        public string Name
         {
             get { return name; }
             set
@@ -161,7 +163,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// Called when a player dies.
         /// </summary>
-        public void BecomesDead()
+        public virtual void BecomesDead()
         {
             int i = ProjectConstants.Instance.GetMaxSpells() - 1;
             for (; i >= 0; i--)
@@ -181,6 +183,24 @@ namespace RPGBase.Flyweights
          * @return
          */
         public abstract bool CanIdentifyEquipment(IOEquipItem equipitem);
+        /// <summary>
+        /// Checks the character's attribute against a range of values to see if it falls between the valid range.
+        /// </summary>
+        /// <param name="attribute">the attribute's abbreviation</param>
+        /// <param name="rangeLow">the low-end range value</param>
+        /// <param name="rangeHigh">the high-end range value</param>
+        /// <returns></returns>
+        public bool CheckAttributeRange(string attribute, int rangeLow, int rangeHigh)
+        {
+            bool pass = false;
+            ComputeFullStats();
+            if (GetFullAttributeScore(attribute) >= rangeLow
+                && GetFullAttributeScore(attribute) <= rangeHigh)
+            {
+                pass = true;
+            }
+            return pass;
+        }
         /** Clears all interface flags that were set. */
         public void ClearInterfaceFlags()
         {
@@ -191,18 +211,18 @@ namespace RPGBase.Flyweights
         /// </summary>
         /// <param name="dmg">the damage amount</param>
         /// <param name="type">the type of damage</param>
-        /// <param name="source">the source of the damage</param>
+        /// <param name="source">the source reference id of the damage (if attacked, should be the attacker)</param>
         /// <returns>the total damage done</returns>
         public float DamagePlayer(float dmg, long type, int source)
         {
             float damagesdone = 0f;
             ComputeFullStats();
             if (!io.HasIOFlag(IoGlobals.PLAYERFLAGS_INVULNERABILITY)
-                    && GetBaseLife() > 0)
+                    && Life > 0)
             {
-                if (dmg > GetBaseLife())
+                if (dmg > Life)
                 {
-                    damagesdone = GetBaseLife();
+                    damagesdone = Life;
                 }
                 else
                 {
@@ -224,7 +244,7 @@ namespace RPGBase.Flyweights
                 }
                 Script.Instance.SendIOScriptEvent(io,
                         ScriptConsts.SM_045_OUCH,
-                        new Object[] { "OUCH", io.DamageSum, "SUMMONED_OUCH", 0f },
+                        new System.Object[] { "OUCH", io.DamageSum, "SUMMONED_OUCH", 0f },
                         null);
                 Script.Instance.EventSender = oes;
                 io.DamageSum = 0;
@@ -267,7 +287,7 @@ namespace RPGBase.Flyweights
                     }
 
                     bool alive;
-                    if (GetBaseLife() > 0)
+                    if (Life > 0)
                     {
                         alive = true;
                     }
@@ -277,9 +297,9 @@ namespace RPGBase.Flyweights
                     }
                     AdjustLife(-dmg);
 
-                    if (GetBaseLife() <= 0f)
+                    if (Life <= 0f)
                     {
-                        AdjustLife(-GetBaseLife());
+                        AdjustLife(-Life);
                         if (alive)
                         {
                             // TODO - what is this?
@@ -329,7 +349,7 @@ namespace RPGBase.Flyweights
                                         }
                                         Script.Instance.SendIOScriptEvent(ioo,
                                                 0,
-                                                new Object[] { "tmp_int1", source },
+                                                new System.Object[] { "tmp_int1", source },
                                                 "TargetDeath");
                                     }
                                 }
@@ -463,7 +483,7 @@ namespace RPGBase.Flyweights
         /// <param name="dmg">the amount of healing</param>
         public void HealManaPlayer(float dmg)
         {
-            if (GetBaseLife() > 0f)
+            if (Life > 0f)
             {
                 if (dmg > 0f)
                 {
@@ -475,9 +495,11 @@ namespace RPGBase.Flyweights
         /// Heals the player.
         /// </summary>
         /// <param name="dmg">the amount of healing</param>
-        public void HealPlayer(float dmg)
+        /// <param name="god">flag indicating the healing is coming from God and current life doesn't matter</param>
+        public void HealPlayer(float dmg, bool god = false)
         {
-            if (GetBaseLife() > 0f)
+            if (Life > 0f
+                || (Life <= 0f && god))
             {
                 if (dmg > 0f)
                 {
@@ -485,6 +507,15 @@ namespace RPGBase.Flyweights
                     AdjustLife(dmg);
                 }
             }
+        }
+        public bool IsDead()
+        {
+            bool dead = false;
+            if (Life <= 0f)
+            {
+                dead = true;
+            }
+            return dead;
         }
         /// <summary>
         /// Determines if the player has an item equipped.

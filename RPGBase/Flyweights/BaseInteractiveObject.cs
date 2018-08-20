@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using RPGBase.Constants;
+using UnityEngine;
 
 namespace RPGBase.Flyweights
 {
-    public abstract class BaseInteractiveObject
+    public class BaseInteractiveObject
     {
         /** the <see cref="BaseInteractiveObject"/>'s armor material. */
         public String Armormaterial { get; set; }
@@ -136,11 +137,11 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// the object's position.
         /// </summary>
-        //public Vector2 Position { get; set; }
+        public Vector2 Position { get; set; }
         /// <summary>
         /// the object's reference id.
         /// </summary>
-        public int RefId { get; }
+        public int RefId { get; private set; }
         /// <summary>
         /// primary script associated with the object.
         /// </summary>
@@ -170,6 +171,7 @@ namespace RPGBase.Flyweights
         /// the list of spells currently active on the object.
         /// </summary>
         private List<int> spellsOn = new List<int>();
+        public Sprite Sprite { get; set; }
         public int StatCount { get; set; }
         public int StatSent { get; set; }
         public int Summoner { get; set; }

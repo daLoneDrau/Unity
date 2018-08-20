@@ -1,0 +1,330 @@
+{
+  "cells": [
+    // buffer cells
+    {
+      "x": 638,
+      "y": 1341,
+      "type": "void"
+    },
+    {
+      "x": 642,
+      "y": 1336,
+      "type": "void"
+    },
+    // ROOM 1
+    {
+      "x": 640,
+      "y": 1340,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 641,
+      "y": 1340,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 642,
+      "y": 1340,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 639,
+      "y": 1339,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 640,
+      "y": 1339,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 641,
+      "y": 1339,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 642,
+      "y": 1339,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 643,
+      "y": 1339,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 639,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 640,
+      "y": 1338,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 641,
+      "y": 1338,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 642,
+      "y": 1338,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 643,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 639,
+      "y": 1337,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 640,
+      "y": 1337,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 641,
+      "y": 1337,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 642,
+      "y": 1337,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 643,
+      "y": 1337,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 639,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 640,
+      "y": 1336,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 641,
+      "y": 1336,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 642,
+      "y": 1336,
+      "type": "floor",
+      "room": "1"
+    },
+    {
+      "x": 643,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 639,
+      "y": 1335,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 640,
+      "y": 1335,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 641,
+      "y": 1335,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 642,
+      "y": 1335,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    {
+      "x": 643,
+      "y": 1335,
+      "type": "cave_wall",
+      "room": "1"
+    },
+    // ROOM 12
+    {
+      "x": 644,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    {
+      "x": 645,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    {
+      "x": 646,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    {
+      "x": 647,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    {
+      "x": 648,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    {
+      "x": 644,
+      "y": 1337,
+      "type": "floor",
+      "room": "12"
+    },
+    {
+      "x": 645,
+      "y": 1337,
+      "type": "floor",
+      "room": "12"
+    },
+    {
+      "x": 646,
+      "y": 1337,
+      "type": "floor",
+      "room": "12"
+    },
+    {
+      "x": 647,
+      "y": 1337,
+      "type": "floor",
+      "room": "12"
+    },
+    {
+      "x": 648,
+      "y": 1337,
+      "type": "floor",
+      "room": "12"
+    },
+    {
+      "x": 644,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    {
+      "x": 645,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    {
+      "x": 646,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    {
+      "x": 647,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    {
+      "x": 648,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "12"
+    },
+    // ROOM 139
+    {
+      "x": 649,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "139"
+    },
+    {
+      "x": 650,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "139"
+    },
+    {
+      "x": 651,
+      "y": 1338,
+      "type": "cave_wall",
+      "room": "139"
+    },
+    {
+      "x": 649,
+      "y": 1337,
+      "type": "floor",
+      "room": "139"
+    },
+    {
+      "x": 650,
+      "y": 1337,
+      "type": "pit",
+      "room": "139"
+    },
+    {
+      "x": 651,
+      "y": 1337,
+      "type": "cave_wall",
+      "room": "139"
+    },
+    {
+      "x": 649,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "139"
+    },
+    {
+      "x": 650,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "139"
+    },
+    {
+      "x": 651,
+      "y": 1336,
+      "type": "cave_wall",
+      "room": "139"
+    }
+  ]
+}

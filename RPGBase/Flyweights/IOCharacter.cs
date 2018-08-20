@@ -1,4 +1,4 @@
-﻿using RPGBase.Constants;
+using RPGBase.Constants;
 using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System;
@@ -30,11 +30,11 @@ namespace RPGBase.Flyweights
         /// the reference ids of all items equipped by the <see cref="IOCharacter"/> indexed by equipment slot.
         /// </summary>
         private int[] equippedItems;
-        private int gender = -1;
+        private int gender = RPGBase.Constants.Gender.GENDER_NEUTRAL;
         /// <summary>
         /// the <see cref="IOCharacter"/>'s gender.
         /// </summary>
-        private int Gender
+        public int Gender
         {
             get { return gender; }
             set
@@ -43,23 +43,25 @@ namespace RPGBase.Flyweights
                 NotifyWatchers();
             }
         }
+        public float Life { get; private set; }
         /// <summary>
-        /// the list of <see cref="Watcher"/>s associated with this <see cref="IOCharacter"/>.
+        /// the list of <see cref="IWatcher"/>s associated with this <see cref="IOCharacter"/>.
         /// </summary>
-        private Watcher[] watchers = new Watcher[0];
+        private IWatcher[] watchers = new IWatcher[0];
         /// <summary>
         /// Creates a new instance of <see cref="IOCharacter"/>.
         /// </summary>
         protected IOCharacter()
         {
-            watchers = new Watcher[0];
+            watchers = new IWatcher[0];
             DefineAttributes();
             InitEquippedItems(ProjectConstants.Instance.GetMaxEquipped());
         }
-        /**
-         * {@inheritDoc}
-         */
-        public override void AddWatcher(Watcher watcher)
+        /// <summary>
+        /// Adds a watcher for this instance.
+        /// </summary>
+        /// <param name="watcher">the new <see cref="IWatcher"/></param>
+        public override void AddWatcher(IWatcher watcher)
         {
             if (watcher != null)
             {
@@ -112,19 +114,20 @@ namespace RPGBase.Flyweights
             String mls = sb.ToString();
             sb.ReturnToPool();
             sb = null;
-            SetBaseAttributeScore(GetLifeAttribute(), GetBaseLife() + dmg);
-            if (GetBaseLife() > GetFullAttributeScore(mls))
+            Life += dmg;
+            if (Life > GetFullAttributeScore(mls))
             {
                 // if Hit Points now > max
-                SetBaseAttributeScore(ls, GetFullAttributeScore(mls));
+                Life = GetFullAttributeScore(mls);
             }
-            if (GetBaseLife() < 0f)
+            if (Life < 0f)
             {
                 // if life now < 0
-                SetBaseAttributeScore(ls, 0f);
+                Life = 0f;
             }
             ls = null;
             mls = null;
+            NotifyWatchers();
         }
         /// <summary>
         /// Adjusts the <see cref="IOCharacter"/>'s mana by a specific amount.
@@ -160,6 +163,9 @@ namespace RPGBase.Flyweights
             }
             return toadd;
         }
+        /// <summary>
+        /// Applies modifiers to the character's attributes and skills based on the game rules.
+        /// </summary>
         protected abstract void ApplyRulesModifiers();
         protected abstract void ApplyRulesPercentModifiers();
         /// <summary>
@@ -219,7 +225,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// Compute FULL versions of player stats including equipped items, spells, and any other effect altering them.
         /// </summary>
-        public void ComputeFullStats()
+        public virtual void ComputeFullStats()
         {
             // clear mods
             ClearModAbilityScores();
@@ -309,11 +315,6 @@ namespace RPGBase.Flyweights
             return attributes[attr].BaseVal;
         }
         /// <summary>
-        /// Gets the <see cref="IOCharacter"/>'s base life value from the correct attribute.
-        /// </summary>
-        /// <returns></returns>
-        public abstract float GetBaseLife();
-        /// <summary>
         /// Gets the <see cref="IOCharacter"/>'s base mana value from the correct attribute.
         /// </summary>
         /// <returns></returns>
@@ -347,7 +348,6 @@ namespace RPGBase.Flyweights
             id = equippedItems[slot];
             return id;
         }
-        public abstract BaseInteractiveObject GetIo();
         /// <summary>
         /// Gets the full attribute score for a specific attribute.
         /// </summary>
@@ -358,6 +358,7 @@ namespace RPGBase.Flyweights
             return attributes[attr].Full;
         }
         public abstract float GetFullDamage();
+        public abstract BaseInteractiveObject GetIo();
         protected abstract String GetLifeAttribute();
         public abstract float GetMaxLife();
         /// <summary>
@@ -373,6 +374,7 @@ namespace RPGBase.Flyweights
                     AdjustMana(dmg);
                 }
             }
+            NotifyWatchers();
         }
         /// <summary>
         /// Initializes the items the <see cref="IOCharacter"/> has equipped.
@@ -414,7 +416,7 @@ namespace RPGBase.Flyweights
         /**
          * {@inheritDoc}
          */
-        public override void RemoveWatcher(Watcher watcher)
+        public override void RemoveWatcher(IWatcher watcher)
         {
             int index = -1;
             for (int i = watchers.Length - 1; i >= 0; i--)
@@ -438,6 +440,7 @@ namespace RPGBase.Flyweights
         public void SetBaseAttributeScore(string attr, float val)
         {
             attributes[attr].BaseVal = val;
+            NotifyWatchers();
         }
         /// <summary>
         /// Sets the reference id of the item the <see cref="IOCharacter"/> has equipped at a specific equipment slot.

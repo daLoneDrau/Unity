@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.6.5f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -87,6 +89,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\LabLord\Constants\LabLordGlobals.cs" />
+    <Compile Include="Assets\LabLord\Flyweights\LabLordCharacter.cs" />
+    <Compile Include="Assets\LabLord\Flyweights\LabLordInteractiveObject.cs" />
+    <Compile Include="Assets\LabLord\Flyweights\LabLordInventoryData.cs" />
+    <Compile Include="Assets\LabLord\Flyweights\LabLordItemData.cs" />
+    <Compile Include="Assets\LabLord\Flyweights\LabLordScriptable.cs" />
+    <Compile Include="Assets\LabLord\Scriptables\Mobs\Hero.cs" />
+    <Compile Include="Assets\LabLord\Scriptables\Mobs\MobBase.cs" />
+    <Compile Include="Assets\LabLord\Singletons\LabLordController.cs" />
+    <Compile Include="Assets\LabLord\Singletons\LabLordInteractive.cs" />
+    <Compile Include="Assets\LabLord\Singletons\LabLordScript.cs" />
+    <Compile Include="Assets\LabLord\UI\GlobalControllers\GameController.cs" />
+    <Compile Include="Assets\LabLord\UI\SceneControllers\CharBuilderController.cs" />
+    <Compile Include="Assets\LabLord\UI\SceneControllers\CharWizard\GenderButtonController.cs" />
+    <Compile Include="Assets\LabLord\UI\SceneControllers\CharWizard\RaceButtonController.cs" />
+    <Compile Include="Assets\LabLord\UI\SceneControllers\CharWizard\ClassButtonController.cs" />
+    <Compile Include="Assets\LabLord\UI\SceneControllers\IntroController.cs" />
+    <Compile Include="Assets\LabLord\UI\SceneControllers\MainMenuController.cs" />
+    <Compile Include="Assets\LabLord\UI\SceneControllers\PlayerWatcher.cs" />
+    <Compile Include="Assets\LabLord\UI\Widgets\Statbar.cs" />
     <Compile Include="Assets\RPGBase\Scripts\Extensions\MonoBehaviourExtended.cs" />
     <Compile Include="Assets\RPGBase\Scripts\Extensions\Singleton.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Constants\Behaviour.cs" />
@@ -109,6 +131,7 @@
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\IONpcData.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\IOPcData.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\IOSpellCastData.cs" />
+    <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\IWatcher.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\InventoryData.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\InventorySlot.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\Quest.cs" />
@@ -125,7 +148,6 @@
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\StackedEvent.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\TargetParameters.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\Watchable.cs" />
-    <Compile Include="Assets\RPGBase\Scripts\RPGBase\Flyweights\Watcher.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Graph\CompoundHexagon.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Graph\DijkstraDirectedSearch.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Graph\DijkstraUndirectedSearch.cs" />
@@ -155,6 +177,8 @@
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Singletons\Speech.cs" />
     <Compile Include="Assets\RPGBase\Scripts\RPGBase\Singletons\SpellController.cs" />
     <Compile Include="Assets\RPGBase\Scripts\Tutorial\CharacterMovement.cs" />
+    <Compile Include="Assets\RPGBase\Scripts\UI\2D\CameraController.cs" />
+    <Compile Include="Assets\RPGBase\Scripts\UI\2D\ViewportController.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\DragAndDropHandler.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\DropAccessible.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\HorizontalLayoutHandler.cs" />

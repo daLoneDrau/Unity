@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RPGBase.Flyweights
 {
-    public struct StackedEvent
+    public class StackedEvent
     {
         /// <summary>
         /// the event name.

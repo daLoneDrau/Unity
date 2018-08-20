@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
-    public class StatWatcher : Watcher
+    public class StatWatcher : IWatcher
     {
         /// <summary>
         /// the game object containing the gender icon.
@@ -112,7 +112,7 @@ namespace Assets.Scripts.UI
         /// the sprite icon for male characters.
         /// </summary>
         public Sprite SpriteMale { get; set; }
-        public override void WatchUpdated(Watchable data)
+        public void WatchUpdated(Watchable data)
         {
             /*
             CryptCharacter hero = (CryptCharacter)data;

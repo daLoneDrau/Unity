@@ -17,6 +17,7 @@ namespace WoFM.UI.SceneControllers
         private TextGenerationSettings generationSettings;
         public Button btnBegin;
         public Button btnNext;
+        private bool doonce;
         public List<string> words;
         public string text;
         private string textRemaining;
@@ -25,11 +26,17 @@ namespace WoFM.UI.SceneControllers
         public Text textUi;
         public Canvas canvas;
         private Vector3 scale;
+        #region MonoBehaviour messages
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
         void Awake()
         {
             btnBegin.interactable = false;
         }
-        // Use this for initialization
+        /// <summary>
+        /// Start is called on the frame when a script is enabled just before any of the Update methods are called the first time.
+        /// </summary>
         void Start()
         {
             btnBegin.interactable = false;
@@ -44,11 +51,13 @@ namespace WoFM.UI.SceneControllers
             // get canvas local scale
             print("local scale "+scale);
         }
-        bool doonce;
-        // Update is called once per frame
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
         void Update()
         {
         }
+        #endregion
         private float GetWordWidth(string word)
         {
             float size = 0;

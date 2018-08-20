@@ -10,15 +10,15 @@ namespace RPGBase.Flyweights
     public class TargetParameters
     {
         private long flags;
-        private int TargetInfo { get; set; } = -1;
+        private int TargetInfo { get; set; }
         /**
          * @param initParams
          * @ 
          */
         public TargetParameters(String initParams)
         {
-            String[]
-            split = initParams.Split(' ');
+            TargetInfo = -1;
+            String[] split = initParams.Split(' ');
             for (int i = split.Length - 1; i >= 0; i--)
             {
                 if (split[i].StartsWith("-"))

@@ -13,7 +13,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// flag indicating the left ring needs to be replaced.
         /// </summary>
-        public bool LeftRing { get; set; } = false;
+        public bool LeftRing { get; set; }
         /// <summary>
         /// the inventory Slots.
         /// </summary>
