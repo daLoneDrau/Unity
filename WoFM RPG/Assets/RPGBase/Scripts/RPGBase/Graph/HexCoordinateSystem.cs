@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.RPGBase.Graph
+namespace RPGBase.Graph
 {
     public class HexCoordinateSystem
     {

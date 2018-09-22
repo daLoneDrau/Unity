@@ -11,8 +11,7 @@ namespace WoFM.Scriptables.Mobs
     {
         public override int OnInit()
         {
-            Console.WriteLine("Mob ONINIT");
-            Debug.Log("Mob ONINIT");
+            // Debug.Log("Mob ONINIT");
             return base.OnInit();
         }
     }

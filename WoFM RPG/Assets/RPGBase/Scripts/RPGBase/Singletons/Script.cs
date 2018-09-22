@@ -1197,7 +1197,6 @@ namespace RPGBase.Singletons
                         sb.Append("on");
                         sb.Append(eventName.ToUpper()[0]);
                         sb.Append(eventName.Substring(1));
-                        Type type = script.GetType();
                         method = script.GetType().GetMethod(sb.ToString(), null);
                         sb.ReturnToPool();
                         sb = null;

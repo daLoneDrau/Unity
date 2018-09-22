@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace RPGBase.Flyweights
 {
-    public class BaseInteractiveObject
+    public class BaseInteractiveObject : MonoBehaviour
     {
         /** the <see cref="BaseInteractiveObject"/>'s armor material. */
         public String Armormaterial { get; set; }
@@ -141,7 +141,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// the object's reference id.
         /// </summary>
-        public int RefId { get; private set; }
+        public int RefId { get; set; }
         /// <summary>
         /// primary script associated with the object.
         /// </summary>

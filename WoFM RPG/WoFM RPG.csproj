@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.6.5f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -157,8 +159,10 @@
     <Compile Include="Assets\RPGBase\Scripts\Tutorial\CharacterMovement.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\2D\CameraController.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\2D\MouseListener.cs" />
+    <Compile Include="Assets\RPGBase\Scripts\UI\2D\MovingObject.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\2D\SpriteMap.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\2D\Tile.cs" />
+    <Compile Include="Assets\RPGBase\Scripts\UI\2D\TileViewportController.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\2D\TileWorld.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\2D\ViewportController.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\DragAndDropHandler.cs" />
@@ -174,6 +178,10 @@
     <Compile Include="Assets\RPGBase\Scripts\UI\UnitySystemConsoleRedirector.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\VerticalLayoutHandler.cs" />
     <Compile Include="Assets\Scripts\WoFM\Constants\WoFMGlobals.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\MoveIoUninterruptedAction.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\MovePathAction.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\TeleportAction.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\IGameAction.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMCharacter.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMInteractiveObject.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMInventoryData.cs" />
@@ -181,11 +189,18 @@
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMScriptable.cs" />
     <Compile Include="Assets\Scripts\WoFM\Scriptables\Mobs\Hero.cs" />
     <Compile Include="Assets\Scripts\WoFM\Scriptables\Mobs\MobBase.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Scriptables\Triggers\OneTimeTextTrigger.cs" />
     <Compile Include="Assets\Scripts\WoFM\Singletons\WoFMController.cs" />
     <Compile Include="Assets\Scripts\WoFM\Singletons\WoFMInteractive.cs" />
     <Compile Include="Assets\Scripts\WoFM\Singletons\WoFMScript.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\2D\Blocker.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\2D\HeroMove.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\2D\ShadowcastFOV.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\2D\WoFMTile.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\2D\WoFMTileWorld.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\GlobalControllers\GameController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\CharBuilderController.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\GameSceneController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\IntroController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\PlayerWatcher.cs" />

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.RPGBase.Graph
+namespace RPGBase.Graph
 {
     /// <summary>
     /// A vertex (plural vertices) or node is the fundamental unit of which graphs are formed.

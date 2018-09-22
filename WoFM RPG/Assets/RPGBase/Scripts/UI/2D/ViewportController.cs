@@ -33,6 +33,14 @@ namespace RPGBase.Scripts.UI._2D
             }
         }
         /// <summary>
+        /// the viewport's x-offset is 1, since the 1st tile is covered by the map border.
+        /// </summary>
+        public static int X_OFFSET = 1;
+        /// <summary>
+        /// the viewport's y-offset is 24; the map is 24 units up and the 1st tile is covered by the map border.
+        /// </summary>
+        public static int Y_OFFSET = 25;
+        /// <summary>
         /// the height of the camera
         /// </summary>
         private float cameraHeight;
@@ -142,6 +150,27 @@ namespace RPGBase.Scripts.UI._2D
                     ViewportPosition = new Vector2(ViewportPosition.x, MaxY - cameraHeight);
                 }
             }
+        }
+        /// <summary>
+        /// Gets the "on-screen" coordinates for a tile
+        /// </summary>
+        /// <param name="tile"></param>
+        public Vector2 GetWorldCoordinatesForTile(Vector2 tile)
+        {
+            // print("viewport is at " + ViewportPosition);
+            // get the value of the left and bottom edges of the viewport
+            int minx = Mathf.FloorToInt(ViewportPosition.x);
+            int miny = Mathf.FloorToInt(ViewportPosition.y);
+            // get the fractional part of the viewport's position
+            float dx = ViewportPosition.x - (float)Math.Truncate(ViewportPosition.x);
+            float dy = ViewportPosition.y - (float)Math.Truncate(ViewportPosition.y);
+            dx *= -1;
+            dy *= -1;
+            // world x-position of the tile is at the tile's coordinates - viewport's left position + fractional part of viewport's position + viewport's x-offset
+            float newX = tile.x - minx + dx + X_OFFSET;
+            float newY = tile.y - miny + dy + Y_OFFSET;
+            // print("tile " + tile + " should appear at " + new Vector2(newX, newY));
+            return new Vector2(newX, newY);
         }
         public void PositionViewport(Vector2 v)
         {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.RPGBase.Graph
+namespace RPGBase.Graph
 {
     public class IndexMinPQ<Key> : IEnumerable<int>, IEnumerable where Key : IComparable<Key>
     {

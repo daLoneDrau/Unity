@@ -1,4 +1,5 @@
 ﻿using RPGBase.Flyweights;
+using UnityEngine;
 
 namespace WoFM.Flyweights
 {
@@ -9,5 +10,9 @@ namespace WoFM.Flyweights
             Inventory = new WoFMInventoryData();
             ItemData = new WoFMItemData();
         }
+        /// <summary>
+        /// the last position the IO was at.  During moves, the IO is still considered to be at this position for lighting and other purposes.
+        /// </summary>
+        public Vector2 LastPositionHeld { get; set; }
     }
 }

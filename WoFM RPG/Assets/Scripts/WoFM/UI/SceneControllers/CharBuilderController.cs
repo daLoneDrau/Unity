@@ -45,9 +45,18 @@ namespace WoFM.UI.SceneControllers
         /// </summary>
         void Start()
         {
-            WoFMInteractiveObject playerIo = ((WoFMInteractive)Interactive.Instance).NewHero();
+            // create player object
+            GameObject player = GameController.Instance.NewHero();
+            // get IO component
+            WoFMInteractiveObject playerIo = player.GetComponent<WoFMInteractiveObject>();
+            // add watcher for player stats
             playerIo.PcData.AddWatcher(GetComponent<PlayerWatcher>());
+            // re-initialize player stats
             Script.Instance.SendInitScriptEvent(playerIo);
+
+            // remove instances for garbage collection
+            player = null;
+            playerIo = null;
         }
         /// <summary>
         /// Update is called every frame, if the MonoBehaviour is enabled.
@@ -58,8 +67,7 @@ namespace WoFM.UI.SceneControllers
         #endregion
         public void RerollStats()
         {
-            WoFMInteractiveObject playerIo = (WoFMInteractiveObject)Interactive.Instance.GetIO(0);
-            Script.Instance.SendInitScriptEvent(playerIo);
+            Script.Instance.SendInitScriptEvent(((WoFMInteractive)Interactive.Instance).GetPlayerIO());
         }
         bool doonce;
         /// <summary>

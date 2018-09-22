@@ -13,8 +13,7 @@ namespace WoFM.Scriptables.Mobs
     {
         public override int OnInit()
         {
-            Console.WriteLine("Hero oninit");
-            Debug.Log("Hero ONINIT");
+            // Debug.Log("Hero ONINIT");
             WoFMCharacter pc = (WoFMCharacter)Io.PcData;
             // roll stats
             OnRollStats();
@@ -26,9 +25,9 @@ namespace WoFM.Scriptables.Mobs
         {
             WoFMCharacter pc = (WoFMCharacter)Io.PcData;
             // SKILL is 6 + 1D6
-            Debug.Log("ROLL SKILL");
+            // Debug.Log("ROLL SKILL");
             pc.SetBaseAttributeScore("SKL", 6 + Diceroller.Instance.RolldX(6));
-            Debug.Log("ROLL MAXSKILL");
+            // Debug.Log("ROLL MAXSKILL");
             pc.SetBaseAttributeScore("MSK", pc.GetBaseAttributeScore("SKL"));
 
             // STAMINA is 12 + 2D6
@@ -40,7 +39,7 @@ namespace WoFM.Scriptables.Mobs
             pc.SetBaseAttributeScore("MLK", pc.GetBaseAttributeScore("LUK"));
 
             pc.ComputeFullStats();
-            Debug.Log("HEAL");
+            // Debug.Log("HEAL");
             pc.HealPlayer(999, true);
 
             return base.OnRollStats();

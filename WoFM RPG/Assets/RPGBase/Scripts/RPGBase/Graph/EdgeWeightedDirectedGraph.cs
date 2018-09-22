@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.RPGBase.Graph
+namespace RPGBase.Graph
 {
     /// <summary>
     /// A Graph is a set of vertices and a collection of edges that each connect a pair of vertices. An directed graph is a graph where all edges are unidirectional.

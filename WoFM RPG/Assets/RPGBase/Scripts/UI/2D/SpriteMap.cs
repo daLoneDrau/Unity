@@ -24,7 +24,6 @@ namespace RPGBase.Scripts.UI._2D
         private void Awake()
         {
             Instance = this;
-            print("setting instance of SpriteMap");
         }
         /// <summary>
         /// Start is called on the frame when a script is enabled just before any of the Update methods are called the first time.

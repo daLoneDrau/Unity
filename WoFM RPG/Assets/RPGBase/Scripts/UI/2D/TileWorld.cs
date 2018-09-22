@@ -11,15 +11,15 @@ namespace RPGBase.Scripts.UI._2D
         /// <summary>
         /// the list of <see cref="Tile"/>s in the world.
         /// </summary>
-        Tile[,] tiles;
+        protected Tile[,] tiles;
         /// <summary>
         /// The <see cref="TileWorld"/>'s width.
         /// </summary>
-        public int Width { get; private set; }
+        public int Width { get; protected set; }
         /// <summary>
         /// The <see cref="TileWorld"/>'s height.
         /// </summary>
-        public int Height { get; private set; }
+        public int Height { get; protected set; }
         /// <summary>
         /// Creates a new instance of <see cref="TileWorld"/>.
         /// </summary>
@@ -27,10 +27,16 @@ namespace RPGBase.Scripts.UI._2D
         /// <param name="h">the <see cref="TileWorld"/>'s height</param>
         public TileWorld(int w = 100, int h = 100)
         {
+            // CODE BELOW USED SUCCESSFULLY FOR WOFM TILE WORLD
+            // WOFM HAS BUILT-IN BUFFER OF EMPTY TILES TO COMPENSATE FOR UI BOUNDARY
+            Width = w;
+            Height = h;
+            /* USED THIS CODE FOR HEX WORLD - NOT SURE WHY HAVE BUFFER OF 2 AND 3
             Width = w + 1;
             Width++;
             Height = h + 1;
             Height += 2;
+            */
             // generate a new list of empty tiles to fill the world.
             tiles = new Tile[Width, Height];
             for (int x = Width - 1; x >= 0; x--)
@@ -75,6 +81,12 @@ namespace RPGBase.Scripts.UI._2D
             }
             return v;
         }
+        /// <summary>
+        /// Gets the tile at a specific location.  If no tile exists, null is returned.
+        /// </summary>
+        /// <param name="x">the x-coordinate</param>
+        /// <param name="y">the y-coordinate</param>
+        /// <returns><see cref="Tile"/></returns>
         public Tile GetTileAt(int x, int y)
         {
             Tile t = null;
@@ -90,6 +102,10 @@ namespace RPGBase.Scripts.UI._2D
                 t = tiles[x, y];
             }
             return t;
+        }
+        public Tile GetTileAt(Vector2 v)
+        {
+            return GetTileAt((int)v.x, (int)v.y);
         }
     }
 }

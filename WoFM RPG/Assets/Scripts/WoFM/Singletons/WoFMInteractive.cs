@@ -1,5 +1,6 @@
 ﻿using RPGBase.Constants;
 using RPGBase.Flyweights;
+using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System;
 using UnityEngine;
@@ -8,13 +9,16 @@ using WoFM.Scriptables.Mobs;
 
 namespace WoFM.Singletons
 {
-    public class WoFMInteractive: Interactive
+    public class WoFMInteractive : Interactive
     {
         /// <summary>
         /// the next available id.
         /// </summary>
         private int nextId;
-        private int playerId;
+        /// <summary>
+        /// the stored Id of the player object.
+        /// </summary>
+        private int playerId = -1;
         /// <summary>
         /// the list of <see cref="WoFMInteractiveObject"/>s.
         /// </summary>
@@ -49,11 +53,10 @@ namespace WoFM.Singletons
             return objs;
         }
 
-        protected override BaseInteractiveObject GetNewIO()
+        protected override void NewIO(BaseInteractiveObject io)
         {
             // step 1 - find the next id
-            int id = nextId++;
-            WoFMInteractiveObject io = new WoFMInteractiveObject(id);
+            io.RefId = nextId++;
             // step 2 - find the next available index in the objs array
             int index = -1;
             for (int i = objs.Length - 1; i >= 0; i--)
@@ -67,43 +70,61 @@ namespace WoFM.Singletons
             // step 3 - put the new object into the arrays
             if (index < 0)
             {
-                objs = ArrayUtilities.Instance.ExtendArray(io, objs);
+                objs = ArrayUtilities.Instance.ExtendArray((WoFMInteractiveObject)io, objs);
             }
             else
             {
-                objs[index] = io;
+                objs[index] = (WoFMInteractiveObject)io;
             }
-            return io;
         }
         public WoFMInteractiveObject GetPlayerIO()
         {
             return (WoFMInteractiveObject)GetIO(playerId);
         }
         /// <summary>
-        /// Gets a new Player IO.
+        /// Initializes a new Player IO.
         /// </summary>
-        /// <returns><see cref="WoFMInteractiveObject"/></returns>
-        public WoFMInteractiveObject NewHero()
+        public void NewHero(WoFMInteractiveObject io)
         {
-            print("NewHero");
-            WoFMInteractiveObject io = (WoFMInteractiveObject)GetNewIO();
+            // register the IO
+            NewIO(io);
+            // add player flag and component
             io.AddIOFlag(IoGlobals.IO_01_PC);
             io.PcData = new WoFMCharacter();
+            // add script
             io.Script = new Hero();
             int val = Script.Instance.SendInitScriptEvent(io);
+            // register the IO as the player
             playerId = io.RefId;
-            return io;
         }
         /// <summary>
-        /// Gets a new Item IO.
+        /// Initializes a new Trigger IO.
         /// </summary>
-        /// <returns><see cref="WoFMInteractiveObject"/></returns>
-        public WoFMInteractiveObject NewItem()
+        public void NewTrigger(WoFMInteractiveObject io, string script)
         {
-            WoFMInteractiveObject io = (WoFMInteractiveObject)GetNewIO();
+            // register the IO
+            NewIO(io);
+            // add trigger flag
+            io.AddIOFlag(IoGlobals.IO_16_TRIGGER);
+            // add script
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append("WoFM.Scriptables.Triggers.");
+            sb.Append(script);
+            Type type = Type.GetType(sb.ToString());
+            sb.ReturnToPool();
+            io.Script = (Scriptable)Activator.CreateInstance(type);
+            int val = Script.Instance.SendInitScriptEvent(io);
+        }
+        /// <summary>
+        /// Initializes a new Item IO.
+        /// </summary>
+        public void NewItem(BaseInteractiveObject io)
+        {
+            // register the IO
+            NewIO(io);
+            // add item flag and component
             io.AddIOFlag(IoGlobals.IO_02_ITEM);
             io.ItemData = new WoFMItemData();
-            return io;
         }
     }
 }

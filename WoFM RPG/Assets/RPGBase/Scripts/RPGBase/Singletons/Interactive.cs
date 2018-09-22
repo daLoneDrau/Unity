@@ -238,10 +238,9 @@ namespace RPGBase.Singletons
         /// <returns>int</returns>
         public virtual int GetMaxIORefId() { throw new NotImplementedException(); }
         /// <summary>
-        /// Gets a new interactive object.
+        /// Initializes a new interactive object.
         /// </summary>
-        /// <returns><see cref="BaseInteractiveObject"/></returns>
-        protected virtual BaseInteractiveObject GetNewIO() { throw new NotImplementedException(); }
+        protected virtual void NewIO(BaseInteractiveObject io) { throw new NotImplementedException(); }
         /// <summary>
         /// Gets an BaseInteractiveObject's reference id by name.  If the target is "none" or does not exist, -1 is returned.If the target is "self" or "me", -2;
         /// </summary>

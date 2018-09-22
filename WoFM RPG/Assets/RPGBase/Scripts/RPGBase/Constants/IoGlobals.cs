@@ -59,6 +59,8 @@ namespace RPGBase.Constants
         public const int IO_14_PARTY = 8192;
         /** flag indicating the interactive object is a winged mount. */
         public const int IO_15_MOVABLE = 16384;
+        /** flag indicating the interactive object is a winged mount. */
+        public const int IO_16_TRIGGER = 1<< 16;
         public const int PLAYER_CROUCH = 1 << 7;
         public const int PLAYER_LEAN_LEFT = 1 << 8;
         public const int PLAYER_LEAN_RIGHT = 1 << 9;
