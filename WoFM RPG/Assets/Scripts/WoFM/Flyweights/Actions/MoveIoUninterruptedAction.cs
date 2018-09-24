@@ -1,4 +1,4 @@
-﻿using RPGBase.Constants;
+using RPGBase.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,22 +25,24 @@ namespace WoFM.Flyweights.Actions
         /// the IO being moved.
         /// </summary>
         private WoFMInteractiveObject io;
+        private float waitTime;
         /// <summary>
         /// Creates a new instance of <see cref="MoveIoUninterruptedAction"/>.
         /// </summary>
         /// <param name="i">the IO being moved</param>
         /// <param name="v">the IO's destination</param>
-        public MoveIoUninterruptedAction(WoFMInteractiveObject i, Vector2 v)
+        public MoveIoUninterruptedAction(WoFMInteractiveObject i, Vector2 v, float wait=.25f)
         {
             io = i;
             destination = v;
+            waitTime = wait;
         }
         public void Execute()
         {
             if (!executionStarted)
             {
                 Debug.Log("exceute move to " + destination);
-                io.gameObject.GetComponent<HeroMove>().MoveUninterrupted(destination);
+                io.gameObject.GetComponent<HeroMove>().MoveUninterrupted(destination, waitTime);
                 executionStarted = true;
             }
         }
