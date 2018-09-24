@@ -1,10 +1,14 @@
-﻿using RPGBase.Scripts.UI._2D;
+using RPGBase.Scripts.UI._2D;
+using RPGBase.Singletons;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using WoFM.Flyweights;
+using WoFM.Flyweights.Actions;
+using WoFM.Singletons;
 using WoFM.UI.GlobalControllers;
 
 namespace WoFM.UI._2D
@@ -25,27 +29,34 @@ namespace WoFM.UI._2D
             bool canMove = Move(xDir, yDir, out hit);
             if (hit.transform == null)
             {
-                return;
+                // move hero to the spot
+                Vector2 end = GetComponent<WoFMInteractiveObject>().LastPositionHeld + new Vector2(xDir, yDir);
+                print("hit nothing - move to " + end);
+                // calculate end position based on directions passed in when calling move
+                GameSceneController.Instance.AddMustCompleteAction(new MoveIoUninterruptedAction(GetComponent<WoFMInteractiveObject>(), end, 0));
             }
-            // get component that was hit.  could be enemies, players, triggers, etc...
-            T hitComponent = hit.transform.GetComponent<T>();
-            if (hitComponent is Blocker)
+            else
             {
-                print("ran into a blocker");
-            }
-            // if unit cannot move and hit something
-            if (!canMove && hitComponent != null)
-            {
-                OnCantMove(hitComponent);
+                // get component that was hit.  could be enemies, players, triggers, etc...
+                T hitComponent = hit.transform.GetComponent<T>();
+                // if unit cannot move and hit something
+                if (!canMove && hitComponent != null)
+                {
+                    OnCantMove(hitComponent);
+                }
+                else
+                {
+                    // didn't hit something, but can't move.  what do we do?
+                }
             }
         }
         /// <summary>
         /// Moves the player to a destination source without checking for collisions.
         /// </summary>
         /// <param name="dest">the destination coordinates</param>
-        public void MoveUninterrupted(Vector2 dest)
+        public void MoveUninterrupted(Vector2 dest, float wait=0f)
         {
-            StartCoroutine(MoveToTile(dest, 0.25f));
+            StartCoroutine(MoveToTile(dest, wait));
         }
         protected override void OnCantMove<T>(T component)
         {
