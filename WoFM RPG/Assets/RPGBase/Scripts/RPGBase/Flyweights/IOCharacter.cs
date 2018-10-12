@@ -107,6 +107,8 @@ namespace RPGBase.Flyweights
         /// <param name="dmg">the amount</param>
         protected void AdjustLife(float dmg)
         {
+            UnityEngine.Debug.Log("AdjustLife(" + dmg);
+            UnityEngine.Debug.Log("Life::" + Life);
             String ls = GetLifeAttribute();
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
             sb.Append("M");

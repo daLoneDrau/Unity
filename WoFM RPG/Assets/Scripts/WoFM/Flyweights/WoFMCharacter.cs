@@ -1,6 +1,8 @@
 ﻿using RPGBase.Flyweights;
 using RPGBase.Pooled;
+using RPGBase.Singletons;
 using System;
+using UnityEngine;
 using WoFM.Constants;
 
 namespace WoFM.Flyweights
@@ -19,6 +21,18 @@ namespace WoFM.Flyweights
             new object[] { "MLK", "Max Luck", WoFMGlobals.EQUIP_ELEMENT_MAX_LUCK },
             new object[] { "DMG", "Damage", WoFMGlobals.EQUIP_ELEMENT_DAMAGE },
         };
+        /// <summary>
+        /// Tests the player's skill.
+        /// </summary>
+        /// <returns></returns>
+        public bool TestSkill()
+        {
+            ComputeFullStats();
+            int roll = Diceroller.Instance.RollXdY(2, 6);
+            float score = GetFullAttributeScore("SKL");
+            Debug.Log("test skill::" + roll + "<=" + score + "?");
+            return roll <= score;
+        }
         protected override void AdjustMana(float dmg)
         {
             throw new NotImplementedException();

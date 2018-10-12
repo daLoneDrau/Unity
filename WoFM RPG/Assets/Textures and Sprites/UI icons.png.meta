@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 639f7e256722a8d45a63f7e2eb1bbd09
-timeCreated: 1537298365
+timeCreated: 1538527990
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -11,6 +11,8 @@ TextureImporter:
     21300008: icon_search_disabled
     21300010: icon_attack_enabled
     21300012: icon_attack_disabled
+    21300014: icon_look_disabled
+    21300016: icon_look_pressed
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -188,6 +190,32 @@ TextureImporter:
         height: 42
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: icon_look_disabled
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 75
+        width: 42
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: icon_look_pressed
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 203
+        width: 42
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

@@ -10,12 +10,16 @@ using WoFM.Flyweights;
 using WoFM.Flyweights.Actions;
 using WoFM.Singletons;
 using WoFM.UI.GlobalControllers;
+using WoFM.UI.SceneControllers;
 
 namespace WoFM.UI._2D
 {
     public class HeroMove: MovingObject
     {
-        public ParticleSystem bonker;
+        /// <summary>
+        /// flag indicating a move that hit an object should actually be allowed.
+        /// </summary>
+        private bool allowMove;
         protected override void Start()
         {
             base.moveTime = .5f;
@@ -23,17 +27,18 @@ namespace WoFM.UI._2D
         }
         public override void AttemptMove<T>(int xDir, int yDir)
         {
+            allowMove = false;
             print("attempt move");
             // hit is an out parameter - we store the hit result in this instance for use later
             RaycastHit2D hit;
             bool canMove = Move(xDir, yDir, out hit);
             if (hit.transform == null)
             {
-                // move hero to the spot
-                Vector2 end = GetComponent<WoFMInteractiveObject>().LastPositionHeld + new Vector2(xDir, yDir);
-                print("hit nothing - move to " + end);
                 // calculate end position based on directions passed in when calling move
-                GameSceneController.Instance.AddMustCompleteAction(new MoveIoUninterruptedAction(GetComponent<WoFMInteractiveObject>(), end, 0));
+                GameSceneController.Instance.AddMustCompleteAction(new MoveIoUninterruptedAction(
+                    GetComponent<WoFMInteractiveObject>(),
+                    GetComponent<WoFMInteractiveObject>().LastPositionHeld + new Vector2(xDir, yDir),
+                    0));
             }
             else
             {
@@ -43,6 +48,15 @@ namespace WoFM.UI._2D
                 if (!canMove && hitComponent != null)
                 {
                     OnCantMove(hitComponent);
+                    if (allowMove)
+                    {
+                        // move is actually allowed
+                        // calculate end position based on directions passed in when calling move
+                        GameSceneController.Instance.AddMustCompleteAction(new MoveIoUninterruptedAction(
+                            GetComponent<WoFMInteractiveObject>(),
+                            GetComponent<WoFMInteractiveObject>().LastPositionHeld + new Vector2(xDir, yDir),
+                            0));
+                    }
                 }
                 else
                 {
@@ -54,9 +68,17 @@ namespace WoFM.UI._2D
         /// Moves the player to a destination source without checking for collisions.
         /// </summary>
         /// <param name="dest">the destination coordinates</param>
-        public void MoveUninterrupted(Vector2 dest, float wait=0f)
+        public void MoveUninterrupted(Vector2 dest, float wait = 0f)
         {
             StartCoroutine(MoveToTile(dest, wait));
+        }
+        /// <summary>
+        /// Moves the player to a destination source without checking for collisions.
+        /// </summary>
+        /// <param name="dest">the destination coordinates</param>
+        public void MoveFast(Vector2 dest, float speed)
+        {
+            StartCoroutine(MoveFastToTile(dest, speed));
         }
         protected override void OnCantMove<T>(T component)
         {
@@ -68,28 +90,38 @@ namespace WoFM.UI._2D
                     case Blocker.WALL:
                         print("ran into a wall");
                         // turn on *BONK*
-                        bonker.transform.position = transform.position + new Vector3(0, .625f, 0);
-                        bonker.Play();
-                        StartCoroutine(FinishBonk());
+                        Particles.Instance.PlayBonk(transform.position);
                         // un-freeze player controls
                         GameSceneController.Instance.CONTROLS_FROZEN = false;
                         break;
+                    case Blocker.DOOR:
+                        print("ran into a door");
+                        WoFMInteractiveObject dio = component.GetComponent<WoFMInteractiveObject>();
+                        if (dio.Script.GetLocalIntVariableValue("locked") == 1)
+                        {
+                            // ran into a locked door
+                            // TODO - check for key
+                            // turn on *LOCKED*
+                            Particles.Instance.PlayLocked(bl.transform.position);
+                            // un-freeze player controls
+                            GameSceneController.Instance.CONTROLS_FROZEN = false;
+                        }
+                        else
+                        {
+                            // ran into unlocked door - change door's sprite and blocking layer
+                            SpriteRenderer sr = component.GetComponent<SpriteRenderer>();
+                            sr.sprite = SpriteMap.Instance.GetSprite("door_1");
+                            sr.sortingLayerName = "Items";
+                            component.gameObject.layer = LayerMask.NameToLayer("Floor");
+                            dio.Script.SetLocalVariable("open", 1);
+                            allowMove = true;
+                        }
+                        break;
+                    default:
+                        print("ran into something unknown");
+                        break;
                 }
             }
-        }
-        /// <summary>
-        /// Co-routine to move the *BONK* particle animator off-screen once it is finished.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator FinishBonk()
-        {
-            // loop until particle is gone
-            while (bonker.IsAlive(true))
-            {
-                yield return null;
-            }
-            // move back off-screen
-            bonker.transform.position = new Vector3(-1, 0, 0);
         }
     }
 }

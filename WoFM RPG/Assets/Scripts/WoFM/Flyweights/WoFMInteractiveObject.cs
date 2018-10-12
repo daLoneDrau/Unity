@@ -3,9 +3,12 @@ using UnityEngine;
 
 namespace WoFM.Flyweights
 {
+    /// <summary>
+    /// Defines an interactive object.
+    /// </summary>
     public class WoFMInteractiveObject : BaseInteractiveObject
     {
-        public WoFMInteractiveObject(int id):base(id)
+        public WoFMInteractiveObject(int id) : base(id)
         {
             Inventory = new WoFMInventoryData();
             ItemData = new WoFMItemData();

@@ -24,6 +24,11 @@ namespace WoFM.Singletons
         /// <returns></returns>
         public override int GetMaxEquipped() { return WoFMGlobals.MAX_EQUIPPED; }
         /// <summary>
+        /// Gets the maximum number of spells.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetMaxSpells() { return -1; }
+        /// <summary>
         /// Gets the number of equipment element modifiers there are.
         /// </summary>
         /// <returns></returns>

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using WoFM.Constants;
 using WoFM.Flyweights;
 using WoFM.Flyweights.Actions;
 using WoFM.Singletons;
@@ -18,10 +19,6 @@ namespace WoFM.UI.GlobalControllers
 {
     public class GameSceneController : Singleton<GameSceneController>
     {
-        public ParticleSystem bonker;
-        public ParticleSystem snorer;
-        public ParticleSystem helper;
-        public ParticleSystem snorter;
         /// <summary>
         /// the GAME is playing
         /// </summary>
@@ -89,15 +86,15 @@ namespace WoFM.UI.GlobalControllers
                 Script.Instance.SendInitScriptEvent(playerIo);
             }
             player = ((WoFMInteractive)Interactive.Instance).GetPlayerIO().gameObject;
-            // add particle system bonk
-            player.GetComponent<HeroMove>().bonker = bonker;
             if (player.GetComponent<SpriteRenderer>() == null)
             {
+                // player didn't get completely initialized, initialize doors also
+                InitDoors();
                 player.AddComponent<SpriteRenderer>();
                 player.GetComponent<SpriteRenderer>().sprite = SpriteMap.Instance.GetSprite("hero_0");
                 player.GetComponent<SpriteRenderer>().sortingLayerName = "Units";
                 player.layer = LayerMask.NameToLayer("BlockingLayer");
-                player.GetComponent<HeroMove>().blockingLayer= 1<<LayerMask.NameToLayer("BlockingLayer");
+                player.GetComponent<HeroMove>().blockingLayer = 1 << LayerMask.NameToLayer("BlockingLayer");
             }
             // teleport the player to the bottom of the screen
             AddMustCompleteAction(new TeleportAction(((WoFMInteractive)Interactive.Instance).GetPlayerIO(), new Vector2(641 - GameController.MAP_X_OFFSET, GameController.MAP_Y_OFFSET - 1341)));
@@ -110,7 +107,7 @@ namespace WoFM.UI.GlobalControllers
             if (!doonce)
             {
                 doonce = true;
-                WeightedGraphEdge[] path = WorldController.Instance.GetLandPath(new Vector2(641 - GameController.MAP_X_OFFSET, GameController.MAP_Y_OFFSET - 1340), new Vector2(641 - GameController.MAP_X_OFFSET, GameController.MAP_Y_OFFSET - 1339));
+                WeightedGraphEdge[] path = WorldController.Instance.GetLandPath(new Vector2(641 - GameController.MAP_X_OFFSET, GameController.MAP_Y_OFFSET - 1340), new Vector2(641 - GameController.MAP_X_OFFSET, GameController.MAP_Y_OFFSET - 1337));
                 for (int i = path.Length - 1; i >= 0; i--)
                 {
                     // get tile destination
@@ -128,86 +125,155 @@ namespace WoFM.UI.GlobalControllers
             // if game state
         }
         #endregion
-        private void GameState()
+        /// <summary>
+        /// Only run when sprites didn't get set as part of setup.
+        /// </summary>
+        private void InitDoors()
         {
-            // are there any actions that need to be run?
-            if (MustCompleteActions.Length > 0)
+            foreach (Transform door in GameController.Instance.doorHolder)
             {
-                CONTROLS_FROZEN = true;
-                // complete actions and then run another update
-                for (int i = 0; i < MustCompleteActions.Length; i++)
+                SpriteRenderer sr = door.gameObject.AddComponent<SpriteRenderer>();
+                sr.sprite = SpriteMap.Instance.GetSprite("door_0");
+                sr.sortingLayerName = "Units";
+                door.gameObject.layer = LayerMask.NameToLayer("BlockingLayer");
+            }
+        }
+        private void RunMustCompleteActions()
+        {
+            CONTROLS_FROZEN = true;
+            // complete actions and then run another update
+            for (int i = 0; i < MustCompleteActions.Length; i++)
+            {
+                // execute the action
+                MustCompleteActions[i].Execute();
+                if (MustCompleteActions[i].IsResolved())
                 {
-                    // execute the action
-                    MustCompleteActions[i].Execute();
-                    if (MustCompleteActions[i].IsResolved())
-                    {
-                        // if action is resolved, remove the action from the list
-                        MustCompleteActions = ArrayUtilities.Instance.RemoveIndex(i, MustCompleteActions);
-                        i--;
-                    }
-                    else
-                    {
-                        // don't start a new action until previous resolves
-                        break;
-                    }
+                    // if action is resolved, remove the action from the list
+                    MustCompleteActions = ArrayUtilities.Instance.RemoveIndex(i, MustCompleteActions);
+                    i--;
+                }
+                else
+                {
+                    // don't start a new action until previous resolves
+                    break;
                 }
             }
-            else
+        }
+        private void CheckControls()
+        {
+            if (Input.anyKey)
             {
-            }
-            // are we listening for device input
-            if (!CONTROLS_FROZEN)
-            {
-                if (Input.anyKey)
+                // freeze the controls until the action is over
+                CONTROLS_FROZEN = true;
+                bool actionable = false;
+                int x = 0, y = 0;
+                char key = ' ';
+                // find out which key
+                if (Input.GetKeyDown("up"))
                 {
-                    // freeze the controls until the action is over
-                    CONTROLS_FROZEN = true;
-                    bool actionable = false;
-                    int x = 0, y = 0;
-                    // find out which key
-                    if (Input.GetKeyDown("up"))
-                    {
-                        print("up arrow key was pressed");
-                        actionable = true;
-                        y++;
-                    }
-                    if (Input.GetKeyDown("down"))
-                    {
-                        print("down arrow key was pressed");
-                        actionable = true;
-                        y--;
-                    }
-                    if (Input.GetKeyDown("left"))
-                    {
-                        print("left arrow key was pressed");
-                        actionable = true;
-                        x--;
+                    actionable = true;
+                    y++;
+                }
+                if (Input.GetKeyDown("down"))
+                {
+                    actionable = true;
+                    y--;
+                }
+                if (Input.GetKeyDown("left"))
+                {
+                    actionable = true;
+                    x--;
 
-                    }
-                    if (Input.GetKeyDown("right"))
+                }
+                if (Input.GetKeyDown("right"))
+                {
+                    actionable = true;
+                    x++;
+                }
+                if (Input.GetKeyDown("b"))
+                {
+                    actionable = true;
+                    key = 'b';
+                }
+                if (Input.GetKeyDown("l"))
+                {
+                    actionable = true;
+                    key = 'l';
+                }
+                if (!actionable)
+                {
+                    // key pressed wasn't valid. turn controls back on
+                    CONTROLS_FROZEN = false;
+                }
+                else
+                {
+                    if (x != 0
+                        || y != 0)
                     {
-                        print("right arrow key was pressed");
-                        actionable = true;
-                        x++;
-                    }
-                    if (!actionable)
-                    {
-                        // key pressed wasn't valid. turn controls back on
-                        CONTROLS_FROZEN = false;
+                        // print("try move " + x + "," + y);
+                        // try a move
+                        MovingObject mo = ((WoFMInteractive)Interactive.Instance).GetPlayerIO().gameObject.GetComponent<MovingObject>();
+                        mo.AttemptMove<Blocker>(x, y);
                     }
                     else
                     {
-                        if (x != 0
-                            || y != 0)
+                        switch (key)
                         {
-                            print("try move " + x + "," + y);
-                            // try a move
-                            MovingObject mo = ((WoFMInteractive)Interactive.Instance).GetPlayerIO().gameObject.GetComponent<MovingObject>();
-                            mo.AttemptMove<Blocker>(x, y);
+                            case 'b':
+                                MenuOptions.Instance.PressBash();
+                                break;
+                            case 'l':
+                                MenuOptions.Instance.PressLook();
+                                break;
                         }
                     }
                 }
+
             }
+        }
+        private void GameState()
+        {
+            // if splash screen - do not render goto end
+
+            // if actions to complete - 
+            if (MustCompleteActions.Length > 0)
+            {
+                RunMustCompleteActions();
+            }
+
+            // check player input
+
+            // check keyboard and mouse input
+            if (!CONTROLS_FROZEN)
+            {
+                CheckControls();
+            }
+
+            // if rendering menus goto end
+
+            // if rendering scene goto end
+
+            // check script timers
+
+            // check if player is dead
+
+            // draw particles
+
+            // render cursor
+
+            // AFTER RENDERING
+
+            // DEPENDING ON GAME STATE, UPDATE GAME
+            // if menus off,
+            // execute script stack
+            // update damage spheres
+            // update missiles
+
+            // check menu options
+            MenuOptions.Instance.CheckOptions();
+            // display messages
+            Messages.Instance.DisplayMessages();
+
         }
         #region ROOM METHODS
         /// <summary>
@@ -215,9 +281,16 @@ namespace WoFM.UI.GlobalControllers
         /// </summary>
         /// <param name="roomId">the room number</param>
         /// <param name="flag">the flag</param>
-        public void SetRoomVisited(int roomId, bool flag)
+        public void SetRoomVisited(int[] rooms, bool flag)
         {
-            roomsVisited[roomId] = flag;
+            for (int i = rooms.Length - 1; i >= 0; i--)
+            {
+                roomsVisited[rooms[i]] = flag;
+            }
+            if (rooms.Length == 1)
+            {
+                MenuOptions.Instance.LastRoomEntered = rooms[0];
+            }
         }
         /// <summary>
         /// Determines if a room has been visited.
@@ -230,6 +303,24 @@ namespace WoFM.UI.GlobalControllers
             roomsVisited.TryGetValue(roomId, out was);
             return was;
         }
+        /// <summary>
+        /// Determines if at least one room in the list has been visited.
+        /// </summary>
+        /// <param name="rooms">the list of rooms</param>
+        /// <returns>true if the room was visited, false otherwise</returns>
+        public bool WasAtLeastOneRoomVisited(int[] rooms)
+        {
+            bool was = false;
+            for (int i = rooms.Length - 1; i >= 0; i--)
+            {
+                roomsVisited.TryGetValue(rooms[i], out was);
+                if (was)
+                {
+                    break;
+                }
+            }
+            return was;
+        }
         #endregion
         public void CheckIOMoveIntoTile(WoFMInteractiveObject io, Vector2 destination)
         {
@@ -237,7 +328,7 @@ namespace WoFM.UI.GlobalControllers
             {
                 // set PC moved into room
                 WoFMTile tile = WorldController.Instance.GetTileAt(destination);
-                SetRoomVisited(tile.RoomId, true);
+                SetRoomVisited(tile.Rooms, true);
             }
             // check for triggers
             foreach (Transform child in GameController.Instance.triggerHolder)
@@ -246,10 +337,11 @@ namespace WoFM.UI.GlobalControllers
                 //child is your child transform
                 WoFMInteractiveObject tio = child.gameObject.GetComponent<WoFMInteractiveObject>();
                 Vector2 tioPos = new Vector2(tio.Script.GetLocalFloatVariableValue("x"), tio.Script.GetLocalFloatVariableValue("y"));
-                print(tioPos);
                 if (io.LastPositionHeld == tioPos)
                 {
                     print("IO just entered " + child.gameObject.name);
+                    // execute trigger's script
+                    Script.Instance.SendIOScriptEvent(child.GetComponent<WoFMInteractiveObject>(), WoFMGlobals.SM_301_TRIGGER_ENTER, null, null);
                 }
             }
         }

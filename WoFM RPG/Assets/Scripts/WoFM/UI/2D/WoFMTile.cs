@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using WoFM.Flyweights;
+using WoFM.UI.GlobalControllers;
 
 namespace WoFM.UI._2D
 {
@@ -16,7 +18,7 @@ namespace WoFM.UI._2D
         /// <summary>
         /// The id of the room the tile is associated with.
         /// </summary>
-        public int RoomId { get; set; }
+        public int[] Rooms { get; set; }
         /// <summary>
         /// the level of shadow that covers the tile, based on lighting.
         /// </summary>
@@ -25,10 +27,10 @@ namespace WoFM.UI._2D
         /// Creates a new instance of <see cref="WoFMTile"/>.
         /// </summary>
         /// <param name="w">the <see cref="TileWorld"/> the <see cref="Tile"/> inhabits</param>
-        /// <param name="id">the id of the room the tile is in</param>
-        public WoFMTile(TileWorld w, int id) : base(w)
+        /// <param name="id">the id of the rooms the tile is in</param>
+        public WoFMTile(TileWorld w, int[] rooms) : base(w)
         {
-            RoomId = id;
+            Rooms = rooms;
         }
         /// <summary>
         /// Determines if a tile blocks light.

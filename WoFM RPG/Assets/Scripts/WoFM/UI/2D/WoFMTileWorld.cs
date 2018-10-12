@@ -28,7 +28,7 @@ namespace WoFM.UI._2D
             {
                 for (int y = Height - 1; y >= 0; y--)
                 {
-                    tiles[x, y] = new WoFMTile(this, 0);
+                    tiles[x, y] = new WoFMTile(this, new int[] { 0 });
                 }
             }
         }

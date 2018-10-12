@@ -178,6 +178,10 @@ namespace RPGBase.Singletons
                         }
                     }
                 }
+                print("making call to destroy io now");
+                // detach the IO from its parent
+                io.transform.parent = null;
+                Destroy(io);
             }
         }
         public virtual void ForceIOLeaveZone(BaseInteractiveObject io, long flags) { throw new NotImplementedException(); }

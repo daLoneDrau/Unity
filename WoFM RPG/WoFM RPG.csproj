@@ -178,8 +178,13 @@
     <Compile Include="Assets\RPGBase\Scripts\UI\UnitySystemConsoleRedirector.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\VerticalLayoutHandler.cs" />
     <Compile Include="Assets\Scripts\WoFM\Constants\WoFMGlobals.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\DamageIOAction.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\DestroyIOAction.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\MessageAction.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\MoveIoSpeedyAction.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\MoveIoUninterruptedAction.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\MovePathAction.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\ParticleAction.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\TeleportAction.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\IGameAction.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMCharacter.cs" />
@@ -187,6 +192,7 @@
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMInventoryData.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMItemData.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMScriptable.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Scriptables\Doors\Door278.cs" />
     <Compile Include="Assets\Scripts\WoFM\Scriptables\Mobs\Hero.cs" />
     <Compile Include="Assets\Scripts\WoFM\Scriptables\Mobs\MobBase.cs" />
     <Compile Include="Assets\Scripts\WoFM\Scriptables\Triggers\OneTimeTextTrigger.cs" />
@@ -203,7 +209,11 @@
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\GameSceneController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\IntroController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\MainMenuController.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\MenuOptions.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\Messages.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\Particles.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\PlayerWatcher.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\StatPanelController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\WorldController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\Widgets\Statbar.cs" />
   </ItemGroup>

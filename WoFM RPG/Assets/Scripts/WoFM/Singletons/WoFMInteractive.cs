@@ -4,6 +4,7 @@ using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System;
 using UnityEngine;
+using WoFM.Constants;
 using WoFM.Flyweights;
 using WoFM.Scriptables.Mobs;
 
@@ -18,13 +19,14 @@ namespace WoFM.Singletons
         /// <summary>
         /// the stored Id of the player object.
         /// </summary>
-        private int playerId = -1;
+        public int PlayerId { get; private set; }
         /// <summary>
         /// the list of <see cref="WoFMInteractiveObject"/>s.
         /// </summary>
         private WoFMInteractiveObject[] objs = new WoFMInteractiveObject[0];
         public WoFMInteractive()
         {
+            PlayerId = -1;
         }
         public static void Init()
         {
@@ -40,7 +42,7 @@ namespace WoFM.Singletons
         }
         public override void ForceIOLeaveZone(BaseInteractiveObject io, long flags)
         {
-            throw new NotImplementedException();
+            // TODO - implement this (what is this?)
         }
 
         public override int GetMaxIORefId()
@@ -77,9 +79,13 @@ namespace WoFM.Singletons
                 objs[index] = (WoFMInteractiveObject)io;
             }
         }
+        public WoFMInteractiveObject GetPlayerId()
+        {
+            return (WoFMInteractiveObject)GetIO(PlayerId);
+        }
         public WoFMInteractiveObject GetPlayerIO()
         {
-            return (WoFMInteractiveObject)GetIO(playerId);
+            return (WoFMInteractiveObject)GetIO(PlayerId);
         }
         /// <summary>
         /// Initializes a new Player IO.
@@ -95,7 +101,25 @@ namespace WoFM.Singletons
             io.Script = new Hero();
             int val = Script.Instance.SendInitScriptEvent(io);
             // register the IO as the player
-            playerId = io.RefId;
+            PlayerId = io.RefId;
+        }
+        /// <summary>
+        /// Initializes a new Door IO.
+        /// </summary>
+        public void NewDoor(WoFMInteractiveObject io, string script)
+        {
+            // register the IO
+            NewIO(io);
+            // add door flag
+            io.AddIOFlag(WoFMGlobals.IO_17_DOOR);
+            // add script
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append("WoFM.Scriptables.Doors.");
+            sb.Append(script);
+            Type type = Type.GetType(sb.ToString());
+            sb.ReturnToPool();
+            io.Script = (Scriptable)Activator.CreateInstance(type);
+            int val = Script.Instance.SendInitScriptEvent(io);
         }
         /// <summary>
         /// Initializes a new Trigger IO.

@@ -1534,7 +1534,7 @@
       "x": 648,
       "y": 1337,
       "type": "floor",
-      "room": "278"
+      "room": [ 278, 343 ]
     },
     {
       "x": 644,
@@ -1853,27 +1853,15 @@
       "room": "343"
     },
     {
-      "x": 651,
-      "y": 1338,
-      "type": "cave_wall",
-      "room": "343"
-    },
-    {
       "x": 649,
       "y": 1337,
-      "type": "floor",
+      "type": "pit",
       "room": "343"
     },
     {
       "x": 650,
       "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 651,
-      "y": 1337,
-      "type": "floor",
+      "type": "cave_wall",
       "room": "343"
     },
     {
@@ -1886,132 +1874,6 @@
       "x": 650,
       "y": 1336,
       "type": "cave_wall",
-      "room": "343"
-    },
-    {
-      "x": 651,
-      "y": 1336,
-      "type": "cave_wall",
-      "room": "343"
-    },
-    {
-      "x": 652,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 653,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 654,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 655,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 656,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 657,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 658,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 659,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 660,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 661,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 662,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 663,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 664,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 665,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 666,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 667,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 668,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 669,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 670,
-      "y": 1337,
-      "type": "floor",
-      "room": "343"
-    },
-    {
-      "x": 671,
-      "y": 1337,
-      "type": "floor",
       "room": "343"
     },
     // ROOM 363
@@ -2415,15 +2277,31 @@
       "x": 641,
       "y": 1337,
       "text": "1"
+    },
+    {
+      "type": "OneTimeTextTrigger",
+      "id": 2,
+      "x": 647,
+      "y": 1337,
+      "text": "278"
+    },
+    {
+      "type": "OneTimeTextTrigger",
+      "id": 3,
+      "x": 638,
+      "y": 1337,
+      "text": "71"
     }
   ],
   "doors": [
     {
-      "locked": true,
-      "bashable": true,
-      "keyed": false,
-      "x": 643,
-      "y": 1337
+      "bashable": 1,
+      "keyed": 0,
+      "locked": 1,
+      "x": 648,
+      "y": 1337,
+      "type": "Door278",
+      "room": 278
     }
   ],
   "room_actions": {

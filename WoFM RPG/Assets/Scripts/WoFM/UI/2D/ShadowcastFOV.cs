@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using WoFM.Flyweights;
+using WoFM.UI.GlobalControllers;
 using WoFM.UI.SceneControllers;
 
 namespace WoFM.UI._2D
@@ -55,7 +57,8 @@ namespace WoFM.UI._2D
                 if (tile == null) { continue; }
                 // light the tile up
                 tile.ShadeLevel = LIT;
-                if (tile.IsLightBlocker())
+                if (tile.IsLightBlocker()
+                    || PositionHasLightBlocker(j, (int)py))
                 {
                     hadBlocker = true;
                     if (debug)
@@ -128,6 +131,7 @@ namespace WoFM.UI._2D
                     }
                     // reached the last cell in the row, and not on last row
                     if (!tile.IsLightBlocker()
+                        && !PositionHasLightBlocker(j, (int)py)
                         && !hadBlocker
                         && startingRow < radius)
                     {
@@ -146,6 +150,31 @@ namespace WoFM.UI._2D
                 }
             }
         }
+        /// <summary>
+        /// Determines if the position has an IO that acts as a light blocker.
+        /// </summary>
+        /// <param name="x">the position's x-coordinate</param>
+        /// <param name="y">the position's y-coordinate</param>
+        /// <returns>true if the position has an IO that blocks light; false otherwise</returns>
+        private bool PositionHasLightBlocker(int x, int y)
+        {
+            bool hasLightBlocker = false;
+            // check to see if the tile has a door
+            foreach (Transform child in GameController.Instance.doorHolder)
+            {
+                //child is your child transform
+                WoFMInteractiveObject tio = child.gameObject.GetComponent<WoFMInteractiveObject>();
+                Vector2 tioPos = new Vector2(tio.Script.GetLocalFloatVariableValue("x"), tio.Script.GetLocalFloatVariableValue("y"));
+                if (new Vector2(x, y) == tioPos
+                    && tio.Script.GetLocalIntVariableValue("open") == 0)
+                {
+                    hasLightBlocker = true;
+                    break;
+                }
+            }
+            return hasLightBlocker;
+        }
+
         public void CheckQuadrant2(Vector2 start, int radius, int startingRow = 1, float startSlope = 1f, float endSlope = float.PositiveInfinity, bool debug = false)
         {
             if (debug)
@@ -184,7 +213,8 @@ namespace WoFM.UI._2D
                 if (tile == null) { continue; }
                 // light the tile up
                 tile.ShadeLevel = LIT;
-                if (tile.IsLightBlocker())
+                if (tile.IsLightBlocker()
+                    || PositionHasLightBlocker(j, (int)py))
                 {
                     hadBlocker = true;
                     if (debug)
@@ -257,6 +287,7 @@ namespace WoFM.UI._2D
                     }
                     // reached the last cell in the row
                     if (!tile.IsLightBlocker()
+                        && !PositionHasLightBlocker(j, (int)py)
                         && !hadBlocker
                         && startingRow < radius)
                     {
@@ -308,7 +339,8 @@ namespace WoFM.UI._2D
                 if (tile == null) { continue; }
                 // light the tile up
                 tile.ShadeLevel = LIT;
-                if (tile.IsLightBlocker())
+                if (tile.IsLightBlocker()
+                    || PositionHasLightBlocker((int)px, j))
                 {
                     hadBlocker = true;
                     if (debug)
@@ -383,6 +415,7 @@ namespace WoFM.UI._2D
                     }
                     // reached the last cell in the column
                     if (!tile.IsLightBlocker()
+                        && !PositionHasLightBlocker((int)px, j)
                         && !hadBlocker
                         && startingCol < radius)
                     {
@@ -435,7 +468,8 @@ namespace WoFM.UI._2D
                 if (tile == null) { continue; }
                 // light the tile up
                 tile.ShadeLevel = LIT;
-                if (tile.IsLightBlocker())
+                if (tile.IsLightBlocker()
+                    || PositionHasLightBlocker((int)px, j))
                 {
                     hadBlocker = true;
                     if (debug)
@@ -510,6 +544,7 @@ namespace WoFM.UI._2D
                     }
                     // reached the last cell in the column
                     if (!tile.IsLightBlocker()
+                        && !PositionHasLightBlocker((int)px, j)
                         && !hadBlocker
                         && startingCol < radius)
                     {
@@ -567,7 +602,8 @@ namespace WoFM.UI._2D
                 if (tile == null) { continue; }
                 // light the tile up
                 tile.ShadeLevel = LIT;
-                if (tile.IsLightBlocker())
+                if (tile.IsLightBlocker()
+                    || PositionHasLightBlocker(j, (int)py))
                 {
                     hadBlocker = true;
                     if (debug)
@@ -640,6 +676,7 @@ namespace WoFM.UI._2D
                     }
                     // reached the last cell in the row
                     if (!tile.IsLightBlocker()
+                        && !PositionHasLightBlocker(j, (int)py)
                         && !hadBlocker
                         && startingRow < radius)
                     {
@@ -692,7 +729,8 @@ namespace WoFM.UI._2D
                 if (tile == null) { continue; }
                 // light the tile up
                 tile.ShadeLevel = LIT;
-                if (tile.IsLightBlocker())
+                if (tile.IsLightBlocker()
+                    || PositionHasLightBlocker(j, (int)py))
                 {
                     hadBlocker = true;
                     if (debug)
@@ -765,6 +803,7 @@ namespace WoFM.UI._2D
                     }
                     // reached the last cell in the row, and not on last row
                     if (!tile.IsLightBlocker()
+                        && !PositionHasLightBlocker(j, (int)py)
                         && !hadBlocker
                         && startingRow < radius)
                     {
@@ -816,7 +855,8 @@ namespace WoFM.UI._2D
                 if (tile == null) { continue; }
                 // light the tile up
                 tile.ShadeLevel = LIT;
-                if (tile.IsLightBlocker())
+                if (tile.IsLightBlocker()
+                    || PositionHasLightBlocker((int)px, j))
                 {
                     hadBlocker = true;
                     if (debug)
@@ -891,6 +931,7 @@ namespace WoFM.UI._2D
                     }
                     // reached the last cell in the column
                     if (!tile.IsLightBlocker()
+                        && !PositionHasLightBlocker((int)px, j)
                         && !hadBlocker
                         && startingCol < radius)
                     {
@@ -943,7 +984,8 @@ namespace WoFM.UI._2D
                 if (tile == null) { continue; }
                 // light the tile up
                 tile.ShadeLevel = LIT;
-                if (tile.IsLightBlocker())
+                if (tile.IsLightBlocker()
+                    || PositionHasLightBlocker((int)px, j))
                 {
                     hadBlocker = true;
                     if (debug)
@@ -1018,6 +1060,7 @@ namespace WoFM.UI._2D
                     }
                     // reached the last cell in the column
                     if (!tile.IsLightBlocker()
+                        && !PositionHasLightBlocker((int)px, j)
                         && !hadBlocker
                         && startingCol < radius)
                     {
@@ -1150,7 +1193,7 @@ namespace WoFM.UI._2D
             y2 -= 7f;
             if (beforeBlocker)
             {
-                y2--;   
+                y2--;
             }
             else
             {

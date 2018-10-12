@@ -215,6 +215,7 @@ namespace RPGBase.Flyweights
         /// <returns>the total damage done</returns>
         public float DamagePlayer(float dmg, long type, int source)
         {
+            Debug.Log("DamagePlayer(" + dmg);
             float damagesdone = 0f;
             ComputeFullStats();
             if (!io.HasIOFlag(IoGlobals.PLAYERFLAGS_INVULNERABILITY)

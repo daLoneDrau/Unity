@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.UI.SimpleJSON;
+using Assets.Scripts.WoFM.UI.SceneControllers;
 using RPGBase.Pooled;
 using RPGBase.Scripts.UI._2D;
 using RPGBase.Singletons;
@@ -36,6 +37,13 @@ namespace WoFM.UI.GlobalControllers
         /// the current section of text loaded for reading.
         /// </summary>
         public string textEntry;
+        //****************************
+        // HOLDERS FOR GAME OBJECTS
+        //****************************
+        /// <summary>
+        /// Transform to hold all our game objects, so they don't clog up the hierarchy.
+        /// </summary>
+        public Transform doorHolder;
         /// <summary>
         /// Transform to hold all our game objects, so they don't clog up the hierarchy.
         /// </summary>
@@ -56,10 +64,23 @@ namespace WoFM.UI.GlobalControllers
             JSONArray array = mapFile["cells"].AsArray;
             for (int i = 0, li = array.Count; i < li; i++)
             {
+                int[] roomArr;
+                if (array[i]["room"].IsArray)
+                {
+                    roomArr = new int[array[i]["room"].Count];
+                    for (int j = 0, lj = array[i]["room"].Count; j < lj; j++)
+                    {
+                        roomArr[j] = array[i]["room"][j].AsInt;
+                    }
+                }
+                else
+                {
+                    roomArr = new int[] { array[i]["room"].AsInt };
+                }
                 mapData.Add(new MapData(new Vector2(
                     array[i]["x"].AsFloat - MAP_X_OFFSET,
                     MAP_Y_OFFSET - array[i]["y"].AsFloat),
-                    array[i]["room"].AsInt,
+                    roomArr,
                     array[i]["type"])
                     );
             }
@@ -80,7 +101,31 @@ namespace WoFM.UI.GlobalControllers
                     tio.Script.SetLocalVariable("text", (string)node["text"]);
                 }
             }
+
+            array = mapFile["doors"].AsArray;
+            for (int i = 0, li = array.Count; i < li; i++)
+            {
+                JSONNode node = array[i];
+                string type = node["type"];
+                int id = node["id"].AsInt;
+                float x = node["x"].AsFloat - MAP_X_OFFSET;
+                float y = MAP_Y_OFFSET - node["y"].AsFloat;
+                bool locked = node["locked"].AsBool;
+                GameObject door = NewDoor(id, type);
+                WoFMInteractiveObject tio = door.GetComponent<WoFMInteractiveObject>();
+                tio.Script.SetLocalVariable("x", x);
+                tio.Script.SetLocalVariable("y", y);
+                tio.Script.SetLocalVariable("bashable", node["bashable"].AsInt);
+                tio.Script.SetLocalVariable("keyed", node["keyed"].AsInt);
+                tio.Script.SetLocalVariable("locked", node["locked"].AsInt);
+                tio.Script.SetLocalVariable("open", 0);
+                tio.Script.SetLocalVariable("room", node["room"].AsInt);
+            }
             return mapData;
+        }
+        public string GetText(string entry)
+        {
+            return textFile[entry];
         }
         /// <summary>
         /// Loads a section of text by name.
@@ -90,6 +135,7 @@ namespace WoFM.UI.GlobalControllers
         {
             textEntry = textFile[entry];
         }
+        #region IO GENERATION
         /// <summary>
         /// Creates a new player <see cref="GameObject"/> with a <see cref="SpriteRenderer"/> and <see cref="WoFMInteractiveObject"/> components.
         /// </summary>
@@ -103,32 +149,102 @@ namespace WoFM.UI.GlobalControllers
             };
             // position player outside the screen
             player.transform.position = new Vector3(-1, 0, 0);
-            // set player sprite to no shield sprite
+            /********************************************************
+             * SETUP SPRITE_RENDERER COMPONENT
+            /*******************************************************/
             if (SpriteMap.Instance != null)
             {
                 SpriteRenderer sr = player.AddComponent<SpriteRenderer>();
+                // set player sprite to no shield sprite
                 sr.sprite = SpriteMap.Instance.GetSprite("hero_0");
                 sr.sortingLayerName = "Units";
                 player.layer = LayerMask.NameToLayer("BlockingLayer");
             }
-            // add component to handle player moves
+            /********************************************************
+             * SETUP HERO_MOVE COMPONENT
+            /*******************************************************/
             HeroMove hm = player.AddComponent<HeroMove>();
             hm.blockingLayer = 1 << LayerMask.NameToLayer("BlockingLayer");
-            // add rigidbody2d and boxcollider2d;
+            /********************************************************
+             * SETUP BOX_COLLIDER_2D COMPONENT
+            /*******************************************************/
             BoxCollider2D bc = player.AddComponent<BoxCollider2D>() as BoxCollider2D;
             bc.size = new Vector2(0.9f, 0.9f);
+            /********************************************************
+             * SETUP RIGID_BODY COMPONENT
+            /*******************************************************/
             Rigidbody2D r = player.AddComponent<Rigidbody2D>() as Rigidbody2D;
             r.bodyType = RigidbodyType2D.Kinematic;
-            // create new IO and assign as component to player object
+            /********************************************************
+             * SETUP WOFM_INTERACTIVE_OBJECT COMPONENT
+            /*******************************************************/
             WoFMInteractiveObject playerIo = player.AddComponent<WoFMInteractiveObject>() as WoFMInteractiveObject;
-
-            // register the IO as the player and initialize player components
+            /********************************************************
+             * REGISTER THE IO AND INITIALIZE INTERACTIVE COMPONENTS
+            /*******************************************************/
             ((WoFMInteractive)Interactive.Instance).NewHero(playerIo);
+            /********************************************************
+             * SETUP WATCHERS
+            /*******************************************************/
+            if (StatPanelController.Instance != null)
+            {
+                playerIo.PcData.AddWatcher(StatPanelController.Instance);
+            }
 
             // remove instances for garbage collection
             playerIo = null;
-
+            print("created player - " + player.GetComponent<WoFMInteractiveObject>().RefId);
+            print(((WoFMInteractive)Interactive.Instance).PlayerId);
             return player;
+        }
+        public GameObject NewDoor(int id, string script)
+        {
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append("door");
+            sb.Append(id);
+            // create player GameObject
+            GameObject door = new GameObject
+            {
+
+                name = sb.ToString()
+            };
+            sb.ReturnToPool();
+            /********************************************************
+             * SETUP BLOCKER COMPONENT
+            /*******************************************************/
+            Blocker b = door.AddComponent<Blocker>();
+            b.Type = Blocker.DOOR;
+            /********************************************************
+             * SETUP BOX_COLLIDER_2D COMPONENT
+            /*******************************************************/
+            BoxCollider2D bc = door.AddComponent<BoxCollider2D>() as BoxCollider2D;
+            bc.size = new Vector2(1f, 1f);
+            /********************************************************
+             * SETUP SPRITE_RENDERER COMPONENT
+            /*******************************************************/
+            if (SpriteMap.Instance != null)
+            {
+                SpriteRenderer sr = door.AddComponent<SpriteRenderer>();
+                sr.sprite = SpriteMap.Instance.GetSprite("door_0");
+                sr.sortingLayerName = "Units";
+                door.layer = LayerMask.NameToLayer("BlockingLayer");
+            }
+            /********************************************************
+             * SETUP INTERACTIVE_OBJECT COMPONENT
+            /*******************************************************/
+            // create new IO and assign as component to door object
+            WoFMInteractiveObject doorIo = door.AddComponent<WoFMInteractiveObject>() as WoFMInteractiveObject;
+            // register the IO and initialize trigger components
+            ((WoFMInteractive)Interactive.Instance).NewDoor(doorIo, script);
+            /********************************************************
+             * FINISH SETUP
+            /*******************************************************/
+            // position door outside the screen
+            door.transform.position = new Vector3(-1, 0, 0);
+            // set new trigger as child of trigger holder
+            door.transform.SetParent(doorHolder);
+
+            return door;
         }
         public GameObject NewTrigger(int id, string script)
         {
@@ -154,6 +270,7 @@ namespace WoFM.UI.GlobalControllers
 
             return trigger;
         }
+        #endregion
         #region MonoBehaviour messages
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -165,6 +282,9 @@ namespace WoFM.UI.GlobalControllers
             WoFMInteractive.Init();
             WoFMScript.Init();
             DontDestroyOnLoad(gameObject);
+            // create holder for all doors
+            doorHolder = new GameObject("Doors").transform;
+            DontDestroyOnLoad(doorHolder);
             // create holder for all triggers
             triggerHolder = new GameObject("Triggers").transform;
             DontDestroyOnLoad(triggerHolder);
@@ -202,7 +322,7 @@ namespace WoFM.UI.GlobalControllers
         /// <summary>
         /// the room in which the tile is located.
         /// </summary>
-        public int roomId;
+        public int[] roomId;
         /// <summary>
         /// the tile type.
         /// </summary>
@@ -213,7 +333,7 @@ namespace WoFM.UI.GlobalControllers
         /// <param name="v">the tile coordinates</param>
         /// <param name="i">the tile's room</param>
         /// <param name="s">the tile type</param>
-        public MapData(Vector2 v, int i, string s)
+        public MapData(Vector2 v, int[] i, string s)
         {
             coordinates = v;
             roomId = i;

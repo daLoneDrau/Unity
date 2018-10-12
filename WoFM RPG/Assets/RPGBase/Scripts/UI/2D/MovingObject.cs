@@ -46,6 +46,10 @@ namespace RPGBase.Scripts.UI._2D
             inverseMoveTime = 1f / moveTime;
         }
         #endregion
+        public void AttemptMove<T>(Vector2 v) where T : Component
+        {
+            AttemptMove<T>((int)v.x, (int)v.y);
+        }
         public virtual void AttemptMove<T>(int xDir, int yDir) where T : Component
         {
             // hit is an out parameter - we store the hit result in this instance for use later
@@ -61,6 +65,41 @@ namespace RPGBase.Scripts.UI._2D
             if (!canMove && hitComponent != null)
             {
                 OnCantMove(hitComponent);
+            }
+        }
+        public IEnumerator MoveFastToTile(Vector2 tileCoords, float speed)
+        {
+            float inverseSpeed = 1f / speed;
+            WoFMInteractiveObject io = GetComponent<WoFMInteractiveObject>();
+            if (io.HasIOFlag(IoGlobals.IO_01_PC))
+            {
+                // calculate remaining distance to move based on the square magnitude of the difference between the current position and the end parameter
+                float sqrRemainingDistance = (io.Position - tileCoords).sqrMagnitude; // while remaining distance still not 0
+                while (sqrRemainingDistance > float.Epsilon)
+                {
+                    // find a position proportionally closer to the end based on the move time.
+                    // Vector2 MoveTowards moves a point in a straight line towards a target point
+                    Vector2 newPosition = Vector2.MoveTowards(io.Position, tileCoords, inverseSpeed * Time.deltaTime);
+
+                    // re-position the viewport
+                    TileViewportController.Instance.CenterOnTile(newPosition);
+                    // position the IO at the new position
+                    io.Position = newPosition;
+                    Vector2 rbp = TileViewportController.Instance.GetScreenCoordinatesForWorldPosition(newPosition);
+                    // move unit
+                    transform.position = rbp;
+                    //rigidBody.MovePosition(rbp);
+
+                    // re-calculate remaining distance
+                    sqrRemainingDistance = (io.Position - tileCoords).sqrMagnitude;
+                    // print("moving unit to " + tileCoords + "\nposition " + newPosition + "\t||unit " + rbp);
+                    // wait one frame before re-evaluating loop condition
+                    yield return null;
+                }
+            }
+            else
+            {
+                // move a unit that is not the PC
             }
         }
         public IEnumerator MoveToTile(Vector2 tileCoords, float pauseTime = 0f)

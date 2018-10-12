@@ -1,7 +1,37 @@
-﻿namespace WoFM.Constants
+﻿using UnityEngine;
+
+namespace WoFM.Constants
 {
     public sealed class WoFMGlobals
     {
+        //****************************
+        // DIRECTIONS
+        //****************************
+        /// <summary>
+        /// North
+        /// </summary>
+        public const int NORTH = 0;
+        /// <summary>
+        /// East
+        /// </summary>
+        public const int EAST = 1;
+        /// <summary>
+        /// South
+        /// </summary>
+        public const int SOUTH = 2;
+        /// <summary>
+        /// West
+        /// </summary>
+        public const int WEST = 3;
+        /// <summary>
+        /// the list of directions.
+        /// </summary>
+        public static Vector2[] DIRECTIONS = new Vector2[] {
+            new Vector2(0, 1), // NORTH
+            new Vector2(1, 0), // EAST
+            new Vector2(0, -1), // SOUTH
+            new Vector2(-1, 0), // WEST
+            };
         //****************************
         // EQUIPMENT SLOTS
         //****************************
@@ -52,6 +82,24 @@
         /// the number of equipment element modifiers that exist.
         /// </summary>
         public const int NUM_ELEMENTS = 7;
+        //****************************
+        // IO FLAGS
+        //****************************
+        /// <summary>
+        /// flag indicating the IO is a door.
+        /// </summary>
+        public const int IO_17_DOOR = 1 << 17;
+        //****************************
+        // SCRIPT MESSAGES
+        //****************************
         public const int SM_300_ROLL_STATS = 300;
+        /// <summary>
+        /// IO entered a trigger area.
+        /// </summary>
+        public const int SM_301_TRIGGER_ENTER = 301;
+        /// <summary>
+        /// IO was bashed.
+        /// </summary>
+        public const int SM_303_BASHED = 303;
     }
 }

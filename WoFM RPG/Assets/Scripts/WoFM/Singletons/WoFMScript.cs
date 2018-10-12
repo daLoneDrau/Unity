@@ -68,7 +68,7 @@ namespace WoFM.Singletons
 
         public override void ClearAdditionalEventStacksForIO(BaseInteractiveObject io)
         {
-            throw new NotImplementedException();
+            // TODO - implement this
         }
 
         public override void DestroyScriptTimers()
@@ -116,6 +116,12 @@ namespace WoFM.Singletons
             {
                 case WoFMGlobals.SM_300_ROLL_STATS:
                     ((WoFMScriptable)script).OnRollStats();
+                    break;
+                case WoFMGlobals.SM_301_TRIGGER_ENTER:
+                    ((WoFMScriptable)script).OnEnterTrigger();
+                    break;
+                case WoFMGlobals.SM_303_BASHED:
+                    ((WoFMScriptable)script).OnBashed();
                     break;
                 default:
                     base.RunMessage(script, msg, io);

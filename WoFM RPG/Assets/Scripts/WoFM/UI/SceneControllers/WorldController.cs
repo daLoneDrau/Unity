@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WoFM.Flyweights;
 using WoFM.Singletons;
 using WoFM.UI._2D;
 using WoFM.UI.GlobalControllers;
@@ -57,24 +58,42 @@ namespace WoFM.UI.SceneControllers
             shadowcaster.CheckQuadrant7(((WoFMInteractive)Interactive.Instance).GetPlayerIO().LastPositionHeld, 5);
             shadowcaster.CheckQuadrant8(((WoFMInteractive)Interactive.Instance).GetPlayerIO().LastPositionHeld, 5);
         }
-        /// <summary>
-        /// Displays the game board.
-        /// </summary>
-        public void DisplayMap()
+        private void DisplayDoors(int minx, int maxx, int miny, int maxy, float now)
         {
-            //print("DisplayMap");
-            RunLightingChecks();
-            // get current time for animations
-            float now = (Time.time - RPGTime.Instance.TimePaused) * 1000f;
-            // get the viewport's range.
-            Vector2 v = TileViewportController.Instance.ViewportPosition;
-            int minx = Mathf.FloorToInt(v.x);
-            int miny = Mathf.FloorToInt(v.y);
-            int maxx = minx + (int)viewportDimensions.x;
-            int maxy = miny + (int)viewportDimensions.y;
-            //print("viewport at " + v.x + "," + v.y + "\nrange from " + minx + "," + miny + " to " + maxx+ "," + maxy);
+            foreach (Transform child in GameController.Instance.doorHolder)
+            {
+                //child is your child transform
+                WoFMInteractiveObject io = child.gameObject.GetComponent<WoFMInteractiveObject>();
+                float iox = io.Script.GetLocalFloatVariableValue("x"), ioy = io.Script.GetLocalFloatVariableValue("y");
+                int room = io.Script.GetLocalIntVariableValue("room");
+                if (iox >= minx
+                    && iox < maxx
+                    && ioy >= miny
+                    && ioy < maxy
+                    && GameSceneController.Instance.WasRoomVisited(io.Script.GetLocalIntVariableValue("room")))
+                {
+                    // Door is in viewport
+                    child.position = TileViewportController.Instance.GetScreenCoordinatesForWorldPosition(new Vector2(iox, ioy));
+                    if (((WoFMTile)world.GetTileAt((int)iox, (int)ioy)).ShadeLevel == ShadowcastFOV.UNSCANNED)
+                    {
+                        io.GetComponent<SpriteRenderer>().color = Color.gray;
+                    }
+                    else
+                    {
+                        io.GetComponent<SpriteRenderer>().color = Color.white;
+                    }
+
+                }
+                else
+                {
+                    // Door is off-screen. move outside view
+                    child.position = new Vector3(-1, 0, 0);
+                }
+            }
+        }
+        private void DisplayTiles(int minx, int maxx, int miny, int maxy, float now)
+        {
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-            // iterate through tiles in viewport's range to set the onscreen sprites
             for (int x = minx, lx = maxx; x < lx; x++)
             {
                 for (int y = miny, ly = maxy; y < ly; y++)
@@ -91,11 +110,6 @@ namespace WoFM.UI.SceneControllers
                     try
                     {
                         GameObject tileObject = tileObjects[sb.ToString()];
-                        if (tileXIndex == 0
-                            && tileYIndex == 0)
-                        {
-                            //print("board piece " + tileXIndex + "," + tileYIndex + " represents tile " + x + "," + y);
-                        }
                         // adjust tile position based on viewport
                         tileObject.transform.position = TileViewportController.Instance.GetScreenCoordinatesForWorldPosition(new Vector2(x, y));
                         WoFMTile tile = (WoFMTile)world.GetTileAt(x, y);
@@ -127,12 +141,13 @@ namespace WoFM.UI.SceneControllers
                             }
                             else
                             {
-                                if (GameSceneController.Instance.WasRoomVisited(tile.RoomId))
-                                    {
+                                if (GameSceneController.Instance.WasAtLeastOneRoomVisited(tile.Rooms))
+                                {
                                     tileObject.GetComponent<SpriteRenderer>().sprite = SpriteMap.Instance.GetSprite(tile.Type.ToString().ToLower());
                                     if (tile.Type == Tile.TerrainType.floor_0
                                         || tile.Type == Tile.TerrainType.floor_1
-                                        || tile.Type == Tile.TerrainType.floor_2)
+                                        || tile.Type == Tile.TerrainType.floor_2
+                                        || tile.Type == Tile.TerrainType.pit)
                                     {
                                         tileObject.GetComponent<SpriteRenderer>().sortingLayerName = "Floor";
                                         tileObject.layer = LayerMask.NameToLayer("Floor");
@@ -161,6 +176,26 @@ namespace WoFM.UI.SceneControllers
                 }
             }
             sb.ReturnToPool();
+        }
+        /// <summary>
+        /// Displays the game board.
+        /// </summary>
+        public void DisplayMap()
+        {
+            //print("DisplayMap");
+            RunLightingChecks();
+            // get current time for animations
+            float now = (Time.time - RPGTime.Instance.TimePaused) * 1000f;
+            // get the viewport's range.
+            Vector2 v = TileViewportController.Instance.ViewportPosition;
+            int minx = Mathf.FloorToInt(v.x);
+            int miny = Mathf.FloorToInt(v.y);
+            int maxx = minx + (int)viewportDimensions.x;
+            int maxy = miny + (int)viewportDimensions.y;
+            //print("viewport at " + v.x + "," + v.y + "\nrange from " + minx + "," + miny + " to " + maxx+ "," + maxy);
+            // iterate through tiles in viewport's range to set the onscreen sprites
+            DisplayTiles(minx, maxx, miny, maxy, now);
+            DisplayDoors(minx, maxx, miny, maxy, now);
         }
         /// <summary>
         /// Gets the tile at a specific location.  If no tile exists, null is returned.
@@ -296,7 +331,7 @@ namespace WoFM.UI.SceneControllers
                             break;
                     }
                 }
-                tile.RoomId = data.roomId;
+                tile.Rooms = data.roomId;
             }
             InitGraph();
         }
@@ -520,7 +555,7 @@ namespace WoFM.UI.SceneControllers
             float xOffset = 638, yOffset = 1341;
             TileViewportController.Instance.GetWorldCoordinatesForTile(new Vector2(641 - xOffset, yOffset - 1340));
             */
-                }
-                #endregion
-            }
+        }
+        #endregion
+    }
 }
