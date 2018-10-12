@@ -202,6 +202,7 @@
     <Compile Include="Assets\Scripts\WoFM\UI\2D\Blocker.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\2D\HeroMove.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\2D\ShadowcastFOV.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\2D\TooltipActivator.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\2D\WoFMTile.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\2D\WoFMTileWorld.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\GlobalControllers\GameController.cs" />
