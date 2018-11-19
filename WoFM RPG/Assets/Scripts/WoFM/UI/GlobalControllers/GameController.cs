@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.UI.SimpleJSON;
 using Assets.Scripts.WoFM.UI.SceneControllers;
+using RPGBase.Flyweights;
 using RPGBase.Pooled;
 using RPGBase.Scripts.UI._2D;
 using RPGBase.Singletons;
@@ -47,6 +48,10 @@ namespace WoFM.UI.GlobalControllers
         /// <summary>
         /// Transform to hold all our game objects, so they don't clog up the hierarchy.
         /// </summary>
+        public Transform mobHolder;
+        /// <summary>
+        /// Transform to hold all our game objects, so they don't clog up the hierarchy.
+        /// </summary>
         public Transform triggerHolder;
         // map offset set to 638, 1341, since map cells don't start at 0,0
         public const int MAP_X_OFFSET = 623;
@@ -57,6 +62,7 @@ namespace WoFM.UI.GlobalControllers
         /// <returns><see cref="List"/></returns>
         public List<MapData> LoadMap()
         {
+            print("*****************************loadmap");
             /********************************************
             * LOAD THE MAP
             /*******************************************/
@@ -84,12 +90,16 @@ namespace WoFM.UI.GlobalControllers
                     array[i]["type"])
                     );
             }
+            /********************************************
+            * LOAD TRIGGERS
+            /*******************************************/
             array = mapFile["triggers"].AsArray;
             for (int i = 0, li = array.Count; i < li; i++)
             {
                 JSONNode node = array[i];
                 string type = node["type"];
                 int id = node["id"].AsInt;
+                print("loading trigger " + id);
                 float x = node["x"].AsFloat - MAP_X_OFFSET;
                 float y = MAP_Y_OFFSET - node["y"].AsFloat;
                 GameObject trigger = NewTrigger(id, type);
@@ -99,6 +109,14 @@ namespace WoFM.UI.GlobalControllers
                 if (node["text"] != null)
                 {
                     tio.Script.SetLocalVariable("text", (string)node["text"]);
+                }
+                if (node["needs_modal"] != null)
+                {
+                    tio.Script.SetLocalVariable("needs_modal", node["needs_modal"].AsInt);
+                }
+                if (node["modal_sprite"] != null)
+                {
+                    tio.Script.SetLocalVariable("modal_sprite", (string)node["modal_sprite"]);
                 }
             }
 
@@ -123,6 +141,12 @@ namespace WoFM.UI.GlobalControllers
             }
             return mapData;
         }
+        #region TEXT
+        /// <summary>
+        /// Gets a text entry.
+        /// </summary>
+        /// <param name="entry">the name of the entry</param>
+        /// <returns><see cref="string"/></returns>
         public string GetText(string entry)
         {
             return textFile[entry];
@@ -135,6 +159,16 @@ namespace WoFM.UI.GlobalControllers
         {
             textEntry = textFile[entry];
         }
+        /// <summary>
+        /// Sets a text entry.
+        /// </summary>
+        /// <param name="entry">the name of the text entry</param>
+        /// <param name="newText">the new text</param>
+        public void SetText(string entry, string newText)
+        {
+            textFile[entry] = newText;
+        }
+        #endregion
         #region IO GENERATION
         /// <summary>
         /// Creates a new player <see cref="GameObject"/> with a <see cref="SpriteRenderer"/> and <see cref="WoFMInteractiveObject"/> components.
@@ -197,6 +231,65 @@ namespace WoFM.UI.GlobalControllers
             print(((WoFMInteractive)Interactive.Instance).PlayerId);
             return player;
         }
+        /// <summary>
+        /// Creates a new mob <see cref="GameObject"/> with a <see cref="SpriteRenderer"/> and <see cref="WoFMInteractiveObject"/> components.
+        /// </summary>
+        /// <returns><see cref="GameObject"/></returns>
+        public GameObject NewMob(string mobName, string sprite, Scriptable script)
+        {
+            // create player GameObject
+            GameObject mob = new GameObject
+            {
+                name = mobName
+            };
+            // position player outside the screen
+            mob.transform.position = new Vector3(-1, 0, 0);
+            /********************************************************
+             * SETUP SPRITE_RENDERER COMPONENT
+            /*******************************************************/
+            if (SpriteMap.Instance != null)
+            {
+                SpriteRenderer sr = mob.AddComponent<SpriteRenderer>();
+                // set player sprite to no shield sprite
+                sr.sprite = SpriteMap.Instance.GetSprite(sprite);
+                sr.sortingLayerName = "Units";
+                mob.layer = LayerMask.NameToLayer("BlockingLayer");
+            }
+            /********************************************************
+             * SETUP MOB_MOVE COMPONENT
+            /*******************************************************/
+            MobMove move = mob.AddComponent<MobMove>();
+            move.blockingLayer = 1 << LayerMask.NameToLayer("BlockingLayer");
+            /********************************************************
+             * SETUP BOX_COLLIDER_2D COMPONENT
+            /*******************************************************/
+            BoxCollider2D bc = mob.AddComponent<BoxCollider2D>() as BoxCollider2D;
+            bc.size = new Vector2(0.9f, 0.9f);
+            /********************************************************
+             * SETUP RIGID_BODY COMPONENT
+            /*******************************************************/
+            Rigidbody2D r = mob.AddComponent<Rigidbody2D>() as Rigidbody2D;
+            r.bodyType = RigidbodyType2D.Kinematic;
+            /********************************************************
+             * SETUP WOFM_INTERACTIVE_OBJECT COMPONENT
+            /*******************************************************/
+            WoFMInteractiveObject mobIo = mob.AddComponent<WoFMInteractiveObject>() as WoFMInteractiveObject;
+            mobIo.Sprite = SpriteMap.Instance.GetSprite(sprite);
+            /********************************************************
+             * REGISTER THE IO AND INITIALIZE INTERACTIVE COMPONENTS
+            /*******************************************************/
+            ((WoFMInteractive)Interactive.Instance).NewMob(mobIo, script);
+            /********************************************************
+             * SETUP WATCHERS
+            /*******************************************************/
+
+            // remove instances for garbage collection
+            mobIo = null;
+            // set new trigger as child of mob holder
+            mob.transform.SetParent(mobHolder);
+            print("created mob - " + mob.GetComponent<WoFMInteractiveObject>().RefId);
+            return mob;
+        }
         public GameObject NewDoor(int id, string script)
         {
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
@@ -205,7 +298,6 @@ namespace WoFM.UI.GlobalControllers
             // create player GameObject
             GameObject door = new GameObject
             {
-
                 name = sb.ToString()
             };
             sb.ReturnToPool();
@@ -254,7 +346,6 @@ namespace WoFM.UI.GlobalControllers
             // create player GameObject
             GameObject trigger = new GameObject
             {
-
                 name = sb.ToString()
             };
             sb.ReturnToPool();
@@ -285,6 +376,9 @@ namespace WoFM.UI.GlobalControllers
             // create holder for all doors
             doorHolder = new GameObject("Doors").transform;
             DontDestroyOnLoad(doorHolder);
+            // create holder for all mobs
+            mobHolder = new GameObject("Mobs").transform;
+            DontDestroyOnLoad(mobHolder);
             // create holder for all triggers
             triggerHolder = new GameObject("Triggers").transform;
             DontDestroyOnLoad(triggerHolder);

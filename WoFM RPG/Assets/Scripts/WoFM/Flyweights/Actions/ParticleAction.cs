@@ -16,47 +16,26 @@ namespace WoFM.Flyweights.Actions
     public class ParticleAction : IGameAction
     {
         /// <summary>
-        /// the reference id of the IO associated with the particle system
-        /// </summary>
-        private int ioid = -1;
-        /// <summary>
         /// the particle emitter that plays due to the action.
         /// </summary>
         private MethodInfo method;
         /// <summary>
-        /// the location where the particle system emits.
+        /// the list of parameters applied when calling the particle emitter.
         /// </summary>
-        private Vector3 position;
-        /// <summary>
-        /// Creates a new instance of <see cref="ParticleAction"/>.
-        /// </summary>
-        /// <param name="m">the particle emitter that plays due to the action</param>
-        /// <param name="v">the location where the particles emit</param>
-        public ParticleAction(MethodInfo m, Vector3 v)
-        {
-            method = m;
-            position = v;
-        }
+        private object[] parameters;
         /// <summary>
         /// Creates a new instance of <see cref="ParticleAction"/>.
         /// </summary>
         /// <param name="m"></param>
-        /// <param name="id"></param>
-        public ParticleAction(MethodInfo m, int id)
+        /// <param name="args"></param>
+        public ParticleAction(MethodInfo m, params object[] args)
         {
             method = m;
-            ioid = id;
+            parameters = args;
         }
         public void Execute()
         {
-            if (ioid == -1)
-            {
-                method.Invoke(Particles.Instance, new object[] { position });
-            }
-            else
-            {
-                method.Invoke(Particles.Instance, new object[] { ioid });
-            }
+            method.Invoke(Particles.Instance, parameters);
         }
         public bool IsResolved()
         {

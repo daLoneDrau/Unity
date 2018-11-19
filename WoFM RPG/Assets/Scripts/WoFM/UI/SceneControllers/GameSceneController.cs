@@ -4,6 +4,7 @@ using RPGBase.Graph;
 using RPGBase.Scripts.UI._2D;
 using RPGBase.Singletons;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ using WoFM.Flyweights.Actions;
 using WoFM.Singletons;
 using WoFM.UI._2D;
 using WoFM.UI.SceneControllers;
+using WoFM.UI.Widgets;
 
 namespace WoFM.UI.GlobalControllers
 {
@@ -49,6 +51,10 @@ namespace WoFM.UI.GlobalControllers
         /// List of actions that must be completed before returning control to the player.
         /// </summary>
         private IGameAction[] MustCompleteActions = new IGameAction[0];
+        /// <summary>
+        /// Adds an action that must be completed during the Update phase.
+        /// </summary>
+        /// <param name="action">the new <see cref="IGameAction"/> being added</param>
         public void AddMustCompleteAction(IGameAction action)
         {
             MustCompleteActions = ArrayUtilities.Instance.ExtendArray(action, MustCompleteActions);
@@ -65,6 +71,7 @@ namespace WoFM.UI.GlobalControllers
         /// </summary>
         private void Start()
         {
+            // print("********************GameSceneController start");
             bool playerCreated = true;
             GameObject player;
             try
@@ -104,6 +111,8 @@ namespace WoFM.UI.GlobalControllers
         /// </summary>
         private void Update()
         {
+            // print("-------------------------GameSceneController update");
+            // at the bery start of the game, make the character walk to the middle of the first room.
             if (!doonce)
             {
                 doonce = true;
@@ -114,6 +123,14 @@ namespace WoFM.UI.GlobalControllers
                     Vector2 node = WorldController.Instance.GetNodeCoordinatesFromId(path[i].To);
                     AddMustCompleteAction(new MoveIoUninterruptedAction(((WoFMInteractive)Interactive.Instance).GetPlayerIO(), node));
                 }
+                AddMustCompleteAction(new ModalAction(new ModalPanelDetails() {
+                    content = GameController.Instance.GetText("1"),
+                    iconImage = SpriteMap.Instance.GetSprite("icon_explore"),
+                    button1Details = new EventButtonDetails()
+                    {
+                        buttonTitle = "Okay"
+                    }
+                }));
             }
             // what state are we in?
             switch (currentState)
@@ -322,6 +339,18 @@ namespace WoFM.UI.GlobalControllers
             return was;
         }
         #endregion
+        public void WaitForSomeTime(float time, WaitAction callback)
+        {
+            StartCoroutine(DoWait(time, callback));
+        }
+        private IEnumerator DoWait(float time, WaitAction callback)
+        {
+            yield return new WaitForSeconds(time);
+            if (callback != null)
+            {
+                callback.Resolved = true;
+            }
+        }
         public void CheckIOMoveIntoTile(WoFMInteractiveObject io, Vector2 destination)
         {
             if (io.HasIOFlag(IoGlobals.IO_01_PC))
@@ -333,7 +362,6 @@ namespace WoFM.UI.GlobalControllers
             // check for triggers
             foreach (Transform child in GameController.Instance.triggerHolder)
             {
-                print("checking trigger " + child.gameObject.name);
                 //child is your child transform
                 WoFMInteractiveObject tio = child.gameObject.GetComponent<WoFMInteractiveObject>();
                 Vector2 tioPos = new Vector2(tio.Script.GetLocalFloatVariableValue("x"), tio.Script.GetLocalFloatVariableValue("y"));

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine.UI;
+using WoFM.UI.Widgets;
 
 namespace WoFM.UI.SceneControllers
 {

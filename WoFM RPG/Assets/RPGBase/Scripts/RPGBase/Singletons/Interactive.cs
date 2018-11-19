@@ -181,6 +181,12 @@ namespace RPGBase.Singletons
                 print("making call to destroy io now");
                 // detach the IO from its parent
                 io.transform.parent = null;
+                SpriteRenderer sr = io.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    sr.sprite = null;
+                    Destroy(sr);
+                }
                 Destroy(io);
             }
         }

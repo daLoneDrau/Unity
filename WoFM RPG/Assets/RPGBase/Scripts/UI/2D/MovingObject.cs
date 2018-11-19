@@ -71,7 +71,7 @@ namespace RPGBase.Scripts.UI._2D
         {
             float inverseSpeed = 1f / speed;
             WoFMInteractiveObject io = GetComponent<WoFMInteractiveObject>();
-            if (io.HasIOFlag(IoGlobals.IO_01_PC))
+            if (io.HasIOFlag(IoGlobals.IO_01_PC) || io.HasIOFlag(IoGlobals.IO_03_NPC))
             {
                 // calculate remaining distance to move based on the square magnitude of the difference between the current position and the end parameter
                 float sqrRemainingDistance = (io.Position - tileCoords).sqrMagnitude; // while remaining distance still not 0
@@ -135,6 +135,9 @@ namespace RPGBase.Scripts.UI._2D
                     // wait one frame before re-evaluating loop condition
                     yield return null;
                 }
+                // finished move to new tile
+                // send hear event to nearby IOs
+                WorldController.Instance.SpawnAudibleSound(tileCoords, io);   
             }
             else
             {

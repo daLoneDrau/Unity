@@ -101,5 +101,13 @@ namespace WoFM.Constants
         /// IO was bashed.
         /// </summary>
         public const int SM_303_BASHED = 303;
+        /// <summary>
+        /// IO is out of view.
+        /// </summary>
+        public const int SM_304_OUT_OF_VIEW = 304;
+        /// <summary>
+        /// IO is out of view.
+        /// </summary>
+        public const int SM_305_IN_VIEW = 305;
     }
 }

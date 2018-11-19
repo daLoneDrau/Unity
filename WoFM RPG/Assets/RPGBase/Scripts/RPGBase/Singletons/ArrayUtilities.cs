@@ -55,5 +55,22 @@ namespace RPGBase.Singletons
             }
             return dest;
         }
+
+        public bool ArrayContainsOneElement(int[] arr0, int[] arr1)
+        {
+            bool contains = false;
+            for (int i = arr0.Length - 1; i >= 0; i--)
+            {
+                for (int j = arr1.Length - 1; j >= 0; j--)
+                {
+                    if (arr0[i] == arr1[j])
+                    {
+                        contains = true;
+                        break;
+                    }
+                }
+            }
+            return contains;
+        }
     }
 }

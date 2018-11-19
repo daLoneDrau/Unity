@@ -46,6 +46,20 @@ namespace WoFM.Flyweights.Actions
                 TileViewportController.Instance.CenterOnTile(location);
                 //TileViewportController.Instance.CenterOnTile(new Vector2(28.9f, 16.9f));
             }
+            else if (io.HasIOFlag(IoGlobals.IO_03_NPC))
+            {
+                // set IO's position to tile position
+                io.Position = location;
+                io.LastPositionHeld = location;
+                // set script variables
+
+                // set Game Object's transform to correct viewport coordinates
+                GameObject ioObj = io.gameObject;
+                Vector2 v = ViewportController.Instance.GetWorldCoordinatesForTile(location);
+                Debug.Log("teleport to " + v);
+                ioObj.transform.position = new Vector3(v.x, v.y, 0);
+                TileViewportController.Instance.CenterOnTile(location);
+            }
         }
         public bool IsResolved()
         {

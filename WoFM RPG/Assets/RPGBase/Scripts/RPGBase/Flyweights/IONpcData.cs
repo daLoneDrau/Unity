@@ -593,9 +593,11 @@ namespace RPGBase.Flyweights
         /// Heals an <see cref="IONpcData"/> for a specific amount.
         /// </summary>
         /// <param name="healAmt">the healing amount</param>
-        public void HealNPC(float healAmt)
+        /// <param name="god">if true, the healing comes from God and current life doesn't matter</param>
+        public void HealNPC(float healAmt, bool god = false)
         {
-            if (Life > 0f)
+            if (Life > 0f
+                || (Life <= 0f && god))
             {
                 if (healAmt > 0f)
                 {

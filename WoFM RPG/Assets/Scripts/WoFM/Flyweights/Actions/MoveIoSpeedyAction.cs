@@ -42,7 +42,14 @@ namespace WoFM.Flyweights.Actions
             if (!executionStarted)
             {
                 Debug.Log("exceute move to " + destination);
-                io.gameObject.GetComponent<HeroMove>().MoveFast(destination, speedTime);
+                if (io.HasIOFlag(IoGlobals.IO_01_PC))
+                {
+                    io.gameObject.GetComponent<HeroMove>().MoveFast(destination, speedTime);
+                }
+                else if (io.HasIOFlag(IoGlobals.IO_03_NPC))
+                {
+                    io.gameObject.GetComponent<MobMove>().MoveFast(destination, speedTime);
+                }
                 executionStarted = true;
             }
         }

@@ -1,4 +1,5 @@
-﻿using RPGBase.Constants;
+﻿using System;
+using RPGBase.Constants;
 using RPGBase.Flyweights;
 using RPGBase.Graph;
 using RPGBase.Singletons;
@@ -72,6 +73,14 @@ namespace WoFM.Flyweights
             return ScriptConsts.ACCEPT;
         }
         public virtual int OnRollStats()
+        {
+            return ScriptConsts.ACCEPT;
+        }
+        public virtual int OnOutOfView()
+        {
+            return ScriptConsts.ACCEPT;
+        }
+        public virtual int OnInView()
         {
             return ScriptConsts.ACCEPT;
         }

@@ -2283,10 +2283,12 @@
       "id": 2,
       "x": 647,
       "y": 1337,
-      "text": "278"
+      "text": "278",
+      "needs_modal": 1,
+      "modal_sprite": "icon_door_in"
     },
     {
-      "type": "OneTimeTextTrigger",
+      "type": "Trigger71",
       "id": 3,
       "x": 638,
       "y": 1337,

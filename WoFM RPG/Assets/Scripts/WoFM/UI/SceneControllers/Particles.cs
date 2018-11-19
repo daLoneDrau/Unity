@@ -63,6 +63,25 @@ namespace WoFM.UI.SceneControllers
             StartCoroutine(FinishParticles(bonker));
         }
         /// <summary>
+        /// Plays the *snort* animation above an IO.
+        /// </summary>
+        /// <param name="ioid">the IO's reference id</param>
+        public void PlaySnortAboveIo(int ioid)
+        {
+            WoFMInteractiveObject io = (WoFMInteractiveObject)Interactive.Instance.GetIO(ioid);
+            snorter.transform.position = io.transform.position + new Vector3(0, .625f, 0);
+            snorter.Play();
+            StartCoroutine(FinishParticles(snorter));
+        }
+        public void PlaySnoreAboveIo(int ioid)
+        {
+            WoFMInteractiveObject io = (WoFMInteractiveObject)Interactive.Instance.GetIO(ioid);
+            snorer.transform.parent = io.transform;
+            snorer.transform.position = io.transform.position + new Vector3(0, .625f, 0);
+            snorer.Play();
+            //StartCoroutine(FinishParticles(bonker));
+        }
+        /// <summary>
         /// Plays the *locked* animation above a specific location.
         /// </summary>
         /// <param name="location">the location where the animation plays above</param>
@@ -72,5 +91,29 @@ namespace WoFM.UI.SceneControllers
             locked.Play();
             StartCoroutine(FinishParticles(locked));
         }
+        public bool IsSnoring()
+        {
+            return snorer.isPlaying;
+        }
+        public void PlaySnoring()
+        {
+            snorer.Play();
+        }
+        public void StopSnoring()
+        {
+            snorer.Stop();
+        }
+        public void StopSnoringAboveIo()
+        {
+            snorer.Stop();
+            snorer.transform.parent = null;
+            snorer.transform.position = new Vector3(-1, 0, 0);
+        }
+        #region MONOBEHAVIOR
+        public void Awake()
+        {
+            snorer.Stop();
+        }
+        #endregion
     }
 }

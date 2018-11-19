@@ -21,6 +21,16 @@ namespace WoFM.Flyweights
             new object[] { "MLK", "Max Luck", WoFMGlobals.EQUIP_ELEMENT_MAX_LUCK },
             new object[] { "DMG", "Damage", WoFMGlobals.EQUIP_ELEMENT_DAMAGE },
         };
+
+        public bool TestYourLuck()
+        {
+            ComputeFullStats();
+            int roll = Diceroller.Instance.RollXdY(2, 6);
+            float score = GetFullAttributeScore("LUK");
+            SetBaseAttributeScore("LUK", GetBaseAttributeScore("LUK") - 1);
+            return roll <= score;
+        }
+
         /// <summary>
         /// Tests the player's skill.
         /// </summary>

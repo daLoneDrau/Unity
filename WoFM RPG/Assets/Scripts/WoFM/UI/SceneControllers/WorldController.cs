@@ -1,4 +1,6 @@
-﻿using RPGBase.Graph;
+﻿using RPGBase.Constants;
+using RPGBase.Flyweights;
+using RPGBase.Graph;
 using RPGBase.Pooled;
 using RPGBase.Scripts.UI._2D;
 using RPGBase.Singletons;
@@ -6,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WoFM.Constants;
 using WoFM.Flyweights;
 using WoFM.Singletons;
 using WoFM.UI._2D;
@@ -39,7 +42,7 @@ namespace WoFM.UI.SceneControllers
         /// The game world.
         /// </summary>
         private WoFMTileWorld world;
-        #region Map
+        #region Map METHODS
         /// <summary>
         /// the field-of-view instance
         /// </summary>
@@ -82,11 +85,70 @@ namespace WoFM.UI.SceneControllers
                     {
                         io.GetComponent<SpriteRenderer>().color = Color.white;
                     }
-
                 }
                 else
                 {
                     // Door is off-screen. move outside view
+                    child.position = new Vector3(-1, 0, 0);
+                }
+            }
+        }
+        /// <summary>
+        /// Displays the game board.
+        /// </summary>
+        public void DisplayMap()
+        {
+            //print("DisplayMap");
+            RunLightingChecks();
+            // get current time for animations
+            float now = (Time.time - RPGTime.Instance.TimePaused) * 1000f;
+            // get the viewport's range.
+            Vector2 v = TileViewportController.Instance.ViewportPosition;
+            int minx = Mathf.FloorToInt(v.x);
+            int miny = Mathf.FloorToInt(v.y);
+            int maxx = minx + (int)viewportDimensions.x;
+            int maxy = miny + (int)viewportDimensions.y;
+            //print("viewport at " + v.x + "," + v.y + "\nrange from " + minx + "," + miny + " to " + maxx+ "," + maxy);
+            // iterate through tiles in viewport's range to set the onscreen sprites
+            DisplayTiles(minx, maxx, miny, maxy, now);
+            DisplayDoors(minx, maxx, miny, maxy, now);
+            DisplayMobs(minx, maxx, miny, maxy, now);
+        }
+        /// <summary>
+        /// Displays all mobs that are in the viewport.
+        /// </summary>
+        /// <param name="minx">the viewport's minimum x-coordinate</param>
+        /// <param name="maxx">the viewport's maximum x-coordinate</param>
+        /// <param name="miny">the viewport's minimum y-coordinate</param>
+        /// <param name="maxy">the viewport's maximum y-coordinate</param>
+        /// <param name="now">the current frame time</param>
+        private void DisplayMobs(int minx, int maxx, int miny, int maxy, float now)
+        {
+            foreach (Transform child in GameController.Instance.mobHolder)
+            {
+                // child is your child transform
+                WoFMInteractiveObject io = child.gameObject.GetComponent<WoFMInteractiveObject>();
+                // check position of child's IO instance
+                if (io.Position.x >= minx
+                    && io.Position.x < maxx
+                    && io.Position.y >= miny
+                    && io.Position.y < maxy)
+                {
+                    // Mob is in viewport. move child transform to correct screen position
+                    child.position = TileViewportController.Instance.GetScreenCoordinatesForWorldPosition(io.Position);
+                    if (((WoFMTile)world.GetTileAt(io.Position)).ShadeLevel == ShadowcastFOV.UNSCANNED)
+                    {
+                        Script.Instance.SendIOScriptEvent(io, WoFMGlobals.SM_304_OUT_OF_VIEW, null, null);
+                    }
+                    else
+                    {
+                        io.GetComponent<SpriteRenderer>().color = Color.white;
+                        Script.Instance.SendIOScriptEvent(io, WoFMGlobals.SM_305_IN_VIEW, null, null);
+                    }
+                }
+                else
+                {
+                    // Mob is off-screen. move child transform outside view
                     child.position = new Vector3(-1, 0, 0);
                 }
             }
@@ -176,26 +238,6 @@ namespace WoFM.UI.SceneControllers
                 }
             }
             sb.ReturnToPool();
-        }
-        /// <summary>
-        /// Displays the game board.
-        /// </summary>
-        public void DisplayMap()
-        {
-            //print("DisplayMap");
-            RunLightingChecks();
-            // get current time for animations
-            float now = (Time.time - RPGTime.Instance.TimePaused) * 1000f;
-            // get the viewport's range.
-            Vector2 v = TileViewportController.Instance.ViewportPosition;
-            int minx = Mathf.FloorToInt(v.x);
-            int miny = Mathf.FloorToInt(v.y);
-            int maxx = minx + (int)viewportDimensions.x;
-            int maxy = miny + (int)viewportDimensions.y;
-            //print("viewport at " + v.x + "," + v.y + "\nrange from " + minx + "," + miny + " to " + maxx+ "," + maxy);
-            // iterate through tiles in viewport's range to set the onscreen sprites
-            DisplayTiles(minx, maxx, miny, maxy, now);
-            DisplayDoors(minx, maxx, miny, maxy, now);
         }
         /// <summary>
         /// Gets the tile at a specific location.  If no tile exists, null is returned.
@@ -334,6 +376,32 @@ namespace WoFM.UI.SceneControllers
                 tile.Rooms = data.roomId;
             }
             InitGraph();
+        }
+        /// <summary>
+        /// Spawns an audible sound to which NPC IOs can react.
+        /// </summary>
+        /// <param name="tileCoords">the world position where the sound happens</param>
+        /// <param name="srcIo">the source IO</param>
+        public void SpawnAudibleSound(Vector2 pos, WoFMInteractiveObject srcIo)
+        {
+            WoFMTile sourceTile = GetTileAt(pos);
+            // go through mobs.  If they are in the same room, send a hear event
+            foreach (Transform child in GameController.Instance.mobHolder)
+            {
+                WoFMInteractiveObject childIo = child.gameObject.GetComponent<WoFMInteractiveObject>();
+                if (childIo.HasIOFlag(IoGlobals.IO_03_NPC)
+                    && childIo.RefId != srcIo.RefId
+                    && childIo.NpcData.Life > 0)
+                {
+                    WoFMTile ioTile = GetTileAt(childIo.LastPositionHeld);
+                    WoFMTile noiseTile = GetTileAt(pos);
+                    if (ArrayUtilities.Instance.ArrayContainsOneElement(ioTile.Rooms, noiseTile.Rooms))
+                    {
+                        Script.Instance.EventSender = srcIo;
+                        Script.Instance.SendIOScriptEvent(childIo, ScriptConsts.SM_046_HEAR, null, null);
+                    }
+                }
+            }
         }
         #endregion
         #region Graph METHODS
@@ -530,6 +598,7 @@ namespace WoFM.UI.SceneControllers
         /// </summary>
         private void Awake()
         {
+            // print("++++++++++++++++++++++WorldController awake");
             shadowcaster = new ShadowcastFOV();
         }
         /// <summary>
@@ -537,6 +606,7 @@ namespace WoFM.UI.SceneControllers
         /// </summary>
         private void Start()
         {
+            // print("********************WorldController start");
             // init singletons
             // MouseListener ml = MouseListener.Instance;
             TileViewportController vc = TileViewportController.Instance;
@@ -550,6 +620,7 @@ namespace WoFM.UI.SceneControllers
         /// </summary>
         private void Update()
         {
+            // print("-------------------------WorldController update");          
             DisplayMap();
             /*
             float xOffset = 638, yOffset = 1341;

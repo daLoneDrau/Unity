@@ -1689,6 +1689,10 @@ namespace RPGBase.Singletons
             }
             if (io != null)
             {
+                if (Debug)
+                {
+                    print("io is not null");
+                }
                 if (io.HasGameFlag(IoGlobals.GFLAG_MEGAHIDE)
                         && msg != ScriptConsts.SM_043_RELOAD)
                 {
@@ -1725,6 +1729,10 @@ namespace RPGBase.Singletons
                             && msg != ScriptConsts.SM_028_INVENTORY2_OPEN
                             && msg != ScriptConsts.SM_029_INVENTORY2_CLOSE)
                     {
+                        if (Debug)
+                        {
+                            print("npc io not responding");
+                        }
                         return ScriptConsts.ACCEPT;
                     }
                 }

@@ -178,6 +178,8 @@
     <Compile Include="Assets\RPGBase\Scripts\UI\UnitySystemConsoleRedirector.cs" />
     <Compile Include="Assets\RPGBase\Scripts\UI\VerticalLayoutHandler.cs" />
     <Compile Include="Assets\Scripts\WoFM\Constants\WoFMGlobals.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\ModalAction.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\WaitAction.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\DamageIOAction.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\DestroyIOAction.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\Actions\MessageAction.cs" />
@@ -191,15 +193,19 @@
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMInteractiveObject.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMInventoryData.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMItemData.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMNPC.cs" />
     <Compile Include="Assets\Scripts\WoFM\Flyweights\WoFMScriptable.cs" />
     <Compile Include="Assets\Scripts\WoFM\Scriptables\Doors\Door278.cs" />
     <Compile Include="Assets\Scripts\WoFM\Scriptables\Mobs\Hero.cs" />
     <Compile Include="Assets\Scripts\WoFM\Scriptables\Mobs\MobBase.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Scriptables\Mobs\Orc71.cs" />
+    <Compile Include="Assets\Scripts\WoFM\Scriptables\Triggers\Trigger71.cs" />
     <Compile Include="Assets\Scripts\WoFM\Scriptables\Triggers\OneTimeTextTrigger.cs" />
     <Compile Include="Assets\Scripts\WoFM\Singletons\WoFMController.cs" />
     <Compile Include="Assets\Scripts\WoFM\Singletons\WoFMInteractive.cs" />
     <Compile Include="Assets\Scripts\WoFM\Singletons\WoFMScript.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\2D\Blocker.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\2D\MobMove.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\2D\HeroMove.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\2D\ShadowcastFOV.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\2D\TooltipActivator.cs" />
@@ -207,6 +213,7 @@
     <Compile Include="Assets\Scripts\WoFM\UI\2D\WoFMTileWorld.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\GlobalControllers\GameController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\CharBuilderController.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\CombatController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\GameSceneController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\IntroController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\MainMenuController.cs" />
@@ -216,6 +223,8 @@
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\PlayerWatcher.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\StatPanelController.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\SceneControllers\WorldController.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\Widgets\BringUiToFront.cs" />
+    <Compile Include="Assets\Scripts\WoFM\UI\Widgets\ModalPanel.cs" />
     <Compile Include="Assets\Scripts\WoFM\UI\Widgets\Statbar.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,6 +15,7 @@ using WoFM.Flyweights.Actions;
 using WoFM.Singletons;
 using WoFM.UI._2D;
 using WoFM.UI.GlobalControllers;
+using WoFM.UI.Widgets;
 
 namespace WoFM.UI.SceneControllers
 {
@@ -163,6 +164,15 @@ namespace WoFM.UI.SceneControllers
                 sb.Append(LastRoomEntered);
                 sb.Append("_SECONDARY");
                 Messages.Instance.SendMessage(GameController.Instance.GetText(sb.ToString()));
+                // display modal as well
+                ModalPanel.Instance.NewChoice(new ModalPanelDetails()
+                {
+                    content = GameController.Instance.GetText(sb.ToString()),
+                    button1Details = new EventButtonDetails()
+                    {
+                        buttonTitle = "Okay"
+                    }
+                });
                 sb.ReturnToPool();
             }
             GameSceneController.Instance.CONTROLS_FROZEN = false;

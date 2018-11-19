@@ -104,6 +104,20 @@ namespace WoFM.Singletons
             PlayerId = io.RefId;
         }
         /// <summary>
+        /// Initializes a new Mob IO.
+        /// </summary>
+        public void NewMob(WoFMInteractiveObject io, Scriptable script)
+        {
+            // register the IO
+            NewIO(io);
+            // add player flag and component
+            io.AddIOFlag(IoGlobals.IO_03_NPC);
+            io.NpcData = new WoFMNPC();
+            // add script
+            io.Script = script;
+            int val = Script.Instance.SendInitScriptEvent(io);
+        }
+        /// <summary>
         /// Initializes a new Door IO.
         /// </summary>
         public void NewDoor(WoFMInteractiveObject io, string script)

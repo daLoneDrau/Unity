@@ -1,5 +1,6 @@
 ﻿using RPGBase.Constants;
 using RPGBase.Graph;
+using RPGBase.Scripts.UI._2D;
 using RPGBase.Singletons;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using WoFM.Flyweights.Actions;
 using WoFM.Singletons;
 using WoFM.UI.GlobalControllers;
 using WoFM.UI.SceneControllers;
+using WoFM.UI.Widgets;
 
 namespace WoFM.Scriptables.Doors
 {
@@ -26,10 +28,8 @@ namespace WoFM.Scriptables.Doors
             WeightedGraphEdge[] path = WorldController.Instance.GetLandPath(backUpPos, new Vector2(x, y));
             // test player's skill
             WoFMInteractiveObject playerIo = ((WoFMInteractive)Interactive.Instance).GetPlayerIO();
-            //if (((WoFMCharacter)playerIo.PcData).TestSkill())
-            if (true)
-            {
-                Debug.Log("successful bash");
+            if (((WoFMCharacter)playerIo.PcData).TestSkill())
+                {
                 // reset door's values
                 // disable attached boxcollider so when casting rays you dont hit your own unit's collider
                 Io.GetComponent<BoxCollider2D>().enabled = false;
@@ -48,9 +48,20 @@ namespace WoFM.Scriptables.Doors
                 GameSceneController.Instance.AddMustCompleteAction(new MoveIoSpeedyAction(playerIo, new Vector2(x + 1, y)));
                 // add action to display message
                 GameSceneController.Instance.AddMustCompleteAction(new MessageAction(GameController.Instance.GetText("278_BASH_SUCCESS"), Messages.WARN));
+                // show modal
+                GameSceneController.Instance.AddMustCompleteAction(new ModalAction(new ModalPanelDetails()
+                {
+                    content = GameController.Instance.GetText("278_BASH_SUCCESS"),
+                    iconImage = SpriteMap.Instance.GetSprite("icon_falling"),
+                    button1Details = new EventButtonDetails()
+                    {
+                        buttonTitle = "Aaaah!"
+                    }
+                }));
                 // add damage action
-                Debug.Log("creating action to damage IO " + playerIo.RefId);
                 GameSceneController.Instance.AddMustCompleteAction(new DamageIOAction(playerIo.RefId, 1, -1, -1));
+                // change room 'Look' text
+                GameController.Instance.SetText("278_SECONDARY", GameController.Instance.GetText("278_TERTIARY"));
             }
             else
             {
@@ -63,8 +74,20 @@ namespace WoFM.Scriptables.Doors
                 }
                 // add action to play bonk
                 GameSceneController.Instance.AddMustCompleteAction(new ParticleAction(Particles.Instance.GetType().GetMethod("PlayBonkAboveIo"), playerIo.RefId));
+                // wait for a second for bonk to finish
+                GameSceneController.Instance.AddMustCompleteAction(new WaitAction(1f));
                 // add action to display message
                 GameSceneController.Instance.AddMustCompleteAction(new MessageAction(GameController.Instance.GetText("278_BASH_FAILURE"), Messages.INFO));
+                // show modal
+                GameSceneController.Instance.AddMustCompleteAction(new ModalAction(new ModalPanelDetails()
+                {
+                    content = GameController.Instance.GetText("278_BASH_FAILURE"),
+                    iconImage = SpriteMap.Instance.GetSprite("icon_door_in"),
+                    button1Details = new EventButtonDetails()
+                    {
+                        buttonTitle = "...Stupid Door"
+                    }
+                }));
             }
 
             return ScriptConsts.ACCEPT;

@@ -1,4 +1,5 @@
 ﻿using RPGBase.Flyweights;
+using RPGBase.Pooled;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.WoFM.UI.SceneControllers
 {
@@ -27,14 +29,17 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
         /// The Luck gauge.
         /// </summary>
         public GameObject LuckGauge;
+        public Text LuckTooltip;
         /// <summary>
         /// The Skill gauge.
         /// </summary>
         public GameObject SkillGauge;
+        public Text SkillTooltip;
         /// <summary>
         /// The Stamina gauge.
         /// </summary>
         public GameObject StaminaGauge;
+        public Text StaminaTooltip;
         /// <summary>
         /// the time it will take the object to perform a move, in seconds.
         /// </summary>
@@ -111,6 +116,12 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
             {
                 StartCoroutine(UpdateGuage(LuckGauge, realPercent));
             }
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append((int)ioData.GetFullAttributeScore("LUK"));
+            sb.Append("/");
+            sb.Append((int)ioData.GetFullAttributeScore("MLK"));
+            LuckTooltip.text = sb.ToString();
+            sb.ReturnToPool();
         }
         private void CheckForSkillBarUpdate(IOCharacter ioData)
         {
@@ -127,6 +138,12 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
             {
                 StartCoroutine(UpdateGuage(SkillGauge, realPercent));
             }
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append((int)ioData.GetFullAttributeScore("SKL"));
+            sb.Append("/");
+            sb.Append((int)ioData.GetFullAttributeScore("MSK"));
+            SkillTooltip.text = sb.ToString();
+            sb.ReturnToPool();
         }
         private void CheckForStaminaBarUpdate(IOCharacter ioData)
         {
@@ -144,6 +161,12 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
                 print("need to update stam");
                 StartCoroutine(UpdateGuage(StaminaGauge, realPercent));
             }
+            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+            sb.Append((int)ioData.Life);
+            sb.Append("/");
+            sb.Append((int)ioData.GetFullAttributeScore("MSTM"));
+            StaminaTooltip.text = sb.ToString();
+            sb.ReturnToPool();
         }
     }
 }

@@ -123,6 +123,12 @@ namespace WoFM.Singletons
                 case WoFMGlobals.SM_303_BASHED:
                     ((WoFMScriptable)script).OnBashed();
                     break;
+                case WoFMGlobals.SM_304_OUT_OF_VIEW:
+                    ((WoFMScriptable)script).OnOutOfView();
+                    break;
+                case WoFMGlobals.SM_305_IN_VIEW:
+                    ((WoFMScriptable)script).OnInView();
+                    break;
                 default:
                     base.RunMessage(script, msg, io);
                     break;
