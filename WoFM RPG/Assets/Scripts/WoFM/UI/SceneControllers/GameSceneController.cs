@@ -21,10 +21,7 @@ namespace WoFM.UI.GlobalControllers
 {
     public class GameSceneController : Singleton<GameSceneController>
     {
-        /// <summary>
-        /// the GAME is playing
-        /// </summary>
-        public const int STATE_GAME = 0;
+        #region GAME STATE INDICATORS
         /// <summary>
         /// the field for the current state the game is in.
         /// </summary>
@@ -33,8 +30,6 @@ namespace WoFM.UI.GlobalControllers
         /// the property for the current state the game is in.
         /// </summary>
         public int CurrentState { get { return currentState; } }
-        public bool CONTROLS_FROZEN = false;
-        private bool doonce = false;
         /// <summary>
         /// the last state the game was in.
         /// </summary>
@@ -43,6 +38,13 @@ namespace WoFM.UI.GlobalControllers
         /// the next state to go into after leaving the current state.
         /// </summary>
         private int nextState;
+        /// <summary>
+        /// the GAME is playing
+        /// </summary>
+        public const int STATE_GAME = 0;
+        #endregion
+        public bool CONTROLS_FROZEN = false;
+        private bool doonce = false;
         /// <summary>
         /// the list of rooms the player has explored.
         /// </summary>
@@ -71,7 +73,7 @@ namespace WoFM.UI.GlobalControllers
         /// </summary>
         private void Start()
         {
-            // print("********************GameSceneController start");
+            print("********************GameSceneController start");
             bool playerCreated = true;
             GameObject player;
             try
@@ -85,12 +87,14 @@ namespace WoFM.UI.GlobalControllers
             // does the Player object exist?
             if (!playerCreated)
             {
+                print("player not created yet");
                 // create player object
                 player = GameController.Instance.NewHero();
                 // get IO component
                 WoFMInteractiveObject playerIo = player.GetComponent<WoFMInteractiveObject>();
                 // re-initialize player stats
-                Script.Instance.SendInitScriptEvent(playerIo);
+                print(playerIo.PcData.GetBaseAttributeScore("STM"));
+                // Script.Instance.SendInitScriptEvent(playerIo);
             }
             player = ((WoFMInteractive)Interactive.Instance).GetPlayerIO().gameObject;
             if (player.GetComponent<SpriteRenderer>() == null)
@@ -102,6 +106,7 @@ namespace WoFM.UI.GlobalControllers
                 player.GetComponent<SpriteRenderer>().sortingLayerName = "Units";
                 player.layer = LayerMask.NameToLayer("BlockingLayer");
                 player.GetComponent<HeroMove>().blockingLayer = 1 << LayerMask.NameToLayer("BlockingLayer");
+                player.GetComponent<WoFMInteractiveObject>().Sprite = SpriteMap.Instance.GetSprite("hero_0");
             }
             // teleport the player to the bottom of the screen
             AddMustCompleteAction(new TeleportAction(((WoFMInteractive)Interactive.Instance).GetPlayerIO(), new Vector2(641 - GameController.MAP_X_OFFSET, GameController.MAP_Y_OFFSET - 1341)));
@@ -123,7 +128,8 @@ namespace WoFM.UI.GlobalControllers
                     Vector2 node = WorldController.Instance.GetNodeCoordinatesFromId(path[i].To);
                     AddMustCompleteAction(new MoveIoUninterruptedAction(((WoFMInteractive)Interactive.Instance).GetPlayerIO(), node));
                 }
-                AddMustCompleteAction(new ModalAction(new ModalPanelDetails() {
+                AddMustCompleteAction(new ModalAction(new ModalPanelDetails()
+                {
                     content = GameController.Instance.GetText("1"),
                     iconImage = SpriteMap.Instance.GetSprite("icon_explore"),
                     button1Details = new EventButtonDetails()

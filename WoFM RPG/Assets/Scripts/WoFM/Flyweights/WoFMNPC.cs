@@ -66,12 +66,10 @@ namespace WoFM.Flyweights
 
         protected override void ApplyRulesModifiers()
         {
-            throw new NotImplementedException();
         }
 
         protected override void ApplyRulesPercentModifiers()
         {
-            throw new NotImplementedException();
         }
 
         protected override void AwardXpForNpcDeath(int xp, BaseInteractiveObject killerIO)

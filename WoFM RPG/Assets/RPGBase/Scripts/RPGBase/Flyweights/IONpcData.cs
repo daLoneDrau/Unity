@@ -70,7 +70,7 @@ namespace RPGBase.Flyweights
         private long npcFlags;
         // IO_PATHFIND pathfind;
         // EERIE_EXTRA_ROTATE * ex_rotate;
-        // D3DCOLOR blood_color;
+        private UnityEngine.Color bloodColor;
         char padd;
         //private IOPathfind pathfinder;
         // IO_BEHAVIOR_DATA stacked[MAX_STACKED_BEHAVIOR];
@@ -340,6 +340,7 @@ namespace RPGBase.Flyweights
         /// <returns></returns>
         public float DamageNPC(float dmg, int srcIoid, bool isSpellDamage)
         {
+            UnityEngine.Debug.Log("DamageNpc");
             float damagesdone = 0f;
             if (io.Show > 0
                     && !io.HasIOFlag(IoGlobals.IO_08_INVULNERABILITY))
@@ -841,7 +842,7 @@ namespace RPGBase.Flyweights
             }
             // check to see if the damage is coming from a summoned object
             Object[] p;
-            if (SummonerIsPlayer((BaseInteractiveObject)Script.Instance.EventSender))
+            if (SummonerIsPlayer(Script.Instance.EventSender))
             {
                 p = new Object[] {
                     "SUMMONED_OUCH", io.DamageSum,

@@ -16,6 +16,10 @@ namespace WoFM.UI.SceneControllers
         /// </summary>
         public Text TextField;
         /// <summary>
+        /// the text field where messages are displayed.
+        /// </summary>
+        public Text CombatField;
+        /// <summary>
         /// message level informational.
         /// </summary>
         public const int INFO = 0;
@@ -28,15 +32,40 @@ namespace WoFM.UI.SceneControllers
         {
             messages = ArrayUtilities.Instance.ExtendArray(new MessageData(message, messageLevel), messages);
         }
+        public void Clear()
+        {
+            if (Script.Instance.GetGlobalIntVariableValue("COMBAT_ON") > 0)
+            {
+                CombatField.text = "";
+            }
+            else
+            {
+                TextField.text = "";
+            }
+        }
         public void DisplayMessages()
         {
+            Text field;
+            bool inCombat = false;
+            if (Script.Instance.GetGlobalIntVariableValue("COMBAT_ON") > 0)
+            {
+                field = CombatField;
+                inCombat = true;
+            }
+            else
+            {
+                field = TextField;
+            }
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
             // clear messages on a FIFO basis
             for (int i = messages.Length - 1; i >= 0 ; i--)
             {
-                sb.Append("(");
-                sb.Append(System.DateTime.UtcNow.ToString("HH:mm:ss"));
-                sb.Append(") ");
+                if (!inCombat)
+                {
+                    sb.Append("(");
+                    sb.Append(System.DateTime.UtcNow.ToString("HH:mm:ss"));
+                    sb.Append(") ");
+                }
                 switch (messages[i].level)
                 {
                     case INFO:
@@ -52,8 +81,8 @@ namespace WoFM.UI.SceneControllers
                 messages = ArrayUtilities.Instance.RemoveIndex(i, messages);
                 i--;
             }
-            sb.Append(TextField.text);
-            TextField.text = sb.ToString();
+            sb.Append(field.text);
+            field.text = sb.ToString();
             sb.ReturnToPool();
             sb = null;
         }

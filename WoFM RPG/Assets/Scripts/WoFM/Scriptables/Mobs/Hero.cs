@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using WoFM.Flyweights;
+using WoFM.Scriptables.Items;
+using WoFM.UI.GlobalControllers;
 
 namespace WoFM.Scriptables.Mobs
 {
@@ -13,12 +15,13 @@ namespace WoFM.Scriptables.Mobs
     {
         public override int OnInit()
         {
-            // Debug.Log("Hero ONINIT");
+            Debug.Log("+++++++++++++++Hero ONINIT");
             WoFMCharacter pc = (WoFMCharacter)Io.PcData;
             // roll stats
             OnRollStats();
-			// equip sword
-            //BPServiceClient.Instance.GetItemByName("Bonebiter");
+            // equip iron sword
+            WoFMInteractiveObject swordIO = GameController.Instance.NewItem("Iron Sword", new IronSword()).GetComponent<WoFMInteractiveObject>();
+            swordIO.ItemData.Equip(Io);
             return base.OnInit();
         }
 		public override int OnRollStats()

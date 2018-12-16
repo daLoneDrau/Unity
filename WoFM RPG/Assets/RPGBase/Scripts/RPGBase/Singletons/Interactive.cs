@@ -383,7 +383,6 @@ namespace RPGBase.Singletons
          * @
          */
         public void PrepareSetWeapon(BaseInteractiveObject io, string temp)
-
         {
             if (io != null
                     && io.HasIOFlag(IoGlobals.IO_03_NPC))

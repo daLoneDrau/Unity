@@ -32,6 +32,10 @@ namespace WoFM.UI.SceneControllers
         /// </summary>
         public ParticleSystem snorter;
         /// <summary>
+        /// The target Io above which the snoring animation is playing.
+        /// </summary>
+        public int SnoreTarget { get; private set; }
+        /// <summary>
         /// Co-routine to move the particle animator off-screen once it is finished.
         /// </summary>
         /// <returns></returns>
@@ -78,6 +82,7 @@ namespace WoFM.UI.SceneControllers
             WoFMInteractiveObject io = (WoFMInteractiveObject)Interactive.Instance.GetIO(ioid);
             snorer.transform.parent = io.transform;
             snorer.transform.position = io.transform.position + new Vector3(0, .625f, 0);
+            SnoreTarget = ioid;
             snorer.Play();
             //StartCoroutine(FinishParticles(bonker));
         }

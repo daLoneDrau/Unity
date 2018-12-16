@@ -63,7 +63,7 @@ namespace WoFM.UI.Widgets
         }
         public void OnEnable()
         {
-            transform.SetAsLastSibling();
+            // transform.SetAsLastSibling();
             GameSceneController.Instance.CONTROLS_FROZEN = true;
         }
         #endregion
@@ -124,6 +124,7 @@ namespace WoFM.UI.Widgets
         private void ClosePanel()
         {
             gameObject.SetActive(false);
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             GameSceneController.Instance.CONTROLS_FROZEN = false;
         }
     }

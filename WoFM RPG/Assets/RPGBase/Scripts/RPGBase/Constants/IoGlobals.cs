@@ -60,7 +60,13 @@ namespace RPGBase.Constants
         /** flag indicating the interactive object is a winged mount. */
         public const int IO_15_MOVABLE = 16384;
         /** flag indicating the interactive object is a trigger. */
-        public const int IO_16_TRIGGER = 1<< 16;
+        public const int IO_16_TRIGGER = 1 << 16;
+        /** flag indicating the interactive object is fixable. */
+        public const int IO_17_FIX = 1 << 17;
+        /// <summary>
+        /// flag indicating that an NPC can be backstabbed
+        /// </summary>
+        public const int NPCFLAG_BACKSTAB = 1;
         public const int PLAYER_CROUCH = 1 << 7;
         public const int PLAYER_LEAN_LEFT = 1 << 8;
         public const int PLAYER_LEAN_RIGHT = 1 << 9;

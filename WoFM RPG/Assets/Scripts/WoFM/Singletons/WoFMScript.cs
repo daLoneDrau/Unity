@@ -43,7 +43,9 @@ namespace WoFM.Singletons
             // init global params
             SetGlobalVariable("PLAYERCASTING", 0);
             SetGlobalVariable("COMBATROUND", 0);
+            SetGlobalVariable("COMBAT_ON", 0);
             SetGlobalVariable("SHUT_UP", 0);
+            SetGlobalVariable("PLAYERSPELL_INVISIBILITY", 0);
             // set singleton - now s
             // Script.Instance = this;
         }

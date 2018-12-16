@@ -592,6 +592,7 @@ namespace RPGBase.Singletons
         /// <returns></returns>
         public long GetGlobalLongVariableValue(string name)
         {
+            long val = 0;
             if (gvars == null)
             {
                 gvars = new ScriptVariable[0];
@@ -609,23 +610,34 @@ namespace RPGBase.Singletons
             }
             if (index == -1)
             {
-                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-                try
+                if (string.Equals(name, "GAMESECONDS", StringComparison.OrdinalIgnoreCase))
                 {
-                    sb.Append("Global Long Integer variable ");
-                    sb.Append(name);
-                    sb.Append(" was never Set.");
+                    val = (long)RPGTime.Instance.GameTime / 1000;
                 }
-                catch (PooledException e)
+                else
                 {
-                    throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
+                    PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+                    try
+                    {
+                        sb.Append("Global Long Integer variable ");
+                        sb.Append(name);
+                        sb.Append(" was never Set.");
+                    }
+                    catch (PooledException e)
+                    {
+                        throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
+                    }
+                    RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION, sb.ToString());
+                    sb.ReturnToPool();
+                    sb = null;
+                    throw ex;
                 }
-                RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION, sb.ToString());
-                sb.ReturnToPool();
-                sb = null;
-                throw ex;
             }
-            return gvars[index].Lval;
+            else
+            {
+                val = gvars[index].Lval;
+            }
+            return val;
         }
         /// <summary>
         /// Gets the value of a global text array variable.

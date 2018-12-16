@@ -8,6 +8,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using WoFM.UI.Tooltips;
 
 namespace Assets.Scripts.WoFM.UI.SceneControllers
 {
@@ -29,17 +30,17 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
         /// The Luck gauge.
         /// </summary>
         public GameObject LuckGauge;
-        public Text LuckTooltip;
+        public InteractiveTooltipWidgetStatbar LuckTooltip;
         /// <summary>
         /// The Skill gauge.
         /// </summary>
         public GameObject SkillGauge;
-        public Text SkillTooltip;
+        public InteractiveTooltipWidgetStatbar SkillTooltip;
         /// <summary>
         /// The Stamina gauge.
         /// </summary>
         public GameObject StaminaGauge;
-        public Text StaminaTooltip;
+        public InteractiveTooltipWidgetStatbar StaminaTooltip;
         /// <summary>
         /// the time it will take the object to perform a move, in seconds.
         /// </summary>
@@ -66,7 +67,6 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
             {
                 // find a position proportionally closer to the end based on the move time.
                 Vector2 newPosition = Vector2.MoveTowards(new Vector2(rt.anchorMax.x, 1), new Vector2(realVal, 1), inverseMoveTime * Time.deltaTime);
-                print("new x " + newPosition.x);
                 // update the gauge
                 if (newPosition.x > MaxX)
                 {
@@ -106,7 +106,7 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
             print("checking luck");
             RectTransform rt = LuckGauge.GetComponent<RectTransform>();
             float currentBarLen = rt.anchorMax.x - MinX;
-            float realPercent = ioData.GetFullAttributeScore("LUK") / ioData.GetFullAttributeScore("MLK");
+            float realPercent = ioData.GetFullAttributeScore("LUK") / 12f;
             if (realPercent > 1)
             {
                 realPercent = 1f;
@@ -116,19 +116,14 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
             {
                 StartCoroutine(UpdateGuage(LuckGauge, realPercent));
             }
-            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-            sb.Append((int)ioData.GetFullAttributeScore("LUK"));
-            sb.Append("/");
-            sb.Append((int)ioData.GetFullAttributeScore("MLK"));
-            LuckTooltip.text = sb.ToString();
-            sb.ReturnToPool();
+            LuckTooltip.IoId = ioData.GetIo().RefId;
         }
         private void CheckForSkillBarUpdate(IOCharacter ioData)
         {
             print("checking skill");
             RectTransform rt = SkillGauge.GetComponent<RectTransform>();
             float currentBarLen = rt.anchorMax.x - MinX;
-            float realPercent = ioData.GetFullAttributeScore("SKL") / ioData.GetFullAttributeScore("MSK");
+            float realPercent = ioData.GetFullAttributeScore("SKL") / 12f;
             if (realPercent > 1)
             {
                 realPercent = 1f;
@@ -138,19 +133,14 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
             {
                 StartCoroutine(UpdateGuage(SkillGauge, realPercent));
             }
-            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-            sb.Append((int)ioData.GetFullAttributeScore("SKL"));
-            sb.Append("/");
-            sb.Append((int)ioData.GetFullAttributeScore("MSK"));
-            SkillTooltip.text = sb.ToString();
-            sb.ReturnToPool();
+            SkillTooltip.IoId = ioData.GetIo().RefId;
         }
         private void CheckForStaminaBarUpdate(IOCharacter ioData)
         {
             print("checking stam");
             RectTransform rt = StaminaGauge.GetComponent<RectTransform>();
             float currentBarLen = rt.anchorMax.x - MinX;
-            float realPercent = ioData.Life / ioData.GetFullAttributeScore("MSTM");
+            float realPercent = ioData.Life / 24f;
             if (realPercent > 1)
             {
                 realPercent = 1f;
@@ -161,12 +151,7 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
                 print("need to update stam");
                 StartCoroutine(UpdateGuage(StaminaGauge, realPercent));
             }
-            PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-            sb.Append((int)ioData.Life);
-            sb.Append("/");
-            sb.Append((int)ioData.GetFullAttributeScore("MSTM"));
-            StaminaTooltip.text = sb.ToString();
-            sb.ReturnToPool();
+            StaminaTooltip.IoId = ioData.GetIo().RefId;
         }
     }
 }

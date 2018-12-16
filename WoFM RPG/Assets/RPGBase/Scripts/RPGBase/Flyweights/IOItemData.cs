@@ -426,6 +426,7 @@ namespace RPGBase.Flyweights
          */
         private void EquipWeapon(IOCharacter charData)
         {
+            UnityEngine.Debug.Log("EquipWeapon");
             // unequip old weapon
             UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_WEAPON);
             // equip new weapon
@@ -479,9 +480,11 @@ namespace RPGBase.Flyweights
         }
         private void UnequipItemInSlot(IOCharacter player, int slot)
         {
+            UnityEngine.Debug.Log("UnequipItemInSlot");
             if (player.GetEquippedItem(slot) >= 0)
             {
                 int slotioid = player.GetEquippedItem(slot);
+                UnityEngine.Debug.Log("slot io "+ slotioid);
                 if (Interactive.Instance.HasIO(slotioid))
                 {
                     BaseInteractiveObject equipIO = (BaseInteractiveObject)Interactive.Instance.GetIO(slotioid);

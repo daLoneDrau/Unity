@@ -150,6 +150,7 @@ namespace WoFM.UI.SceneControllers
                 {
                     // Mob is off-screen. move child transform outside view
                     child.position = new Vector3(-1, 0, 0);
+                    Script.Instance.SendIOScriptEvent(io, WoFMGlobals.SM_304_OUT_OF_VIEW, null, null);
                 }
             }
         }

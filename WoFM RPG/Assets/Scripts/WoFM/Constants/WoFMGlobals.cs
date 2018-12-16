@@ -46,7 +46,7 @@ namespace WoFM.Constants
         /// <summary>
         /// The # of equipment slots.
         /// </summary>
-        public const int MAX_EQUIPPED = 2;
+        public const int MAX_EQUIPPED = 8;
         //****************************
         // EQUIPMENT ELEMENTS
         //****************************

@@ -7,15 +7,23 @@ namespace RPGBase.Flyweights
 {
     public class BaseInteractiveObject : MonoBehaviour
     {
-        /** the <see cref="BaseInteractiveObject"/>'s armor material. */
+        /// <summary>
+        /// the <see cref="BaseInteractiveObject"/>'s armor material.
+        /// </summary>
         public String Armormaterial { get; set; }
-        /** any flags that have been set. */
-        private long behaviorFlags = 0;
+        /// <summary>
+        /// any flags that have been set.
+        /// </summary>
+        private long behaviorFlags;
         public float DamageSum { get; set; }
-        /** flags indicating the BaseInteractiveObject is taking damage of a specific type. */
-        private long dmgFlags = 0;
-        /** any game flags that have been set. */
-        private long gameFlags = 0;
+        /// <summary>
+        /// flags indicating the BaseInteractiveObject is taking damage of a specific type.
+        /// </summary>
+        private long dmgFlags;
+        /// <summary>
+        /// any game flags that have been set.
+        /// </summary>
+        private long gameFlags;
         /** the object's init position. */
         //private Vector2 InitPosition { get; set; }
         /// <summary>
@@ -34,10 +42,14 @@ namespace RPGBase.Flyweights
                 inventory.Io = this;
             }
         }
-        /** any flags that have been set. */
-        private long ioFlags = 0;
-        /** the list of groups to which the BaseInteractiveObject belongs. */
-        private List<string> ioGroups = new List<string>();
+        /// <summary>
+        /// any flags that have been set.
+        /// </summary>
+        private long ioFlags;
+        /// <summary>
+        /// the list of groups to which the BaseInteractiveObject belongs.
+        /// </summary>
+        private List<string> ioGroups;
         /// <summary>
         /// the <see cref="BaseInteractiveObject"/>'s <see cref="IOItemData"/>.
         /// </summary>
@@ -180,7 +192,7 @@ namespace RPGBase.Flyweights
         /// <summary>
         /// any type flags that have been set (is the object a goblin, weapon, etc...).
         /// </summary>
-        private long typeFlags = 0;
+        private long typeFlags;
         /// <summary>
         /// the <see cref="BaseInteractiveObject"/>'s weapon material.
         /// </summary>
@@ -192,6 +204,14 @@ namespace RPGBase.Flyweights
         protected BaseInteractiveObject(int id)
         {
             RefId = id;
+            spellcastData = new IOSpellCastData();
+            // TODO - handle Target
+            //Target = new Vector3();
+        }
+        public virtual void Awake()
+        {
+            print("BaseInteractiveObject awake");
+            ioGroups = new List<string>();
             spellcastData = new IOSpellCastData();
             // TODO - handle Target
             //Target = new Vector3();

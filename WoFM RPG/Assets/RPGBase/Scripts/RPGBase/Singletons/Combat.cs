@@ -18,11 +18,14 @@ namespace RPGBase.Singletons
         {
             return 1;
         }
-        public virtual float ComputeDamages(BaseInteractiveObject srcIo, BaseInteractiveObject wpnIo, BaseInteractiveObject targetIo, int result)
+        public virtual float ComputeDamages(BaseInteractiveObject srcIo, BaseInteractiveObject wpnIo, BaseInteractiveObject targetIo, long flags)
         {
             throw new NotImplementedException();
         }
-
+        public virtual void DamageFix(BaseInteractiveObject io, float dmg, long source, long flags)
+        {
+            throw new NotImplementedException();
+        }
         public virtual bool StrikeCheck(BaseInteractiveObject srcIo, BaseInteractiveObject wpnIo, long flags, int targ)
         {
             throw new NotImplementedException();

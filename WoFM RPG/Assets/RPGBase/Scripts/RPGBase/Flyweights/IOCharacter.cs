@@ -107,8 +107,6 @@ namespace RPGBase.Flyweights
         /// <param name="dmg">the amount</param>
         protected void AdjustLife(float dmg)
         {
-            UnityEngine.Debug.Log("AdjustLife(" + dmg);
-            UnityEngine.Debug.Log("Life::" + Life);
             String ls = GetLifeAttribute();
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
             sb.Append("M");
@@ -385,7 +383,7 @@ namespace RPGBase.Flyweights
         private void InitEquippedItems(int total)
         {
             equippedItems = new int[total];
-            for (int i = 0; i < equippedItems.Length; i++)
+            for (int i = equippedItems.Length - 1; i >= 0; i--)
             {
                 equippedItems[i] = -1;
             }
@@ -476,6 +474,7 @@ namespace RPGBase.Flyweights
             else
             {
                 equippedItems[slot] = item.RefId;
+                UnityEngine.Debug.Log("putting item " + item.RefId + " in slot " + slot);
             }
         }
         /// <summary>
@@ -504,6 +503,7 @@ namespace RPGBase.Flyweights
                 throw ex;
             }
             equippedItems[slot] = id;
+            UnityEngine.Debug.Log("2 putting item " + id + " in slot " + slot);
         }
         /// <summary>
         /// Removes all the player's equipment.

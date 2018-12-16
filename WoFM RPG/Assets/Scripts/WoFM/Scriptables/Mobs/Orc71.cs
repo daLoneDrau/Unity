@@ -9,6 +9,7 @@ using System.Text;
 using UnityEngine;
 using WoFM.Flyweights;
 using WoFM.Flyweights.Actions;
+using WoFM.Scriptables.Items;
 using WoFM.Singletons;
 using WoFM.UI.GlobalControllers;
 using WoFM.UI.SceneControllers;
@@ -16,7 +17,7 @@ using WoFM.UI.Widgets;
 
 namespace WoFM.Scriptables.Mobs
 {
-    public class Orc71 : MobBase
+    public class Orc71 : OrcBase
     {
         /// <summary>
         /// the time given to show the orc 'waking up'.
@@ -84,13 +85,18 @@ namespace WoFM.Scriptables.Mobs
         }
         public override int OnInit()
         {
-            // Debug.Log("Mob ONINIT");
+            base.OnInit();
+            // initialize stats
             Io.NpcData.SetBaseAttributeScore("SKL", 6);
             Io.NpcData.SetBaseAttributeScore("MSK", 6);
             Io.NpcData.SetBaseAttributeScore("STM", 5);
             Io.NpcData.SetBaseAttributeScore("MSTM", 5);
+            Io.NpcData.Name = "Orc";
             // heal from god
             Io.NpcData.HealNPC(5, true);
+            // equip weapon
+            WoFMInteractiveObject wpnIo = GameController.Instance.NewItem("Orc Cleaver", new OrcCleaver()).GetComponent<WoFMInteractiveObject>();
+            wpnIo.ItemData.Equip(Io);
             SetLocalVariable("asleep", 1);
             // turn off hearing initially - this will be turned back on after modal plays
             AssignDisallowedEvent(ScriptConsts.DISABLE_HEAR);
@@ -98,23 +104,15 @@ namespace WoFM.Scriptables.Mobs
             GameSceneController.Instance.AddMustCompleteAction(new TeleportAction((WoFMInteractiveObject)Io, new Vector2(636 - GameController.MAP_X_OFFSET, GameController.MAP_Y_OFFSET - 1338)));
             // start particles
             Particles.Instance.PlaySnoreAboveIo(Io.RefId);
-            return base.OnInit();
+            return ScriptConsts.ACCEPT;
         }
         public override int OnOutOfView()
         {
-            Particles.Instance.StopSnoring();
-            Io.transform.position = new Vector3(-1, 0, 0);
             return base.OnOutOfView();
         }
         public override int OnInView()
         {
-            if (GetLocalIntVariableValue("asleep") == 1)
-            {
-                if (!Particles.Instance.IsSnoring())
-                {
-                    Particles.Instance.PlaySnoring();
-                }
-            }
+            Io.Show = 1;
             return base.OnInView();
         }
     }

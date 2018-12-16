@@ -98,10 +98,27 @@ namespace WoFM.Singletons
             io.AddIOFlag(IoGlobals.IO_01_PC);
             io.PcData = new WoFMCharacter();
             // add script
-            io.Script = new Hero();
+            Hero script = new Hero();
+            io.Script = script;
+            //script.Io = io;
             int val = Script.Instance.SendInitScriptEvent(io);
             // register the IO as the player
             PlayerId = io.RefId;
+        }
+        /// <summary>
+        /// Initializes a new Item IO.
+        /// </summary>
+        public void NewItem(WoFMInteractiveObject io, Scriptable script)
+        {
+            // register the IO
+            NewIO(io);
+            // add item flag and component
+            io.AddIOFlag(IoGlobals.IO_02_ITEM);
+            io.ItemData = new WoFMItemData();
+            // add script
+            io.Script = script;
+            //script.Io = io;
+            int val = Script.Instance.SendInitScriptEvent(io);
         }
         /// <summary>
         /// Initializes a new Mob IO.
@@ -115,6 +132,7 @@ namespace WoFM.Singletons
             io.NpcData = new WoFMNPC();
             // add script
             io.Script = script;
+            //script.Io = io;
             int val = Script.Instance.SendInitScriptEvent(io);
         }
         /// <summary>

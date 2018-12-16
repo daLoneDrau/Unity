@@ -176,6 +176,7 @@ namespace WoFM.UI.GlobalControllers
         /// <returns><see cref="GameObject"/></returns>
         public GameObject NewHero()
         {
+            print("*************************NEWHERO");
             // create player GameObject
             GameObject player = new GameObject
             {
@@ -224,12 +225,86 @@ namespace WoFM.UI.GlobalControllers
             {
                 playerIo.PcData.AddWatcher(StatPanelController.Instance);
             }
+            if (CombatController.Instance != null)
+            {
+                playerIo.PcData.AddWatcher(CombatController.Instance);
+            }
+            playerIo.PcData.NotifyWatchers();
 
             // remove instances for garbage collection
+            if (SpriteMap.Instance != null)
+            {
+                playerIo.Sprite = SpriteMap.Instance.GetSprite("hero_0");
+            }
             playerIo = null;
             print("created player - " + player.GetComponent<WoFMInteractiveObject>().RefId);
-            print(((WoFMInteractive)Interactive.Instance).PlayerId);
             return player;
+        }
+        /// <summary>
+        /// Creates a new mob <see cref="GameObject"/> with a <see cref="SpriteRenderer"/> and <see cref="WoFMInteractiveObject"/> components.
+        /// </summary>
+        /// <returns><see cref="GameObject"/></returns>
+        public GameObject NewItem(string itemName, Scriptable script, bool inScene = false)
+        {
+            // create item GameObject
+            GameObject item = new GameObject
+            {
+                name = itemName
+            };
+            // position item outside the screen
+            // mob.transform.position = new Vector3(-1, 0, 0);
+            /********************************************************
+             * SETUP SPRITE_RENDERER COMPONENT
+            /*******************************************************/
+            /*
+            if (SpriteMap.Instance != null)
+            {
+                SpriteRenderer sr = mob.AddComponent<SpriteRenderer>();
+                // set player sprite to no shield sprite
+                sr.sprite = SpriteMap.Instance.GetSprite(sprite);
+                sr.sortingLayerName = "Units";
+                mob.layer = LayerMask.NameToLayer("BlockingLayer");
+            }
+            */
+            /********************************************************
+             * SETUP MOB_MOVE COMPONENT
+            /*******************************************************/
+            /*
+            MobMove move = mob.AddComponent<MobMove>();
+            move.blockingLayer = 1 << LayerMask.NameToLayer("BlockingLayer");
+            */
+            /********************************************************
+             * SETUP BOX_COLLIDER_2D COMPONENT
+            /*******************************************************/
+            /*
+            BoxCollider2D bc = mob.AddComponent<BoxCollider2D>() as BoxCollider2D;
+            bc.size = new Vector2(0.9f, 0.9f);
+            */
+            /********************************************************
+             * SETUP RIGID_BODY COMPONENT
+            /*******************************************************/
+            /*
+            Rigidbody2D r = mob.AddComponent<Rigidbody2D>() as Rigidbody2D;
+            r.bodyType = RigidbodyType2D.Kinematic;
+            */
+            /********************************************************
+             * SETUP WOFM_INTERACTIVE_OBJECT COMPONENT
+            /*******************************************************/
+            WoFMInteractiveObject itemIo = item.AddComponent<WoFMInteractiveObject>() as WoFMInteractiveObject;
+            // itemIo.Sprite = SpriteMap.Instance.GetSprite(sprite);
+            /********************************************************
+             * REGISTER THE IO AND INITIALIZE INTERACTIVE COMPONENTS
+            /*******************************************************/
+            ((WoFMInteractive)Interactive.Instance).NewItem(itemIo, script);
+            /********************************************************
+             * SETUP WATCHERS
+            /*******************************************************/
+
+            // remove instances for garbage collection
+            itemIo = null;
+            // set new item as child of item holder
+            // item.transform.SetParent(mobHolder);
+            return item;
         }
         /// <summary>
         /// Creates a new mob <see cref="GameObject"/> with a <see cref="SpriteRenderer"/> and <see cref="WoFMInteractiveObject"/> components.
@@ -369,6 +444,7 @@ namespace WoFM.UI.GlobalControllers
         void Awake()
         {
             // initialize singleton controllers
+            WoFMCombat.Init();
             WoFMController.Init();
             WoFMInteractive.Init();
             WoFMScript.Init();
