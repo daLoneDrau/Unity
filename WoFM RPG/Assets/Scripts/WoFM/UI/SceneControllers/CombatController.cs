@@ -84,8 +84,11 @@ namespace WoFM.UI.SceneControllers
         public void StartCombat()
         {
             print("starting combat");
+            // set global combat variables
             Script.Instance.SetGlobalVariable("COMBAT_ROUNDS", 0);
             Script.Instance.SetGlobalVariable("COMBAT_ON", 1);
+            // clear 
+            Messages.Instance.Clear();
             roundNumber = 1;
             gameObject.SetActive(true);
             for (int i = 0, li = Enemies.Length; i < li; i++)
@@ -276,7 +279,6 @@ namespace WoFM.UI.SceneControllers
             AttackPanel.SetActive(false);
             DefensePanel.SetActive(false);
             NeutralPanel.SetActive(false);
-            RoundMessages.text = "";
             animationsToComplete = 0;
 
             // play marquee
@@ -302,20 +304,19 @@ namespace WoFM.UI.SceneControllers
             switch (((WoFMCombat)Combat.Instance).StrikeCheck(pc, npc))
             {
                 case WoFMCombat.PLAYER_WOUNDS_CREATURE:
-                    RoundMessages.text = "Player wins initiative. Attack!";
                     Messages.Instance.SendMessage("Player wins initiative. Attack!");
                     AttackPanel.SetActive(true);
                     break;
                 case WoFMCombat.CREATURE_WOUNDS_PLAYER:
                     sb.Append(Interactive.Instance.GetIO(enemies[0]).NpcData.Name);
                     sb.Append(" wins initiative! Defend!");
-                    RoundMessages.text = sb.ToString();
+                    Messages.Instance.SendMessage(sb.ToString());
                     DefensePanel.SetActive(true);
                     break;
                 default:
                     sb.Append(Interactive.Instance.GetIO(enemies[0]).NpcData.Name);
                     sb.Append(" eyes you warily... Choose: Attack or Defend.");
-                    RoundMessages.text = sb.ToString();
+                    Messages.Instance.SendMessage(sb.ToString());
                     NeutralPanel.SetActive(true);
                     break;
             }
