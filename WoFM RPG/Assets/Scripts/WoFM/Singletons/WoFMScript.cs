@@ -112,7 +112,7 @@ namespace WoFM.Singletons
         {
             if (Debug)
             {
-                print("RunMessage(" + script + "," + msg + "," + io.RefId);
+                print("WoFMScript.RunMessage(" + script + "," + msg + "," + io + " - "+io.RefId);
             }
             switch (msg)
             {

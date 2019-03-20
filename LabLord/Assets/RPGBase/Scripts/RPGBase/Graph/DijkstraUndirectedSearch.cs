@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.RPGBase.Graph
+namespace RPGBase.Graph
 {
     public sealed class DijkstraUndirectedSearch
     {

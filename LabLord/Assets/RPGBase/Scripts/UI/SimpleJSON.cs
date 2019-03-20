@@ -111,7 +111,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.UI.SimpleJSON
+namespace RPGBase.Scripts.UI.SimpleJSON
 {
     public enum JSONNodeType
     {

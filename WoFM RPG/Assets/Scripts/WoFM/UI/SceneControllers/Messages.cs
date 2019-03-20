@@ -16,10 +16,6 @@ namespace WoFM.UI.SceneControllers
         /// </summary>
         public Text TextField;
         /// <summary>
-        /// the text field where messages are displayed.
-        /// </summary>
-        public Text CombatField;
-        /// <summary>
         /// message level informational.
         /// </summary>
         public const int INFO = 0;
@@ -36,7 +32,6 @@ namespace WoFM.UI.SceneControllers
         {
             if (Script.Instance.GetGlobalIntVariableValue("COMBAT_ON") > 0)
             {
-                CombatField.text = "";
             }
             else
             {
@@ -45,11 +40,10 @@ namespace WoFM.UI.SceneControllers
         }
         public void DisplayMessages()
         {
-            Text field;
+            Text field = TextField;
             bool inCombat = false;
             if (Script.Instance.GetGlobalIntVariableValue("COMBAT_ON") > 0)
             {
-                field = CombatField;
                 inCombat = true;
             }
             else

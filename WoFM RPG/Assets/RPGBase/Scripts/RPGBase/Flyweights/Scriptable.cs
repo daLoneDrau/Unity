@@ -435,6 +435,11 @@ namespace RPGBase.Flyweights
             }
             return svar;
         }
+        public int GetLocalVariableType(string name)
+        {
+            ScriptVariable svar = GetLocalVariable(name);
+            return svar.Type;
+        }
         public void GetTargetPos(BaseInteractiveObject io, long smoothing)
         {
             if (io == null)

@@ -503,7 +503,6 @@ namespace RPGBase.Flyweights
                 throw ex;
             }
             equippedItems[slot] = id;
-            UnityEngine.Debug.Log("2 putting item " + id + " in slot " + slot);
         }
         /// <summary>
         /// Removes all the player's equipment.

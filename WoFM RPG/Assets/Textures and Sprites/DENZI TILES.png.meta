@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: c0fcb96d1324a3d4ea8f208c131fdf14
-timeCreated: 1537462858
+timeCreated: 1545924647
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -20,6 +20,9 @@ TextureImporter:
     21300026: text_snort
     21300028: text_bonk
     21300030: text_z
+    21300032: tombstone
+    21300034: corpse
+    21300036: broadsword
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -274,7 +277,7 @@ TextureImporter:
         width: 24
         height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -287,7 +290,7 @@ TextureImporter:
         width: 35
         height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -300,7 +303,7 @@ TextureImporter:
         width: 31
         height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -313,7 +316,33 @@ TextureImporter:
         width: 6
         height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tombstone
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 539
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: corpse
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 539
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

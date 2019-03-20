@@ -1,11 +1,15 @@
 fileFormatVersion: 2
 guid: 4d24e7a0efa35fe48b668e8a6f57b6fe
-timeCreated: 1544534893
+timeCreated: 1545924688
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: slash_left
     21300002: Hit
+    21300004: double slash
+    21300006: broadsword
+    21300008: orc cleaver
+    21300010: club
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -100,7 +104,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 80
+        y: 208
         width: 48
         height: 48
       alignment: 0
@@ -109,15 +113,54 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Hit
+      name: double slash
       rect:
         serializedVersion: 2
-        x: 48
-        y: 80
+        x: 0
+        y: 159
         width: 48
         height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: broadsword
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 110
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: orc cleaver
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 110
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: club
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 110
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

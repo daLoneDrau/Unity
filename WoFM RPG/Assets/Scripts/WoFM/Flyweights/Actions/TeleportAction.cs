@@ -41,7 +41,7 @@ namespace WoFM.Flyweights.Actions
                 // set Game Object's transform to correct viewport coordinates
                 GameObject ioObj = io.gameObject;
                 Vector2 v = ViewportController.Instance.GetWorldCoordinatesForTile(location);
-                Debug.Log("teleport to " + v);
+                Debug.Log("teleport player to " + v);
                 ioObj.transform.position = new Vector3(v.x, v.y, 0);
                 TileViewportController.Instance.CenterOnTile(location);
                 //TileViewportController.Instance.CenterOnTile(new Vector2(28.9f, 16.9f));

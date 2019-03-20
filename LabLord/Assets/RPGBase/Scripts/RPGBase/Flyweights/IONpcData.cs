@@ -70,7 +70,7 @@ namespace RPGBase.Flyweights
         private long npcFlags;
         // IO_PATHFIND pathfind;
         // EERIE_EXTRA_ROTATE * ex_rotate;
-        // D3DCOLOR blood_color;
+        private UnityEngine.Color bloodColor;
         char padd;
         //private IOPathfind pathfinder;
         // IO_BEHAVIOR_DATA stacked[MAX_STACKED_BEHAVIOR];
@@ -340,6 +340,7 @@ namespace RPGBase.Flyweights
         /// <returns></returns>
         public float DamageNPC(float dmg, int srcIoid, bool isSpellDamage)
         {
+            // UnityEngine.Debug.Log("IONpcData.DamageNpc(" + dmg + "," + srcIoid + "," + isSpellDamage);
             float damagesdone = 0f;
             if (io.Show > 0
                     && !io.HasIOFlag(IoGlobals.IO_08_INVULNERABILITY))
@@ -593,9 +594,11 @@ namespace RPGBase.Flyweights
         /// Heals an <see cref="IONpcData"/> for a specific amount.
         /// </summary>
         /// <param name="healAmt">the healing amount</param>
-        public void HealNPC(float healAmt)
+        /// <param name="god">if true, the healing comes from God and current life doesn't matter</param>
+        public void HealNPC(float healAmt, bool god = false)
         {
-            if (Life > 0f)
+            if (Life > 0f
+                || (Life <= 0f && god))
             {
                 if (healAmt > 0f)
                 {
@@ -746,6 +749,7 @@ namespace RPGBase.Flyweights
         /// <returns></returns>
         private int SendHitEvent(float dmg, int srcIoid, bool isSpellDamage)
         {
+            //UnityEngine.Debug.Log("IONpcData.SendHitEvent");
             if (Interactive.Instance.HasIO(srcIoid))
             {
                 Script.Instance.EventSender = Interactive.Instance.GetIO(srcIoid);
@@ -825,8 +829,8 @@ namespace RPGBase.Flyweights
         /// <param name="dmg">the amount of damage</param>
         /// <param name="srcIoid">the source of the damage</param>
         private void SendOuchEvent(float dmg, int srcIoid)
-
         {
+            // UnityEngine.Debug.Log("IONpcData.SendOuchEvent(" + dmg);
             io.DamageSum += dmg;
             // set the event sender
             if (Interactive.Instance.HasIO(srcIoid))
@@ -839,7 +843,7 @@ namespace RPGBase.Flyweights
             }
             // check to see if the damage is coming from a summoned object
             Object[] p;
-            if (SummonerIsPlayer((BaseInteractiveObject)Script.Instance.EventSender))
+            if (SummonerIsPlayer(Script.Instance.EventSender))
             {
                 p = new Object[] {
                     "SUMMONED_OUCH", io.DamageSum,

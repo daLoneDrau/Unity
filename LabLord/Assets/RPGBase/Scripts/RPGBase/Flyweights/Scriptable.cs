@@ -251,7 +251,7 @@ namespace RPGBase.Flyweights
                     || svar.Type != ScriptConsts.TYPE_L_13_INT_ARR)
             {
                 PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-                sb.Append("Local floating-point variable ");
+                sb.Append("Local integer array variable ");
                 sb.Append(name);
                 sb.Append(" was never set.");
                 RPGException ex = new RPGException(ErrorMessage.INVALID_PARAM, sb.ToString());
@@ -434,6 +434,11 @@ namespace RPGBase.Flyweights
                 }
             }
             return svar;
+        }
+        public int GetLocalVariableType(string name)
+        {
+            ScriptVariable svar = GetLocalVariable(name);
+            return svar.Type;
         }
         public void GetTargetPos(BaseInteractiveObject io, long smoothing)
         {

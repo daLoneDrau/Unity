@@ -11,7 +11,8 @@ namespace WoFM.UI._2D
     {
         public void AnimationFinished()
         {
-            CombatController.Instance.FinishRound();
+            print("*****************AnimationFinished " + gameObject.name);
+            CombatController.Instance.FinishRound(gameObject.name);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace LabLord.Flyweights
     {
         public LabLordInventoryData()
         {
-            Slots = new InventorySlot[16];
+            Slots = new InventorySlot[8];
             for (int i = 0; i < Slots.Length; i++)
             {
                 Slots[i] = new InventorySlot();

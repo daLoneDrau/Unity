@@ -26,30 +26,30 @@ namespace RPGBase.Constants
         public const int DAMAGE_TYPE_PUSH = 1 << 14;
         public const int DAMAGE_TYPE_STONE = 1 << 8;
         public const int DAMAGE_TYPE_WOOD = 1 << 7;
+        public const int EQUIP_SLOT_RING_LEFT = 0;
+        public const int EQUIP_SLOT_RING_RIGHT = 1;
+        public const int EQUIP_SLOT_WEAPON = 2;
+        public const int EQUIP_SLOT_SHIELD = 3;
+        public const int EQUIP_SLOT_TORCH = 4;
         public const int EQUIP_SLOT_TORSO = 5;
         public const int EQUIP_SLOT_HELMET = 6;
         public const int EQUIP_SLOT_LEGGINGS = 7;
-        public const int EQUIP_SLOT_RING_LEFT = 0;
-        public const int EQUIP_SLOT_RING_RIGHT = 1;
-        public const int EQUIP_SLOT_SHIELD = 3;
-        public const int EQUIP_SLOT_TORCH = 4;
-        public const int EQUIP_SLOT_WEAPON = 2;
         public const int MAX_EQUIPPED = 8;
         public const int MAX_SPELLS = 0;
-        public const int OBJECT_TYPE_1H = 1 << 2;
-        public const int OBJECT_TYPE_2H = 1 << 3;
-        public const int OBJECT_TYPE_ARMOR = 1 << 8;
-        public const int OBJECT_TYPE_BOW = 1 << 4;
         /// <summary>
         /// Dagger type.
         /// </summary>
         public const int OBJECT_TYPE_DAGGER = 1 << 1;
+        public const int OBJECT_TYPE_1H = 1 << 2;
+        public const int OBJECT_TYPE_2H = 1 << 3;
+        public const int OBJECT_TYPE_BOW = 1 << 4;
+        public const int OBJECT_TYPE_SHIELD = 1 << 5;
         public const int OBJECT_TYPE_FOOD = 1 << 6;
         public const int OBJECT_TYPE_GOLD = 1 << 7;
+        public const int OBJECT_TYPE_ARMOR = 1 << 8;
         public const int OBJECT_TYPE_HELMET = 1 << 9;
-        public const int OBJECT_TYPE_LEGGINGS = 1 << 11;
         public const int OBJECT_TYPE_RING = 1 << 10;
-        public const int OBJECT_TYPE_SHIELD = 1 << 5;
+        public const int OBJECT_TYPE_LEGGINGS = 1 << 11;
         public const int OBJECT_TYPE_WEAPON = 1;
         public const int TARGET_NONE = -2;
         public const int TARGET_PLAYER = -1;

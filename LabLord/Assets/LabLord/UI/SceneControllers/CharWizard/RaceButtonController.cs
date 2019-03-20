@@ -62,31 +62,31 @@ namespace LabLord.UI.SceneControllers.CharWizard
         public void SetOptions(int options)
         {
             DisableAll();
-            if ((options & LabLordGlobals.RACE_DWARF) == LabLordGlobals.RACE_DWARF)
+            if ((options & LabLordRace.RACE_DWARF) == LabLordRace.RACE_DWARF)
             {
                 Dwarf.interactable = true;
             }
-            if ((options & LabLordGlobals.RACE_ELF) == LabLordGlobals.RACE_ELF)
+            if ((options & LabLordRace.RACE_ELF) == LabLordRace.RACE_ELF)
             {
                 Elf.interactable = true;
             }
-            if ((options & LabLordGlobals.RACE_GNOME) == LabLordGlobals.RACE_GNOME)
+            if ((options & LabLordRace.RACE_GNOME) == LabLordRace.RACE_GNOME)
             {
                 Gnome.interactable = true;
             }
-            if ((options & LabLordGlobals.RACE_HALFLING) == LabLordGlobals.RACE_HALFLING)
+            if ((options & LabLordRace.RACE_HALFLING) == LabLordRace.RACE_HALFLING)
             {
                 Halfling.interactable = true;
             }
-            if ((options & LabLordGlobals.RACE_HALF_ELF) == LabLordGlobals.RACE_HALF_ELF)
+            if ((options & LabLordRace.RACE_HALF_ELF) == LabLordRace.RACE_HALF_ELF)
             {
                 Half_Elf.interactable = true;
             }
-            if ((options & LabLordGlobals.RACE_HALF_ORC) == LabLordGlobals.RACE_HALF_ORC)
+            if ((options & LabLordRace.RACE_HALF_ORC) == LabLordRace.RACE_HALF_ORC)
             {
                 Half_Orc.interactable = true;
             }
-            if ((options & LabLordGlobals.RACE_HUMAN) == LabLordGlobals.RACE_HUMAN)
+            if ((options & LabLordRace.RACE_HUMAN) == LabLordRace.RACE_HUMAN)
             {
                 Human.interactable = true;
             }

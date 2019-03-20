@@ -178,6 +178,27 @@ namespace RPGBase.Singletons
                         }
                     }
                 }
+                print("making call to destroy io now");
+                // detach the IO from its parent
+                io.transform.parent = null;
+                SpriteRenderer sr = io.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    sr.sprite = null;
+                    Destroy(sr);
+                }
+                BoxCollider2D bc = io.GetComponent<BoxCollider2D>();
+                if (bc != null)
+                {
+                    Destroy(bc);
+                }
+                Rigidbody2D rb = io.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    Destroy(rb);
+                }
+                io.transform.position = new Vector3(-1, -1, 0);
+                Destroy(io);
             }
         }
         public virtual void ForceIOLeaveZone(BaseInteractiveObject io, long flags) { throw new NotImplementedException(); }
@@ -238,10 +259,9 @@ namespace RPGBase.Singletons
         /// <returns>int</returns>
         public virtual int GetMaxIORefId() { throw new NotImplementedException(); }
         /// <summary>
-        /// Gets a new interactive object.
+        /// Initializes a new interactive object.
         /// </summary>
-        /// <returns><see cref="BaseInteractiveObject"/></returns>
-        protected virtual BaseInteractiveObject GetNewIO() { throw new NotImplementedException(); }
+        protected virtual void NewIO(BaseInteractiveObject io) { throw new NotImplementedException(); }
         /// <summary>
         /// Gets an BaseInteractiveObject's reference id by name.  If the target is "none" or does not exist, -1 is returned.If the target is "self" or "me", -2;
         /// </summary>
@@ -374,7 +394,6 @@ namespace RPGBase.Singletons
          * @
          */
         public void PrepareSetWeapon(BaseInteractiveObject io, string temp)
-
         {
             if (io != null
                     && io.HasIOFlag(IoGlobals.IO_03_NPC))

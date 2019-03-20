@@ -2,6 +2,9 @@
 using RPGBase.Pooled;
 using System;
 using LabLord.Constants;
+using System.Collections.Generic;
+using RPGBase.Constants;
+using RPGBase.Singletons;
 
 namespace LabLord.Flyweights
 {
@@ -11,26 +14,124 @@ namespace LabLord.Flyweights
         /// the list of attributes and their matching names and modifiers.
         /// </summary>
         private static object[][] attributeMap = new object[][] {
+            #region ABILITIES - 6
             new object[] { "STR", "Strength", LabLordGlobals.EQUIP_ELEMENT_STR },
+            new object[] { "DEX", "Dexterity", LabLordGlobals.EQUIP_ELEMENT_DEX },
+            new object[] { "CON", "Constitution", LabLordGlobals.EQUIP_ELEMENT_CON },
             new object[] { "INT", "Intelligence", LabLordGlobals.EQUIP_ELEMENT_INT },
             new object[] { "WIS", "Wisdom", LabLordGlobals.EQUIP_ELEMENT_WIS },
-            new object[] { "CON", "Constitution", LabLordGlobals.EQUIP_ELEMENT_CON },
-            new object[] { "DEX", "Dexterity", LabLordGlobals.EQUIP_ELEMENT_DEX },
             new object[] { "CHA", "Charisma", LabLordGlobals.EQUIP_ELEMENT_CHA },
+            #endregion
+            #region SAVING THROWS - 7
+            new object[] { "SBW", "Save vs. Breath Weapon", LabLordGlobals.EQUIP_ELEMENT_SAVE_V_BREATH },
+            new object[] { "SVP", "Save vs. Poison", LabLordGlobals.EQUIP_ELEMENT_SAVE_V_POISON },
+            new object[] { "SVD", "Save vs. Death", LabLordGlobals.EQUIP_ELEMENT_SAVE_V_DEATH },
+            new object[] { "SPT", "Save vs. Petrify", LabLordGlobals.EQUIP_ELEMENT_SAVE_V_PETRIFY },
+            new object[] { "SPR", "Save vs. Paralyze", LabLordGlobals.EQUIP_ELEMENT_SAVE_V_PARALYZE },
+            new object[] { "SVW", "Save vs. Wands", LabLordGlobals.EQUIP_ELEMENT_SAVE_V_WANDS },
+            new object[] { "SSS", "Save vs. Spell or Staff", LabLordGlobals.EQUIP_ELEMENT_SAVE_V_SPELLS },
+            #endregion
+            #region THIEF SKILLS - 7
+            new object[] { "TPL", "Pick Locks", LabLordGlobals.EQUIP_ELEMENT_THIEF_PICK_LOCKS },
+            new object[] { "FRT", "Find and Remove Traps", LabLordGlobals.EQUIP_ELEMENT_THIEF_FIND_REMOVE_TRAPS },
+            new object[] { "TPP", "Pick Pockets", LabLordGlobals.EQUIP_ELEMENT_THIEF_PICK_POCKETS },
+            new object[] { "TMS", "Move Silently", LabLordGlobals.EQUIP_ELEMENT_THIEF_MOVE_SILENTLY },
+            new object[] { "E17", "Climb Walls", LabLordGlobals.EQUIP_ELEMENT_THIEF_CLIMB_WALLS },
+            new object[] { "THS", "Hide in Shadows", LabLordGlobals.EQUIP_ELEMENT_THIEF_HIDE_SHADOWS },
+            new object[] { "THN", "Hear Noise", LabLordGlobals.EQUIP_ELEMENT_THIEF_HEAR_NOISE },
+            #endregion
+            #region STRENGTH MODIFIERS - 3
+            new object[] { "THM", "To Hit", LabLordGlobals.EQUIP_ELEMENT_THM },
+            new object[] { "DMG", "Damage", LabLordGlobals.EQUIP_ELEMENT_DMG },
+            new object[] { "EFD", "Force Doors", LabLordGlobals.EQUIP_ELEMENT_FORCE_DOORS },
+            #endregion
+            #region  DEXTERITY MODIFIERS - 3
+            new object[] { "AC", "AC", LabLordGlobals.EQUIP_ELEMENT_AC },
+            new object[] { "E24", "Missile Weapons", LabLordGlobals.EQUIP_ELEMENT_MISSILE_THM },
+            new object[] { "E25", "Initiative", LabLordGlobals.EQUIP_ELEMENT_INITIATIVE },
+            #endregion
+            #region  CONSTITUTION MODIFIERS
             new object[] { "HP", "Hit Points", LabLordGlobals.EQUIP_ELEMENT_HP },
             new object[] { "MHP", "Max Hit Points", LabLordGlobals.EQUIP_ELEMENT_MHP },
-            new object[] { "SBW", "Save vs. Breath Weapon", LabLordGlobals.EQUIP_ELEMENT_SBW },
-            new object[] { "SMW", "Save vs. Magic Wand", LabLordGlobals.EQUIP_ELEMENT_SMW },
-            new object[] { "SGZ", "Save vs. Gaze", LabLordGlobals.EQUIP_ELEMENT_SGZ },
-            new object[] { "SRP", "Save vs. Ray or Poison", LabLordGlobals.EQUIP_ELEMENT_SRP },
-            new object[] { "SSS", "Save vs. Spell or Staff", LabLordGlobals.EQUIP_ELEMENT_SSS },
-            new object[] { "AC", "Armour Class", LabLordGlobals.EQUIP_ELEMENT_AC },
-            new object[] { "THM", "To Hit Modifier", LabLordGlobals.EQUIP_ELEMENT_THM }
+            new object[] { "E28", "vs Resurrection", LabLordGlobals.EQUIP_SURVIVE_RESURRECTION },
+            new object[] { "E29", "vs Shock", LabLordGlobals.EQUIP_SURVIVE_POLYMORPH },
+            #endregion
+            #region  INTELLIGENCE MODIFIERS
+            new object[] { "E30", "Additional Languages", LabLordGlobals.EQUIP_ELEMENT_ADDL_LANGUAGES },
+            new object[] { "E31", "Language Proficiency", LabLordGlobals.EQUIP_ELEMENT_LANGUAGE_PROFICIENCY },
+            new object[] { "E32", "Chance Learn Spell", LabLordGlobals.EQUIP_ELEMENT_LEARN_SPELL },
+            new object[] { "E33", "Min Spells/Lvl", LabLordGlobals.EQUIP_ELEMENT_MIN_SPELLS },
+            new object[] { "E34", "Max Spells/Lvl", LabLordGlobals.EQUIP_ELEMENT_MAX_SPELLS },
+            #endregion
+            #region  WISDOM MODIFIERS
+            new object[] { "E35", "Divine Spell Failure", LabLordGlobals.EQUIP_ELEMENT_DIVINE_SPELL_FAILURE },
+            new object[] { "E36", "Bonus Level 1 Spells", LabLordGlobals.EQUIP_ELEMENT_BONUS_LVL_1_SPELLS },
+            new object[] { "E37", "Bonus Level 2 Spells", LabLordGlobals.EQUIP_ELEMENT_BONUS_LVL_2_SPELLS },
+            new object[] { "E38", "Bonus Level 3 Spells", LabLordGlobals.EQUIP_ELEMENT_BONUS_LVL_3_SPELLS },
+            new object[] { "E39", "Bonus Level 4 Spells", LabLordGlobals.EQUIP_ELEMENT_BONUS_LVL_4_SPELLS },
+            #endregion
+            #region  CHARISMA MODIFIERS
+            new object[] { "E40", "Reaction Adjustment", LabLordGlobals.EQUIP_ELEMENT_REACTION_ADJUSTMENT },
+            new object[] { "E41", "Max Hirelings", LabLordGlobals.EQUIP_ELEMENT_NUM_HIRELIGNS },
+            new object[] { "E42", "Retainer Morale", LabLordGlobals.EQUIP_ELEMENT_RETAINER_MORALE }
+            #endregion
         };
+        /// <summary>
+        /// the age field.
+        /// </summary>
+        private int age = -1;
+        /// <summary>
+        /// The character's age property.
+        /// </summary>
+        public int Age
+        {
+            get { return age; }
+            set
+            {
+                age = value;
+                NotifyWatchers();
+            }
+        }
+        /// <summary>
+        /// Gets the XP needed to attain the next level.
+        /// </summary>
+        /// <returns></returns>
+        public int GetXpNeededForNextLevel()
+        {
+            return LabLordClass.Classes[clazz].LevelRequirements[Level + 1];
+        }
+        /// <summary>
+        /// the clazz field
+        /// </summary>
+        private int clazz = -1;
+        /// <summary>
+        /// The character's class.
+        /// </summary>
+        public int Clazz
+        {
+            get { return clazz; }
+            set
+            {
+                clazz = value;
+                NotifyWatchers();
+            }
+        }
+        /// <summary>
+        /// the race field.
+        /// </summary>
+        private int race = -1;
         /// <summary>
         /// The character's race.
         /// </summary>
-        public int Race { get; set; }
+        public int Race
+        {
+            get { return race; }
+            set
+            {
+                race = value;
+                NotifyWatchers();
+            }
+        }
         protected override void AdjustMana(float dmg)
         {
             throw new NotImplementedException();
@@ -40,9 +141,57 @@ namespace LabLord.Flyweights
         /// </summary>
         protected override void ApplyRulesModifiers()
         {
+            // apply RACIAL modifiers
+            if (Race >= 0)
+            {
+                for (int elementType = LabLordRace.Races[Race].Modifiers.Length - 1; elementType >= 0; elementType--)
+                {
+                    EquipmentItemModifier mod = LabLordRace.Races[Race].Modifiers[elementType];
 
+                    if (mod == null)
+                    {
+                        continue;
+                    }
+                    if (mod.Percent
+                        || mod.PerLevel
+                        || mod.Value == 0f)
+                    {
+                        continue;
+                    }
+                    AdjustAttributeModifier((string)attributeMap[elementType][0], mod.Value);
+                }
+            }
+            // apply ABILITY modifiers
+            for (int ability = LabLordGlobals.EQUIP_ELEMENT_CHA; ability >= 0; ability--)
+            {
+                int abilityScore = (int)GetBaseAttributeScore((string)attributeMap[ability][0]);
+                Dictionary<int, EquipmentItemModifier> modifiers = LabLordAbility.Abilities[ability].GetModifiersForScore(abilityScore);
+                if (modifiers != null)
+                {
+                    foreach (KeyValuePair<int, EquipmentItemModifier> entry in modifiers)
+                    {
+                        // do something with entry.Value or entry.Key
+                        AdjustAttributeModifier((string)attributeMap[entry.Key][0], entry.Value.Value);
+                    }
+                    modifiers = null;
+                }
+            }
+            // apply CLASS modifiers
+            if (clazz >= 0)
+            {
+            }
+            // FIGHTERS get +1 HP for 19 CON
+            if (clazz == LabLordGlobals.CLASS_FIGHTER
+                && GetFullAttributeScore("CON")>= 19f)
+            {
+                AdjustAttributeModifier((string)attributeMap[LabLordGlobals.EQUIP_ELEMENT_MHP][0], 1f);
+            }
         }
         protected override void ApplyRulesPercentModifiers()
+        {
+
+        }
+        protected override void ApplyRulesPerLevelModifiers()
         {
 
         }
@@ -68,6 +217,18 @@ namespace LabLord.Flyweights
         }
         public override void ComputeFullStats()
         {
+            // get damage from weapon
+            int wpnId = GetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON);
+            if (wpnId >= 0
+                && Interactive.Instance.HasIO(wpnId))
+            {
+                BaseInteractiveObject wpnIo = Interactive.Instance.GetIO(wpnId);
+                Io.Script.SetLocalVariable("DMG", wpnIo.Script.GetLocalIntArrayVariableValue("DMG"));
+            }
+            else
+            {
+                Io.Script.SetLocalVariable("DMG", new int[] { 1, 2 });
+            }
             base.ComputeFullStats();
         }
         protected override object[][] GetAttributeMap()
@@ -84,15 +245,19 @@ namespace LabLord.Flyweights
         }
         public override float GetMaxLife()
         {
-            return GetFullAttributeScore("MST");
+            return GetFullAttributeScore("MHP");
         }
         public override void RecreatePlayerMesh()
         {
-            throw new NotImplementedException();
+            
         }
         protected override string GetLifeAttribute()
         {
-            return "STM";
+            return "HP";
+        }
+        public int GetSavingThrow(int type)
+        {
+            return LabLordSaveThrow.GetSavingThrow(type, clazz, Level);
         }
         public string ToCharSheetString()
         {

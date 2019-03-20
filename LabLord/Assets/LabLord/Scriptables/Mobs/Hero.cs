@@ -15,11 +15,10 @@ namespace LabLord.Scriptables.Mobs
     {
         public override int OnInit()
         {
-            Console.WriteLine("Hero oninit");
-            Debug.Log("Hero ONINIT");
+            // Debug.Log("Hero ONINIT");
             LabLordCharacter pc = (LabLordCharacter)Io.PcData;
             // roll stats
-            OnCharWizardStepOne();
+            // OnCharWizardStepOne();
             // equip sword
             //BPServiceClient.Instance.GetItemByName("Bonebiter");
             return base.OnInit();

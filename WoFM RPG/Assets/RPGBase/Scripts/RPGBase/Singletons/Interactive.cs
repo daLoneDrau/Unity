@@ -187,6 +187,17 @@ namespace RPGBase.Singletons
                     sr.sprite = null;
                     Destroy(sr);
                 }
+                BoxCollider2D bc = io.GetComponent<BoxCollider2D>();
+                if (bc != null)
+                {
+                    Destroy(bc);
+                }
+                Rigidbody2D rb = io.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    Destroy(rb);
+                }
+                io.transform.position = new Vector3(-1, -1, 0);
                 Destroy(io);
             }
         }

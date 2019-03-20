@@ -210,6 +210,8 @@ namespace WoFM.UI.SceneControllers
                                     if (tile.Type == Tile.TerrainType.floor_0
                                         || tile.Type == Tile.TerrainType.floor_1
                                         || tile.Type == Tile.TerrainType.floor_2
+                                        || tile.Type == Tile.TerrainType.tombstone
+                                        || tile.Type == Tile.TerrainType.corpse
                                         || tile.Type == Tile.TerrainType.pit)
                                     {
                                         tileObject.GetComponent<SpriteRenderer>().sortingLayerName = "Floor";
@@ -525,7 +527,9 @@ namespace WoFM.UI.SceneControllers
                 Tile orig = world.GetTileAt(node.Location);
                 if (orig.Type != Tile.TerrainType.floor_0
                     && orig.Type != Tile.TerrainType.floor_1
-                    && orig.Type != Tile.TerrainType.floor_2)
+                    && orig.Type != Tile.TerrainType.floor_2
+                    && orig.Type != Tile.TerrainType.tombstone
+                    && orig.Type != Tile.TerrainType.corpse)
                 {
                     // no need to create edge for walls or void spaces
                     continue;
@@ -548,7 +552,9 @@ namespace WoFM.UI.SceneControllers
                 if (other != null
                     && (other.Type == Tile.TerrainType.floor_0
                     || other.Type == Tile.TerrainType.floor_1
-                    || other.Type == Tile.TerrainType.floor_2))
+                    || other.Type == Tile.TerrainType.floor_2
+                    || other.Type == Tile.TerrainType.tombstone
+                    || other.Type == Tile.TerrainType.corpse))
                 {
                     dungeonGraph.AddEdge(node.Index, GetNode(new Vector2(otherX, otherY)).Index);
                     //print("edge created: " + node.Location + "-" + GetNode(new Vector2(otherX, otherY)).Location);
@@ -560,7 +566,9 @@ namespace WoFM.UI.SceneControllers
                 if (other != null
                     && (other.Type == Tile.TerrainType.floor_0
                     || other.Type == Tile.TerrainType.floor_1
-                    || other.Type == Tile.TerrainType.floor_2))
+                    || other.Type == Tile.TerrainType.floor_2
+                    || other.Type == Tile.TerrainType.tombstone
+                    || other.Type == Tile.TerrainType.corpse))
                 {
                     dungeonGraph.AddEdge(node.Index, GetNode(new Vector2(otherX, otherY)).Index);
                     //print("edge created: " + node.Location + "-" + GetNode(new Vector2(otherX, otherY)).Location);
@@ -572,7 +580,9 @@ namespace WoFM.UI.SceneControllers
                 if (other != null
                     && (other.Type == Tile.TerrainType.floor_0
                     || other.Type == Tile.TerrainType.floor_1
-                    || other.Type == Tile.TerrainType.floor_2))
+                    || other.Type == Tile.TerrainType.floor_2
+                    || other.Type == Tile.TerrainType.tombstone
+                    || other.Type == Tile.TerrainType.corpse))
                 {
                     dungeonGraph.AddEdge(node.Index, GetNode(new Vector2(otherX, otherY)).Index);
                     //print("edge created: " + node.Location + "-" + GetNode(new Vector2(otherX, otherY)).Location);

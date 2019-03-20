@@ -1,10 +1,10 @@
-﻿using Assets.Scripts.UI.SimpleJSON;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine.SceneManagement;
 using LabLord.Singletons;
+using RPGBase.Scripts.UI.SimpleJSON;
 
 namespace LabLord.UI.GlobalControllers
 {
@@ -12,9 +12,9 @@ namespace LabLord.UI.GlobalControllers
     {
         void Awake()
         {
-            LabLordController.Init();
-            LabLordInteractive .Init();
-            LabLordScript.Init();
+            // LabLordController.Init();
+            // LabLordInteractive .Init();
+            // LabLordScript.Init();
             DontDestroyOnLoad(gameObject);
         }
         /// <summary>

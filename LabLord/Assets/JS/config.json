@@ -1,0 +1,12 @@
+﻿{
+  "systems": [
+    {
+      "title": "Labyrinth Lord",
+      "scene": "LabLordWizard"
+    },
+    {
+      "title": "Crypts & Things",
+      "scene": "CryptsThingsWizard"
+    }
+  ]
+}

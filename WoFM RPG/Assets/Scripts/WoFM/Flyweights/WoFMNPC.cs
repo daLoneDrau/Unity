@@ -72,10 +72,7 @@ namespace WoFM.Flyweights
         {
         }
 
-        protected override void AwardXpForNpcDeath(int xp, BaseInteractiveObject killerIO)
-        {
-            throw new NotImplementedException();
-        }
+        protected override void AwardXpForNpcDeath(int xp, BaseInteractiveObject killerIO) { }
 
         protected override void DamageNonLivingNPC(float dmg, int srcIoid, bool isSpellDamage)
         {
@@ -97,7 +94,7 @@ namespace WoFM.Flyweights
         }
         protected override bool HasLifeRemaining()
         {
-            throw new NotImplementedException();
+            return Life > 0;
         }
 
         protected override void MoveToInitialPosition()

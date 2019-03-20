@@ -1,6 +1,4 @@
-﻿using Assets.Scripts.UI.SimpleJSON;
-using RPGBase.Pooled;
-using RPGBase.Singletons;
+﻿using RPGBase.Singletons;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,9 +55,11 @@ namespace LabLord.UI.SceneControllers
         // Use this for initialization
         void Start()
         {
+            /*
             LabLordInteractiveObject playerIo = ((LabLordInteractive)Interactive.Instance).NewHero();
             playerIo.PcData.AddWatcher(GetComponent<PlayerWatcher>());
             Script.Instance.SendInitScriptEvent(playerIo);
+            */
         }
         public void RaceClick(bool value)
         {
@@ -71,37 +71,37 @@ namespace LabLord.UI.SceneControllers
                     print(t.name);
                     if (t.name.ToLower().Contains("dwarf"))
                     {
-                        int classOptions = GetValidClassesForRace(LabLordGlobals.RACE_DWARF);
+                        int classOptions = GetValidClassesForRace(LabLordRace.RACE_DWARF);
                         ClassButtonController.SetOptions(classOptions);
                     }
                     else if (t.name.ToLower().Contains("halfelf"))
                     {
-                        int classOptions = GetValidClassesForRace(LabLordGlobals.RACE_HALF_ELF);
+                        int classOptions = GetValidClassesForRace(LabLordRace.RACE_HALF_ELF);
                         ClassButtonController.SetOptions(classOptions);
                     }
                     else if (t.name.ToLower().Contains("elf"))
                     {
-                        int classOptions = GetValidClassesForRace(LabLordGlobals.RACE_ELF);
+                        int classOptions = GetValidClassesForRace(LabLordRace.RACE_ELF);
                         ClassButtonController.SetOptions(classOptions);
                     }
                     else if (t.name.ToLower().Contains("gnome"))
                     {
-                        int classOptions = GetValidClassesForRace(LabLordGlobals.RACE_GNOME);
+                        int classOptions = GetValidClassesForRace(LabLordRace.RACE_GNOME);
                         ClassButtonController.SetOptions(classOptions);
                     }
                     else if (t.name.ToLower().Contains("halfling"))
                     {
-                        int classOptions = GetValidClassesForRace(LabLordGlobals.RACE_HALFLING);
+                        int classOptions = GetValidClassesForRace(LabLordRace.RACE_HALFLING);
                         ClassButtonController.SetOptions(classOptions);
                     }
                     else if (t.name.ToLower().Contains("orc"))
                     {
-                        int classOptions = GetValidClassesForRace(LabLordGlobals.RACE_HALF_ORC);
+                        int classOptions = GetValidClassesForRace(LabLordRace.RACE_HALF_ORC);
                         ClassButtonController.SetOptions(classOptions);
                     }
                     else if (t.name.ToLower().Contains("human"))
                     {
-                        int classOptions = GetValidClassesForRace(LabLordGlobals.RACE_HUMAN);
+                        int classOptions = GetValidClassesForRace(LabLordRace.RACE_HUMAN);
                         ClassButtonController.SetOptions(classOptions);
                     }
                 }
@@ -129,12 +129,12 @@ namespace LabLord.UI.SceneControllers
         private bool ValidateAssassin(int race, LabLordCharacter pc)
         {
             bool valid = false;
-            if (race == LabLordGlobals.RACE_DWARF
-                || race == LabLordGlobals.RACE_ELF
-                || race == LabLordGlobals.RACE_GNOME
-                || race == LabLordGlobals.RACE_HALF_ELF
-                || race == LabLordGlobals.RACE_HALF_ORC
-                || race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_DWARF
+                || race == LabLordRace.RACE_ELF
+                || race == LabLordRace.RACE_GNOME
+                || race == LabLordRace.RACE_HALF_ELF
+                || race == LabLordRace.RACE_HALF_ORC
+                || race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("STR") >= 12
                     && pc.GetBaseAttributeScore("DEX") >= 12
@@ -161,12 +161,12 @@ namespace LabLord.UI.SceneControllers
                 validClasses += LabLordGlobals.CLASS_ASSASSIN;
             }
             // CLERIC
-            if (race == LabLordGlobals.RACE_DWARF
-                || race == LabLordGlobals.RACE_ELF
-                || race == LabLordGlobals.RACE_GNOME
-                || race == LabLordGlobals.RACE_HALF_ELF
-                || race == LabLordGlobals.RACE_HALF_ORC
-                || race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_DWARF
+                || race == LabLordRace.RACE_ELF
+                || race == LabLordRace.RACE_GNOME
+                || race == LabLordRace.RACE_HALF_ELF
+                || race == LabLordRace.RACE_HALF_ORC
+                || race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("WIS") >= 12)
                 {
@@ -174,7 +174,7 @@ namespace LabLord.UI.SceneControllers
                 }
             }
             // DRUID
-            if (race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("WIS") >= 12
                 && pc.GetBaseAttributeScore("CHA") >= 15)
@@ -183,13 +183,13 @@ namespace LabLord.UI.SceneControllers
                 }
             }
             // FIGHTER
-            if (race == LabLordGlobals.RACE_DWARF
-                || race == LabLordGlobals.RACE_ELF
-                || race == LabLordGlobals.RACE_GNOME
-                || race == LabLordGlobals.RACE_HALFLING
-                || race == LabLordGlobals.RACE_HALF_ELF
-                || race == LabLordGlobals.RACE_HALF_ORC
-                || race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_DWARF
+                || race == LabLordRace.RACE_ELF
+                || race == LabLordRace.RACE_GNOME
+                || race == LabLordRace.RACE_HALFLING
+                || race == LabLordRace.RACE_HALF_ELF
+                || race == LabLordRace.RACE_HALF_ORC
+                || race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("STR") >= 12)
                 {
@@ -197,8 +197,8 @@ namespace LabLord.UI.SceneControllers
                 }
             }
             // ILLUSIONIST
-            if (race == LabLordGlobals.RACE_GNOME
-                || race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_GNOME
+                || race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("INT") >= 15
                 && pc.GetBaseAttributeScore("DEX") >= 16)
@@ -207,9 +207,9 @@ namespace LabLord.UI.SceneControllers
                 }
             }
             // MAGIC-USER
-            if (race == LabLordGlobals.RACE_ELF
-                || race == LabLordGlobals.RACE_HALF_ELF
-                || race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_ELF
+                || race == LabLordRace.RACE_HALF_ELF
+                || race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("INT") >= 12)
                 {
@@ -217,7 +217,7 @@ namespace LabLord.UI.SceneControllers
                 }
             }
             // MONK
-            if (race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("STR") >= 12
                 && pc.GetBaseAttributeScore("DEX") >= 15
@@ -227,7 +227,7 @@ namespace LabLord.UI.SceneControllers
                 }
             }
             // PALADIN
-            if (race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("STR") >= 12
                 && pc.GetBaseAttributeScore("INT") >= 9
@@ -238,8 +238,8 @@ namespace LabLord.UI.SceneControllers
                 }
             }
             // RANGER
-            if (race == LabLordGlobals.RACE_HALF_ELF
-                || race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_HALF_ELF
+                || race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("STR") >= 12
                 && pc.GetBaseAttributeScore("INT") >= 12
@@ -250,13 +250,13 @@ namespace LabLord.UI.SceneControllers
                 }
             }
             // THIEF
-            if (race == LabLordGlobals.RACE_DWARF
-                || race == LabLordGlobals.RACE_ELF
-                || race == LabLordGlobals.RACE_GNOME
-                || race == LabLordGlobals.RACE_HALFLING
-                || race == LabLordGlobals.RACE_HALF_ELF
-                || race == LabLordGlobals.RACE_HALF_ORC
-                || race == LabLordGlobals.RACE_HUMAN)
+            if (race == LabLordRace.RACE_DWARF
+                || race == LabLordRace.RACE_ELF
+                || race == LabLordRace.RACE_GNOME
+                || race == LabLordRace.RACE_HALFLING
+                || race == LabLordRace.RACE_HALF_ELF
+                || race == LabLordRace.RACE_HALF_ORC
+                || race == LabLordRace.RACE_HUMAN)
             {
                 if (pc.GetBaseAttributeScore("DEX") >= 12)
                 {
@@ -272,43 +272,43 @@ namespace LabLord.UI.SceneControllers
             LabLordCharacter pc = (LabLordCharacter)playerIo.PcData;
             if (pc.GetBaseAttributeScore("CON") >= 9)
             {
-                if (GetValidClassesForRace(LabLordGlobals.RACE_DWARF) > 0)
+                if (GetValidClassesForRace(LabLordRace.RACE_DWARF) > 0)
                 {
-                    validRaces += LabLordGlobals.RACE_DWARF;
+                    validRaces += LabLordRace.RACE_DWARF;
                 }
-                if (GetValidClassesForRace(LabLordGlobals.RACE_HALF_ORC) > 0)
+                if (GetValidClassesForRace(LabLordRace.RACE_HALF_ORC) > 0)
                 {
-                    validRaces += LabLordGlobals.RACE_HALF_ORC;
+                    validRaces += LabLordRace.RACE_HALF_ORC;
                 }
             }
             if (pc.GetBaseAttributeScore("INT") >= 9)
             {
-                if (GetValidClassesForRace(LabLordGlobals.RACE_ELF) > 0)
+                if (GetValidClassesForRace(LabLordRace.RACE_ELF) > 0)
                 {
-                    validRaces += LabLordGlobals.RACE_ELF;
+                    validRaces += LabLordRace.RACE_ELF;
                 }
             }
             if (pc.GetBaseAttributeScore("DEX") >= 8
                 && pc.GetBaseAttributeScore("CON") >= 9)
             {
-                if (GetValidClassesForRace(LabLordGlobals.RACE_GNOME) > 0)
+                if (GetValidClassesForRace(LabLordRace.RACE_GNOME) > 0)
                 {
-                    validRaces += LabLordGlobals.RACE_GNOME;
+                    validRaces += LabLordRace.RACE_GNOME;
                 }
             }
             if (pc.GetBaseAttributeScore("DEX") >= 9
                 && pc.GetBaseAttributeScore("CON") >= 9)
             {
-                if (GetValidClassesForRace(LabLordGlobals.RACE_HALFLING) > 0)
+                if (GetValidClassesForRace(LabLordRace.RACE_HALFLING) > 0)
                 {
-                    validRaces += LabLordGlobals.RACE_HALFLING;
+                    validRaces += LabLordRace.RACE_HALFLING;
                 }
             }
-            if (GetValidClassesForRace(LabLordGlobals.RACE_HALF_ELF) > 0)
+            if (GetValidClassesForRace(LabLordRace.RACE_HALF_ELF) > 0)
             {
-                validRaces += LabLordGlobals.RACE_HALF_ELF;
+                validRaces += LabLordRace.RACE_HALF_ELF;
             }
-            validRaces += LabLordGlobals.RACE_HUMAN;
+            validRaces += LabLordRace.RACE_HUMAN;
             return validRaces;
         }
         bool doonce;

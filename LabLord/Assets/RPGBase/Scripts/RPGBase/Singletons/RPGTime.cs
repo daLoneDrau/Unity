@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.RPGBase.Singletons
+namespace RPGBase.Singletons
 {
     public class RPGTime
     {

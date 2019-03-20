@@ -173,20 +173,24 @@ namespace RPGBase.Flyweights
                                                                  // Set_DragInter(NULL);
                         if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_WEAPON))
                         {
+                            UnityEngine.Debug.Log("equip weapon " + ItemName);
                             EquipWeapon(charData);
                         }
                         else if (io
                               .HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_SHIELD))
                         {
+                            UnityEngine.Debug.Log("equip shield " + ItemName);
                             EquipShield(charData);
                         }
                         else if (io
                               .HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_RING))
                         {
+                            UnityEngine.Debug.Log("equip ring " + ItemName);
                             EquipRing(charData);
                         }
                         else if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_ARMOR))
                         {
+                            UnityEngine.Debug.Log("equip armor " + ItemName);
                             // unequip old armor
                             UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_TORSO);
                             // equip new armor
@@ -194,6 +198,7 @@ namespace RPGBase.Flyweights
                         }
                         else if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_LEGGINGS))
                         {
+                            UnityEngine.Debug.Log("equip leggings " + ItemName);
                             // unequip old leggings
                             UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_LEGGINGS);
                             // equip new leggings
@@ -201,6 +206,7 @@ namespace RPGBase.Flyweights
                         }
                         else if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_HELMET))
                         {
+                            UnityEngine.Debug.Log("equip helmet " + ItemName);
                             // unequip old helmet
                             UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_HELMET);
                             // equip new helmet
@@ -213,7 +219,14 @@ namespace RPGBase.Flyweights
                             charData.RecreatePlayerMesh();
                         }
                         charData.ComputeFullStats();
+                        // send event from this item to target to unequip
+                        Script.Instance.EventSender = io;
+                        Script.Instance.SendIOScriptEvent(target, ScriptConsts.SM_006_EQUIPIN, null, null);
+                        // send event from target to this item to unequip
+                        Script.Instance.EventSender = target;
+                        Script.Instance.SendIOScriptEvent(io, ScriptConsts.SM_006_EQUIPIN, null, null);
                     }
+                    target.PcData.NotifyWatchers();
                 }
             }
         }
@@ -276,6 +289,7 @@ namespace RPGBase.Flyweights
 
                             if (!isDestroyed)
                             {
+                                UnityEngine.Debug.Log("try to put " + ItemName + " in inventory");
                                 // if (DRAGINTER == null) {
                                 // ARX_SOUND_PlayInterface(SND_INVSTD);
                                 // Set_DragInter(tounequip);
@@ -300,6 +314,7 @@ namespace RPGBase.Flyweights
                     {
                         target.PcData.RecreatePlayerMesh();
                     }
+                    target.PcData.NotifyWatchers();
                 }
             }
         }
@@ -429,6 +444,7 @@ namespace RPGBase.Flyweights
             // unequip old weapon
             UnequipItemInSlot(charData, EquipmentGlobals.EQUIP_SLOT_WEAPON);
             // equip new weapon
+            UnityEngine.Debug.Log("equipping " + ItemName + " in slot " + EquipmentGlobals.EQUIP_SLOT_WEAPON);
             charData.SetEquippedItem(EquipmentGlobals.EQUIP_SLOT_WEAPON, io.RefId);
             // attach it to player mesh
             if (io.HasTypeFlag(EquipmentGlobals.OBJECT_TYPE_BOW))
@@ -488,6 +504,7 @@ namespace RPGBase.Flyweights
                     if (equipIO.HasIOFlag(IoGlobals.IO_02_ITEM)
                             && equipIO.ItemData != null)
                     {
+                        UnityEngine.Debug.Log("unequipping " + equipIO.ItemData.ItemName + " in slot " + slot);
                         equipIO.ItemData.UnEquip(player.GetIo(), false);
                     }
                     equipIO = null;

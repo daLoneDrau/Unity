@@ -93,7 +93,6 @@ namespace WoFM.UI.GlobalControllers
                 // get IO component
                 WoFMInteractiveObject playerIo = player.GetComponent<WoFMInteractiveObject>();
                 // re-initialize player stats
-                print(playerIo.PcData.GetBaseAttributeScore("STM"));
                 // Script.Instance.SendInitScriptEvent(playerIo);
             }
             player = ((WoFMInteractive)Interactive.Instance).GetPlayerIO().gameObject;

@@ -70,8 +70,6 @@ namespace WoFM.UI.Widgets
         public void NewChoice(ModalPanelDetails details)
         {
             gameObject.SetActive(true);
-            print(this.icon);
-            print(this.button1);
             this.icon.gameObject.SetActive(false);
             button1.gameObject.SetActive(false);
             button2.gameObject.SetActive(false);
@@ -126,6 +124,7 @@ namespace WoFM.UI.Widgets
             gameObject.SetActive(false);
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             GameSceneController.Instance.CONTROLS_FROZEN = false;
+            print("turning controls on from modal");
         }
     }
 }

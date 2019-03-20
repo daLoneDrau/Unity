@@ -210,7 +210,6 @@ namespace RPGBase.Flyweights
         }
         public virtual void Awake()
         {
-            print("BaseInteractiveObject awake");
             ioGroups = new List<string>();
             spellcastData = new IOSpellCastData();
             // TODO - handle Target

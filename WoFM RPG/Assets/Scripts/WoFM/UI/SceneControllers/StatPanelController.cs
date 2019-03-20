@@ -92,7 +92,6 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
         {
             // data has been updated
             // did skill just change?
-            print("got notified of something");
             CheckForLuckBarUpdate((IOCharacter)data);
             CheckForSkillBarUpdate((IOCharacter)data);
             CheckForStaminaBarUpdate((IOCharacter)data);
@@ -103,7 +102,6 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
         }
         private void CheckForLuckBarUpdate(IOCharacter ioData)
         {
-            print("checking luck");
             RectTransform rt = LuckGauge.GetComponent<RectTransform>();
             float currentBarLen = rt.anchorMax.x - MinX;
             float realPercent = ioData.GetFullAttributeScore("LUK") / 12f;
@@ -120,7 +118,6 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
         }
         private void CheckForSkillBarUpdate(IOCharacter ioData)
         {
-            print("checking skill");
             RectTransform rt = SkillGauge.GetComponent<RectTransform>();
             float currentBarLen = rt.anchorMax.x - MinX;
             float realPercent = ioData.GetFullAttributeScore("SKL") / 12f;
@@ -137,7 +134,6 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
         }
         private void CheckForStaminaBarUpdate(IOCharacter ioData)
         {
-            print("checking stam");
             RectTransform rt = StaminaGauge.GetComponent<RectTransform>();
             float currentBarLen = rt.anchorMax.x - MinX;
             float realPercent = ioData.Life / 24f;
@@ -148,7 +144,6 @@ namespace Assets.Scripts.WoFM.UI.SceneControllers
             float realBarLen = realPercent * barLen;
             if (currentBarLen != realBarLen)
             {
-                print("need to update stam");
                 StartCoroutine(UpdateGuage(StaminaGauge, realPercent));
             }
             StaminaTooltip.IoId = ioData.GetIo().RefId;

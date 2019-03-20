@@ -10,7 +10,6 @@ namespace WoFM.Flyweights
     {
         public override void Awake()
         {
-            print("WoFMInteractiveObject awake");
             base.Awake();
             Inventory = new WoFMInventoryData();
             ItemData = new WoFMItemData();

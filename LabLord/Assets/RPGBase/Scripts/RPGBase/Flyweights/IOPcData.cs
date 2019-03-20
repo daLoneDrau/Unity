@@ -215,6 +215,7 @@ namespace RPGBase.Flyweights
         /// <returns>the total damage done</returns>
         public float DamagePlayer(float dmg, long type, int source)
         {
+            Debug.Log("DamagePlayer(" + dmg);
             float damagesdone = 0f;
             ComputeFullStats();
             if (!io.HasIOFlag(IoGlobals.PLAYERFLAGS_INVULNERABILITY)
@@ -521,7 +522,7 @@ namespace RPGBase.Flyweights
         /// Determines if the player has an item equipped.
         /// </summary>
         /// <param name="itemIO">the item</param>
-        /// <returns><tt>true</tt> if the player has the item equipped; <tt>false</tt> otherwise</returns>
+        /// <returns>true if the player has the item equipped; false otherwise</returns>
         public bool IsPlayerEquip(BaseInteractiveObject itemIO)
         {
             bool isEquipped = false;

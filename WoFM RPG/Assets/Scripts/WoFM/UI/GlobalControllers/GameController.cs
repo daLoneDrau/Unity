@@ -56,6 +56,8 @@ namespace WoFM.UI.GlobalControllers
         // map offset set to 638, 1341, since map cells don't start at 0,0
         public const int MAP_X_OFFSET = 623;
         public const int MAP_Y_OFFSET = 1341;
+        public bool GOD_MODE = true;
+
         /// <summary>
         /// Loads map data from the data repository.
         /// </summary>
@@ -99,7 +101,6 @@ namespace WoFM.UI.GlobalControllers
                 JSONNode node = array[i];
                 string type = node["type"];
                 int id = node["id"].AsInt;
-                print("loading trigger " + id);
                 float x = node["x"].AsFloat - MAP_X_OFFSET;
                 float y = MAP_Y_OFFSET - node["y"].AsFloat;
                 GameObject trigger = NewTrigger(id, type);
@@ -237,7 +238,6 @@ namespace WoFM.UI.GlobalControllers
                 playerIo.Sprite = SpriteMap.Instance.GetSprite("hero_0");
             }
             playerIo = null;
-            print("created player - " + player.GetComponent<WoFMInteractiveObject>().RefId);
             return player;
         }
         /// <summary>
@@ -362,7 +362,6 @@ namespace WoFM.UI.GlobalControllers
             mobIo = null;
             // set new trigger as child of mob holder
             mob.transform.SetParent(mobHolder);
-            print("created mob - " + mob.GetComponent<WoFMInteractiveObject>().RefId);
             return mob;
         }
         public GameObject NewDoor(int id, string script)

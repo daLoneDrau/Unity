@@ -12,7 +12,7 @@ namespace LabLord.Singletons
             {
                 GameObject go = new GameObject
                 {
-                    name = "WoFMController"
+                    name = "LabLordController"
                 };
                 Instance = go.AddComponent<LabLordController>();
                 DontDestroyOnLoad(go);
@@ -23,6 +23,11 @@ namespace LabLord.Singletons
         /// </summary>
         /// <returns></returns>
         public override int GetMaxEquipped() { return LabLordGlobals.MAX_EQUIPPED; }
+        /// <summary>
+        /// Gets the maximum number of spells.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetMaxSpells() { return -1; }
         /// <summary>
         /// Gets the number of equipment element modifiers there are.
         /// </summary>

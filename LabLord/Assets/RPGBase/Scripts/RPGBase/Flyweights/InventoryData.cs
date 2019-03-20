@@ -18,6 +18,124 @@ namespace RPGBase.Flyweights
         /// the inventory Slots.
         /// </summary>
         public InventorySlot[] Slots { get; set; }
+        /// <summary>
+        /// Determines if an item can be put in inventory.
+        /// </summary>
+        /// <param name="itemIO">the item</param>
+        /// <returns>true if the item was put in inventory; false otherwise</returns>
+        public bool CanBePutInInventory(BaseInteractiveObject itemIO)
+        {
+            bool can = false;
+            if (itemIO != null
+                    && !itemIO.HasIOFlag(IoGlobals.IO_15_MOVABLE))
+            {
+                if (itemIO.HasIOFlag(IoGlobals.IO_10_GOLD)
+                        && Io.HasIOFlag(IoGlobals.IO_01_PC))
+                {
+                    UnityEngine.Debug.Log("giving " + itemIO.ItemData.ItemName + " gold value to PC");
+                    Io.PcData.AdjustGold(itemIO.ItemData.Price);
+                    if (itemIO.ScriptLoaded)
+                    {
+                        Interactive.Instance.RemoveFromAllInventories(itemIO);
+                        Interactive.Instance.ReleaseIO(itemIO);
+                    }
+                    else
+                    {
+                        itemIO.Show = IoGlobals.SHOW_FLAG_KILLED;
+                        itemIO.RemoveGameFlag(IoGlobals.GFLAG_ISINTREATZONE);
+                    }
+                    Io.PcData.NotifyWatchers();
+                    can = true;
+                }
+                if (!can)
+                {
+                    UnityEngine.Debug.Log("trying to stack " + itemIO.ItemData.ItemName);
+                    // first try to stack
+                    for (int i = Slots.Length - 1; i >= 0; i--)
+                    {
+                        BaseInteractiveObject slotIO = Slots[i].Io;
+                        if (slotIO != null
+                                && slotIO.ItemData.StackSize > 1
+                                && Interactive.Instance.IsSameObject(itemIO, slotIO))
+                        {
+                            // found a matching item - try to stack
+                            int slotCount = slotIO.ItemData.Count;
+                            int itemCount = itemIO.ItemData.Count;
+                            int slotMaxStack = slotIO.ItemData.StackSize;
+                            if (slotCount < slotMaxStack)
+                            {
+                                // there's room to stack more - stack it
+                                slotIO.ItemData.AdjustCount(itemCount);
+                                // check to see if too many are stacked
+                                slotCount = slotIO.ItemData.Count;
+                                if (slotCount > slotMaxStack)
+                                {
+                                    // remove excess from stack
+                                    // and put it back into item io
+                                    itemIO.ItemData.Count = slotCount - slotMaxStack;
+                                    slotIO.ItemData.Count = slotMaxStack;
+                                }
+                                else
+                                {
+                                    // no excess. remove count from item io
+                                    itemIO.ItemData.Count = 0;
+                                }
+                                // was item count set to 0? release the BaseInteractiveObject
+                                if (itemIO.ItemData.Count == 0)
+                                {
+                                    if (itemIO.ScriptLoaded)
+                                    {
+                                        int inner = Interactive.Instance.GetMaxIORefId();
+                                        for (; inner >= 0; inner--)
+                                        {
+                                            if (Interactive.Instance.HasIO(inner))
+                                            {
+                                                BaseInteractiveObject innerIO = Interactive.Instance.GetIO(inner);
+                                                if (innerIO.Equals(itemIO))
+                                                {
+                                                    Interactive.Instance.ReleaseIO(innerIO);
+                                                    innerIO = null;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        itemIO.Show = IoGlobals.SHOW_FLAG_KILLED;
+                                    }
+                                }
+                                // declare item in inventory
+                                DeclareInInventory(Io, slotIO);
+                                Io.PcData.NotifyWatchers();
+                                can = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                // can't stack the item? find an empty slot
+                if (!can)
+                {
+                    UnityEngine.Debug.Log("can't stack item - looking for empty slot");
+                    // find an empty slot for the item
+                    for (int i = 0, li = Slots.Length; i < li; i++)
+                    {
+                        // got an empty slot - add it
+                        if (Slots[i].Io == null)
+                        {
+                            UnityEngine.Debug.Log("slot " + i + " is empty. storing " + itemIO.ItemData.ItemName);
+                            Slots[i].Io = itemIO;
+                            Slots[i].Show = true;
+                            DeclareInInventory(Io, itemIO);
+                            Io.PcData.NotifyWatchers();
+                            can = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            return can;
+        }
         /**
          * Sends messages between an item and its owner that it is now in inventory.
          * @param invOwnerIO the owner
@@ -76,119 +194,6 @@ namespace RPGBase.Flyweights
             }
         }
         /**
-         * Determines if an item can be put in inventory.
-         * @param itemIO the item
-         * @return <tt>true</tt> if the item can be put in inventory; <tt>false</tt>
-         *         otherwise
-         * @ if an error occurs
-         */
-        public bool CanBePutInInventory(BaseInteractiveObject itemIO)
-        {
-            bool can = false;
-            if (itemIO != null
-                    && !itemIO.HasIOFlag(IoGlobals.IO_15_MOVABLE))
-            {
-                if (itemIO.HasIOFlag(IoGlobals.IO_10_GOLD)
-                        && Io.HasIOFlag(IoGlobals.IO_01_PC))
-                {
-                    Io.PcData.AdjustGold(itemIO.ItemData.Price);
-                    if (itemIO.ScriptLoaded)
-                    {
-                        Interactive.Instance.RemoveFromAllInventories(itemIO);
-                        Interactive.Instance.ReleaseIO(itemIO);
-                    }
-                    else
-                    {
-                        itemIO.Show = IoGlobals.SHOW_FLAG_KILLED;
-                        itemIO.RemoveGameFlag(IoGlobals.GFLAG_ISINTREATZONE);
-                    }
-                    can = true;
-                }
-                if (!can)
-                {
-                    // first try to stack
-                    for (int i = Slots.Length - 1; i >= 0; i--)
-                    {
-                        BaseInteractiveObject slotIO = (BaseInteractiveObject)Slots[i].Io;
-                        if (slotIO != null
-                                && slotIO.ItemData.StackSize > 1
-                                && Interactive.Instance.IsSameObject(itemIO, slotIO))
-                        {
-                            // found a matching item - try to stack
-                            int slotCount = slotIO.ItemData.Count;
-                            int itemCount = itemIO.ItemData.Count;
-                            int slotMaxStack = slotIO.ItemData.StackSize;
-                            if (slotCount < slotMaxStack)
-                            {
-                                // there's room to stack more - stack it
-                                slotIO.ItemData.AdjustCount(itemCount);
-                                // check to see if too many are stacked
-                                slotCount = slotIO.ItemData.Count;
-                                if (slotCount > slotMaxStack)
-                                {
-                                    // remove excess from stack
-                                    // and put it back into item io
-                                    itemIO.ItemData.Count = slotCount - slotMaxStack;
-                                    slotIO.ItemData.Count = slotMaxStack;
-                                }
-                                else
-                                {
-                                    // no excess. remove count from item io
-                                    itemIO.ItemData.Count = 0;
-                                }
-                                // was item count set to 0? release the BaseInteractiveObject
-                                if (itemIO.ItemData.Count == 0)
-                                {
-                                    if (itemIO.ScriptLoaded)
-                                    {
-                                        int inner = Interactive.Instance.GetMaxIORefId();
-                                        for (; inner >= 0; inner--)
-                                        {
-                                            if (Interactive.Instance.HasIO(inner))
-                                            {
-                                                BaseInteractiveObject innerIO = Interactive.Instance.GetIO(inner);
-                                                if (innerIO.Equals(itemIO))
-                                                {
-                                                    Interactive.Instance.ReleaseIO(innerIO);
-                                                    innerIO = null;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        itemIO.Show = IoGlobals.SHOW_FLAG_KILLED;
-                                    }
-                                }
-                                // declare item in inventory
-                                DeclareInInventory(Io, slotIO);
-                                can = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                // cant stack the item? find an empty slot
-                if (!can)
-                {
-                    // find an empty slot for the item
-                    for (int i = Slots.Length - 1; i >= 0; i--)
-                    {
-                        // got an empty slot - add it
-                        if (Slots[i].Io == null)
-                        {
-                            Slots[i].Io = itemIO;
-                            Slots[i].Show = true;
-                            DeclareInInventory(Io, itemIO);
-                            can = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            return can;
-        }
-        /**
          * UNTESTED DO NOT USE Replaces an item in an BaseInteractiveObject's inventory.
          * @param itemIO the item being added
          * @param old the item being replaced
@@ -220,7 +225,7 @@ namespace RPGBase.Flyweights
                     int i = Interactive.Instance.GetMaxIORefId();
                     for (; i >= 0; i--)
                     {
-                        BaseInteractiveObject io = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
+                        BaseInteractiveObject io = Interactive.Instance.GetIO(i);
                         if (io != null
                                 && io.Inventory != null)
                         {
@@ -289,7 +294,7 @@ namespace RPGBase.Flyweights
             bool f = false;
             for (int i = Slots.Length - 1; i >= 0; i--)
             {
-                BaseInteractiveObject ioo = (BaseInteractiveObject)Slots[i].Io;
+                BaseInteractiveObject ioo = Slots[i].Io;
                 if (ioo != null
                         && ioo.Equals(io))
                 {
@@ -329,7 +334,7 @@ namespace RPGBase.Flyweights
                     {
                         continue;
                     }
-                    BaseInteractiveObject invOwner = (BaseInteractiveObject)Interactive.Instance.GetIO(i);
+                    BaseInteractiveObject invOwner = Interactive.Instance.GetIO(i);
                     if (invOwner.Inventory != null)
                     {
                         InventoryData inv = invOwner.Inventory;
@@ -358,7 +363,7 @@ namespace RPGBase.Flyweights
             {
                 for (int i = Slots.Length - 1; i >= 0; i--)
                 {
-                    BaseInteractiveObject slotIO = (BaseInteractiveObject)Slots[i].Io;
+                    BaseInteractiveObject slotIO = Slots[i].Io;
                     if (slotIO != null
                             && slotIO.HasGameFlag(IoGlobals.GFLAG_INTERACTIVITY)
                             && slotIO.ItemData != null)

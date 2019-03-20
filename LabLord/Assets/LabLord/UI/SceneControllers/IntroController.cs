@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.UI.SimpleJSON;
-using RPGBase.Pooled;
+﻿using RPGBase.Pooled;
 using RPGBase.Singletons;
 using System.Collections;
 using System.Collections.Generic;

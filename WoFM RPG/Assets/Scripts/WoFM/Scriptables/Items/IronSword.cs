@@ -8,6 +8,7 @@ using System.Text;
 using WoFM.Constants;
 using WoFM.Flyweights;
 using WoFM.Singletons;
+using WoFM.UI.GlobalControllers;
 
 namespace WoFM.Scriptables.Items
 {
@@ -131,7 +132,14 @@ namespace WoFM.Scriptables.Items
             Io.ItemData.Description = "Your trusty iron sword.";
             Io.ItemData.MaxOwned = 1;
             Io.ItemData.Equipitem.GetElementModifier(WoFMGlobals.EQUIP_ELEMENT_DAMAGE).Value = 2f;
+            if (GameController.Instance.GOD_MODE)
+            {
+                Io.ItemData.Equipitem.GetElementModifier(WoFMGlobals.EQUIP_ELEMENT_DAMAGE).Value = 99f;
+            }
+
             Io.ItemData.Price = 0f;
+            ((WoFMItemData)Io.ItemData).Sprite = "broadsword";
+            ((WoFMItemData)Io.ItemData).SpriteRotation = -45;
             Io.ItemData.StackSize = 1;
             Io.ItemData.Title = "IRON SWORD";
             Io.ItemData.SetObjectType(EquipmentGlobals.OBJECT_TYPE_1H);

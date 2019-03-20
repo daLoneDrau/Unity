@@ -132,6 +132,7 @@ namespace WoFM.Scriptables.Items
             Io.ItemData.MaxOwned = 1;
             Io.ItemData.Equipitem.GetElementModifier(WoFMGlobals.EQUIP_ELEMENT_DAMAGE).Value = 2f;
             Io.ItemData.Price = 0f;
+            ((WoFMItemData)Io.ItemData).Sprite = "cleaver";
             Io.ItemData.StackSize = 1;
             Io.ItemData.Title = "ORC CLEAVER";
             Io.ItemData.SetObjectType(EquipmentGlobals.OBJECT_TYPE_1H);

@@ -9,6 +9,7 @@ using System.Text;
 using UnityEngine;
 using WoFM.Flyweights;
 using WoFM.UI.GlobalControllers;
+using WoFM.UI.SceneControllers;
 
 namespace WoFM.Scriptables.Mobs
 {
@@ -60,8 +61,9 @@ namespace WoFM.Scriptables.Mobs
                     // send event to all members of group that the player attacked
                     Script.Instance.StackSendGroupScriptEvent(
                             GetLocalStringVariableValue("friend"),
-                            0, null, "onPlayerEnemy");
-                    Debug.Log("PLAYER_ENEMY sent");
+                            0,
+                            null,
+                            "onPlayerEnemy");
                 }
                 // kill all local timers
                 Script.Instance.TimerClearAllLocalsForIO(Io);
@@ -504,7 +506,6 @@ namespace WoFM.Scriptables.Mobs
         }
         public override int OnInitEnd()
         {
-            Debug.Log("onInitEnd OrcScript");
             if (GetLocalIntVariableValue("enemy") == 1)
             {
                 // turn hearing back on
@@ -512,8 +513,6 @@ namespace WoFM.Scriptables.Mobs
             }
             if (!string.Equals("none", GetLocalStringVariableValue("friend"), StringComparison.OrdinalIgnoreCase))
             {
-                Debug.Log(Io);
-                Debug.Log(GetLocalStringVariableValue("friend"));
                 Script.Instance.AddToGroup(Io, GetLocalStringVariableValue("friend"));
             }
             int scale = 95;
@@ -566,6 +565,7 @@ namespace WoFM.Scriptables.Mobs
         }
         public override int OnOuch()
         {
+            // Debug.Log("OrcBase.OnOuch");
             OuchStart();
             OuchSuite();
             return ScriptConsts.ACCEPT;
@@ -601,16 +601,12 @@ namespace WoFM.Scriptables.Mobs
         }
         private void OuchStart()
         {
-            Debug.Log("OUCH ");
+            // Debug.Log("OrcBase.OuchStart");
             float ouchDmg = GetLocalFloatVariableValue("SUMMONED_OUCH")
                     + GetLocalFloatVariableValue("OUCH");
-            Debug.Log(ouchDmg);
             int painThreshold = GetLocalIntVariableValue("pain");
-            Debug.Log(" PAIN THRESHOLD ");
-            Debug.Log(painThreshold);
             if (ouchDmg < painThreshold)
             {
-                Debug.Log("Damage is below pain threshold");
                 if (Script.Instance.GetGlobalIntVariableValue("PLAYERCASTING") == 0)
                 {
                     // Script.Instance.forceAnimation(HIT_SHORT);
@@ -622,17 +618,14 @@ namespace WoFM.Scriptables.Mobs
             }
             else
             {
-                Debug.Log("Damage is above pain threshold");
                 // damage is above pain threshold
                 long tmp = Script.Instance.GetGlobalIntVariableValue("COMBAT_ROUNDS");
-                Debug.Log("COMBAT_ROUNDS::" + tmp);
                 if (HasLocalVariable("ouch_time"))
                 {
                     tmp -= GetLocalLongVariableValue("ouch_time");
                 }
                 if (tmp > 4)
                 {
-                    Debug.Log("been more than 4 rounds since last ouch");
                     // been more than 4 seconds since last recorded ouch?
                     // force hit animation
                     // Script.Instance.forceAnimation(HIT);
@@ -643,10 +636,10 @@ namespace WoFM.Scriptables.Mobs
                 tmp *= 3;
                 if (ouchDmg >= tmp)
                 {
-                    Debug.Log("Damage was greater than 3x pain threshold");
                     if (Diceroller.Instance.RolldX(2) == 2)
                     {
                         // speak angrily "ouch_strong"
+                        Messages.Instance.SendMessage(GetLocalStringVariableValue("ouch_speak_strong"));
                     }
                 }
                 else
@@ -655,18 +648,18 @@ namespace WoFM.Scriptables.Mobs
                     tmp *= 2;
                     if (ouchDmg >= tmp)
                     {
-                        Debug.Log("Damage was greater than 2x pain threshold");
                         if (Diceroller.Instance.RolldX(2) == 2)
                         {
                             // speak angrily "ouch_medium"
+                            Messages.Instance.SendMessage(GetLocalStringVariableValue("ouch_speak_medium"));
                         }
                     }
                     else
                     {
-                        Debug.Log("Damage was greater than pain threshold");
                         if (Diceroller.Instance.RolldX(2) == 2)
                         {
                             // speak angrily "ouch"
+                            Messages.Instance.SendMessage(GetLocalStringVariableValue("ouch_speak"));
                         }
                     }
                 }

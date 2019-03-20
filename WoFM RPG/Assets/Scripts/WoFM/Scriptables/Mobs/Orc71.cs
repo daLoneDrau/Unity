@@ -23,9 +23,21 @@ namespace WoFM.Scriptables.Mobs
         /// the time given to show the orc 'waking up'.
         /// </summary>
         private float WAKE_UP_TIME = 2f;
+        public override int OnDie()
+        {
+            Debug.Log("Orc71.OnDie");
+            // generate a tombstone at location
+            WorldController.Instance.GetTileAt(Io.Position).Type = Tile.TerrainType.corpse;
+            WorldController.Instance.GetTileAt(Io.Position).Notes = "ORC SENTRY was defeated here";
+            // change room description
+            GameController.Instance.SetText("71_SECONDARY", GameController.Instance.GetText("71_TERTIARY"));
+            // send victory message
+            CombatController.Instance.VictoryMessage = "You bested an ORC in single-combat.\n";
+            return ScriptConsts.ACCEPT;
+        }
         public override int OnHear()
         {
-            Debug.Log("I HEARD SOMETHING");
+            Debug.Log("ORC71 HEARD SOMETHING");
             if (!HasLocalVariable("tested_luck"))
             {
                 SetLocalVariable("tested_luck", 0);
@@ -43,6 +55,7 @@ namespace WoFM.Scriptables.Mobs
                     }
                     if (!((WoFMCharacter)srcIo.PcData).TestYourLuck() || forceHear == 1)
                     {
+                        SetLocalVariable("asleep", 0);
                         // WAKE UP
                         // 1. wait 5 seconds
                         GameSceneController.Instance.AddMustCompleteAction(new WaitAction(WAKE_UP_TIME));
@@ -77,12 +90,6 @@ namespace WoFM.Scriptables.Mobs
             }
             return base.OnHear();
         }
-        private void StartCombat()
-        {
-            Debug.Log("STARTING COMBAT");
-            CombatController.Instance.AddEnemies(Io.RefId);
-            CombatController.Instance.StartCombat();
-        }
         public override int OnInit()
         {
             base.OnInit();
@@ -94,6 +101,10 @@ namespace WoFM.Scriptables.Mobs
             Io.NpcData.Name = "Orc";
             // heal from god
             Io.NpcData.HealNPC(5, true);
+            // set ouch messages
+            SetLocalVariable("ouch_speak", GameController.Instance.GetText("orc_71_ouch"));
+            SetLocalVariable("ouch_speak_medium", GameController.Instance.GetText("orc_71_ouch_medium"));
+            SetLocalVariable("ouch_speak_strong", GameController.Instance.GetText("orc_71_ouch_strong"));
             // equip weapon
             WoFMInteractiveObject wpnIo = GameController.Instance.NewItem("Orc Cleaver", new OrcCleaver()).GetComponent<WoFMInteractiveObject>();
             wpnIo.ItemData.Equip(Io);
@@ -102,7 +113,7 @@ namespace WoFM.Scriptables.Mobs
             AssignDisallowedEvent(ScriptConsts.DISABLE_HEAR);
             // teleport orc into scene
             GameSceneController.Instance.AddMustCompleteAction(new TeleportAction((WoFMInteractiveObject)Io, new Vector2(636 - GameController.MAP_X_OFFSET, GameController.MAP_Y_OFFSET - 1338)));
-            // start particles
+            // start snoring
             Particles.Instance.PlaySnoreAboveIo(Io.RefId);
             return ScriptConsts.ACCEPT;
         }
@@ -114,6 +125,11 @@ namespace WoFM.Scriptables.Mobs
         {
             Io.Show = 1;
             return base.OnInView();
+        }
+        private void StartCombat()
+        {
+            CombatController.Instance.AddEnemies(Io.RefId);
+            CombatController.Instance.StartCombat();
         }
     }
 }

@@ -340,7 +340,7 @@ namespace RPGBase.Flyweights
         /// <returns></returns>
         public float DamageNPC(float dmg, int srcIoid, bool isSpellDamage)
         {
-            UnityEngine.Debug.Log("DamageNpc");
+            // UnityEngine.Debug.Log("IONpcData.DamageNpc(" + dmg + "," + srcIoid + "," + isSpellDamage);
             float damagesdone = 0f;
             if (io.Show > 0
                     && !io.HasIOFlag(IoGlobals.IO_08_INVULNERABILITY))
@@ -749,6 +749,7 @@ namespace RPGBase.Flyweights
         /// <returns></returns>
         private int SendHitEvent(float dmg, int srcIoid, bool isSpellDamage)
         {
+            //UnityEngine.Debug.Log("IONpcData.SendHitEvent");
             if (Interactive.Instance.HasIO(srcIoid))
             {
                 Script.Instance.EventSender = Interactive.Instance.GetIO(srcIoid);
@@ -828,8 +829,8 @@ namespace RPGBase.Flyweights
         /// <param name="dmg">the amount of damage</param>
         /// <param name="srcIoid">the source of the damage</param>
         private void SendOuchEvent(float dmg, int srcIoid)
-
         {
+            // UnityEngine.Debug.Log("IONpcData.SendOuchEvent(" + dmg);
             io.DamageSum += dmg;
             // set the event sender
             if (Interactive.Instance.HasIO(srcIoid))

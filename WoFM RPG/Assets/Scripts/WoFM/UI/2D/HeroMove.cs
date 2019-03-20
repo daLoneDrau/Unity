@@ -34,6 +34,7 @@ namespace WoFM.UI._2D
             bool canMove = Move(xDir, yDir, out hit);
             if (hit.transform == null)
             {
+                print("didnt hit anything, complete the move");
                 // calculate end position based on directions passed in when calling move
                 GameSceneController.Instance.AddMustCompleteAction(new MoveIoUninterruptedAction(
                     GetComponent<WoFMInteractiveObject>(),
@@ -42,11 +43,13 @@ namespace WoFM.UI._2D
             }
             else
             {
+                print("hit something, get the component");
                 // get component that was hit.  could be enemies, players, triggers, etc...
                 T hitComponent = hit.transform.GetComponent<T>();
                 // if unit cannot move and hit something
                 if (!canMove && hitComponent != null)
                 {
+                    print("cant move and hit component not null");
                     OnCantMove(hitComponent);
                     if (allowMove)
                     {
@@ -61,6 +64,9 @@ namespace WoFM.UI._2D
                 else
                 {
                     // didn't hit something, but can't move.  what do we do?
+                    print("WTF");
+                    print(canMove);
+                    print(hitComponent);
                 }
             }
         }

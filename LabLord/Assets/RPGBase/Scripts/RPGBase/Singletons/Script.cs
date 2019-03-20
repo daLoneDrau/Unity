@@ -592,6 +592,7 @@ namespace RPGBase.Singletons
         /// <returns></returns>
         public long GetGlobalLongVariableValue(string name)
         {
+            long val = 0;
             if (gvars == null)
             {
                 gvars = new ScriptVariable[0];
@@ -609,23 +610,34 @@ namespace RPGBase.Singletons
             }
             if (index == -1)
             {
-                PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-                try
+                if (string.Equals(name, "GAMESECONDS", StringComparison.OrdinalIgnoreCase))
                 {
-                    sb.Append("Global Long Integer variable ");
-                    sb.Append(name);
-                    sb.Append(" was never Set.");
+                    val = (long)RPGTime.Instance.GameTime / 1000;
                 }
-                catch (PooledException e)
+                else
                 {
-                    throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
+                    PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
+                    try
+                    {
+                        sb.Append("Global Long Integer variable ");
+                        sb.Append(name);
+                        sb.Append(" was never Set.");
+                    }
+                    catch (PooledException e)
+                    {
+                        throw new RPGException(ErrorMessage.INTERNAL_ERROR, e);
+                    }
+                    RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION, sb.ToString());
+                    sb.ReturnToPool();
+                    sb = null;
+                    throw ex;
                 }
-                RPGException ex = new RPGException(ErrorMessage.INVALID_OPERATION, sb.ToString());
-                sb.ReturnToPool();
-                sb = null;
-                throw ex;
             }
-            return gvars[index].Lval;
+            else
+            {
+                val = gvars[index].Lval;
+            }
+            return val;
         }
         /// <summary>
         /// Gets the value of a global text array variable.
@@ -1197,7 +1209,6 @@ namespace RPGBase.Singletons
                         sb.Append("on");
                         sb.Append(eventName.ToUpper()[0]);
                         sb.Append(eventName.Substring(1));
-                        Type type = script.GetType();
                         method = script.GetType().GetMethod(sb.ToString(), null);
                         sb.ReturnToPool();
                         sb = null;
@@ -1218,7 +1229,7 @@ namespace RPGBase.Singletons
         {
             if (Debug)
             {
-                print("RunMessage(" + script + "," + msg + "," + io.RefId);
+                print("Script.RunMessage(" + script + "," + msg + "," + io + " - "+io.RefId);
             }
             switch (msg)
             {
@@ -1230,6 +1241,9 @@ namespace RPGBase.Singletons
                     break;
                 case ScriptConsts.SM_004_INVENTORYUSE:
                     script.OnInventoryUse();
+                    break;
+                case ScriptConsts.SM_006_EQUIPIN:
+                    script.OnEquip();
                     break;
                 case ScriptConsts.SM_007_EQUIPOUT:
                     script.OnUnequip();
@@ -1253,6 +1267,11 @@ namespace RPGBase.Singletons
                     script.OnReload();
                     break;
                 case ScriptConsts.SM_045_OUCH:
+                    if (Debug)
+                    {
+                        print(script.HasLocalVariable("SUMMONED_OUCH"));
+                        print(script.HasLocalVariable("OUCH"));
+                    }
                     script.OnOuch();
                     break;
                 case ScriptConsts.SM_046_HEAR:
@@ -1514,6 +1533,10 @@ namespace RPGBase.Singletons
         /// <returns></returns>
         public int SendIOScriptEvent(BaseInteractiveObject target, int msg, object[] parameters, string eventname)
         {
+            if (Debug)
+            {
+                print("Script.SendIOScriptEvent(" + target + " - "+target.RefId+"," + msg + "," + parameters + "," + eventname);
+            }
             // checks invalid BaseInteractiveObject
             if (target == null)
             {
@@ -1527,6 +1550,10 @@ namespace RPGBase.Singletons
                 if (msg == ScriptConsts.SM_001_INIT
                         || msg == ScriptConsts.SM_033_INITEND)
                 {
+                    if (Debug)
+                    {
+                        print("sent initialization");
+                    }
                     BaseInteractiveObject hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
                     SendIOScriptEventReverse(hio, msg, parameters, eventname);
                     EventSender = originalEventSender;
@@ -1535,19 +1562,23 @@ namespace RPGBase.Singletons
 
                 if (Interactive.Instance.HasIO(num))
                 {
-                    // if this BaseInteractiveObject only has a Local script, send event to it
+                    // if this BaseInteractiveObject only has a Local script, send event to it and return from method
                     BaseInteractiveObject hio = Interactive.Instance.GetIO(num);
                     if (hio.Overscript == null)
                     {
+                        if (Debug)
+                        {
+                            print("target only has local script");
+                        }
                         GLOB = 0;
                         int ret = SendScriptEvent(hio.Script, msg, parameters, hio, eventname);
                         EventSender = originalEventSender;
                         return ret;
                     }
-
-                    // If this BaseInteractiveObject has a Global script send to Local (if exists)
-                    // then to Global if not overridden by Local
+                    // If this BaseInteractiveObject has a Global script
+                    // send event to Global
                     int s = SendScriptEvent(hio.Overscript, msg, parameters, hio, eventname);
+                    // if Global script didn't refuse processing, send event to Local and return
                     if (s != ScriptConsts.REFUSE)
                     {
                         EventSender = originalEventSender;
@@ -1555,13 +1586,13 @@ namespace RPGBase.Singletons
 
                         if (Interactive.Instance.HasIO(num))
                         {
-                            hio = (BaseInteractiveObject)Interactive.Instance.GetIO(num);
+                            hio = Interactive.Instance.GetIO(num);
                             int ret = SendScriptEvent(
-                                    (Scriptable)hio.Script,
-                                    msg,
-                                        parameters,
-                                    hio,
-                                    eventname);
+                                hio.Script,
+                                msg,
+                                parameters,
+                                hio,
+                                eventname);
                             EventSender = originalEventSender;
                             return ret;
                         }
@@ -1679,7 +1710,7 @@ namespace RPGBase.Singletons
         {
             if (Debug)
             {
-                print("SendScriptEvent(" + localScript + "," + msg + "," + p + "," + io.RefId + "," + eventName);
+                print("SendScriptEvent(" + localScript + "," + msg + "," + p + "," + io+" - " + io.RefId + "," + eventName);
             }
             int retVal = ScriptConsts.ACCEPT;
             bool keepGoing = true;
@@ -1726,6 +1757,10 @@ namespace RPGBase.Singletons
                             && msg != ScriptConsts.SM_028_INVENTORY2_OPEN
                             && msg != ScriptConsts.SM_029_INVENTORY2_CLOSE)
                     {
+                        if (Debug)
+                        {
+                            print("npc io not responding");
+                        }
                         return ScriptConsts.ACCEPT;
                     }
                 }
@@ -1736,9 +1771,13 @@ namespace RPGBase.Singletons
                  */
             }
             // use master script if available
-            Scriptable script = (Scriptable)localScript.Master;
+            Scriptable script = localScript.Master;
             if (script == null)
             { // no master - use local script
+                if (Debug)
+                {
+                    print("no master script - using local");
+                }
                 script = localScript;
             }
             // Set parameters on script that will be used

@@ -26,7 +26,6 @@ namespace WoFM.Flyweights.Actions
         {
             if (!Resolved)
             {
-                Debug.Log("waiting ");
                 GameSceneController.Instance.WaitForSomeTime(time, this);
             }
         }

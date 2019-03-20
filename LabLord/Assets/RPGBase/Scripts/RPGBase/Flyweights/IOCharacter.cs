@@ -1,3 +1,4 @@
+using LabLord.Constants;
 using RPGBase.Constants;
 using RPGBase.Pooled;
 using RPGBase.Singletons;
@@ -144,30 +145,39 @@ namespace RPGBase.Flyweights
             float toadd = 0;
             for (int i = ProjectConstants.Instance.GetMaxEquipped() - 1; i >= 0; i--)
             {
+                if (elementType == LabLordGlobals.EQUIP_ELEMENT_AC)
+                {
+                    UnityEngine.Debug.Log("AC- checking equipment slot " + i);
+                }
                 if (equippedItems[i] >= 0
                         && Interactive.Instance.HasIO(equippedItems[i]))
                 {
-                    BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.Instance.GetIO(equippedItems[i]);
+                    BaseInteractiveObject toequip = Interactive.Instance.GetIO(equippedItems[i]);
+                    if (elementType == LabLordGlobals.EQUIP_ELEMENT_AC)
+                    {
+                        UnityEngine.Debug.Log("found " + toequip.ItemData.ItemName);
+                    }
                     if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
                             && toequip.ItemData != null
                             && toequip.ItemData.Equipitem != null)
                     {
                         EquipmentItemModifier element = toequip.ItemData.Equipitem.GetElementModifier(elementType);
-                        if (!element.Percent)
+                        if (!element.Percent
+                            && !element.PerLevel)
                         {
                             toadd += element.Value;
+                            if (elementType == LabLordGlobals.EQUIP_ELEMENT_AC)
+                            {
+                                UnityEngine.Debug.Log("has value " + element.Value);
+                            }
                         }
+
                     }
                     toequip = null;
                 }
             }
             return toadd;
         }
-        /// <summary>
-        /// Applies modifiers to the character's attributes and skills based on the game rules.
-        /// </summary>
-        protected abstract void ApplyRulesModifiers();
-        protected abstract void ApplyRulesPercentModifiers();
         /// <summary>
         /// Gets the total percentage modifier for a specific element type from the equipment the player is wielding.
         /// </summary>
@@ -183,7 +193,7 @@ namespace RPGBase.Flyweights
                 if (equippedItems[i] >= 0
                         && Interactive.Instance.HasIO(equippedItems[i]))
                 {
-                    BaseInteractiveObject toequip = (BaseInteractiveObject)Interactive.Instance.GetIO(equippedItems[i]);
+                    BaseInteractiveObject toequip = Interactive.Instance.GetIO(equippedItems[i]);
                     if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
                             && toequip.ItemData != null
                             && toequip.ItemData.Equipitem != null)
@@ -199,6 +209,43 @@ namespace RPGBase.Flyweights
             }
             return toadd * trueval * MathGlobals.DIV100;
         }
+        /// <summary>
+        /// Gets the total percentage modifier for a specific element type from the equipment the player is wielding.
+        /// </summary>
+        /// <param name="elementType">the type of element</param>
+        /// <param name="trueval">the true value being modified</param>
+        /// <returns>float</returns>
+        public float ApplyEquipmentPerLevelModifiers(int elementType, int level)
+        {
+            float toadd = 0;
+            int i = ProjectConstants.Instance.GetMaxEquipped() - 1;
+            for (; i >= 0; i--)
+            {
+                if (equippedItems[i] >= 0
+                        && Interactive.Instance.HasIO(equippedItems[i]))
+                {
+                    BaseInteractiveObject toequip = Interactive.Instance.GetIO(equippedItems[i]);
+                    if (toequip.HasIOFlag(IoGlobals.IO_02_ITEM)
+                            && toequip.ItemData != null
+                            && toequip.ItemData.Equipitem != null)
+                    {
+                        EquipmentItemModifier element = toequip.ItemData.Equipitem.GetElementModifier(elementType);
+                        if (element.PerLevel)
+                        {
+                            toadd += element.Value;
+                        }
+                    }
+                    toequip = null;
+                }
+            }
+            return toadd * level;
+        }
+        /// <summary>
+        /// Applies modifiers to the character's attributes and skills based on the game rules.
+        /// </summary>
+        protected abstract void ApplyRulesModifiers();
+        protected abstract void ApplyRulesPercentModifiers();
+        protected abstract void ApplyRulesPerLevelModifiers();
         public abstract bool CalculateBackstab();
         public abstract bool CalculateCriticalHit();
         /// <summary>
@@ -229,11 +276,23 @@ namespace RPGBase.Flyweights
         {
             // clear mods
             ClearModAbilityScores();
-            // apply equipment modifiers
+            // apply modifiers
             Object[][] map = GetAttributeMap();
             for (int i = map.Length - 1; i >= 0; i--)
             {
-                AdjustAttributeModifier((string)map[i][ATTR_MAP_ABBR], ApplyEquipmentModifiers((int)map[i][ATTR_MAP_MOD_CODE]));
+                if ((int)map[i][ATTR_MAP_MOD_CODE] == LabLordGlobals.EQUIP_ELEMENT_AC)
+                {
+                    UnityEngine.Debug.Log("On AC");
+                    float mod = ApplyEquipmentModifiers((int)map[i][ATTR_MAP_MOD_CODE]);
+                    UnityEngine.Debug.Log("mod is " + mod);
+                    UnityEngine.Debug.Log("before apply::" + GetAttributeModifier((string)map[i][ATTR_MAP_ABBR]));
+                    AdjustAttributeModifier((string)map[i][ATTR_MAP_ABBR], mod);
+                    UnityEngine.Debug.Log("after apply::" + GetAttributeModifier((string)map[i][ATTR_MAP_ABBR]));
+                }
+                else
+                {
+                    AdjustAttributeModifier((string)map[i][ATTR_MAP_ABBR], ApplyEquipmentModifiers((int)map[i][ATTR_MAP_MOD_CODE]));
+                }
             }
             // apply modifiers based on rules
             ApplyRulesModifiers();
@@ -245,6 +304,17 @@ namespace RPGBase.Flyweights
             }
             // apply percent modifiers based on rules
             ApplyRulesPercentModifiers();
+            // apply per level modifiers
+            if (this is IOPcData)
+            {
+                for (int i = map.Length - 1; i >= 0; i--)
+                {
+                    float perLevelModifier = this.ApplyEquipmentPerLevelModifiers((int)map[i][ATTR_MAP_MOD_CODE], ((IOPcData)this).Level);
+                    AdjustAttributeModifier((String)map[i][ATTR_MAP_ABBR], perLevelModifier);
+                }
+                // apply percent modifiers based on rules
+                ApplyRulesPerLevelModifiers();
+            }
         }
         /// <summary>
         /// Defines the <see cref="IOCharacter"/>'s attributes.
@@ -275,6 +345,26 @@ namespace RPGBase.Flyweights
             return attributes[abbr];
         }
         /// <summary>
+        /// Gets an attribute's display name.
+        /// </summary>
+        /// <param name="elementModifierId">the attribute's element modifier id</param>
+        /// <returns><see cref="string"/></returns>
+        public string GetAttributeAbbreviation(int elementModifierId)
+        {
+            string abbr = null;
+            Object[][] map = GetAttributeMap();
+            for (int i = map.Length - 1; i >= 0; i--)
+            {
+                object[] entry = map[i];
+                if ((int)entry[2] == elementModifierId)
+                {
+                    abbr = (string)entry[0];
+                    break;
+                }
+            }
+            return abbr;
+        }
+        /// <summary>
         /// Gets the initial attribute map.
         /// </summary>
         /// <returns></returns>
@@ -293,9 +383,29 @@ namespace RPGBase.Flyweights
         /// </summary>
         /// <param name="attr">the attribute's abbreviation</param>
         /// <returns><see cref="string"/></returns>
-        public String GetAttributeName(String attr)
+        public string GetAttributeName(String attr)
         {
             return attributes[attr].DisplayName;
+        }
+        /// <summary>
+        /// Gets an attribute's display name.
+        /// </summary>
+        /// <param name="elementModifierId">the attribute's element modifier id</param>
+        /// <returns><see cref="string"/></returns>
+        public string GetAttributeName(int elementModifierId)
+        {
+            string name = null;
+            Object[][] map = GetAttributeMap();
+            for (int i = map.Length - 1; i >= 0; i--)
+            {
+                object[] entry = map[i];
+                if ((int)entry[2] == elementModifierId)
+                {
+                    name = (string)entry[1];
+                    break;
+                }
+            }
+            return name;
         }
         /// <summary>
         /// Gets all attributes.
@@ -383,7 +493,7 @@ namespace RPGBase.Flyweights
         private void InitEquippedItems(int total)
         {
             equippedItems = new int[total];
-            for (int i = 0; i < equippedItems.Length; i++)
+            for (int i = equippedItems.Length - 1; i >= 0; i--)
             {
                 equippedItems[i] = -1;
             }
@@ -474,6 +584,7 @@ namespace RPGBase.Flyweights
             else
             {
                 equippedItems[slot] = item.RefId;
+                UnityEngine.Debug.Log("putting item " + item.RefId + " in slot " + slot);
             }
         }
         /// <summary>
@@ -517,7 +628,7 @@ namespace RPGBase.Flyweights
                     {
                         throw new RPGException(ErrorMessage.INVALID_DATA_TYPE, "Equipped unregistered item in slot " + i);
                     }
-                    BaseInteractiveObject itemIO = (BaseInteractiveObject)Interactive.Instance.GetIO(equippedItems[i]);
+                    BaseInteractiveObject itemIO = Interactive.Instance.GetIO(equippedItems[i]);
                     if (!itemIO.HasIOFlag(IoGlobals.IO_02_ITEM))
                     {
                         throw new RPGException(ErrorMessage.INVALID_DATA_TYPE, "Equipped item without IO_02_ITEM in slot " + i);

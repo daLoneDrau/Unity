@@ -14,13 +14,17 @@ namespace LabLord.Singletons
         /// the next available id.
         /// </summary>
         private int nextId;
-        private int playerId;
+        /// <summary>
+        /// the stored Id of the player object.
+        /// </summary>
+        public int PlayerId { get; private set; }
         /// <summary>
         /// the list of <see cref="LabLordInteractiveObject"/>s.
         /// </summary>
         private LabLordInteractiveObject[] objs = new LabLordInteractiveObject[0];
         public LabLordInteractive ()
         {
+            PlayerId = -1;
         }
         public static void Init()
         {
@@ -28,9 +32,9 @@ namespace LabLord.Singletons
             {
                 GameObject go = new GameObject
                 {
-                    name = "WoFMInteractive"
+                    name = "LabLordInteractive"
                 };
-                Instance = go.AddComponent<LabLordInteractive >();
+                Instance = go.AddComponent<LabLordInteractive>();
                 DontDestroyOnLoad(go);
             }
         }
@@ -48,12 +52,10 @@ namespace LabLord.Singletons
         {
             return objs;
         }
-
-        protected override BaseInteractiveObject GetNewIO()
+        protected override void NewIO(BaseInteractiveObject io)
         {
             // step 1 - find the next id
-            int id = nextId++;
-            LabLordInteractiveObject io = new LabLordInteractiveObject(id);
+            io.RefId = nextId++;
             // step 2 - find the next available index in the objs array
             int index = -1;
             for (int i = objs.Length - 1; i >= 0; i--)
@@ -67,43 +69,74 @@ namespace LabLord.Singletons
             // step 3 - put the new object into the arrays
             if (index < 0)
             {
-                objs = ArrayUtilities.Instance.ExtendArray(io, objs);
+                objs = ArrayUtilities.Instance.ExtendArray((LabLordInteractiveObject)io, objs);
             }
             else
             {
-                objs[index] = io;
+                objs[index] = (LabLordInteractiveObject)io;
             }
-            return io;
         }
         public LabLordInteractiveObject GetPlayerIO()
         {
-            return (LabLordInteractiveObject)GetIO(playerId);
+            return (LabLordInteractiveObject)GetIO(PlayerId);
         }
         /// <summary>
         /// Gets a new Player IO.
         /// </summary>
         /// <returns><see cref="LabLordInteractiveObject"/></returns>
-        public LabLordInteractiveObject NewHero()
+        public void NewHero(LabLordInteractiveObject io)
         {
-            print("NewHero");
-            LabLordInteractiveObject io = (LabLordInteractiveObject)GetNewIO();
+            // register the IO
+            NewIO(io);
+            // add player flag and component
             io.AddIOFlag(IoGlobals.IO_01_PC);
-            io.PcData = new LabLordCharacter();
-            io.Script = new Hero();
+            io.PcData = new LabLordCharacter
+            {
+                Level = 1
+            };
+            io.PcData.SetBaseAttributeScore("AC", 10f);
+            // add script
+            Hero script = new Hero();
+            io.Script = script;
+            //script.Io = io;
             int val = Script.Instance.SendInitScriptEvent(io);
-            playerId = io.RefId;
-            return io;
+            // initialize inventory
+            io.Inventory = new LabLordInventoryData();
+            // register the IO as the player
+            PlayerId = io.RefId;
         }
         /// <summary>
         /// Gets a new Item IO.
         /// </summary>
         /// <returns><see cref="LabLordInteractiveObject"/></returns>
-        public LabLordInteractiveObject NewItem()
+        public void NewItem(LabLordInteractiveObject io, Scriptable script)
         {
-            LabLordInteractiveObject io = (LabLordInteractiveObject)GetNewIO();
+            // register the IO
+            NewIO(io);
+            // add item flag and component
             io.AddIOFlag(IoGlobals.IO_02_ITEM);
             io.ItemData = new LabLordItemData();
-            return io;
+            // add script
+            io.Script = script;
+            //script.Io = io;
+            int val = Script.Instance.SendInitScriptEvent(io);
+        }
+        /// <summary>
+        /// Initializes a new Mob IO.
+        /// </summary>
+        public void NewMob(LabLordInteractiveObject io, Scriptable script)
+        {
+            /*
+            // register the IO
+            NewIO(io);
+            // add player flag and component
+            io.AddIOFlag(IoGlobals.IO_03_NPC);
+            io.NpcData = new LabLordNPC();
+            // add script
+            io.Script = script;
+            //script.Io = io;
+            int val = Script.Instance.SendInitScriptEvent(io);
+            */
         }
     }
 }

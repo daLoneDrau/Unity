@@ -175,6 +175,7 @@ namespace RPGBase.Scripts.UI._2D
         }
         protected bool Move(int xDir, int yDir, out RaycastHit2D hit)
         {
+            print("MovingObject.Move");
             bool moveResult = false;
             // store the current position
             Vector2 start = transform.position;
@@ -190,10 +191,15 @@ namespace RPGBase.Scripts.UI._2D
             // check to see if anything was hit
             if (hit.transform == null)
             {
-                print("hit nothing");
+                print("\thit nothing");
                 // space is open and available to move into
                 // StartCoroutine(SmoothMovement(end));
                 moveResult = true;
+            }
+            else
+            {
+                print("\thit something");
+                print(hit.transform.gameObject);
             }
             return moveResult;
         }

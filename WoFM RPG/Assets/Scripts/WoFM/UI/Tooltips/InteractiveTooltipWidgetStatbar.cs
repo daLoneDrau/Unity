@@ -56,7 +56,6 @@ namespace WoFM.UI.Tooltips
         /// <param name="eventData">the pointer event data</param>
         public void EnterWidget(BaseEventData eventData)
         {
-            print("enter widget" + gameObject.name);
             bool ignore = false;
             if (!ignore
                 && GameSceneController.Instance.CONTROLS_FROZEN)
@@ -91,7 +90,6 @@ namespace WoFM.UI.Tooltips
                 }
                 else
                 {
-                    print("print stat "+ SkillSet[0]+" for "+IoId);
                     PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
                     WoFMInteractiveObject io = (WoFMInteractiveObject)Interactive.Instance.GetIO(IoId);
                     if (io.HasIOFlag(IoGlobals.IO_01_PC))

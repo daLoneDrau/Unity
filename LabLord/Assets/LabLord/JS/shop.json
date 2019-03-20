@@ -1,0 +1,356 @@
+﻿{
+  "weapons": [
+    {
+      "name": "Axe, battle",
+      "script": "AxeBattle",
+      "cost": 600,
+      "damage": "1d8",
+      "weight": 6,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 0, 0, 1, 1, 1 ]
+    },
+    {
+      "name": "Axe, hand",
+      "script": "AxeHand",
+      "cost": 100,
+      "damage": "1d6",
+      "weight": 3,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Club",
+      "script": "Club",
+      "cost": 300,
+      "damage": "1d4",
+      "weight": 3,
+      "classes": [ 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Crossbow, heavy",
+      "script": "CrossbowHeavy",
+      "cost": 2500,
+      "damage": "1d8",
+      "weight": 8,
+      "classes": [ 1, 0, 0, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Crossbow, light",
+      "script": "CrossbowLight",
+      "cost": 1600,
+      "damage": "1d6",
+      "weight": 4,
+      "classes": [ 1, 0, 0, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Dagger",
+      "script": "Dagger",
+      "cost": 300,
+      "damage": "1d4",
+      "weight": 1,
+      "classes": [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Dagger, silver",
+      "script": "DaggerSilver",
+      "cost": 3000,
+      "damage": "1d4",
+      "weight": 1,
+      "classes": [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Dart",
+      "script": "Dart",
+      "cost": 50,
+      "damage": "1d4",
+      "weight": 0.5,
+      "classes": [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Flail",
+      "script": "Flail",
+      "cost": 300,
+      "damage": "1d6",
+      "weight": 5,
+      "classes": [ 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Flail, heavy",
+      "script": "FlailHeavy",
+      "cost": 800,
+      "damage": "1d8",
+      "weight": 10,
+      "classes": [ 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 0, 0, 1, 1, 1 ]
+    },
+    {
+      "name": "Hammer, light",
+      "script": "HammerLight",
+      "cost": 100,
+      "damage": "1d4",
+      "weight": 2,
+      "classes": [ 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Hammer, war",
+      "script": "HammerWar",
+      "cost": 700,
+      "damage": "1d6",
+      "weight": 5,
+      "classes": [ 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 0, 0, 1, 1, 1 ]
+    },
+    {
+      "name": "Javelin",
+      "script": "Javelin",
+      "cost": 100,
+      "damage": "1d6",
+      "weight": 2,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Lance",
+      "script": "Lance",
+      "cost": 700,
+      "damage": "1d6",
+      "weight": 10,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Longbow",
+      "script": "Longbow",
+      "cost": 4000,
+      "damage": "1d8",
+      "weight": 3,
+      "classes": [ 1, 0, 0, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 0, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Mace",
+      "script": "Mace",
+      "cost": 500,
+      "damage": "1d6",
+      "weight": 3,
+      "classes": [ 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Morningstar",
+      "script": "Morningstar",
+      "cost": 500,
+      "damage": "1d6",
+      "weight": 6,
+      "classes": [ 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 0, 0, 1, 1, 1 ]
+    },
+    {
+      "name": "Pick, heavy",
+      "script": "PickHeavy",
+      "cost": 800,
+      "damage": "1d8",
+      "weight": 6,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 0, 0, 1, 1, 1 ]
+    },
+    {
+      "name": "Pick, light",
+      "script": "PickLight",
+      "cost": 500,
+      "damage": "1d6",
+      "weight": 3,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Pole Arm",
+      "script": "PoleArm",
+      "cost": 700,
+      "damage": "1d10",
+      "weight": 15,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 0, 1, 0, 0, 1, 1, 1 ]
+    },
+    {
+      "name": "Quarterstaff",
+      "script": "Quarterstaff",
+      "cost": 200,
+      "damage": "1d6",
+      "weight": 4,
+      "classes": [ 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 0, 0, 1, 1, 1 ]
+    },
+    {
+      "name": "Scimitar",
+      "script": "Scimitar",
+      "cost": 1500,
+      "damage": "1d8",
+      "weight": 4,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Shortbow",
+      "script": "Shortbow",
+      "cost": 2500,
+      "damage": "1d6",
+      "weight": 2,
+      "classes": [ 1, 0, 0, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Sling",
+      "script": "Sling",
+      "cost": 200,
+      "damage": "1d4",
+      "weight": 0,
+      "classes": [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Spear",
+      "script": "Spear",
+      "cost": 300,
+      "damage": "1d6",
+      "weight": 6,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Sword, long",
+      "script": "Sword, long",
+      "cost": 1000,
+      "damage": "1d8",
+      "weight": 4,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Sword, bastard",
+      "script": "SwordBastard",
+      "cost": 2000,
+      "damage": "2d4",
+      "weight": 6,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 0, 0, 1, 1, 1 ]
+    },
+    {
+      "name": "Sword, short",
+      "script": "SwordShort",
+      "cost": 700,
+      "damage": "1d6",
+      "weight": 2,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Sword, two-handed",
+      "script": "SwordTwoHanded",
+      "cost": 1500,
+      "damage": "1d10",
+      "weight": 15,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 0, 1, 0, 0, 1, 1, 1 ]
+    },
+    {
+      "name": "Trident",
+      "script": "Trident",
+      "cost": 400,
+      "damage": "1d6",
+      "weight": 4,
+      "classes": [ 1, 0, 1, 1, 0, 0, 1, 1, 1, 1 ],
+      "races": [ 1, 1, 1, 1, 1, 1, 1 ]
+    }
+  ],
+  "armour": [
+    {
+      "name": "Banded mail",
+      "script": "BandedMail",
+      "cost": 8500,
+      "ac": "4",
+      "weight": 35,
+      "classes": [ 0, 1, 0, 1, 1, 1, 1, 1, 1, 0 ]
+    },
+    {
+      "name": "Chain mail",
+      "script": "ChainMail",
+      "cost": 7000,
+      "ac": "5",
+      "weight": 30,
+      "classes": [ 0, 1, 0, 1, 1, 1, 1, 1, 1, 0 ]
+    },
+    {
+      "name": "Helmet",
+      "script": "Helmet",
+      "cost": 1000,
+      "ac": "0",
+      "weight": 5,
+      "classes": [ 1, 1, 0, 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Leather",
+      "script": "Leather",
+      "cost": 600,
+      "ac": "8",
+      "weight": 15,
+      "classes": [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Padded",
+      "script": "Padded",
+      "cost": 400,
+      "ac": "8",
+      "weight": 10,
+      "classes": [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name": "Plate mail",
+      "script": "PlateMail",
+      "cost": 45000,
+      "ac": "3",
+      "weight": 50,
+      "classes": [ 0, 1, 0, 1, 1, 1, 1, 1, 1, 0 ]
+    },
+    {
+      "name": "Scale mail",
+      "script": "ScaleMail",
+      "cost": 5000,
+      "ac": "6",
+      "weight": 40,
+      "classes": [ 0, 1, 0, 1, 1, 1, 1, 1, 1, 0 ]
+    },
+    {
+      "name": "Shield",
+      "script": "Shield",
+      "cost": 1000,
+      "ac": "1",
+      "weight": 10,
+      "classes": [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 ]
+    },
+    {
+      "name": "Splint mail",
+      "script": "SplintMail",
+      "cost": 7500,
+      "ac": "4",
+      "weight": 45,
+      "classes": [ 0, 1, 0, 1, 1, 1, 1, 1, 1, 0 ]
+    },
+    {
+      "name": "Studded leather",
+      "script": "StuddedLeather",
+      "cost": 3000,
+      "ac": "7",
+      "weight": 20,
+      "classes": [ 0, 1, 0, 1, 1, 1, 1, 1, 1, 0 ]
+    }
+  ]
+}
